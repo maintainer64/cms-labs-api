@@ -1,0 +1,23 @@
+# macOS
+**/.DS_Store
+
+# Dev build
+build/
+tmp/
+
+# Test
+*.out
+
+# Environment variables
+.env
+
+# Go builds
+**/build/
+**/local_db/
+
+# Node.js dependencies
+**/node_modules/
+
+# Files
+hosts.ini
+cover.out

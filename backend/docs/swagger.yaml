@@ -1,0 +1,513 @@
+basePath: /api
+definitions:
+  models.LTIForm:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      lti_key:
+        type: string
+      lti_secret:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      version:
+        type: string
+    required:
+    - created_at
+    - lti_key
+    - lti_secret
+    - name
+    - updated_at
+    - version
+    type: object
+  models.PNETServer:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      last_online_status:
+        type: string
+      name:
+        type: string
+      token:
+        type: string
+      unit_rate:
+        type: integer
+      updated_at:
+        type: string
+      url:
+        type: string
+    required:
+    - created_at
+    - updated_at
+    type: object
+  usecases.LtiFormDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LtiFormDeleteResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LtiFormDeleteInputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LtiFormEditInputDTO:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      version:
+        type: string
+    required:
+    - name
+    - version
+    type: object
+  usecases.LtiFormEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  usecases.LtiFormEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LtiFormGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LtiFormGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.LTIForm'
+    type: object
+  usecases.LtiFormGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LtiFormGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LtiFormListInputDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  usecases.PNETServerDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.PNETServerDeleteResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.PNETServerDeleteInputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.PNETServerEditInputDTO:
+    properties:
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      name:
+        type: string
+      token:
+        type: string
+      unit_rate:
+        type: integer
+      url:
+        type: string
+    required:
+    - name
+    - token
+    - url
+    type: object
+  usecases.PNETServerEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  usecases.PNETServerEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.PNETServerEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.PNETServerGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.PNETServerGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.PNETServer'
+    type: object
+  usecases.PNETServerGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.PNETServerGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.PNETServerListInputDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+info:
+  contact:
+    email: your@mail.com
+    name: API Support
+  description: This is an auto-generated API Docs.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: API
+  version: "1.0"
+paths:
+  /v1/lti-form/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete lti integration.
+      parameters:
+      - description: lti id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LtiFormDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LtiFormDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete lti integration
+      tags:
+      - LTIForm
+  /v1/lti-form/get:
+    post:
+      consumes:
+      - application/json
+      description: get lti integration.
+      parameters:
+      - description: lti id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LtiFormGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LtiFormGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get lti integration
+      tags:
+      - LTIForm
+  /v1/lti-form/list:
+    post:
+      consumes:
+      - application/json
+      description: List lti integration.
+      parameters:
+      - description: lti list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LtiFormListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LtiFormEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list lti integration
+      tags:
+      - LTIForm
+  /v1/lti-form/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create a lti integration.
+      parameters:
+      - description: lti form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LtiFormEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LtiFormEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create lti integration
+      tags:
+      - LTIForm
+  /v1/pnet-server/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete pnet-server integration.
+      parameters:
+      - description: pnet-server id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.PNETServerDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.PNETServerDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete pnet-server integration
+      tags:
+      - PNETServer
+  /v1/pnet-server/get:
+    post:
+      consumes:
+      - application/json
+      description: get lti integration.
+      parameters:
+      - description: pnet-server id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.PNETServerGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.PNETServerGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get lti integration
+      tags:
+      - PNETServer
+  /v1/pnet-server/list:
+    post:
+      consumes:
+      - application/json
+      description: List pnet server integration.
+      parameters:
+      - description: pnet-server list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.PNETServerListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.PNETServerEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list pnet server integration
+      tags:
+      - PNETServer
+  /v1/pnet-server/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create a pnet server connection.
+      parameters:
+      - description: pnet server info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.PNETServerEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.PNETServerEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create PNETServer integration
+      tags:
+      - PNETServer
+  /v1/token/renew:
+    post:
+      consumes:
+      - application/json
+      description: Renew access and refresh tokens.
+      parameters:
+      - description: Refresh token
+        in: body
+        name: refresh_token
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: renew access and refresh tokens
+      tags:
+      - Token
+  /v2/lti:
+    get:
+      consumes:
+      - application/json
+      description: Базовая информация для интеграции LTI.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
+            type: array
+      summary: получить базовую информацию для интеграции
+      tags:
+      - LTI
+  /v2/lti/launch/:
+    post:
+      consumes:
+      - application/json
+      description: инициализация подключения к LTI.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
+            type: array
+      summary: инициализация подключения к LTI
+      tags:
+      - LTI
+  /v2/lti/launch/authenticate/:
+    post:
+      consumes:
+      - application/json
+      description: аутентификация LTI.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
+            type: array
+      summary: аутентификация через LTI
+      tags:
+      - LTI
+  /v2/lti/launch/public_keys/:
+    get:
+      consumes:
+      - application/json
+      description: RSA ключи для интеграции LTI.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
+            type: array
+      summary: получить RSA ключи для интеграции LTI
+      tags:
+      - LTI
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
