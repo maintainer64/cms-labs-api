@@ -2,10 +2,7 @@ package models
 
 import "time"
 
-type PNETServerSecret struct {
-	Token string `gorm:"type:bool" json:"token" valid:"required"`
-}
-
+// PNETServerBase struct to describe PNETServer object.
 type PNETServerBase struct {
 	Name             string    `gorm:"type:varchar(255)" json:"name"`
 	Url              string    `gorm:"type:varchar(255)" json:"url"`
@@ -14,12 +11,20 @@ type PNETServerBase struct {
 	UnitRate         uint      `gorm:"type:int" json:"unit_rate"`
 }
 
+type PNETServerSecret struct {
+	Token string `gorm:"type:bool" json:"token" valid:"required"`
+}
+
 type PNETServerListItem struct {
 	Base
 	PNETServerBase
 }
 
-// PNETServer struct to describe PNETLab servers connection params.
+// TableName переопределяет название таблицы для PNETServerListItem на `pnet_servers`
+func (PNETServerListItem) TableName() string {
+	return "pnet_servers"
+}
+
 type PNETServer struct {
 	Base
 	PNETServerBase

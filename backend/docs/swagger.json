@@ -23,7 +23,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Delete lti integration.",
+                "description": "Delete lti_form. Roles: [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -33,15 +33,15 @@
                 "tags": [
                     "LTIForm"
                 ],
-                "summary": "delete lti integration",
+                "summary": "delete lti_form",
                 "parameters": [
                     {
-                        "description": "lti id",
+                        "description": "lti_form id",
                         "name": "form",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormDeleteInputDTO"
+                            "$ref": "#/definitions/usecases.LTIFormDeleteInputDTO"
                         }
                     }
                 ],
@@ -49,7 +49,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormDeleteResponse"
+                            "$ref": "#/definitions/usecases.LTIFormDeleteResponse"
                         }
                     }
                 }
@@ -62,7 +62,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get lti integration.",
+                "description": "get lti_form. Roles [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -72,15 +72,15 @@
                 "tags": [
                     "LTIForm"
                 ],
-                "summary": "get lti integration",
+                "summary": "get lti_form",
                 "parameters": [
                     {
-                        "description": "lti id",
+                        "description": "lti_form id",
                         "name": "form",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormGetInputDTO"
+                            "$ref": "#/definitions/usecases.LTIFormGetInputDTO"
                         }
                     }
                 ],
@@ -88,7 +88,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormGetResponse"
+                            "$ref": "#/definitions/usecases.LTIFormGetResponse"
                         }
                     }
                 }
@@ -101,7 +101,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "List lti integration.",
+                "description": "List lti_form. Roles: [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -111,15 +111,15 @@
                 "tags": [
                     "LTIForm"
                 ],
-                "summary": "list lti integration",
+                "summary": "list lti_form",
                 "parameters": [
                     {
-                        "description": "lti list info",
+                        "description": "lti_form list info",
                         "name": "form",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormListInputDTO"
+                            "$ref": "#/definitions/usecases.LTIFormListInputDTO"
                         }
                     }
                 ],
@@ -127,7 +127,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormEditResponse"
+                            "$ref": "#/definitions/usecases.LTIFormEditResponse"
                         }
                     }
                 }
@@ -140,7 +140,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create a lti integration.",
+                "description": "Create lti_form. Roles: [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -150,15 +150,15 @@
                 "tags": [
                     "LTIForm"
                 ],
-                "summary": "create lti integration",
+                "summary": "create lti_form",
                 "parameters": [
                     {
-                        "description": "lti form info",
+                        "description": "lti_form form info",
                         "name": "form",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormEditInputDTO"
+                            "$ref": "#/definitions/usecases.LTIFormEditInputDTO"
                         }
                     }
                 ],
@@ -166,7 +166,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LtiFormEditResponse"
+                            "$ref": "#/definitions/usecases.LTIFormEditResponse"
                         }
                     }
                 }
@@ -179,7 +179,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Delete pnet-server integration.",
+                "description": "Delete pnet_server. Roles: [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -189,10 +189,10 @@
                 "tags": [
                     "PNETServer"
                 ],
-                "summary": "delete pnet-server integration",
+                "summary": "delete pnet_server",
                 "parameters": [
                     {
-                        "description": "pnet-server id",
+                        "description": "pnet_server id",
                         "name": "form",
                         "in": "body",
                         "required": true,
@@ -218,7 +218,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get lti integration.",
+                "description": "get pnet_server. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -228,10 +228,10 @@
                 "tags": [
                     "PNETServer"
                 ],
-                "summary": "get lti integration",
+                "summary": "get pnet_server",
                 "parameters": [
                     {
-                        "description": "pnet-server id",
+                        "description": "pnet_server id",
                         "name": "form",
                         "in": "body",
                         "required": true,
@@ -257,7 +257,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "List pnet server integration.",
+                "description": "List pnet_server. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -267,10 +267,10 @@
                 "tags": [
                     "PNETServer"
                 ],
-                "summary": "list pnet server integration",
+                "summary": "list pnet_server",
                 "parameters": [
                     {
-                        "description": "pnet-server list info",
+                        "description": "pnet_server list info",
                         "name": "form",
                         "in": "body",
                         "required": true,
@@ -296,7 +296,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create a pnet server connection.",
+                "description": "Create pnet_server. Roles [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -306,10 +306,10 @@
                 "tags": [
                     "PNETServer"
                 ],
-                "summary": "create PNETServer integration",
+                "summary": "create pnet_server",
                 "parameters": [
                     {
-                        "description": "pnet server info",
+                        "description": "pnet_server form info",
                         "name": "form",
                         "in": "body",
                         "required": true,
@@ -328,13 +328,138 @@
                 }
             }
         },
-        "/v1/token/renew": {
+        "/v1/token/check": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
+                "description": "View data access token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "view data from access token",
+                "parameters": [
+                    {
+                        "description": "renew token form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.RenewManagerInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.RenewManagerUserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/token/login": {
+            "post": {
+                "description": "Login by email and password.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "login by email and password",
+                "parameters": [
+                    {
+                        "description": "credentials form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.RenewManagerCredentialsInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.RenewManagerResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/token/logout": {
+            "post": {
+                "description": "Logout.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "logout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.RenewManagerResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/token/password_change": {
+            "post": {
+                "description": "Change password.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "change password",
+                "parameters": [
+                    {
+                        "description": "credentials form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserPasswordChangeInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserPasswordRecoverResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/token/renew": {
+            "post": {
                 "description": "Renew access and refresh tokens.",
                 "consumes": [
                     "application/json"
@@ -348,28 +473,145 @@
                 "summary": "renew access and refresh tokens",
                 "parameters": [
                     {
-                        "description": "Refresh token",
-                        "name": "refresh_token",
+                        "description": "renew token form info",
+                        "name": "form",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/auth.RenewManagerInputDTO"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/auth.RenewManagerResponse"
                         }
                     }
                 }
             }
         },
-        "/v2/lti": {
+        "/v1/user/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get user. Roles[admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "get user",
+                "parameters": [
+                    {
+                        "description": "user id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List user. Roles[admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "list user",
+                "parameters": [
+                    {
+                        "description": "user list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserListInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create user. Roles[admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "create user",
+                "parameters": [
+                    {
+                        "description": "user form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserEditInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/lti/launch": {
             "get": {
-                "description": "Базовая информация для интеграции LTI.",
+                "description": "инициализация подключения к LTI.",
                 "consumes": [
                     "application/json"
                 ],
@@ -379,21 +621,13 @@
                 "tags": [
                     "LTI"
                 ],
-                "summary": "получить базовую информацию для интеграции",
+                "summary": "инициализация подключения к LTI",
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/usecases.LtiFormEditOutputDTO"
-                            }
-                        }
+                    "302": {
+                        "description": "Found"
                     }
                 }
-            }
-        },
-        "/v2/lti/launch/": {
+            },
             "post": {
                 "description": "инициализация подключения к LTI.",
                 "consumes": [
@@ -407,19 +641,31 @@
                 ],
                 "summary": "инициализация подключения к LTI",
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/usecases.LtiFormEditOutputDTO"
-                            }
-                        }
+                    "302": {
+                        "description": "Found"
                     }
                 }
             }
         },
-        "/v2/lti/launch/authenticate/": {
+        "/v2/lti/login": {
+            "get": {
+                "description": "аутентификация LTI.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTI"
+                ],
+                "summary": "аутентификация через LTI",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
             "post": {
                 "description": "аутентификация LTI.",
                 "consumes": [
@@ -434,75 +680,167 @@
                 "summary": "аутентификация через LTI",
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/usecases.LtiFormEditOutputDTO"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v2/lti/launch/public_keys/": {
-            "get": {
-                "description": "RSA ключи для интеграции LTI.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTI"
-                ],
-                "summary": "получить RSA ключи для интеграции LTI",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/usecases.LtiFormEditOutputDTO"
-                            }
-                        }
+                        "description": "OK"
                     }
                 }
             }
         }
     },
     "definitions": {
+        "auth.RenewManagerCredentialsInputDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.RenewManagerInputDTO": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.RenewManagerResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/auth.Tokens"
+                }
+            }
+        },
+        "auth.RenewManagerUserResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/auth.TokenPublicData"
+                }
+            }
+        },
+        "auth.TokenDataWithExp": {
+            "type": "object",
+            "properties": {
+                "exp": {
+                    "type": "integer"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.TokenPublicData": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "exp": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_launch_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.Tokens": {
+            "type": "object",
+            "properties": {
+                "access": {
+                    "$ref": "#/definitions/auth.TokenDataWithExp"
+                },
+                "refresh": {
+                    "$ref": "#/definitions/auth.TokenDataWithExp"
+                }
+            }
+        },
         "models.LTIForm": {
             "type": "object",
             "required": [
+                "base_uri",
                 "created_at",
-                "lti_key",
-                "lti_secret",
+                "key_set_uri",
+                "lti_auth_login_uri",
+                "lti_auth_token_uri",
+                "lti_client_id",
+                "lti_deployment_id",
                 "name",
-                "updated_at",
-                "version"
+                "private_key",
+                "public_key",
+                "target_link_uri",
+                "updated_at"
             ],
             "properties": {
+                "base_uri": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "lti_key": {
+                "key_set_uri": {
                     "type": "string"
                 },
-                "lti_secret": {
+                "lti_auth_login_uri": {
+                    "type": "string"
+                },
+                "lti_auth_token_uri": {
+                    "type": "string"
+                },
+                "lti_client_id": {
+                    "type": "string"
+                },
+                "lti_deployment_id": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "updated_at": {
+                "private_key": {
                     "type": "string"
                 },
-                "version": {
+                "public_key": {
+                    "type": "string"
+                },
+                "target_link_uri": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -543,62 +881,94 @@
                 }
             }
         },
-        "usecases.LtiFormDeleteInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.LtiFormDeleteResponse": {
+        "models.User": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "created_at",
+                "group_name",
+                "updated_at",
+                "user_role"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
+                "created_at": {
                     "type": "string"
                 },
-                "result": {
-                    "$ref": "#/definitions/usecases.LtiFormDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.LtiFormEditInputDTO": {
-            "type": "object",
-            "required": [
-                "name",
-                "version"
-            ],
-            "properties": {
+                "deleted_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "group_name": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
+                },
+                "last_launch_id": {
+                    "type": "string"
+                },
+                "lti_user_id": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "version": {
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_role": {
                     "type": "string"
                 }
             }
         },
-        "usecases.LtiFormEditOutputDTO": {
+        "models.UserListItem": {
             "type": "object",
             "required": [
-                "id"
+                "created_at",
+                "group_name",
+                "updated_at",
+                "user_role"
             ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "group_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lti_user_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_role": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIFormDeleteInputDTO": {
+            "type": "object",
             "properties": {
                 "id": {
                     "type": "integer"
                 }
             }
         },
-        "usecases.LtiFormEditResponse": {
+        "usecases.LTIFormDeleteResponse": {
             "type": "object",
             "required": [
                 "error",
@@ -612,11 +982,53 @@
                     "type": "string"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LtiFormEditOutputDTO"
+                    "$ref": "#/definitions/usecases.LTIFormDeleteInputDTO"
                 }
             }
         },
-        "usecases.LtiFormGetInputDTO": {
+        "usecases.LTIFormEditInputDTO": {
+            "type": "object",
+            "required": [
+                "auth_login_uri",
+                "auth_token_uri",
+                "base_uri",
+                "client_id",
+                "deployment_id",
+                "key_set_uri",
+                "name",
+                "target_link_uri"
+            ],
+            "properties": {
+                "auth_login_uri": {
+                    "type": "string"
+                },
+                "auth_token_uri": {
+                    "type": "string"
+                },
+                "base_uri": {
+                    "type": "string"
+                },
+                "client_id": {
+                    "type": "string"
+                },
+                "deployment_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key_set_uri": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target_link_uri": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIFormEditOutputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -624,7 +1036,33 @@
                 }
             }
         },
-        "usecases.LtiFormGetOutputDTO": {
+        "usecases.LTIFormEditResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIFormEditOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIFormGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIFormGetOutputDTO": {
             "type": "object",
             "properties": {
                 "model": {
@@ -632,7 +1070,7 @@
                 }
             }
         },
-        "usecases.LtiFormGetResponse": {
+        "usecases.LTIFormGetResponse": {
             "type": "object",
             "required": [
                 "error",
@@ -646,11 +1084,11 @@
                     "type": "string"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LtiFormGetOutputDTO"
+                    "$ref": "#/definitions/usecases.LTIFormGetOutputDTO"
                 }
             }
         },
-        "usecases.LtiFormListInputDTO": {
+        "usecases.LTIFormListInputDTO": {
             "type": "object",
             "properties": {
                 "limit": {
@@ -717,9 +1155,6 @@
         },
         "usecases.PNETServerEditOutputDTO": {
             "type": "object",
-            "required": [
-                "id"
-            ],
             "properties": {
                 "id": {
                     "type": "integer"
@@ -786,6 +1221,186 @@
                 },
                 "offset": {
                     "type": "integer"
+                }
+            }
+        },
+        "usecases.UserEditInputDTO": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "group_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "lti_user_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "user_role": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.UserEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.UserEditResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UserEditOutputDTO"
+                }
+            }
+        },
+        "usecases.UserGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.UserGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.User"
+                }
+            }
+        },
+        "usecases.UserGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UserGetOutputDTO"
+                }
+            }
+        },
+        "usecases.UserListInputDTO": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.UserListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.UserListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UserListOutputDTO"
+                }
+            }
+        },
+        "usecases.UserPasswordChangeInputDTO": {
+            "type": "object",
+            "properties": {
+                "again_password": {
+                    "type": "string"
+                },
+                "new_password": {
+                    "type": "string"
+                },
+                "old_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.UserPasswordChangeOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.UserPasswordRecoverResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UserPasswordChangeOutputDTO"
                 }
             }
         }

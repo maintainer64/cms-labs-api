@@ -1,0 +1,135 @@
+package auth
+
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"errors"
+	"fmt"
+	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+)
+
+type TokenDataWithExp struct {
+	Token string `json:"token"`
+	Exp   int64  `json:"exp"`
+}
+
+// Tokens struct to describe tokens object.
+type Tokens struct {
+	Access  *TokenDataWithExp `json:"access"`
+	Refresh *TokenDataWithExp `json:"refresh"`
+}
+
+// TokenPublicData struct to describe public payload object.
+type TokenPublicData struct {
+	Id           uint   `json:"id"`
+	Email        string `json:"email"`
+	Name         string `json:"name"`
+	Role         string `json:"role"`
+	LastLaunchId string `json:"last_launch_id"`
+	Expires      int64  `json:"exp"`
+}
+
+func (t *TokenPublicData) JWTClaims() jwt.MapClaims {
+	return jwt.MapClaims{
+		"id":             t.Id,
+		"email":          t.Email,
+		"name":           t.Name,
+		"role":           t.Role,
+		"last_launch_id": t.LastLaunchId,
+		"expires":        t.Expires,
+	}
+}
+
+// GenerateNewTokens func for generate a new Access & Refresh tokens.
+func GenerateNewTokens(entity *TokenPublicData) (*Tokens, error) {
+	// Generate JWT Access token.
+	accessToken, err := generateNewAccessToken(entity)
+	if err != nil {
+		// Return token generation error.
+		return nil, err
+	}
+
+	// Generate JWT Refresh token.
+	refreshToken, err := generateNewRefreshToken()
+	if err != nil {
+		// Return token generation error.
+		return nil, err
+	}
+
+	return &Tokens{
+		Access:  accessToken,
+		Refresh: refreshToken,
+	}, nil
+}
+
+func generateNewAccessToken(entity *TokenPublicData) (*TokenDataWithExp, error) {
+	// Set secret key from .env file.
+	secret := configs.AppConfig.JWT.SecretKey
+
+	// Set expires minutes count for secret key from .env file.
+	minutesCount := configs.AppConfig.JWT.SecretKeyExpireMinutes
+
+	// Set public claims:
+	entity.Expires = time.Now().Add(time.Minute * time.Duration(minutesCount)).Unix()
+
+	// Create a new claims.
+	claims := entity.JWTClaims()
+
+	// Create a new JWT access token with claims.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate token.
+	t, err := token.SignedString([]byte(secret))
+	if err != nil {
+		// Return error, it JWT token generation failed.
+		return nil, err
+	}
+
+	return &TokenDataWithExp{
+		Token: t,
+		Exp:   entity.Expires,
+	}, nil
+}
+
+func generateNewRefreshToken() (*TokenDataWithExp, error) {
+	// Create a new SHA256 hash.
+	hash := sha256.New()
+
+	// Create a new now date and time string with salt.
+	refresh := configs.AppConfig.JWT.SecretRefresh + time.Now().String()
+
+	// See: https://pkg.go.dev/io#Writer.Write
+	_, err := hash.Write([]byte(refresh))
+	if err != nil {
+		// Return error, it refresh token generation failed.
+		return nil, err
+	}
+
+	// Set expires hours count for refresh key from .env file.
+	hoursCount := configs.AppConfig.JWT.SecretRefreshExpireHours
+
+	// Set expiration time.
+	expireTime := time.Now().Add(time.Hour * time.Duration(hoursCount)).Unix()
+
+	// Create a new refresh token (sha256 string with salt + expire time).
+	t := hex.EncodeToString(hash.Sum(nil)) + "." + fmt.Sprint(expireTime)
+
+	return &TokenDataWithExp{
+		Token: t,
+		Exp:   expireTime,
+	}, nil
+}
+
+// ParseRefreshToken func for parse second argument from refresh token.
+func ParseRefreshToken(refreshToken string) (int64, error) {
+	splitToken := strings.Split(refreshToken, ".")
+	if len(splitToken) < 2 {
+		return 0, errors.New("invalid refresh token")
+	}
+	return strconv.ParseInt(splitToken[1], 0, 64)
+}

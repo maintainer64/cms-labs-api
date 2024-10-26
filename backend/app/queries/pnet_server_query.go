@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 	"gorm.io/gorm"
@@ -36,8 +35,8 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug(fmt.Sprintf("PNETServerQueries: entity update: %+v", entityDB))
-		log.Info(fmt.Sprintf("PNETServerQueries: entity update id=%+v", entityDB.ID))
+		log.Debug().Msg(fmt.Sprintf("PNETServerQueries: entity update: %+v", entityDB))
+		log.Info().Msg(fmt.Sprintf("PNETServerQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -46,8 +45,8 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug(fmt.Sprintf("PNETServerQueries: entity create: %+v", entityDB))
-		log.Info(fmt.Sprintf("PNETServerQueries: entity create name=%+v", entityDB.Name))
+		log.Debug().Msg(fmt.Sprintf("PNETServerQueries: entity create: %+v", entity))
+		log.Info().Msg(fmt.Sprintf("PNETServerQueries: entity create name=%+v", entity.Name))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -59,12 +58,12 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 func (q *PNETServerQueries) List(limit int, offset int) ([]models.PNETServerListItem, error) {
 	var entities []models.PNETServerListItem
 	result := q.Limit(limit).Offset(offset).Order(`created_at desc`).Find(&entities)
-	log.Debug(fmt.Sprintf("PNETServerQueries: entities %+v", entities))
+	log.Debug().Msg(fmt.Sprintf("PNETServerQueries: entities %+v", entities))
 	return entities, result.Error
 }
 
 func (q *PNETServerQueries) Delete(id uint) error {
 	_ = q.Where("id = ?", id).Delete(&models.PNETServer{})
-	log.Debug(fmt.Sprintf("PNETServerQueries: delete entity by id: %+v", id))
+	log.Debug().Msg(fmt.Sprintf("PNETServerQueries: delete entity by id: %+v", id))
 	return nil
 }

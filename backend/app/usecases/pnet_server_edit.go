@@ -19,7 +19,7 @@ type PNETServerEditInputDTO struct {
 }
 
 type PNETServerEditOutputDTO struct {
-	ID uint `json:"id" validate:"required"`
+	ID uint `json:"id" required:"true"`
 }
 
 type PNETServerEditResponse = Response[PNETServerEditOutputDTO]

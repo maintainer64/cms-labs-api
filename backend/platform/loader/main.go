@@ -11,10 +11,14 @@ import (
 )
 
 func main() {
-	// usage on `atlas migrate diff --env gorm`
-	// usage on `atlas migrate apply --url "$POSTGRES_URL"`
 	stmts, err := gormschema.New("mysql").Load(
+		&models.LTIAccessToken{},
 		&models.LTIForm{},
+		&models.LTILaunchData{},
+		&models.LTINonceToken{},
+		&models.PNETServer{},
+		&models.User{},
+		&models.UserToken{},
 	)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load gorm schema: %v\n", err)

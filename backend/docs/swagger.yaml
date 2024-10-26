@@ -1,28 +1,111 @@
 basePath: /api
 definitions:
+  auth.RenewManagerCredentialsInputDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  auth.RenewManagerInputDTO:
+    properties:
+      refresh_token:
+        type: string
+    type: object
+  auth.RenewManagerResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/auth.Tokens'
+    required:
+    - error
+    - msg
+    type: object
+  auth.RenewManagerUserResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/auth.TokenPublicData'
+    required:
+    - error
+    - msg
+    type: object
+  auth.TokenDataWithExp:
+    properties:
+      exp:
+        type: integer
+      token:
+        type: string
+    type: object
+  auth.TokenPublicData:
+    properties:
+      email:
+        type: string
+      exp:
+        type: integer
+      id:
+        type: integer
+      last_launch_id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+    type: object
+  auth.Tokens:
+    properties:
+      access:
+        $ref: '#/definitions/auth.TokenDataWithExp'
+      refresh:
+        $ref: '#/definitions/auth.TokenDataWithExp'
+    type: object
   models.LTIForm:
     properties:
+      base_uri:
+        type: string
       created_at:
         type: string
       id:
         type: integer
-      lti_key:
+      key_set_uri:
         type: string
-      lti_secret:
+      lti_auth_login_uri:
+        type: string
+      lti_auth_token_uri:
+        type: string
+      lti_client_id:
+        type: string
+      lti_deployment_id:
         type: string
       name:
         type: string
+      private_key:
+        type: string
+      public_key:
+        type: string
+      target_link_uri:
+        type: string
       updated_at:
         type: string
-      version:
-        type: string
     required:
+    - base_uri
     - created_at
-    - lti_key
-    - lti_secret
+    - key_set_uri
+    - lti_auth_login_uri
+    - lti_auth_token_uri
+    - lti_client_id
+    - lti_deployment_id
     - name
+    - private_key
+    - public_key
+    - target_link_uri
     - updated_at
-    - version
     type: object
   models.PNETServer:
     properties:
@@ -48,77 +131,147 @@ definitions:
     - created_at
     - updated_at
     type: object
-  usecases.LtiFormDeleteInputDTO:
+  models.User:
     properties:
-      id:
-        type: integer
-    type: object
-  usecases.LtiFormDeleteResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
+      created_at:
         type: string
-      result:
-        $ref: '#/definitions/usecases.LtiFormDeleteInputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.LtiFormEditInputDTO:
-    properties:
+      deleted_at:
+        type: string
+      email:
+        type: string
+      group_name:
+        type: string
       id:
         type: integer
+      last_launch_id:
+        type: string
+      lti_user_id:
+        type: string
       name:
         type: string
-      version:
+      updated_at:
+        type: string
+      user_role:
         type: string
     required:
-    - name
-    - version
+    - created_at
+    - group_name
+    - updated_at
+    - user_role
     type: object
-  usecases.LtiFormEditOutputDTO:
+  models.UserListItem:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        type: string
+      group_name:
+        type: string
+      id:
+        type: integer
+      lti_user_id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      user_role:
+        type: string
+    required:
+    - created_at
+    - group_name
+    - updated_at
+    - user_role
+    type: object
+  usecases.LTIFormDeleteInputDTO:
     properties:
       id:
         type: integer
-    required:
-    - id
     type: object
-  usecases.LtiFormEditResponse:
+  usecases.LTIFormDeleteResponse:
     properties:
       error:
         type: boolean
       msg:
         type: string
       result:
-        $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
+        $ref: '#/definitions/usecases.LTIFormDeleteInputDTO'
     required:
     - error
     - msg
     type: object
-  usecases.LtiFormGetInputDTO:
+  usecases.LTIFormEditInputDTO:
+    properties:
+      auth_login_uri:
+        type: string
+      auth_token_uri:
+        type: string
+      base_uri:
+        type: string
+      client_id:
+        type: string
+      deployment_id:
+        type: string
+      id:
+        type: integer
+      key_set_uri:
+        type: string
+      name:
+        type: string
+      target_link_uri:
+        type: string
+    required:
+    - auth_login_uri
+    - auth_token_uri
+    - base_uri
+    - client_id
+    - deployment_id
+    - key_set_uri
+    - name
+    - target_link_uri
+    type: object
+  usecases.LTIFormEditOutputDTO:
     properties:
       id:
         type: integer
     type: object
-  usecases.LtiFormGetOutputDTO:
+  usecases.LTIFormEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIFormEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIFormGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LTIFormGetOutputDTO:
     properties:
       model:
         $ref: '#/definitions/models.LTIForm'
     type: object
-  usecases.LtiFormGetResponse:
+  usecases.LTIFormGetResponse:
     properties:
       error:
         type: boolean
       msg:
         type: string
       result:
-        $ref: '#/definitions/usecases.LtiFormGetOutputDTO'
+        $ref: '#/definitions/usecases.LTIFormGetOutputDTO'
     required:
     - error
     - msg
     type: object
-  usecases.LtiFormListInputDTO:
+  usecases.LTIFormListInputDTO:
     properties:
       limit:
         type: integer
@@ -165,8 +318,6 @@ definitions:
     properties:
       id:
         type: integer
-    required:
-    - id
     type: object
   usecases.PNETServerEditResponse:
     properties:
@@ -209,6 +360,124 @@ definitions:
       offset:
         type: integer
     type: object
+  usecases.UserEditInputDTO:
+    properties:
+      email:
+        type: string
+      group_name:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      lti_user_id:
+        type: string
+      name:
+        type: string
+      user_role:
+        type: string
+    required:
+    - email
+    - name
+    type: object
+  usecases.UserEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.UserEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UserEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.UserGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.UserGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.User'
+    type: object
+  usecases.UserGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UserGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.UserListInputDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+    type: object
+  usecases.UserListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.UserListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.UserListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UserListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.UserPasswordChangeInputDTO:
+    properties:
+      again_password:
+        type: string
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
+  usecases.UserPasswordChangeOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.UserPasswordRecoverResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UserPasswordChangeOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
 info:
   contact:
     email: your@mail.com
@@ -225,105 +494,105 @@ paths:
     post:
       consumes:
       - application/json
-      description: Delete lti integration.
+      description: 'Delete lti_form. Roles: [admin]'
       parameters:
-      - description: lti id
+      - description: lti_form id
         in: body
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LtiFormDeleteInputDTO'
+          $ref: '#/definitions/usecases.LTIFormDeleteInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LtiFormDeleteResponse'
+            $ref: '#/definitions/usecases.LTIFormDeleteResponse'
       security:
       - ApiKeyAuth: []
-      summary: delete lti integration
+      summary: delete lti_form
       tags:
       - LTIForm
   /v1/lti-form/get:
     post:
       consumes:
       - application/json
-      description: get lti integration.
+      description: get lti_form. Roles [admin]
       parameters:
-      - description: lti id
+      - description: lti_form id
         in: body
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LtiFormGetInputDTO'
+          $ref: '#/definitions/usecases.LTIFormGetInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LtiFormGetResponse'
+            $ref: '#/definitions/usecases.LTIFormGetResponse'
       security:
       - ApiKeyAuth: []
-      summary: get lti integration
+      summary: get lti_form
       tags:
       - LTIForm
   /v1/lti-form/list:
     post:
       consumes:
       - application/json
-      description: List lti integration.
+      description: 'List lti_form. Roles: [admin]'
       parameters:
-      - description: lti list info
+      - description: lti_form list info
         in: body
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LtiFormListInputDTO'
+          $ref: '#/definitions/usecases.LTIFormListInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LtiFormEditResponse'
+            $ref: '#/definitions/usecases.LTIFormEditResponse'
       security:
       - ApiKeyAuth: []
-      summary: list lti integration
+      summary: list lti_form
       tags:
       - LTIForm
   /v1/lti-form/upsert:
     post:
       consumes:
       - application/json
-      description: Create a lti integration.
+      description: 'Create lti_form. Roles: [admin]'
       parameters:
-      - description: lti form info
+      - description: lti_form form info
         in: body
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LtiFormEditInputDTO'
+          $ref: '#/definitions/usecases.LTIFormEditInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LtiFormEditResponse'
+            $ref: '#/definitions/usecases.LTIFormEditResponse'
       security:
       - ApiKeyAuth: []
-      summary: create lti integration
+      summary: create lti_form
       tags:
       - LTIForm
   /v1/pnet-server/delete:
     post:
       consumes:
       - application/json
-      description: Delete pnet-server integration.
+      description: 'Delete pnet_server. Roles: [admin]'
       parameters:
-      - description: pnet-server id
+      - description: pnet_server id
         in: body
         name: form
         required: true
@@ -338,16 +607,16 @@ paths:
             $ref: '#/definitions/usecases.PNETServerDeleteResponse'
       security:
       - ApiKeyAuth: []
-      summary: delete pnet-server integration
+      summary: delete pnet_server
       tags:
       - PNETServer
   /v1/pnet-server/get:
     post:
       consumes:
       - application/json
-      description: get lti integration.
+      description: 'get pnet_server. Roles: [admin, instructor]'
       parameters:
-      - description: pnet-server id
+      - description: pnet_server id
         in: body
         name: form
         required: true
@@ -362,16 +631,16 @@ paths:
             $ref: '#/definitions/usecases.PNETServerGetResponse'
       security:
       - ApiKeyAuth: []
-      summary: get lti integration
+      summary: get pnet_server
       tags:
       - PNETServer
   /v1/pnet-server/list:
     post:
       consumes:
       - application/json
-      description: List pnet server integration.
+      description: 'List pnet_server. Roles: [admin, instructor]'
       parameters:
-      - description: pnet-server list info
+      - description: pnet_server list info
         in: body
         name: form
         required: true
@@ -386,16 +655,16 @@ paths:
             $ref: '#/definitions/usecases.PNETServerEditResponse'
       security:
       - ApiKeyAuth: []
-      summary: list pnet server integration
+      summary: list pnet_server
       tags:
       - PNETServer
   /v1/pnet-server/upsert:
     post:
       consumes:
       - application/json
-      description: Create a pnet server connection.
+      description: Create pnet_server. Roles [admin]
       parameters:
-      - description: pnet server info
+      - description: pnet_server form info
         in: body
         name: form
         required: true
@@ -410,51 +679,199 @@ paths:
             $ref: '#/definitions/usecases.PNETServerEditResponse'
       security:
       - ApiKeyAuth: []
-      summary: create PNETServer integration
+      summary: create pnet_server
       tags:
       - PNETServer
-  /v1/token/renew:
+  /v1/token/check:
     post:
       consumes:
       - application/json
-      description: Renew access and refresh tokens.
+      description: View data access token.
       parameters:
-      - description: Refresh token
+      - description: renew token form info
         in: body
-        name: refresh_token
+        name: form
         required: true
         schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: renew access and refresh tokens
-      tags:
-      - Token
-  /v2/lti:
-    get:
-      consumes:
-      - application/json
-      description: Базовая информация для интеграции LTI.
+          $ref: '#/definitions/auth.RenewManagerInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
-            type: array
-      summary: получить базовую информацию для интеграции
+            $ref: '#/definitions/auth.RenewManagerUserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: view data from access token
+      tags:
+      - Token
+  /v1/token/login:
+    post:
+      consumes:
+      - application/json
+      description: Login by email and password.
+      parameters:
+      - description: credentials form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RenewManagerCredentialsInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.RenewManagerResponse'
+      summary: login by email and password
+      tags:
+      - Token
+  /v1/token/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.RenewManagerResponse'
+      summary: logout
+      tags:
+      - Token
+  /v1/token/password_change:
+    post:
+      consumes:
+      - application/json
+      description: Change password.
+      parameters:
+      - description: credentials form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UserPasswordChangeInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UserPasswordRecoverResponse'
+      summary: change password
+      tags:
+      - Token
+  /v1/token/renew:
+    post:
+      consumes:
+      - application/json
+      description: Renew access and refresh tokens.
+      parameters:
+      - description: renew token form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RenewManagerInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.RenewManagerResponse'
+      summary: renew access and refresh tokens
+      tags:
+      - Token
+  /v1/user/get:
+    post:
+      consumes:
+      - application/json
+      description: get user. Roles[admin, instructor]
+      parameters:
+      - description: user id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UserGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UserGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get user
+      tags:
+      - User
+  /v1/user/list:
+    post:
+      consumes:
+      - application/json
+      description: List user. Roles[admin, instructor]
+      parameters:
+      - description: user list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UserListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UserListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list user
+      tags:
+      - User
+  /v1/user/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create user. Roles[admin, instructor]
+      parameters:
+      - description: user form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UserEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UserEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create user
+      tags:
+      - User
+  /v2/lti/launch:
+    get:
+      consumes:
+      - application/json
+      description: инициализация подключения к LTI.
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: Found
+      summary: инициализация подключения к LTI
       tags:
       - LTI
-  /v2/lti/launch/:
     post:
       consumes:
       - application/json
@@ -462,16 +879,24 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
-            type: array
+        "302":
+          description: Found
       summary: инициализация подключения к LTI
       tags:
       - LTI
-  /v2/lti/launch/authenticate/:
+  /v2/lti/login:
+    get:
+      consumes:
+      - application/json
+      description: аутентификация LTI.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: аутентификация через LTI
+      tags:
+      - LTI
     post:
       consumes:
       - application/json
@@ -481,28 +906,7 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            items:
-              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
-            type: array
       summary: аутентификация через LTI
-      tags:
-      - LTI
-  /v2/lti/launch/public_keys/:
-    get:
-      consumes:
-      - application/json
-      description: RSA ключи для интеграции LTI.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/usecases.LtiFormEditOutputDTO'
-            type: array
-      summary: получить RSA ключи для интеграции LTI
       tags:
       - LTI
 securityDefinitions:

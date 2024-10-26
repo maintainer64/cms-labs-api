@@ -43,7 +43,7 @@ func {{.Name}}Create(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param form body usecases.{{.Name}}ListInputDTO true "{{.NameSnake}} list info"
-// @Success 200 {object} usecases.{{.Name}}EditResponse
+// @Success 200 {object} usecases.{{.Name}}ListResponse
 // @Security ApiKeyAuth
 // @Router /v1/{{.NameDash}}/list [post]
 func {{.Name}}List(c *fiber.Ctx) error {

@@ -1,0 +1,34 @@
+{
+  "autoCheckerStatusChip": {
+    "success": "Успешно",
+    "warning": "Ошибка",
+    "error": "Ошибка",
+    "wait": "Ожидает",
+    "run": "Запущена",
+    "cancel": "Отменена"
+  },
+  "autoCheckerTopContent": {
+    "clear": "Очистить",
+    "refresh": "Обновить",
+    "emptyContent": "Лабораторная работа не содержит тестов",
+    "ariaLabel": "Просмотр одной проверки",
+    "ariaLabelJob": "Просмотр списка попыток одного теста",
+    "modalHeader": "Очистка тестирования",
+    "modalContent1": "Текущие тесты будут",
+    "modalContent2": "завершены",
+    "modalContent3": "Страница сбросится к начальному состоянию",
+    "modalBtnClose": "Закрыть",
+    "modalBtnConfirm": "Продолжить",
+    "columnStatus": "Статус",
+    "columnName": "Название",
+    "columnActions": "Действия",
+    "columnIndex": "#",
+    "columnDuration": "Время",
+    "columnCreatedAt": "Создана",
+    "actionShowAttempts": "Показать попытки",
+    "actionShowLogs": "Показать логи",
+    "actionRestart": "Перезапустить",
+    "actionRun": "Запустить",
+    "actionCancel": "Отменить"
+  }
+}

@@ -2,26 +2,26 @@ package usecases
 
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 )
 
-type LtiFormGetUC struct {
-	LTIFromQuery *queries.LTIFromQueries
+type LTIFormGetUC struct {
+	LTIFormQueries *lti_query.LTIFormQueries
 }
 
-type LtiFormGetInputDTO struct {
+type LTIFormGetInputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LtiFormGetOutputDTO struct {
+type LTIFormGetOutputDTO struct {
 	Model models.LTIForm `json:"model" required:"true"`
 }
 
-type LtiFormGetResponse = Response[LtiFormGetOutputDTO]
+type LTIFormGetResponse = Response[LTIFormGetOutputDTO]
 
-func (u *LtiFormGetUC) Execute(dto LtiFormGetInputDTO) (LtiFormGetOutputDTO, error) {
-	form, err := u.LTIFromQuery.Get(dto.ID)
-	return LtiFormGetOutputDTO{
+func (u *LTIFormGetUC) Execute(dto LTIFormGetInputDTO) (LTIFormGetOutputDTO, error) {
+	form, err := u.LTIFormQueries.Get(dto.ID)
+	return LTIFormGetOutputDTO{
 		Model: form,
 	}, err
 }

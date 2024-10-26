@@ -3,21 +3,29 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
+	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 )
 
-// CreatePNETServer func for creates a new PNETServer connection.
-// @Description Create a pnet server connection.
-// @Summary create PNETServer integration
+// PNETServerCreate func for creates a new PNETServer.
+// @Description Create pnet_server. Roles [admin]
+// @Summary create pnet_server
 // @Tags PNETServer
 // @Accept json
 // @Produce json
-// @Param form body usecases.PNETServerEditInputDTO true "pnet server info"
+// @Param form body usecases.PNETServerEditInputDTO true "pnet_server form info"
 // @Success 200 {object} usecases.PNETServerEditResponse
 // @Security ApiKeyAuth
 // @Router /v1/pnet-server/upsert [post]
-func CreatePNETServer(c *fiber.Ctx) error {
+func PNETServerCreate(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin},
+	); err != nil {
+		return err
+	}
 	dto := usecases.PNETServerEditInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
@@ -34,17 +42,23 @@ func CreatePNETServer(c *fiber.Ctx) error {
 	return utils.FiberSuccessResponse{Result: output}
 }
 
-// ListPNETServer func for view of list PNET Servers integration.
-// @Description List pnet server integration.
-// @Summary list pnet server integration
+// PNETServerList func for view of list PNETServer.
+// @Description List pnet_server. Roles: [admin, instructor]
+// @Summary list pnet_server
 // @Tags PNETServer
 // @Accept json
 // @Produce json
-// @Param form body usecases.PNETServerListInputDTO true "pnet-server list info"
+// @Param form body usecases.PNETServerListInputDTO true "pnet_server list info"
 // @Success 200 {object} usecases.PNETServerEditResponse
 // @Security ApiKeyAuth
 // @Router /v1/pnet-server/list [post]
-func ListPNETServer(c *fiber.Ctx) error {
+func PNETServerList(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	dto := usecases.PNETServerListInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
@@ -61,17 +75,23 @@ func ListPNETServer(c *fiber.Ctx) error {
 	return utils.FiberSuccessResponse{Result: output}
 }
 
-// DeletePNETServer func for delete PNET server integration.
-// @Description Delete pnet-server integration.
-// @Summary delete pnet-server integration
+// PNETServerDelete func for delete PNETServer.
+// @Description Delete pnet_server. Roles: [admin]
+// @Summary delete pnet_server
 // @Tags PNETServer
 // @Accept json
 // @Produce json
-// @Param form body usecases.PNETServerDeleteInputDTO true "pnet-server id"
+// @Param form body usecases.PNETServerDeleteInputDTO true "pnet_server id"
 // @Success 200 {object} usecases.PNETServerDeleteResponse
 // @Security ApiKeyAuth
 // @Router /v1/pnet-server/delete [post]
-func DeletePNETServer(c *fiber.Ctx) error {
+func PNETServerDelete(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin},
+	); err != nil {
+		return err
+	}
 	dto := usecases.PNETServerDeleteInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
@@ -88,17 +108,23 @@ func DeletePNETServer(c *fiber.Ctx) error {
 	return utils.FiberSuccessResponse{Result: output}
 }
 
-// GetPNETServer func for full model PNETServer integration.
-// @Description get lti integration.
-// @Summary get lti integration
+// PNETServerGet func for full model PNETServer.
+// @Description get pnet_server. Roles: [admin, instructor]
+// @Summary get pnet_server
 // @Tags PNETServer
 // @Accept json
 // @Produce json
-// @Param form body usecases.PNETServerGetInputDTO true "pnet-server id"
+// @Param form body usecases.PNETServerGetInputDTO true "pnet_server id"
 // @Success 200 {object} usecases.PNETServerGetResponse
 // @Security ApiKeyAuth
 // @Router /v1/pnet-server/get [post]
-func GetPNETServer(c *fiber.Ctx) error {
+func PNETServerGet(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	dto := usecases.PNETServerGetInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {

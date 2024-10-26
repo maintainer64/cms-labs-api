@@ -1,16 +1,32 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"time"
+
+	. "gitlab.com/a10869/api-modules/shared/logs"
+	_ "gitlab.com/a10869/api-modules/shared/logs"
 
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	_ "github.com/go-sql-driver/mysql"
 )
+
+var (
+	log = NewZeroLogger("db")
+)
+
+type DBLogger struct {
+}
+
+func (l *DBLogger) Printf(format string, ctx ...interface{}) {
+	log.Info().Msg(fmt.Sprintf(format, ctx))
+}
 
 // MysqlConnection func for connection to Mysql database.
 func MysqlConnection() (*gorm.DB, error) {
@@ -26,15 +42,27 @@ func MysqlConnection() (*gorm.DB, error) {
 		mysql.Open(mysqlConnURL),
 		&gorm.Config{
 			QueryFields: true,
+			Logger: logger.New(
+				&DBLogger{},
+				logger.Config{
+					SlowThreshold:             200 * time.Millisecond,
+					LogLevel:                  logger.Warn,
+					IgnoreRecordNotFoundError: false,
+					Colorful:                  false,
+				}),
 		},
 	)
 	if err != nil {
-		return nil, fmt.Errorf("error, not connected to database, %w", err)
+		errText := fmt.Sprintf("error, not connected to database, %+v", err)
+		log.Error().Msg(errText)
+		return nil, errors.New(errText)
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, fmt.Errorf("error, not opened connected to database, %w", err)
+		errText := fmt.Sprintf("error, not opened connected to database, %+v", err)
+		log.Error().Msg(errText)
+		return nil, errors.New(errText)
 	}
 
 	sqlDB.SetMaxIdleConns(configs.AppConfig.DB.MaxIdleConnections)

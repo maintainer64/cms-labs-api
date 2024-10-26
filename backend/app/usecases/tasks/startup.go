@@ -1,0 +1,54 @@
+package tasks
+
+import (
+	"gitlab.com/a10869/api-modules/backend/app/models"
+	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/shared/logs"
+	"golang.org/x/crypto/bcrypt"
+)
+
+var (
+	log = logs.NewZeroLogger("tasks")
+)
+
+type StartupFiberUC struct {
+	UserQueries      *queries.UserQueries
+	UserTokenQueries *queries.UserTokenQueries
+}
+
+const UserDefaultEmail = "admin@admin.com"
+const UserDefaultPassword = "admin"
+const UserDefaultName = "admin"
+
+func (u *StartupFiberUC) userDefaultCreate() error {
+	entity, _ := u.UserQueries.GetByEmail(UserDefaultEmail)
+	if entity.Email != UserDefaultEmail {
+		entity.Name = UserDefaultName
+		entity.Email = UserDefaultEmail
+		entity.UserRole = models.UsersRoleAdmin
+		_ = u.UserQueries.Upsert(&entity)
+	}
+	creds, _ := u.UserTokenQueries.Get(entity.ID)
+	if creds.UserID == entity.ID {
+		return nil
+
+	}
+	hashPassword, err := bcrypt.GenerateFromPassword(
+		[]byte(UserDefaultPassword),
+		14,
+	)
+	if err != nil {
+		return err
+	}
+	err = u.UserTokenQueries.Upsert(&models.UserToken{
+		UserID:       entity.ID,
+		RefreshToken: "",
+		HashPassword: string(hashPassword),
+	})
+	return err
+}
+
+func (u *StartupFiberUC) Startup() error {
+	_ = u.userDefaultCreate()
+	return nil
+}

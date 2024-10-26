@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"{{.Root}}/app/models"
 	"{{.Root}}/pkg/utils"
 	"gorm.io/gorm"
@@ -37,8 +36,8 @@ func (q *{{.Name}}Queries) Upsert(entity *models.{{.Name}}) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug(fmt.Sprintf("{{.Name}}Queries: entity update: %+v", entityDB))
-		log.Info(fmt.Sprintf("{{.Name}}Queries: entity update id=%+v", entityDB.ID))
+		log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries: entity update: %+v", entityDB))
+		log.Info().Msg(fmt.Sprintf("{{.Name}}Queries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -49,8 +48,8 @@ func (q *{{.Name}}Queries) Upsert(entity *models.{{.Name}}) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug(fmt.Sprintf("{{.Name}}Queries: entity create: %+v", entityDB))
-		log.Info(fmt.Sprintf("{{.Name}}Queries: entity create name=%+v", entityDB.Name))
+		log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries: entity create: %+v", entityDB))
+		log.Info().Msg(fmt.Sprintf("{{.Name}}Queries: entity create name=%+v", entityDB.Name))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -65,13 +64,13 @@ func (q *{{.Name}}Queries) Upsert(entity *models.{{.Name}}) error {
 func (q *{{.Name}}Queries) List(limit int, offset int) ([]models.{{.Name}}ListItem, error) {
 	var entities []models.{{.Name}}ListItem
 	result := q.Limit(limit).Offset(offset).Order(` + "`created_at desc`" + `).Find(&entities)
-	log.Debug(fmt.Sprintf("{{.Name}}Queries: entities %+v", entities))
+	log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries: entities %+v", entities))
 	return entities, result.Error
 }
 
 func (q *{{.Name}}Queries) Delete(id uint) error {
 	_ = q.Where("id = ?", id).Delete(&models.{{.Name}}{})
-	log.Debug(fmt.Sprintf("{{.Name}}Queries: delete entity by id: %+v", id))
+	log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries: delete entity by id: %+v", id))
 	return nil
 }
 

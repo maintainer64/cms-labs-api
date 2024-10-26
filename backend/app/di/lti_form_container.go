@@ -6,42 +6,42 @@ import (
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 )
 
-func (di *DIContainer) LtiFormEditUC() (*usecases.LtiFormEditUC, error) {
+func (di *DIContainer) LTIFormEditUC() (*usecases.LTIFormEditUC, error) {
 	db, err := di.Queries()
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	return &usecases.LtiFormEditUC{
-		LTIFromQuery: db.LTIFromQueries,
+	return &usecases.LTIFormEditUC{
+		LTIFormQueries: db.LTIFormQueries,
 	}, nil
 }
 
-func (di *DIContainer) LtiFormGetUC() (*usecases.LtiFormGetUC, error) {
+func (di *DIContainer) LTIFormGetUC() (*usecases.LTIFormGetUC, error) {
 	db, err := di.Queries()
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	return &usecases.LtiFormGetUC{
-		LTIFromQuery: db.LTIFromQueries,
+	return &usecases.LTIFormGetUC{
+		LTIFormQueries: db.LTIFormQueries,
 	}, nil
 }
 
-func (di *DIContainer) LtiFormListUC() (*usecases.LtiFormListUC, error) {
+func (di *DIContainer) LTIFormListUC() (*usecases.LTIFormListUC, error) {
 	db, err := di.Queries()
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	return &usecases.LtiFormListUC{
-		LTIFromQuery: db.LTIFromQueries,
+	return &usecases.LTIFormListUC{
+		LTIFormQueries: db.LTIFormQueries,
 	}, nil
 }
 
-func (di *DIContainer) LtiFormDeleteUC() (*usecases.LtiFormDeleteUC, error) {
+func (di *DIContainer) LTIFormDeleteUC() (*usecases.LTIFormDeleteUC, error) {
 	db, err := di.Queries()
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	return &usecases.LtiFormDeleteUC{
-		LTIFromQuery: db.LTIFromQueries,
+	return &usecases.LTIFormDeleteUC{
+		LTIFormQueries: db.LTIFormQueries,
 	}, nil
 }

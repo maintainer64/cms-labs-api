@@ -1,20 +1,20 @@
 package usecases
 
 import (
-	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 )
 
-type LtiFormDeleteUC struct {
-	LTIFromQuery *queries.LTIFromQueries
+type LTIFormDeleteUC struct {
+	LTIFormQueries *lti_query.LTIFormQueries
 }
 
-type LtiFormDeleteInputDTO struct {
+type LTIFormDeleteInputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LtiFormDeleteResponse = Response[LtiFormDeleteInputDTO]
+type LTIFormDeleteResponse = Response[LTIFormDeleteInputDTO]
 
-func (u *LtiFormDeleteUC) Execute(dto LtiFormDeleteInputDTO) (LtiFormDeleteInputDTO, error) {
-	err := u.LTIFromQuery.Delete(dto.ID)
+func (u *LTIFormDeleteUC) Execute(dto LTIFormDeleteInputDTO) (LTIFormDeleteInputDTO, error) {
+	err := u.LTIFormQueries.Delete(dto.ID)
 	return dto, err
 }

@@ -103,6 +103,7 @@ type {{.Name}}ListUC struct {
 }
 
 type {{.Name}}ListInputDTO struct {
+	Search string ` + "`json:\"search\"`" + `
 	Limit  int ` + "`json:\"limit\"`" + `
 	Offset int ` + "`json:\"offset\"`" + `
 }

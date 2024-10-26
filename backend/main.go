@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	_ "github.com/joho/godotenv/autoload" // load .env file automatically
+	"gitlab.com/a10869/api-modules/backend/app/di"
+	_ "gitlab.com/a10869/api-modules/backend/docs" // load API Docs files (Swagger)
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 	"gitlab.com/a10869/api-modules/backend/pkg/middleware"
 	"gitlab.com/a10869/api-modules/backend/pkg/routes"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
-
-	_ "gitlab.com/a10869/api-modules/backend/docs" // load API Docs files (Swagger)
-
-	_ "github.com/joho/godotenv/autoload" // load .env file automatically
+	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
 // @title API
@@ -27,15 +27,31 @@ import (
 func main() {
 	// Define Fiber config.
 	config := configs.FiberConfig()
+	logs.ZeroLogInit(configs.AppConfig.Debug)
+
+	startup, err := di.NewDIContainer().TaskStartup()
+	if err != nil {
+		panic(err)
+	}
+	if err = startup.Startup(); err != nil {
+		panic(err)
+	}
 
 	// Define a new Fiber app with config.
 	app := fiber.New(config)
+
+	app.Static("/", "./public", fiber.Static{
+		Compress: true,
+		MaxAge:   5 * 60 * 60, // 5 minutes
+	})
 
 	// Middlewares.
 	middleware.FiberMiddleware(app) // Register Fiber's middleware for app.
 
 	// Routes.
 	routes.SwaggerRoute(app)
+	routes.V1AuthRoute(app)
+	routes.V1UserRoutes(app)
 	routes.V1LTIFormRoutes(app)
 	routes.V1PNETServerRoutes(app)
 	routes.V2LTIRoutes(app)

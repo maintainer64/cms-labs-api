@@ -6,11 +6,17 @@ import (
 	"gorm.io/gorm"
 
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 )
 
 // Queries struct for collect all app queries.
 type Queries struct {
-	*queries.LTIFromQueries
+	*lti_query.LTIFormQueries
+	*lti_query.LTINonceTokenQueries
+	*lti_query.LTIAccessTokenQueries
+	*lti_query.LTILaunchDataQueries
+	*queries.UserQueries
+	*queries.UserTokenQueries
 	*queries.PNETServerQueries
 }
 
@@ -37,7 +43,12 @@ func OpenDBConnection() (*Queries, error) {
 
 	return &Queries{
 		// Set queries from models:
-		LTIFromQueries:    &queries.LTIFromQueries{DB: db},
-		PNETServerQueries: &queries.PNETServerQueries{DB: db},
+		LTIFormQueries:        &lti_query.LTIFormQueries{DB: db},
+		LTINonceTokenQueries:  &lti_query.LTINonceTokenQueries{DB: db},
+		LTIAccessTokenQueries: &lti_query.LTIAccessTokenQueries{DB: db},
+		LTILaunchDataQueries:  &lti_query.LTILaunchDataQueries{DB: db},
+		UserQueries:           &queries.UserQueries{DB: db},
+		UserTokenQueries:      &queries.UserTokenQueries{DB: db},
+		PNETServerQueries:     &queries.PNETServerQueries{DB: db},
 	}, nil
 }

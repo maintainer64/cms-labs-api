@@ -3,27 +3,35 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
+	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 )
 
-// CreateLTIForm func for creates a new LTI integration.
-// @Description Create a lti integration.
-// @Summary create lti integration
+// LTIFormCreate func for creates a new LTIForm.
+// @Description Create lti_form. Roles: [admin]
+// @Summary create lti_form
 // @Tags LTIForm
 // @Accept json
 // @Produce json
-// @Param form body usecases.LtiFormEditInputDTO true "lti form info"
-// @Success 200 {object} usecases.LtiFormEditResponse
+// @Param form body usecases.LTIFormEditInputDTO true "lti_form form info"
+// @Success 200 {object} usecases.LTIFormEditResponse
 // @Security ApiKeyAuth
 // @Router /v1/lti-form/upsert [post]
-func CreateLTIForm(c *fiber.Ctx) error {
-	dto := usecases.LtiFormEditInputDTO{}
+func LTIFormCreate(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin},
+	); err != nil {
+		return err
+	}
+	dto := usecases.LTIFormEditInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LtiFormEditUC()
+	uc, err := di.NewDIContainer().LTIFormEditUC()
 	if err != nil {
 		return err
 	}
@@ -34,23 +42,29 @@ func CreateLTIForm(c *fiber.Ctx) error {
 	return utils.FiberSuccessResponse{Result: output}
 }
 
-// ListLTIForm func for view of list LTI integration.
-// @Description List lti integration.
-// @Summary list lti integration
+// LTIFormList func for view of list LTIForm.
+// @Description List lti_form. Roles: [admin]
+// @Summary list lti_form
 // @Tags LTIForm
 // @Accept json
 // @Produce json
-// @Param form body usecases.LtiFormListInputDTO true "lti list info"
-// @Success 200 {object} usecases.LtiFormEditResponse
+// @Param form body usecases.LTIFormListInputDTO true "lti_form list info"
+// @Success 200 {object} usecases.LTIFormEditResponse
 // @Security ApiKeyAuth
 // @Router /v1/lti-form/list [post]
-func ListLTIForm(c *fiber.Ctx) error {
-	dto := usecases.LtiFormListInputDTO{}
+func LTIFormList(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin},
+	); err != nil {
+		return err
+	}
+	dto := usecases.LTIFormListInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LtiFormListUC()
+	uc, err := di.NewDIContainer().LTIFormListUC()
 	if err != nil {
 		return err
 	}
@@ -61,23 +75,29 @@ func ListLTIForm(c *fiber.Ctx) error {
 	return utils.FiberSuccessResponse{Result: output}
 }
 
-// DeleteLTIForm func for delete LTI integration.
-// @Description Delete lti integration.
-// @Summary delete lti integration
+// LTIFormDelete func for delete LTIForm.
+// @Description Delete lti_form. Roles: [admin]
+// @Summary delete lti_form
 // @Tags LTIForm
 // @Accept json
 // @Produce json
-// @Param form body usecases.LtiFormDeleteInputDTO true "lti id"
-// @Success 200 {object} usecases.LtiFormDeleteResponse
+// @Param form body usecases.LTIFormDeleteInputDTO true "lti_form id"
+// @Success 200 {object} usecases.LTIFormDeleteResponse
 // @Security ApiKeyAuth
 // @Router /v1/lti-form/delete [post]
-func DeleteLTIForm(c *fiber.Ctx) error {
-	dto := usecases.LtiFormDeleteInputDTO{}
+func LTIFormDelete(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin},
+	); err != nil {
+		return err
+	}
+	dto := usecases.LTIFormDeleteInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LtiFormDeleteUC()
+	uc, err := di.NewDIContainer().LTIFormDeleteUC()
 	if err != nil {
 		return err
 	}
@@ -88,23 +108,29 @@ func DeleteLTIForm(c *fiber.Ctx) error {
 	return utils.FiberSuccessResponse{Result: output}
 }
 
-// GetLTIForm func for full model LTI integration.
-// @Description get lti integration.
-// @Summary get lti integration
+// LTIFormGet func for full model LTIForm.
+// @Description get lti_form. Roles [admin]
+// @Summary get lti_form
 // @Tags LTIForm
 // @Accept json
 // @Produce json
-// @Param form body usecases.LtiFormGetInputDTO true "lti id"
-// @Success 200 {object} usecases.LtiFormGetResponse
+// @Param form body usecases.LTIFormGetInputDTO true "lti_form id"
+// @Success 200 {object} usecases.LTIFormGetResponse
 // @Security ApiKeyAuth
 // @Router /v1/lti-form/get [post]
-func GetLTIForm(c *fiber.Ctx) error {
-	dto := usecases.LtiFormGetInputDTO{}
+func LTIFormGet(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin},
+	); err != nil {
+		return err
+	}
+	dto := usecases.LTIFormGetInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LtiFormGetUC()
+	uc, err := di.NewDIContainer().LTIFormGetUC()
 	if err != nil {
 		return err
 	}

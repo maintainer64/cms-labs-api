@@ -2,30 +2,42 @@ package usecases
 
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 )
 
-type LtiFormEditUC struct {
-	LTIFromQuery *queries.LTIFromQueries
+type LTIFormEditUC struct {
+	LTIFormQueries *lti_query.LTIFormQueries
 }
 
-type LtiFormEditInputDTO struct {
-	ID      int    `json:"id"`
-	Name    string `json:"name" validate:"required"`
-	Version string `json:"version" validate:"required"`
+type LTIFormEditInputDTO struct {
+	ID            uint   `json:"id"`
+	ClientID      string `json:"client_id" validate:"required"`
+	DeploymentID  string `json:"deployment_id" validate:"required"`
+	BaseURI       string `json:"base_uri" validate:"required"`
+	AuthTokenURI  string `json:"auth_token_uri" validate:"required"`
+	AuthLoginURI  string `json:"auth_login_uri" validate:"required"`
+	KeySetURI     string `json:"key_set_uri" validate:"required"`
+	TargetLinkURI string `json:"target_link_uri" validate:"required"`
+	Name          string `json:"name" validate:"required"`
 }
 
-type LtiFormEditOutputDTO struct {
-	ID int `json:"id" validate:"required"`
+type LTIFormEditOutputDTO struct {
+	ID uint `json:"id" required:"true"`
 }
 
-type LtiFormEditResponse = Response[LtiFormEditOutputDTO]
+type LTIFormEditResponse = Response[LTIFormEditOutputDTO]
 
-func (u *LtiFormEditUC) Execute(dto LtiFormEditInputDTO) (LtiFormEditOutputDTO, error) {
+func (u *LTIFormEditUC) Execute(dto LTIFormEditInputDTO) (LTIFormEditOutputDTO, error) {
 	entity := &models.LTIForm{}
+	entity.ID = dto.ID
 	entity.Name = dto.Name
-	entity.Version = dto.Version
-	entity.ID = uint(dto.ID)
-	err := u.LTIFromQuery.Upsert(entity)
-	return LtiFormEditOutputDTO{ID: int(entity.ID)}, err
+	entity.LTIClientID = dto.ClientID
+	entity.LTIDeploymentID = dto.DeploymentID
+	entity.BaseURI = dto.BaseURI
+	entity.LTIAuthTokenURI = dto.AuthTokenURI
+	entity.LTIAuthLoginURI = dto.AuthLoginURI
+	entity.KeySetURI = dto.KeySetURI
+	entity.TargetLinkURI = dto.TargetLinkURI
+	err := u.LTIFormQueries.Upsert(entity)
+	return LTIFormEditOutputDTO{ID: entity.ID}, err
 }

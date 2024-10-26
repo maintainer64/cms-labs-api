@@ -7,8 +7,8 @@ import (
 
 func V1LTIFormRoutes(a *fiber.App) {
 	group := a.Group("/api/v1/lti-form")
-	group.Post("/upsert", controllers.CreateLTIForm)
-	group.Post("/list", controllers.ListLTIForm)
-	group.Post("/delete", controllers.DeleteLTIForm)
-	group.Post("/get", controllers.GetLTIForm)
+	group.Post("/upsert", controllers.LTIFormCreate)
+	group.Post("/list", controllers.LTIFormList)
+	group.Post("/delete", controllers.LTIFormDelete)
+	group.Post("/get", controllers.LTIFormGet)
 }

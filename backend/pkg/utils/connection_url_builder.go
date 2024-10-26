@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
@@ -32,7 +33,7 @@ func ConnectionURLBuilder(n string) (string, error) {
 		)
 	default:
 		// Return error message.
-		return "", fmt.Errorf("connection name '%v' is not supported", n)
+		return "", errors.New(fmt.Sprintf("connection name '%v' is not supported", n))
 	}
 
 	// Return connection URL.

@@ -154,7 +154,7 @@ func (di *DIContainer) UserFormLegacyEditUC() (*usecases.UserFormLegacyEditUC, e
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyEditUC{
-		UserFormLegacyQuery: db.UserFormLegacyQueries,
+		UserFormLegacyQueries: db.UserFormLegacyQueries,
 	}, nil
 }
 
@@ -164,7 +164,7 @@ func (di *DIContainer) UserFormLegacyGetUC() (*usecases.UserFormLegacyGetUC, err
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyGetUC{
-		UserFormLegacyQuery: db.UserFormLegacyQueries,
+		UserFormLegacyQueries: db.UserFormLegacyQueries,
 	}, nil
 }
 
@@ -174,7 +174,7 @@ func (di *DIContainer) UserFormLegacyListUC() (*usecases.UserFormLegacyListUC, e
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyListUC{
-		UserFormLegacyQuery: db.UserFormLegacyQueries,
+		UserFormLegacyQueries: db.UserFormLegacyQueries,
 	}, nil
 }
 
@@ -184,7 +184,7 @@ func (di *DIContainer) UserFormLegacyDeleteUC() (*usecases.UserFormLegacyDeleteU
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyDeleteUC{
-		UserFormLegacyQuery: db.UserFormLegacyQueries,
+		UserFormLegacyQueries: db.UserFormLegacyQueries,
 	}, nil
 }
 
@@ -229,7 +229,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/simple-app/backend/app/models"
 	"github.com/simple-app/backend/pkg/utils"
 	"gorm.io/gorm"
@@ -260,8 +259,8 @@ func (q *UserFormLegacyQueries) Upsert(entity *models.UserFormLegacy) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug(fmt.Sprintf("UserFormLegacyQueries: entity update: %+v", entityDB))
-		log.Info(fmt.Sprintf("UserFormLegacyQueries: entity update id=%+v", entityDB.ID))
+		log.Debug().Msg(fmt.Sprintf("UserFormLegacyQueries: entity update: %+v", entityDB))
+		log.Info().Msg(fmt.Sprintf("UserFormLegacyQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -272,8 +271,8 @@ func (q *UserFormLegacyQueries) Upsert(entity *models.UserFormLegacy) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug(fmt.Sprintf("UserFormLegacyQueries: entity create: %+v", entityDB))
-		log.Info(fmt.Sprintf("UserFormLegacyQueries: entity create name=%+v", entityDB.Name))
+		log.Debug().Msg(fmt.Sprintf("UserFormLegacyQueries: entity create: %+v", entity))
+		log.Info().Msg(fmt.Sprintf("UserFormLegacyQueries: entity create name=%+v", entity.Name))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -288,13 +287,13 @@ func (q *UserFormLegacyQueries) Upsert(entity *models.UserFormLegacy) error {
 func (q *UserFormLegacyQueries) List(limit int, offset int) ([]models.UserFormLegacyListItem, error) {
 	var entities []models.UserFormLegacyListItem
 	result := q.Limit(limit).Offset(offset).Order(` + "`created_at desc`" + `).Find(&entities)
-	log.Debug(fmt.Sprintf("UserFormLegacyQueries: entities %+v", entities))
+	log.Debug().Msg(fmt.Sprintf("UserFormLegacyQueries: entities %+v", entities))
 	return entities, result.Error
 }
 
 func (q *UserFormLegacyQueries) Delete(id uint) error {
 	_ = q.Where("id = ?", id).Delete(&models.UserFormLegacy{})
-	log.Debug(fmt.Sprintf("UserFormLegacyQueries: delete entity by id: %+v", id))
+	log.Debug().Msg(fmt.Sprintf("UserFormLegacyQueries: delete entity by id: %+v", id))
 	return nil
 }
 
@@ -430,6 +429,7 @@ type UserFormLegacyListUC struct {
 }
 
 type UserFormLegacyListInputDTO struct {
+	Search string ` + "`json:\"search\"`" + `
 	Limit  int ` + "`json:\"limit\"`" + `
 	Offset int ` + "`json:\"offset\"`" + `
 }

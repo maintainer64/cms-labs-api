@@ -1,129 +1,145 @@
 package controllers
 
 import (
-	"errors"
-
 	"github.com/gofiber/fiber/v2"
+	"gitlab.com/a10869/api-modules/backend/app/di"
+	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 )
 
-// RenewTokens method for renew access and refresh tokens.
+// TokensRenew method for renew access and refresh tokens.
 // @Description Renew access and refresh tokens.
 // @Summary renew access and refresh tokens
 // @Tags Token
 // @Accept json
 // @Produce json
-// @Param refresh_token body string true "Refresh token"
-// @Success 200 {string} status "ok"
-// @Security ApiKeyAuth
+// @Param form body auth.RenewManagerInputDTO true "renew token form info"
+// @Success 200 {object} auth.RenewManagerResponse
 // @Router /v1/token/renew [post]
-func RenewTokens(c *fiber.Ctx) error {
-	//// Get now time.
-	//now := time.Now().Unix()
-	//
-	//// Get claims from JWT.
-	//claims, err := utils.ExtractTokenMetadata(c)
-	//if err != nil {
-	//	// Return status 500 and JWT parse error.
-	//	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-	//		"error": true,
-	//		"msg":   err.Error(),
-	//	})
-	//}
-	//
-	//// Set expiration time from JWT data of current user.
-	//expiresAccessToken := claims.Expires
-	//
-	//// Checking, if now time greather than Access token expiration time.
-	//if now > expiresAccessToken {
-	//	// Return status 401 and unauthorized error message.
-	//	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-	//		"error": true,
-	//		"msg":   "unauthorized, check expiration time of your token",
-	//	})
-	//}
-	//
-	//// Create a new renew refresh token struct.
-	//renew := &models.Renew{}
-	//
-	//// Checking received data from JSON body.
-	//if err := c.BodyParser(renew); err != nil {
-	//	// Return, if JSON data is not correct.
-	//	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-	//		"error": true,
-	//		"msg":   err.Error(),
-	//	})
-	//}
-	//
-	//// Set expiration time from Refresh token of current user.
-	//expiresRefreshToken, err := utils.ParseRefreshToken(renew.RefreshToken)
-	//if err != nil {
-	//	// Return status 400 and error message.
-	//	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-	//		"error": true,
-	//		"msg":   err.Error(),
-	//	})
-	//}
-	//
-	//// Checking, if now time greather than Refresh token expiration time.
-	//if now < expiresRefreshToken {
-	//	// Define user ID.
-	//	userID := claims.UserID
-	//
-	//	// Create database connection.
-	//	db, err := database.OpenDBConnection()
-	//	if err != nil {
-	//		// Return status 500 and database connection error.
-	//		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-	//			"error": true,
-	//			"msg":   err.Error(),
-	//		})
-	//	}
-	//
-	//	// Get user by ID.
-	//	// foundedUser, err := db.GetUserByID(userID)
-	//	foundedUser, err := nil, errors.New("dlkflsdk")
-	//	if err != nil {
-	//		// Return, if user not found.
-	//		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-	//			"error": true,
-	//			"msg":   "user with the given ID is not found",
-	//		})
-	//	}
-	//
-	//	// Get role credentials from founded user.
-	//	credentials, err := utils.GetCredentialsByRole(foundedUser.UserRole)
-	//	if err != nil {
-	//		// Return status 400 and error message.
-	//		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-	//			"error": true,
-	//			"msg":   err.Error(),
-	//		})
-	//	}
-	//
-	//	// Generate JWT Access & Refresh tokens.
-	//	tokens, err := utils.GenerateNewTokens(userID.String(), credentials)
-	//	if err != nil {
-	//		// Return status 500 and token generation error.
-	//		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-	//			"error": true,
-	//			"msg":   err.Error(),
-	//		})
-	//	}
-	//
-	//	return c.JSON(fiber.Map{
-	//		"error": false,
-	//		"msg":   nil,
-	//		"tokens": fiber.Map{
-	//			"access":  tokens.Access,
-	//			"refresh": tokens.Refresh,
-	//		},
-	//	})
-	//} else {
-	//	// Return status 401 and unauthorized error message.
-	//	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-	//		"error": true,
-	//		"msg":   "unauthorized, your session was ended earlier",
-	//	})
-	//}
-	return errors.New("dlskfsd")
+func TokensRenew(c *fiber.Ctx) error {
+	refreshToken := c.Cookies("refresh-token", "")
+	if refreshToken == "" {
+		dto := auth.RenewManagerInputDTO{}
+		err := utils.FiberValidatorBase(c, &dto)
+		if err != nil {
+			return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		}
+		refreshToken = dto.RefreshToken
+	}
+	uc, err := di.NewDIContainer().AuthTokenManager()
+	if err != nil {
+		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+	}
+	token, err := uc.NewJWTByRefreshToken(refreshToken)
+	if err != nil {
+		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+	}
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh-token",
+		Value:    token.Refresh.Token,
+		Path:     "/",
+		Expires:  auth.ExpiresRefreshCookie(),
+		SameSite: fiber.CookieSameSiteNoneMode,
+		Secure:   true,
+	})
+	return utils.FiberSuccessResponse{Result: token}
+}
+
+// TokensCheck method for payload and validate access token.
+// @Description View data access token.
+// @Summary view data from access token
+// @Tags Token
+// @Accept json
+// @Produce json
+// @Param form body auth.RenewManagerInputDTO true "renew token form info"
+// @Success 200 {object} auth.RenewManagerUserResponse
+// @Security ApiKeyAuth
+// @Router /v1/token/check [post]
+func TokensCheck(c *fiber.Ctx) error {
+	claims, err := auth.ExtractTokenMetadata(c, []string{})
+	if err != nil {
+		return err
+	}
+	return utils.FiberSuccessResponse{Result: claims}
+}
+
+// TokensByCredentials method for grant access by email and password
+// @Description Login by email and password.
+// @Summary login by email and password
+// @Tags Token
+// @Accept json
+// @Produce json
+// @Param form body auth.RenewManagerCredentialsInputDTO true "credentials form info"
+// @Success 200 {object} auth.RenewManagerResponse
+// @Router /v1/token/login [post]
+func TokensByCredentials(c *fiber.Ctx) error {
+	dto := auth.RenewManagerCredentialsInputDTO{}
+	err := utils.FiberValidatorBase(c, &dto)
+	uc, err := di.NewDIContainer().AuthTokenManager()
+	if err != nil {
+		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+	}
+	token, err := uc.NewJWTByCredentials(dto.Email, dto.Password)
+	if err != nil {
+		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+	}
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh-token",
+		Value:    token.Refresh.Token,
+		Path:     "/",
+		Expires:  auth.ExpiresRefreshCookie(),
+		SameSite: fiber.CookieSameSiteNoneMode,
+		Secure:   true,
+	})
+	return utils.FiberSuccessResponse{Result: token}
+}
+
+// TokensRemove method for remove access and refresh token
+// @Description Logout.
+// @Summary logout
+// @Tags Token
+// @Accept json
+// @Produce json
+// @Success 200 {object} auth.RenewManagerResponse
+// @Router /v1/token/logout [post]
+func TokensRemove(c *fiber.Ctx) error {
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh-token",
+		Value:    "",
+		Path:     "/",
+		Expires:  auth.ExpiresRefreshCookie(),
+		SameSite: fiber.CookieSameSiteNoneMode,
+		Secure:   true,
+	})
+	return utils.FiberSuccessResponse{Result: nil}
+}
+
+// TokensPasswordRecover method for change password
+// @Description Change password.
+// @Summary change password
+// @Tags Token
+// @Accept json
+// @Produce json
+// @Param form body usecases.UserPasswordChangeInputDTO true "credentials form info"
+// @Success 200 {object} usecases.UserPasswordRecoverResponse
+// @Router /v1/token/password_change [post]
+func TokensPasswordRecover(c *fiber.Ctx) error {
+	claims, err := auth.ExtractTokenMetadata(c, []string{})
+	if err != nil {
+		return err
+	}
+	dto := usecases.UserPasswordChangeInputDTO{}
+	if err := utils.FiberValidatorBase(c, &dto); err != nil {
+		return err
+	}
+	uc, err := di.NewDIContainer().UserPasswordRecoverUC()
+	if err != nil {
+		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+	}
+	response, err := uc.SetContext(claims).Execute(dto)
+	if err != nil {
+		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+	}
+	return utils.FiberSuccessResponse{Result: response}
 }

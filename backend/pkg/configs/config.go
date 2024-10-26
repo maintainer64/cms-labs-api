@@ -26,10 +26,10 @@ type DBConfig struct {
 }
 
 type JWTConfig struct {
-	SecretKey                  string
-	SecretKeyExpireMinutes     int
-	SecretRefresh              string
-	SecretRefreshExpireMinutes int
+	SecretKey                string
+	SecretKeyExpireMinutes   int
+	SecretRefresh            string
+	SecretRefreshExpireHours int
 }
 
 type AppConfigModel struct {
@@ -68,10 +68,10 @@ func NewAppConfigModel() *AppConfigModel {
 			MaxLifetimeConnections: getEnvInt("DB_MAX_LIFETIME_CONNECTIONS"),
 		},
 		JWT: &JWTConfig{
-			SecretKey:                  os.Getenv("JWT_SECRET_KEY"),
-			SecretKeyExpireMinutes:     getEnvInt("JWT_SECRET_EXP"),
-			SecretRefresh:              os.Getenv("JWT_SECRET_REFRESH"),
-			SecretRefreshExpireMinutes: getEnvInt("JWT_SECRET_REFRESH_EXP"),
+			SecretKey:                os.Getenv("JWT_SECRET_KEY"),
+			SecretKeyExpireMinutes:   getEnvInt("JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT"),
+			SecretRefresh:            os.Getenv("JWT_REFRESH_KEY"),
+			SecretRefreshExpireHours: getEnvInt("JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT"),
 		},
 	}
 }

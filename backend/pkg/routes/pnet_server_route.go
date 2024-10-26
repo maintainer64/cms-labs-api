@@ -7,8 +7,8 @@ import (
 
 func V1PNETServerRoutes(a *fiber.App) {
 	group := a.Group("/api/v1/pnet-server")
-	group.Post("/upsert", controllers.CreatePNETServer)
-	group.Post("/list", controllers.ListPNETServer)
-	group.Post("/delete", controllers.DeletePNETServer)
-	group.Post("/get", controllers.GetPNETServer)
+	group.Post("/upsert", controllers.PNETServerCreate)
+	group.Post("/list", controllers.PNETServerList)
+	group.Post("/delete", controllers.PNETServerDelete)
+	group.Post("/get", controllers.PNETServerGet)
 }
