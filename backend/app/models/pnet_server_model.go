@@ -4,11 +4,12 @@ import "time"
 
 // PNETServerBase struct to describe PNETServer object.
 type PNETServerBase struct {
-	Name             string    `gorm:"type:varchar(255)" json:"name"`
-	Url              string    `gorm:"type:varchar(255)" json:"url"`
-	IsActive         bool      `gorm:"type:bool" json:"is_active"`
-	LastOnlineStatus time.Time `gorm:"type:datetime(3)" json:"last_online_status"`
-	UnitRate         uint      `gorm:"type:int" json:"unit_rate"`
+	Name                 string     `gorm:"type:varchar(255)" json:"name"`
+	Url                  string     `gorm:"type:varchar(255)" json:"url"`
+	IsActive             bool       `gorm:"type:bool" json:"is_active"`
+	MinutesForDisconnect uint       `gorm:"type:int" json:"minutes_for_disconnect"`
+	LastOnlineStatus     *time.Time `gorm:"type:datetime(3)" json:"last_online_status"`
+	UnitRate             uint       `gorm:"type:int" json:"unit_rate"`
 }
 
 type PNETServerSecret struct {

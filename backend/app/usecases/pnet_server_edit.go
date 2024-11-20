@@ -10,12 +10,12 @@ type PNETServerEditUC struct {
 }
 
 type PNETServerEditInputDTO struct {
-	ID       uint   `json:"id"`
-	Name     string `json:"name" validate:"required"`
-	Url      string `json:"url" validate:"required"`
-	IsActive bool   `json:"is_active"`
-	UnitRate uint   `json:"unit_rate"`
-	Token    string `json:"token" validate:"required"`
+	ID                   uint   `json:"id"`
+	Name                 string `json:"name" validate:"required"`
+	Url                  string `json:"url" validate:"required"`
+	IsActive             bool   `json:"is_active"`
+	MinutesForDisconnect uint   `json:"minutes_for_disconnect"`
+	UnitRate             uint   `json:"unit_rate"`
 }
 
 type PNETServerEditOutputDTO struct {
@@ -31,7 +31,7 @@ func (u *PNETServerEditUC) Execute(dto PNETServerEditInputDTO) (PNETServerEditOu
 	entity.Url = dto.Url
 	entity.IsActive = dto.IsActive
 	entity.UnitRate = dto.UnitRate
-	entity.Token = dto.Token
+	entity.MinutesForDisconnect = dto.MinutesForDisconnect
 	err := u.PNETServerQueries.Upsert(entity)
 	return PNETServerEditOutputDTO{ID: entity.ID}, err
 }

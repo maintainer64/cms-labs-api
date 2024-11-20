@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
+	"strings"
 )
 
 type LTIFormGetUC struct {
@@ -19,8 +20,22 @@ type LTIFormGetOutputDTO struct {
 
 type LTIFormGetResponse = Response[LTIFormGetOutputDTO]
 
+func (u *LTIFormGetUC) ReplacePublicKey(publicKey string) string {
+	return strings.Replace(
+		strings.Replace(
+			publicKey,
+			"BEGIN RSA PUBLIC KEY",
+			"BEGIN PUBLIC KEY",
+			1,
+		),
+		"END RSA PUBLIC KEY",
+		"END PUBLIC KEY",
+		1,
+	)
+}
 func (u *LTIFormGetUC) Execute(dto LTIFormGetInputDTO) (LTIFormGetOutputDTO, error) {
 	form, err := u.LTIFormQueries.Get(dto.ID)
+	form.PublicKey = u.ReplacePublicKey(form.PublicKey)
 	return LTIFormGetOutputDTO{
 		Model: form,
 	}, err

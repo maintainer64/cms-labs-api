@@ -2,9 +2,10 @@ package http_debug
 
 import (
 	"fmt"
-	"gitlab.com/a10869/api-modules/shared/logs"
 	"net/http"
 	"net/http/httputil"
+
+	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
 var (

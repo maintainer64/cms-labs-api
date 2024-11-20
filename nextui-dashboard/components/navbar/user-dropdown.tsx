@@ -36,8 +36,7 @@ export const UserDropdown = () => {
                 </DropdownTrigger>
             </NavbarItem>
             <DropdownMenu
-                aria-label='User menu actions'
-                onAction={(actionKey) => console.log({actionKey})}>
+                aria-label='User menu actions'>
                 <DropdownItem
                     key='profile'
                     className='flex flex-col justify-start w-full items-start'

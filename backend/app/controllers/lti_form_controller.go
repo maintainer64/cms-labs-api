@@ -49,7 +49,7 @@ func LTIFormCreate(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param form body usecases.LTIFormListInputDTO true "lti_form list info"
-// @Success 200 {object} usecases.LTIFormEditResponse
+// @Success 200 {object} usecases.LTIFormListResponse
 // @Security ApiKeyAuth
 // @Router /v1/lti-form/list [post]
 func LTIFormList(c *fiber.Ctx) error {

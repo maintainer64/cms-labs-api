@@ -3,6 +3,9 @@ package queries
 import (
 	"errors"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ory/go-convenience/mapx"
@@ -10,8 +13,6 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 	"gorm.io/gorm"
-	"strings"
-	"time"
 )
 
 var (
@@ -98,11 +99,16 @@ func (q *UserQueries) GetByLaunchID(launchID string) (models.User, error) {
 		Status:    fiber.StatusNotFound,
 		Exception: UserNotFoundError,
 	}
-	log.Info().Msg(fmt.Sprintf("UserQueries: get user by launch_id=%+v", launchID))
+	log.Info().Msg(fmt.Sprintf("UserQueries: get user by last_launch_id=%+v", launchID))
 	if launchID == "" {
 		return entity, err
 	}
-	q.Where("launch_id = ?", launchID).Limit(1).Find(&entity)
+	q.Where("last_launch_id = ?", launchID).Limit(1).Find(&entity)
+	log.Info().Msg(fmt.Sprintf(
+		"UserQueries: get user by last_launch_id=%+v fetched id=%+v",
+		launchID,
+		entity.ID,
+	))
 	if entity.LastLaunchID != launchID {
 		return entity, err
 	}
@@ -127,12 +133,12 @@ func (q *UserQueries) List(
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
-	log.Debug().Msg(fmt.Sprintf("UserQueries: count %+v", count))
+	log.Debug().Msg(fmt.Sprintf("UserQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
 		q.Limit(limit).Offset(offset),
 	).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("UserQueries: entities %+v", entities))
+	log.Debug().Msg(fmt.Sprintf("UserQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
@@ -143,6 +149,7 @@ func (q *UserQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 	}
 	tx = tx.Where("email LIKE ?", fmt.Sprintf("%%%s%%", search))
 	tx = tx.Or("name LIKE ?", fmt.Sprintf("%%%s%%", search))
+	tx = tx.Or("id = ?", search)
 	return tx
 }
 

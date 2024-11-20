@@ -5,10 +5,11 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 	"strconv"
 	"strings"
 	"time"
+
+	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 
 	"github.com/golang-jwt/jwt/v5"
 )

@@ -107,6 +107,27 @@ definitions:
     - target_link_uri
     - updated_at
     type: object
+  models.LTIFormListItem:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      lti_client_id:
+        type: string
+      lti_deployment_id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - lti_client_id
+    - lti_deployment_id
+    - name
+    - updated_at
+    type: object
   models.PNETServer:
     properties:
       created_at:
@@ -117,9 +138,35 @@ definitions:
         type: boolean
       last_online_status:
         type: string
+      minutes_for_disconnect:
+        type: integer
       name:
         type: string
       token:
+        type: string
+      unit_rate:
+        type: integer
+      updated_at:
+        type: string
+      url:
+        type: string
+    required:
+    - created_at
+    - updated_at
+    type: object
+  models.PNETServerListItem:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      last_online_status:
+        type: string
+      minutes_for_disconnect:
+        type: integer
+      name:
         type: string
       unit_rate:
         type: integer
@@ -277,6 +324,32 @@ definitions:
         type: integer
       offset:
         type: integer
+      search:
+        type: string
+    type: object
+  usecases.LTIFormListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.LTIFormListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.LTIFormListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIFormListOutputDTO'
+    required:
+    - error
+    - msg
     type: object
   usecases.PNETServerDeleteInputDTO:
     properties:
@@ -301,9 +374,9 @@ definitions:
         type: integer
       is_active:
         type: boolean
+      minutes_for_disconnect:
+        type: integer
       name:
-        type: string
-      token:
         type: string
       unit_rate:
         type: integer
@@ -311,7 +384,6 @@ definitions:
         type: string
     required:
     - name
-    - token
     - url
     type: object
   usecases.PNETServerEditOutputDTO:
@@ -359,6 +431,32 @@ definitions:
         type: integer
       offset:
         type: integer
+      search:
+        type: string
+    type: object
+  usecases.PNETServerListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.PNETServerListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.PNETServerListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.PNETServerListOutputDTO'
+    required:
+    - error
+    - msg
     type: object
   usecases.UserEditInputDTO:
     properties:
@@ -556,7 +654,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LTIFormEditResponse'
+            $ref: '#/definitions/usecases.LTIFormListResponse'
       security:
       - ApiKeyAuth: []
       summary: list lti_form
@@ -652,7 +750,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.PNETServerEditResponse'
+            $ref: '#/definitions/usecases.PNETServerListResponse'
       security:
       - ApiKeyAuth: []
       summary: list pnet_server

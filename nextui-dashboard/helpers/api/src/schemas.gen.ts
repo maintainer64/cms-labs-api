@@ -147,6 +147,31 @@ export const models_LTIFormSchema = {
     }
 } as const;
 
+export const models_LTIFormListItemSchema = {
+    type: 'object',
+    required: ['created_at', 'lti_client_id', 'lti_deployment_id', 'name', 'updated_at'],
+    properties: {
+        created_at: {
+            type: 'string'
+        },
+        id: {
+            type: 'integer'
+        },
+        lti_client_id: {
+            type: 'string'
+        },
+        lti_deployment_id: {
+            type: 'string'
+        },
+        name: {
+            type: 'string'
+        },
+        updated_at: {
+            type: 'string'
+        }
+    }
+} as const;
+
 export const models_PNETServerSchema = {
     type: 'object',
     required: ['created_at', 'updated_at'],
@@ -163,10 +188,47 @@ export const models_PNETServerSchema = {
         last_online_status: {
             type: 'string'
         },
+        minutes_for_disconnect: {
+            type: 'integer'
+        },
         name: {
             type: 'string'
         },
         token: {
+            type: 'string'
+        },
+        unit_rate: {
+            type: 'integer'
+        },
+        updated_at: {
+            type: 'string'
+        },
+        url: {
+            type: 'string'
+        }
+    }
+} as const;
+
+export const models_PNETServerListItemSchema = {
+    type: 'object',
+    required: ['created_at', 'updated_at'],
+    properties: {
+        created_at: {
+            type: 'string'
+        },
+        id: {
+            type: 'integer'
+        },
+        is_active: {
+            type: 'boolean'
+        },
+        last_online_status: {
+            type: 'string'
+        },
+        minutes_for_disconnect: {
+            type: 'integer'
+        },
+        name: {
             type: 'string'
         },
         unit_rate: {
@@ -378,6 +440,41 @@ export const usecases_LTIFormListInputDTOSchema = {
         },
         offset: {
             type: 'integer'
+        },
+        search: {
+            type: 'string'
+        }
+    }
+} as const;
+
+export const usecases_LTIFormListOutputDTOSchema = {
+    type: 'object',
+    required: ['model', 'total_count'],
+    properties: {
+        model: {
+            type: 'array',
+            items: {
+                '$ref': '#/definitions/models.LTIFormListItem'
+            }
+        },
+        total_count: {
+            type: 'integer'
+        }
+    }
+} as const;
+
+export const usecases_LTIFormListResponseSchema = {
+    type: 'object',
+    required: ['error', 'msg'],
+    properties: {
+        error: {
+            type: 'boolean'
+        },
+        msg: {
+            type: 'string'
+        },
+        result: {
+            '$ref': '#/definitions/usecases.LTIFormListOutputDTO'
         }
     }
 } as const;
@@ -409,7 +506,7 @@ export const usecases_PNETServerDeleteResponseSchema = {
 
 export const usecases_PNETServerEditInputDTOSchema = {
     type: 'object',
-    required: ['name', 'token', 'url'],
+    required: ['name', 'url'],
     properties: {
         id: {
             type: 'integer'
@@ -417,10 +514,10 @@ export const usecases_PNETServerEditInputDTOSchema = {
         is_active: {
             type: 'boolean'
         },
-        name: {
-            type: 'string'
+        minutes_for_disconnect: {
+            type: 'integer'
         },
-        token: {
+        name: {
             type: 'string'
         },
         unit_rate: {
@@ -499,6 +596,41 @@ export const usecases_PNETServerListInputDTOSchema = {
         },
         offset: {
             type: 'integer'
+        },
+        search: {
+            type: 'string'
+        }
+    }
+} as const;
+
+export const usecases_PNETServerListOutputDTOSchema = {
+    type: 'object',
+    required: ['model', 'total_count'],
+    properties: {
+        model: {
+            type: 'array',
+            items: {
+                '$ref': '#/definitions/models.PNETServerListItem'
+            }
+        },
+        total_count: {
+            type: 'integer'
+        }
+    }
+} as const;
+
+export const usecases_PNETServerListResponseSchema = {
+    type: 'object',
+    required: ['error', 'msg'],
+    properties: {
+        error: {
+            type: 'boolean'
+        },
+        msg: {
+            type: 'string'
+        },
+        result: {
+            '$ref': '#/definitions/usecases.PNETServerListOutputDTO'
         }
     }
 } as const;

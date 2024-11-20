@@ -1,6 +1,6 @@
 import {Link as LinkComponent} from "@nextui-org/link";
 import {Link} from "react-router-dom";
-import {UsersTableWrapper} from "@/components/accounts/table/table";
+import {UsersTableWrapper} from "@/components/pages/accounts/table/table";
 import React from "react";
 import {useUsersList} from "@/helpers/queries/users/get";
 
@@ -22,7 +22,10 @@ const HomeUsersWidget = () => {
                     </Link>
                 </LinkComponent>
             </div>
-            <UsersTableWrapper users={users} isLoading={response.isLoading}/>
+            <UsersTableWrapper
+                users={users}
+                isLoading={response.isLoading}
+            />
         </div>
     );
 };

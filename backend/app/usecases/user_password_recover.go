@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"golang.org/x/crypto/bcrypt"

@@ -3,12 +3,13 @@ package queries
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ory/go-convenience/stringsx"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 	"gorm.io/gorm"
-	"time"
 )
 
 type UserTokenQueries struct {

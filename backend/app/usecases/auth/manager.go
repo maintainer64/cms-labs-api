@@ -2,11 +2,12 @@ package auth
 
 import (
 	"errors"
+	"time"
+
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 type TokenManager struct {

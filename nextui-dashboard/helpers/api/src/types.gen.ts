@@ -56,13 +56,35 @@ export type models_LTIForm = {
     updated_at: string;
 };
 
+export type models_LTIFormListItem = {
+    created_at: string;
+    id?: number;
+    lti_client_id: string;
+    lti_deployment_id: string;
+    name: string;
+    updated_at: string;
+};
+
 export type models_PNETServer = {
     created_at: string;
     id?: number;
     is_active?: boolean;
     last_online_status?: string;
+    minutes_for_disconnect?: number;
     name?: string;
     token?: string;
+    unit_rate?: number;
+    updated_at: string;
+    url?: string;
+};
+
+export type models_PNETServerListItem = {
+    created_at: string;
+    id?: number;
+    is_active?: boolean;
+    last_online_status?: string;
+    minutes_for_disconnect?: number;
+    name?: string;
     unit_rate?: number;
     updated_at: string;
     url?: string;
@@ -142,6 +164,18 @@ export type usecases_LTIFormGetResponse = {
 export type usecases_LTIFormListInputDTO = {
     limit?: number;
     offset?: number;
+    search?: string;
+};
+
+export type usecases_LTIFormListOutputDTO = {
+    model: Array<models_LTIFormListItem>;
+    total_count: number;
+};
+
+export type usecases_LTIFormListResponse = {
+    error: boolean;
+    msg: string;
+    result?: usecases_LTIFormListOutputDTO;
 };
 
 export type usecases_PNETServerDeleteInputDTO = {
@@ -157,8 +191,8 @@ export type usecases_PNETServerDeleteResponse = {
 export type usecases_PNETServerEditInputDTO = {
     id?: number;
     is_active?: boolean;
+    minutes_for_disconnect?: number;
     name: string;
-    token: string;
     unit_rate?: number;
     url: string;
 };
@@ -190,6 +224,18 @@ export type usecases_PNETServerGetResponse = {
 export type usecases_PNETServerListInputDTO = {
     limit?: number;
     offset?: number;
+    search?: string;
+};
+
+export type usecases_PNETServerListOutputDTO = {
+    model: Array<models_PNETServerListItem>;
+    total_count: number;
+};
+
+export type usecases_PNETServerListResponse = {
+    error: boolean;
+    msg: string;
+    result?: usecases_PNETServerListOutputDTO;
 };
 
 export type usecases_UserEditInputDTO = {
@@ -284,7 +330,7 @@ export type PostV1LtiFormListData = {
     form: usecases_LTIFormListInputDTO;
 };
 
-export type PostV1LtiFormListResponse = (usecases_LTIFormEditResponse);
+export type PostV1LtiFormListResponse = (usecases_LTIFormListResponse);
 
 export type PostV1LtiFormUpsertData = {
     /**
@@ -320,7 +366,7 @@ export type PostV1PnetServerListData = {
     form: usecases_PNETServerListInputDTO;
 };
 
-export type PostV1PnetServerListResponse = (usecases_PNETServerEditResponse);
+export type PostV1PnetServerListResponse = (usecases_PNETServerListResponse);
 
 export type PostV1PnetServerUpsertData = {
     /**

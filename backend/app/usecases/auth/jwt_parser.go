@@ -2,10 +2,11 @@ package auth
 
 import (
 	"errors"
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 	"slices"
 	"strings"
+
+	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"

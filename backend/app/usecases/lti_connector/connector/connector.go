@@ -16,13 +16,14 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"gitlab.com/a10869/api-modules/shared/http_debug"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"gitlab.com/a10869/api-modules/shared/http_debug"
 
 	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/jwa"

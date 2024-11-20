@@ -95,11 +95,34 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 	return result.Error
 }
 
-func (q *LTIFormQueries) List(limit int, offset int) ([]models.LTIFormListItem, error) {
+func (q *LTIFormQueries) List(
+	search string,
+	limit int,
+	offset int,
+) ([]models.LTIFormListItem, int64, error) {
 	var entities []models.LTIFormListItem
-	result := q.Limit(limit).Offset(offset).Order(`created_at desc`).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("LTIFormQueries: entities %+v", entities))
-	return entities, result.Error
+	result := q.listFilter(
+		search,
+		q.Limit(MaxLimitCount).Offset(0),
+	).Find(&entities)
+	count := result.RowsAffected
+	log.Debug().Msg(fmt.Sprintf("LTIFormQueries list: count %+v", count))
+	result = q.listFilter(
+		search,
+		q.Limit(limit).Offset(offset),
+	).Find(&entities)
+	log.Debug().Msg(fmt.Sprintf("LTIFormQueries list: entities %+v", entities))
+	return entities, count, result.Error
+}
+
+func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Order(`created_at desc`)
+	if search == "" {
+		return tx
+	}
+	tx = tx.Where("base_uri LIKE ?", fmt.Sprintf("%%%s%%", search))
+	tx = tx.Or("id = ?", search)
+	return tx
 }
 
 func (q *LTIFormQueries) Delete(id uint) error {

@@ -10,50 +10,58 @@ import {useSidebarContext} from "../layout/layout-context";
 import {useLocation} from "react-router-dom";
 import useLanguageBrowser from "@/helpers/locale";
 import {RoutesLocation} from "@/components/routes";
+import {LtiIcon} from "@/components/icons/breadcrumb/lti-icon";
+import {ServersIcon} from "@/components/icons/breadcrumb/servers-icon";
 
 export const SidebarWrapper = () => {
-  const {pathname} = useLocation();
-  const {locale} = useLanguageBrowser();
-  const { collapsed, setCollapsed } = useSidebarContext();
+    const {pathname} = useLocation();
+    const {locale} = useLanguageBrowser();
+    const {collapsed, setCollapsed} = useSidebarContext();
 
-  return (
-    <aside className="h-screen z-[20] sticky top-0">
-      {collapsed ? (
-        <div className={Sidebar.Overlay()} onClick={setCollapsed} />
-      ) : null}
-      <div
-        className={Sidebar({
-          collapsed: collapsed,
-        })}
-      >
-        <div className={Sidebar.Header()}>
-          <CompaniesDropdown />
-        </div>
-        <div className="flex flex-col justify-between h-full">
-          <div className={Sidebar.Body()}>
-            <SidebarItem
-              title={locale.Sidebar.Home}
-              icon={<HomeIcon />}
-              isActive={pathname === "/"}
-              href="/"
-            />
-            <SidebarMenu title={locale.Sidebar.MainMenu}>
-              <SidebarItem
-                isActive={pathname === RoutesLocation.accounts()}
-                title={locale.Sidebar.Users}
-                icon={<AccountsIcon />}
-                href={RoutesLocation.accounts()}
-              />
-              <SidebarItem
-                isActive={pathname === RoutesLocation.tasks()}
-                title={locale.Sidebar.Servers}
-                icon={<BalanceIcon />}
-                href={RoutesLocation.tasks()}
-              />
-            </SidebarMenu>
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
+    return (
+        <aside className="h-screen z-[20] sticky top-0">
+            {collapsed ? (
+                <div className={Sidebar.Overlay()} onClick={setCollapsed}/>
+            ) : null}
+            <div
+                className={Sidebar({
+                    collapsed: collapsed,
+                })}
+            >
+                <div className={Sidebar.Header()}>
+                    <CompaniesDropdown/>
+                </div>
+                <div className="flex flex-col justify-between h-full">
+                    <div className={Sidebar.Body()}>
+                        <SidebarItem
+                            title={locale.Sidebar.Home}
+                            icon={<HomeIcon/>}
+                            isActive={pathname === "/"}
+                            href="/"
+                        />
+                        <SidebarMenu title={locale.Sidebar.MainMenu}>
+                            <SidebarItem
+                                isActive={pathname === RoutesLocation.accounts()}
+                                title={locale.Sidebar.Users}
+                                icon={<AccountsIcon/>}
+                                href={RoutesLocation.accounts()}
+                            />
+                            <SidebarItem
+                                isActive={pathname === RoutesLocation.ltiForms()}
+                                title={locale.Sidebar.LTIIntegrations}
+                                icon={<LtiIcon/>}
+                                href={RoutesLocation.ltiForms()}
+                            />
+                            <SidebarItem
+                                isActive={pathname === RoutesLocation.pnetServers()}
+                                title={locale.Sidebar.Servers}
+                                icon={<ServersIcon/>}
+                                href={RoutesLocation.pnetServers()}
+                            />
+                        </SidebarMenu>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    );
 };

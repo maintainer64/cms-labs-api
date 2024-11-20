@@ -38,7 +38,7 @@ export const postV1LtiFormGet = (data: PostV1LtiFormGetData): CancelablePromise<
  * List lti_form. Roles: [admin]
  * @param data The data for the request.
  * @param data.form lti_form list info
- * @returns usecases_LTIFormEditResponse OK
+ * @returns usecases_LTIFormListResponse OK
  * @throws ApiError
  */
 export const postV1LtiFormList = (data: PostV1LtiFormListData): CancelablePromise<PostV1LtiFormListResponse> => { return __request(OpenAPI, {
@@ -94,7 +94,7 @@ export const postV1PnetServerGet = (data: PostV1PnetServerGetData): CancelablePr
  * List pnet_server. Roles: [admin, instructor]
  * @param data The data for the request.
  * @param data.form pnet_server list info
- * @returns usecases_PNETServerEditResponse OK
+ * @returns usecases_PNETServerListResponse OK
  * @throws ApiError
  */
 export const postV1PnetServerList = (data: PostV1PnetServerListData): CancelablePromise<PostV1PnetServerListResponse> => { return __request(OpenAPI, {

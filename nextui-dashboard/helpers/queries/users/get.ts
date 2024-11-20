@@ -13,6 +13,9 @@ export const useUsersList = (params?: usecases_UserListInputDTO) => {
                 }
             });
         },
+        refetchOnWindowFocus: false,
+        refetchInterval: false,
+        refetchOnMount: false,
         getNextPageParam: (response, pages) => {
             const totalCount = response.result?.total_count || 0;
             const count = pages.flatMap((p) => p.result?.model).length;

@@ -57,16 +57,18 @@ CREATE TABLE `lti_nonce_tokens`
 
 CREATE TABLE `pnet_servers`
 (
-  `id`                 bigint unsigned AUTO_INCREMENT,
-  `created_at`         datetime(3),
-  `updated_at`         datetime(3),
-  `name`               varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `url`                varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `is_active`          boolean,
-  `last_online_status` datetime(3),
-  `unit_rate`          bigint,
-  `token`              boolean,
+  `id`                     bigint unsigned AUTO_INCREMENT,
+  `created_at`             datetime(3),
+  `updated_at`             datetime(3),
+  `name`                   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `url`                    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `is_active`              boolean,
+  `last_online_status`     datetime(3),
+  `minutes_for_disconnect` bigint,
+  `unit_rate`              bigint,
+  `token`                  varchar(255) CHARACTER SET utfke 8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `idx_pnet_servers_token` (`token`),
   INDEX `idx_pnet_servers_created_at` (`created_at`),
   INDEX `idx_pnet_servers_updated_at` (`updated_at`)
 );

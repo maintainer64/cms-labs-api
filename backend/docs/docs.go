@@ -134,7 +134,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormEditResponse"
+                            "$ref": "#/definitions/usecases.LTIFormListResponse"
                         }
                     }
                 }
@@ -290,7 +290,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerEditResponse"
+                            "$ref": "#/definitions/usecases.PNETServerListResponse"
                         }
                     }
                 }
@@ -852,6 +852,36 @@ const docTemplate = `{
                 }
             }
         },
+        "models.LTIFormListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "lti_client_id",
+                "lti_deployment_id",
+                "name",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lti_client_id": {
+                    "type": "string"
+                },
+                "lti_deployment_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.PNETServer": {
             "type": "object",
             "required": [
@@ -871,10 +901,49 @@ const docTemplate = `{
                 "last_online_status": {
                     "type": "string"
                 },
+                "minutes_for_disconnect": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
                 "token": {
+                    "type": "string"
+                },
+                "unit_rate": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.PNETServerListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "last_online_status": {
+                    "type": "string"
+                },
+                "minutes_for_disconnect": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 },
                 "unit_rate": {
@@ -1103,6 +1172,45 @@ const docTemplate = `{
                 },
                 "offset": {
                     "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIFormListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LTIFormListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIFormListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
                 }
             }
         },
@@ -1136,7 +1244,6 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
-                "token",
                 "url"
             ],
             "properties": {
@@ -1146,10 +1253,10 @@ const docTemplate = `{
                 "is_active": {
                     "type": "boolean"
                 },
-                "name": {
-                    "type": "string"
+                "minutes_for_disconnect": {
+                    "type": "integer"
                 },
-                "token": {
+                "name": {
                     "type": "string"
                 },
                 "unit_rate": {
@@ -1228,6 +1335,45 @@ const docTemplate = `{
                 },
                 "offset": {
                     "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.PNETServerListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PNETServerListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.PNETServerListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.PNETServerListOutputDTO"
                 }
             }
         },

@@ -49,7 +49,7 @@ func PNETServerCreate(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param form body usecases.PNETServerListInputDTO true "pnet_server list info"
-// @Success 200 {object} usecases.PNETServerEditResponse
+// @Success 200 {object} usecases.PNETServerListResponse
 // @Security ApiKeyAuth
 // @Router /v1/pnet-server/list [post]
 func PNETServerList(c *fiber.Ctx) error {
