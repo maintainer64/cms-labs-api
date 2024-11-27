@@ -63,10 +63,12 @@ CREATE TABLE `pnet_servers`
   `name`                   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `url`                    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `is_active`              boolean,
-  `last_online_status`     datetime(3),
   `minutes_for_disconnect` bigint,
+  `max_count_users_limit`  bigint,
+  `last_online_status`     datetime(3),
+  `last_count_users`       bigint,
   `unit_rate`              bigint,
-  `token`                  varchar(255) CHARACTER SET utfke 8mb4 COLLATE utf8mb4_unicode_ci,
+  `token`                  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `idx_pnet_servers_token` (`token`),
   INDEX `idx_pnet_servers_created_at` (`created_at`),
@@ -102,4 +104,21 @@ CREATE TABLE `user_tokens`
     REFERENCES users (`id`)
     ON DELETE CASCADE,
   INDEX `idx_user_tokens_refresh_token` (`refresh_token`)
+);
+
+CREATE TABLE `round_queue_pools`
+(
+  `id`             bigint unsigned AUTO_INCREMENT,
+  `created_at`     datetime(3),
+  `updated_at`     datetime(3),
+  `type`           varchar(255),
+  `connected_at`   datetime(3),
+  `last_used`      boolean,
+  `is_active`      boolean,
+  `pnet_server_id` bigint null,
+  PRIMARY KEY (`id`),
+  INDEX `idx_round_queue_pools_connected_at` (`connected_at`),
+  INDEX `idx_round_queue_pools_type` (`type`),
+  INDEX `idx_round_queue_pools_is_active` (`is_active`),
+  INDEX `idx_round_queue_pools_pnet_server_id` (`pnet_server_id`)
 );

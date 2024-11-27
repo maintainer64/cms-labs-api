@@ -18,6 +18,7 @@ type Queries struct {
 	*queries.UserQueries
 	*queries.UserTokenQueries
 	*queries.PNETServerQueries
+	*queries.RoundQueuePoolQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -50,5 +51,6 @@ func OpenDBConnection() (*Queries, error) {
 		UserQueries:           &queries.UserQueries{DB: db},
 		UserTokenQueries:      &queries.UserTokenQueries{DB: db},
 		PNETServerQueries:     &queries.PNETServerQueries{DB: db},
+		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db},
 	}, nil
 }

@@ -1,3 +1,3 @@
-import useLanguageBrowser from "./locale";
+import useLanguageBrowser from './locale';
 
 export default useLanguageBrowser;

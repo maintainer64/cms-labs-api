@@ -1,66 +1,58 @@
-import {Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem,} from "@nextui-org/react";
-import React, {useCallback} from "react";
-import {DarkModeSwitch} from "./darkmodeswitch";
-import {userClearCookies} from "@/helpers/queries/jwt/userClearCookies";
-import useLanguageBrowser from "@/helpers/locale";
-import {useNavigate, useNavigation} from "react-router-dom";
-import {useUserProfile} from "@/components/providers/auth-jwt/hooks";
-import CustomAvatar from "@/components/sidebar/avatar";
-import {RoutesLocation} from "@/components/routes";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@nextui-org/react';
+import React, { useCallback } from 'react';
+import { DarkModeSwitch } from './darkmodeswitch';
+import { userClearCookies } from '@/helpers/queries/jwt/userClearCookies';
+import useLanguageBrowser from '@/helpers/locale';
+import { useNavigate, useNavigation } from 'react-router-dom';
+import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
+import CustomAvatar from '@/components/sidebar/avatar';
+import { RoutesLocation } from '@/components/routes';
 
 export const UserDropdown = () => {
-    const navigate = useNavigate()
-    const {locale} = useLanguageBrowser();
-    const user = useUserProfile();
+  const navigate = useNavigate();
+  const { locale } = useLanguageBrowser();
+  const user = useUserProfile();
 
-    const handleLogout = useCallback(async () => {
-        await userClearCookies();
-        navigate(RoutesLocation.login());
-    }, [navigate]);
+  const handleLogout = useCallback(async () => {
+    await userClearCookies();
+    navigate(RoutesLocation.login());
+  }, [navigate]);
 
-    const handleChangeLanguage = useCallback(() => {
-        navigate(RoutesLocation.language());
-    }, [navigate]);
+  const handleChangeLanguage = useCallback(() => {
+    navigate(RoutesLocation.language());
+  }, [navigate]);
 
-    return (
-        <Dropdown>
-            <NavbarItem>
-                <DropdownTrigger>
-                    {CustomAvatar({
-                        tooltip: false,
-                        as: "button",
-                        size: "md",
-                        username: user.name,
-                        email: user.email,
-                    })}
-                </DropdownTrigger>
-            </NavbarItem>
-            <DropdownMenu
-                aria-label='User menu actions'>
-                <DropdownItem
-                    key='profile'
-                    className='flex flex-col justify-start w-full items-start'
-                >
-                    <p>{locale.UserNavBar.SignedAs}</p>
-                    <p>{user.email}</p>
-                </DropdownItem>
-                <DropdownItem href={RoutesLocation.profileChangePassword()}
-                              key='password'>{locale.UserNavBar.PasswordChange}</DropdownItem>
-                <DropdownItem
-                    key='language'
-                    onPress={handleChangeLanguage}
-                >{locale.UserNavBar.LanguageChange}</DropdownItem>
-                <DropdownItem
-                    key='logout'
-                    color='danger'
-                    className='text-danger'
-                    onPress={handleLogout}>
-                    {locale.UserNavBar.Logout}
-                </DropdownItem>
-                <DropdownItem key='switch'>
-                    <DarkModeSwitch/>
-                </DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
-    );
+  return (
+    <Dropdown>
+      <NavbarItem>
+        <DropdownTrigger>
+          {CustomAvatar({
+            tooltip: false,
+            as: 'button',
+            size: 'md',
+            username: user.name,
+            email: user.email
+          })}
+        </DropdownTrigger>
+      </NavbarItem>
+      <DropdownMenu aria-label='User menu actions'>
+        <DropdownItem key='profile' className='flex flex-col justify-start w-full items-start'>
+          <p>{locale.UserNavBar.SignedAs}</p>
+          <p>{user.email}</p>
+        </DropdownItem>
+        <DropdownItem href={RoutesLocation.profileChangePassword()} key='password'>
+          {locale.UserNavBar.PasswordChange}
+        </DropdownItem>
+        <DropdownItem key='language' onPress={handleChangeLanguage}>
+          {locale.UserNavBar.LanguageChange}
+        </DropdownItem>
+        <DropdownItem key='logout' color='danger' className='text-danger' onPress={handleLogout}>
+          {locale.UserNavBar.Logout}
+        </DropdownItem>
+        <DropdownItem key='switch'>
+          <DarkModeSwitch />
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
 };

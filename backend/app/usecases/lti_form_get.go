@@ -1,9 +1,10 @@
 package usecases
 
 import (
+	"strings"
+
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
-	"strings"
 )
 
 type LTIFormGetUC struct {

@@ -5,10 +5,11 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ory/go-convenience/stringsx"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
@@ -19,6 +20,29 @@ import (
 type PNETServerQueries struct {
 	*gorm.DB
 }
+
+type PNETServerQueriesListDTO struct {
+	Search string `json:"search"`
+	Limit  int    `json:"limit"`
+	Offset int    `json:"offset"`
+	// The type of status
+	// enum: all,active
+	Status string `json:"status"`
+	// The type of orderBy
+	// enum: createdAt,unitRate,lastCountUsers
+	OrderBy string `json:"order_by"`
+}
+
+const (
+	PNETServerListInputDTOStatusAll    = "all"
+	PNETServerListInputDTOStatusActive = "active"
+)
+
+const (
+	PNETServerListInputDTOOrderByCreatedAt      = "createdAt"
+	PNETServerListInputDTOOrderByUnitRate       = "unitRate"
+	PNETServerListInputDTOOrderByLastCountUsers = "lastCountUsers"
+)
 
 func (q *PNETServerQueries) Get(id uint) (models.PNETServer, error) {
 	var entity models.PNETServer
@@ -74,39 +98,48 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 	}
 }
 
-func (q *PNETServerQueries) List(
-	search string,
-	limit int,
-	offset int,
-) ([]models.PNETServerListItem, int64, error) {
+func (q *PNETServerQueries) List(filter PNETServerQueriesListDTO) ([]models.PNETServerListItem, int64, error) {
 	var entities []models.PNETServerListItem
 	result := q.listFilter(
-		search,
+		filter,
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	log.Debug().Msg(fmt.Sprintf("PNETServerQueries list: count %+v", count))
 	result = q.listFilter(
-		search,
-		q.Limit(limit).Offset(offset),
+		filter,
+		q.Limit(filter.Limit).Offset(filter.Offset),
 	).Find(&entities)
 	log.Debug().Msg(fmt.Sprintf("PNETServerQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
-func (q *PNETServerQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
-	tx = tx.Order(`created_at desc`)
-	if search == "" {
-		return tx
+func (q *PNETServerQueries) listFilter(filter PNETServerQueriesListDTO, tx *gorm.DB) *gorm.DB {
+	if filter.OrderBy == PNETServerListInputDTOOrderByLastCountUsers {
+		tx = tx.Order(`last_count_users desc`)
 	}
-	tx = tx.Where("name LIKE ?", fmt.Sprintf("%%%s%%", search))
-	tx = tx.Or("url LIKE ?", fmt.Sprintf("%%%s%%", search))
-	tx = tx.Or("id = ?", search)
+	if filter.OrderBy == PNETServerListInputDTOOrderByUnitRate {
+		tx = tx.Order(`unit_rate desc`)
+	}
+	if filter.OrderBy == PNETServerListInputDTOOrderByCreatedAt || filter.OrderBy == "" {
+		tx = tx.Order(`created_at desc`)
+	}
+
+	if filter.Search != "" {
+		tx = tx.Where("name LIKE ?", fmt.Sprintf("%%%s%%", filter.Search))
+		tx = tx.Or("url LIKE ?", fmt.Sprintf("%%%s%%", filter.Search))
+		tx = tx.Or("id = ?", filter.Search)
+	}
+
+	if filter.Status == PNETServerListInputDTOStatusActive {
+		tx = models.PNETServeIsRealActive(tx)
+	}
+
 	return tx
 }
 
 func (q *PNETServerQueries) Delete(id uint) error {
-	_ = q.Where("id = ?", id).Delete(&models.PNETServer{})
+	tx := q.Where("id = ?", id).Delete(&models.PNETServer{})
 	log.Debug().Msg(fmt.Sprintf("PNETServerQueries: delete entity by id: %+v", id))
-	return nil
+	return tx.Error
 }

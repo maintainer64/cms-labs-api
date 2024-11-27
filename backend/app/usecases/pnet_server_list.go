@@ -9,11 +9,7 @@ type PNETServerListUC struct {
 	PNETServerQueries *queries.PNETServerQueries
 }
 
-type PNETServerListInputDTO struct {
-	Search string `json:"search"`
-	Limit  int    `json:"limit"`
-	Offset int    `json:"offset"`
-}
+type PNETServerListInputDTO = queries.PNETServerQueriesListDTO
 
 type PNETServerListOutputDTO struct {
 	Model      []models.PNETServerListItem `json:"model" validate:"required"`
@@ -23,7 +19,7 @@ type PNETServerListOutputDTO struct {
 type PNETServerListResponse = Response[PNETServerListOutputDTO]
 
 func (u *PNETServerListUC) Execute(dto PNETServerListInputDTO) (PNETServerListOutputDTO, error) {
-	entities, count, err := u.PNETServerQueries.List(dto.Search, dto.Limit, dto.Offset)
+	entities, count, err := u.PNETServerQueries.List(dto)
 	return PNETServerListOutputDTO{
 		Model:      entities,
 		TotalCount: count,

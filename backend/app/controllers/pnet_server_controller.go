@@ -39,6 +39,14 @@ func PNETServerCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+	ucDistribution, err := di.NewDIContainer().PnetServerChangeDistributionUC()
+	if err != nil {
+		return err
+	}
+	err = ucDistribution.Execute()
+	if err != nil {
+		return err
+	}
 	return utils.FiberSuccessResponse{Result: output}
 }
 
@@ -102,6 +110,14 @@ func PNETServerDelete(c *fiber.Ctx) error {
 		return err
 	}
 	output, err := uc.Execute(dto)
+	if err != nil {
+		return err
+	}
+	ucDistribution, err := di.NewDIContainer().PnetServerChangeDistributionUC()
+	if err != nil {
+		return err
+	}
+	err = ucDistribution.Execute()
 	if err != nil {
 		return err
 	}

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useLockedBody } from "../hooks/useBodyLock";
-import { NavbarWrapper } from "../navbar/navbar";
-import { SidebarWrapper } from "../sidebar/sidebar";
-import { SidebarContext } from "./layout-context";
+import React from 'react';
+import { useLockedBody } from '../hooks/useBodyLock';
+import { NavbarWrapper } from '../navbar/navbar';
+import { SidebarWrapper } from '../sidebar/sidebar';
+import { SidebarContext } from './layout-context';
 
 interface Props {
   children: React.ReactNode;
@@ -22,8 +22,9 @@ export const Layout = ({ children }: Props) => {
     <SidebarContext.Provider
       value={{
         collapsed: sidebarOpen,
-        setCollapsed: handleToggleSidebar,
-      }}>
+        setCollapsed: handleToggleSidebar
+      }}
+    >
       <section className='flex'>
         <SidebarWrapper />
         <NavbarWrapper>{children}</NavbarWrapper>

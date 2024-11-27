@@ -172,6 +172,62 @@
                 }
             }
         },
+        "/v1/pnet-server-queue/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List pnet_server_queue. Roles: [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PNETServerQueue"
+                ],
+                "summary": "list pnet_server_queue",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/pnet-server-queue/upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create pnet_server_queue. Roles: [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PNETServerQueue"
+                ],
+                "summary": "create pnet_server_queue",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/pnet-server/delete": {
             "post": {
                 "security": [
@@ -891,8 +947,14 @@
                 "is_active": {
                     "type": "boolean"
                 },
+                "last_count_users": {
+                    "type": "integer"
+                },
                 "last_online_status": {
                     "type": "string"
+                },
+                "max_count_users_limit": {
+                    "type": "integer"
                 },
                 "minutes_for_disconnect": {
                     "type": "integer"
@@ -930,8 +992,14 @@
                 "is_active": {
                     "type": "boolean"
                 },
+                "last_count_users": {
+                    "type": "integer"
+                },
                 "last_online_status": {
                     "type": "string"
+                },
+                "max_count_users_limit": {
+                    "type": "integer"
                 },
                 "minutes_for_disconnect": {
                     "type": "integer"
@@ -1026,6 +1094,84 @@
                 },
                 "user_role": {
                     "type": "string"
+                }
+            }
+        },
+        "queries.RoundQueuePoolPnetListItem": {
+            "type": "object",
+            "required": [
+                "connected_at",
+                "last_used",
+                "type"
+            ],
+            "properties": {
+                "connected_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_used": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queries.RoundQueuePoolPnetListItem"
+                    }
+                }
+            }
+        },
+        "round_queue_pool_pnet.RoundQueuePoolPnetListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO"
+                }
+            }
+        },
+        "round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO": {
+            "type": "object"
+        },
+        "round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO"
                 }
             }
         },
@@ -1246,6 +1392,9 @@
                 "is_active": {
                     "type": "boolean"
                 },
+                "max_count_users_limit": {
+                    "type": "integer"
+                },
                 "minutes_for_disconnect": {
                     "type": "integer"
                 },
@@ -1329,7 +1478,15 @@
                 "offset": {
                     "type": "integer"
                 },
+                "order_by": {
+                    "description": "The type of orderBy\nenum: createdAt,unitRate,lastCountUsers",
+                    "type": "string"
+                },
                 "search": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "The type of status\nenum: all,active",
                     "type": "string"
                 }
             }

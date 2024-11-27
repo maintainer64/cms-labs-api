@@ -136,8 +136,12 @@ definitions:
         type: integer
       is_active:
         type: boolean
+      last_count_users:
+        type: integer
       last_online_status:
         type: string
+      max_count_users_limit:
+        type: integer
       minutes_for_disconnect:
         type: integer
       name:
@@ -162,8 +166,12 @@ definitions:
         type: integer
       is_active:
         type: boolean
+      last_count_users:
+        type: integer
       last_online_status:
         type: string
+      max_count_users_limit:
+        type: integer
       minutes_for_disconnect:
         type: integer
       name:
@@ -231,6 +239,58 @@ definitions:
     - group_name
     - updated_at
     - user_role
+    type: object
+  queries.RoundQueuePoolPnetListItem:
+    properties:
+      connected_at:
+        type: string
+      id:
+        type: integer
+      last_used:
+        type: boolean
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - connected_at
+    - last_used
+    - type
+    type: object
+  round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/queries.RoundQueuePoolPnetListItem'
+        type: array
+    required:
+    - model
+    type: object
+  round_queue_pool_pnet.RoundQueuePoolPnetListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO:
+    type: object
+  round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO'
+    required:
+    - error
+    - msg
     type: object
   usecases.LTIFormDeleteInputDTO:
     properties:
@@ -374,6 +434,8 @@ definitions:
         type: integer
       is_active:
         type: boolean
+      max_count_users_limit:
+        type: integer
       minutes_for_disconnect:
         type: integer
       name:
@@ -431,7 +493,17 @@ definitions:
         type: integer
       offset:
         type: integer
+      order_by:
+        description: |-
+          The type of orderBy
+          enum: createdAt,unitRate,lastCountUsers
+        type: string
       search:
+        type: string
+      status:
+        description: |-
+          The type of status
+          enum: all,active
         type: string
     type: object
   usecases.PNETServerListOutputDTO:
@@ -684,6 +756,40 @@ paths:
       summary: create lti_form
       tags:
       - LTIForm
+  /v1/pnet-server-queue/list:
+    post:
+      consumes:
+      - application/json
+      description: 'List pnet_server_queue. Roles: [admin, instructor]'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list pnet_server_queue
+      tags:
+      - PNETServerQueue
+  /v1/pnet-server-queue/upsert:
+    post:
+      consumes:
+      - application/json
+      description: 'Create pnet_server_queue. Roles: [admin, instructor]'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create pnet_server_queue
+      tags:
+      - PNETServerQueue
   /v1/pnet-server/delete:
     post:
       consumes:

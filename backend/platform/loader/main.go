@@ -19,6 +19,7 @@ func main() {
 		&models.PNETServer{},
 		&models.User{},
 		&models.UserToken{},
+		&models.RoundQueuePool{},
 	)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load gorm schema: %v\n", err)
