@@ -48,8 +48,8 @@ func (q *{{.Name}}Queries) Upsert(entity *models.{{.Name}}) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries: entity create: %+v", entityDB))
-		log.Info().Msg(fmt.Sprintf("{{.Name}}Queries: entity create name=%+v", entityDB.Name))
+		log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries: entity create: %+v", entity))
+		log.Info().Msg(fmt.Sprintf("{{.Name}}Queries: entity create name=%+v", entity.Name))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -61,11 +61,33 @@ func (q *{{.Name}}Queries) Upsert(entity *models.{{.Name}}) error {
 	}
 }
 
-func (q *{{.Name}}Queries) List(limit int, offset int) ([]models.{{.Name}}ListItem, error) {
+func (q *{{.Name}}Queries) List(
+	search string,
+	limit int,
+	offset int,
+) ([]models.{{.Name}}ListItem, int64, error) {
 	var entities []models.{{.Name}}ListItem
-	result := q.Limit(limit).Offset(offset).Order(` + "`created_at desc`" + `).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries: entities %+v", entities))
-	return entities, result.Error
+	result := q.listFilter(
+		search,
+		q.Limit(MaxLimitCount).Offset(0),
+	).Find(&entities)
+	count := result.RowsAffected
+	log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries list: count %+v", count))
+	result = q.listFilter(
+		search,
+		q.Limit(limit).Offset(offset),
+	).Find(&entities)
+	log.Debug().Msg(fmt.Sprintf("{{.Name}}Queries list: entities %+v", entities))
+	return entities, count, result.Error
+}
+
+func (q *{{.Name}}Queries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Order(` + "`created_at desc`" + `)
+	if search == "" {
+		return tx
+	}
+	tx = tx.Or("id = ?", search)
+	return tx
 }
 
 func (q *{{.Name}}Queries) Delete(id uint) error {

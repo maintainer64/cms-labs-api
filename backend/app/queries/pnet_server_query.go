@@ -1,7 +1,7 @@
 package queries
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -63,11 +63,11 @@ func (q *PNETServerQueries) securityTokenGenerate() string {
 		log.Warn().Msg(fmt.Sprintf("PNETServerQueries: securityTokenGenerate error: %+v", err))
 		return ""
 	}
-	hasher := md5.New()
+	hasher := sha256.New()
 	hasher.Write(hash)
 	return hex.EncodeToString(hasher.Sum(nil))
-
 }
+
 func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 	if entity == nil {
 		return nil

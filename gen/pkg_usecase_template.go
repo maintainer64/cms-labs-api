@@ -110,14 +110,16 @@ type {{.Name}}ListInputDTO struct {
 
 type {{.Name}}ListOutputDTO struct {
 	Model []models.{{.Name}}ListItem ` + "`json:\"model\" validate:\"required\"`" + `
+	TotalCount int64                      ` + "`json:\"total_count\" validate:\"required\"`" + `
 }
 
 type {{.Name}}ListResponse = Response[{{.Name}}ListOutputDTO]
 
 func (u *{{.Name}}ListUC) Execute(dto {{.Name}}ListInputDTO) ({{.Name}}ListOutputDTO, error) {
-	entities, err := u.{{.Name}}Queries.List(dto.Limit, dto.Offset)
+	entities, count, err := u.{{.Name}}Queries.List(dto.Search, dto.Limit, dto.Offset)
 	return {{.Name}}ListOutputDTO{
 		Model: entities,
+		TotalCount: count
 	}, err
 }
 

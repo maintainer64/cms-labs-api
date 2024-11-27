@@ -11,11 +11,11 @@ type PNETServerBase struct {
 	Name                 string     `gorm:"type:varchar(255)" json:"name"`
 	Url                  string     `gorm:"type:varchar(255)" json:"url"`
 	IsActive             bool       `gorm:"type:bool" json:"is_active"`
-	MinutesForDisconnect uint       `gorm:"type:int" json:"minutes_for_disconnect"`
-	MaxCountUsersLimit   uint       `gorm:"type:int" json:"max_count_users_limit"`
+	MinutesForDisconnect int        `gorm:"type:int" json:"minutes_for_disconnect"`
+	MaxCountUsersLimit   int        `gorm:"type:int" json:"max_count_users_limit"`
 	LastOnlineStatus     *time.Time `gorm:"type:datetime(3)" json:"last_online_status"`
-	LastCountUsers       uint       `gorm:"type:int" json:"last_count_users"`
-	UnitRate             uint       `gorm:"type:int" json:"unit_rate"`
+	LastCountUsers       int        `gorm:"type:int" json:"last_count_users"`
+	UnitRate             int        `gorm:"type:int" json:"unit_rate"`
 }
 
 func PNETServeIsRealActive(db *gorm.DB) *gorm.DB {

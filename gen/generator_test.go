@@ -62,7 +62,7 @@ func UserFormLegacyCreate(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param form body usecases.UserFormLegacyListInputDTO true "user_form_legacy list info"
-// @Success 200 {object} usecases.UserFormLegacyEditResponse
+// @Success 200 {object} usecases.UserFormLegacyListResponse
 // @Security ApiKeyAuth
 // @Router /v1/user-form-legacy/list [post]
 func UserFormLegacyList(c *fiber.Ctx) error {
@@ -284,11 +284,33 @@ func (q *UserFormLegacyQueries) Upsert(entity *models.UserFormLegacy) error {
 	}
 }
 
-func (q *UserFormLegacyQueries) List(limit int, offset int) ([]models.UserFormLegacyListItem, error) {
+func (q *UserFormLegacyQueries) List(
+	search string,
+	limit int,
+	offset int,
+) ([]models.UserFormLegacyListItem, int64, error) {
 	var entities []models.UserFormLegacyListItem
-	result := q.Limit(limit).Offset(offset).Order(` + "`created_at desc`" + `).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("UserFormLegacyQueries: entities %+v", entities))
-	return entities, result.Error
+	result := q.listFilter(
+		search,
+		q.Limit(MaxLimitCount).Offset(0),
+	).Find(&entities)
+	count := result.RowsAffected
+	log.Debug().Msg(fmt.Sprintf("UserFormLegacyQueries list: count %+v", count))
+	result = q.listFilter(
+		search,
+		q.Limit(limit).Offset(offset),
+	).Find(&entities)
+	log.Debug().Msg(fmt.Sprintf("UserFormLegacyQueries list: entities %+v", entities))
+	return entities, count, result.Error
+}
+
+func (q *UserFormLegacyQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Order(` + "`created_at desc`" + `)
+	if search == "" {
+		return tx
+	}
+	tx = tx.Or("id = ?", search)
+	return tx
 }
 
 func (q *UserFormLegacyQueries) Delete(id uint) error {
@@ -436,14 +458,16 @@ type UserFormLegacyListInputDTO struct {
 
 type UserFormLegacyListOutputDTO struct {
 	Model []models.UserFormLegacyListItem ` + "`json:\"model\" validate:\"required\"`" + `
+	TotalCount int64                      ` + "`json:\"total_count\" validate:\"required\"`" + `
 }
 
 type UserFormLegacyListResponse = Response[UserFormLegacyListOutputDTO]
 
 func (u *UserFormLegacyListUC) Execute(dto UserFormLegacyListInputDTO) (UserFormLegacyListOutputDTO, error) {
-	entities, err := u.UserFormLegacyQueries.List(dto.Limit, dto.Offset)
+	entities, count, err := u.UserFormLegacyQueries.List(dto.Search, dto.Limit, dto.Offset)
 	return UserFormLegacyListOutputDTO{
 		Model: entities,
+		TotalCount: count
 	}, err
 }
 

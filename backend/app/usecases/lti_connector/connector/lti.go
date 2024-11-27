@@ -133,9 +133,9 @@ func (j *JSONWebKeySet) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	key.Set(jwk.KeyIDKey, j.Identifier)
-	key.Set(jwk.AlgorithmKey, "RS256")
-	key.Set(jwk.KeyUsageKey, "sig")
+	_ = key.Set(jwk.KeyIDKey, j.Identifier)
+	_ = key.Set(jwk.AlgorithmKey, "RS256")
+	_ = key.Set(jwk.KeyUsageKey, "sig")
 
 	var keyArr [1]jwk.Key = [1]jwk.Key{key}
 	jwks := KeySet{
@@ -144,5 +144,5 @@ func (j *JSONWebKeySet) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 	enc := json.NewEncoder(w)
-	enc.Encode(jwks)
+	_ = enc.Encode(jwks)
 }

@@ -14,9 +14,9 @@ type PNETServerEditInputDTO struct {
 	Name                 string `json:"name" validate:"required"`
 	Url                  string `json:"url" validate:"required"`
 	IsActive             bool   `json:"is_active"`
-	MinutesForDisconnect uint   `json:"minutes_for_disconnect"`
-	MaxCountUsersLimit   uint   `json:"max_count_users_limit"`
-	UnitRate             uint   `json:"unit_rate"`
+	MinutesForDisconnect int    `json:"minutes_for_disconnect"`
+	MaxCountUsersLimit   int    `json:"max_count_users_limit"`
+	UnitRate             int    `json:"unit_rate"`
 }
 
 type PNETServerEditOutputDTO struct {

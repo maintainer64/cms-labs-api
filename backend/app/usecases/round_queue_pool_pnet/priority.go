@@ -2,8 +2,9 @@ package round_queue_pool_pnet
 
 import (
 	"fmt"
-	"github.com/thoas/go-funk"
 	"sort"
+
+	"github.com/thoas/go-funk"
 )
 
 type ServerStats struct {

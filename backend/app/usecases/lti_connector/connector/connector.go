@@ -184,12 +184,12 @@ func (c *Connector) checkAccessTokenStore(tokenURI, clientID string, scopes []st
 // createRequest creates a signed bearer request JWT as part of an *http.Request to be sent to the platform.
 func (c *Connector) createRequest(tokenURI, clientID string, scopes []string) (*http.Request, error) {
 	token := jwt.New()
-	token.Set(jwt.IssuerKey, clientID)
-	token.Set(jwt.SubjectKey, clientID)
-	token.Set(jwt.AudienceKey, tokenURI)
-	token.Set(jwt.IssuedAtKey, time.Now().Add(-time.Minute*ClockSkewAllowanceMinutes))
-	token.Set(jwt.ExpirationKey, time.Now().Add(time.Second*AccessTokenTimeoutSeconds))
-	token.Set(jwt.JwtIDKey, "lti-service-token"+uuid.New().String())
+	_ = token.Set(jwt.IssuerKey, clientID)
+	_ = token.Set(jwt.SubjectKey, clientID)
+	_ = token.Set(jwt.AudienceKey, tokenURI)
+	_ = token.Set(jwt.IssuedAtKey, time.Now().Add(-time.Minute*ClockSkewAllowanceMinutes))
+	_ = token.Set(jwt.ExpirationKey, time.Now().Add(time.Second*AccessTokenTimeoutSeconds))
+	_ = token.Set(jwt.JwtIDKey, "lti-service-token"+uuid.New().String())
 
 	if c.SigningKey == nil {
 		return nil, errors.New("signing key has not been set for this connector")
@@ -198,7 +198,7 @@ func (c *Connector) createRequest(tokenURI, clientID string, scopes []string) (*
 	if err != nil {
 		return nil, fmt.Errorf("failed to create jwk.Key: %w", err)
 	}
-	signingKey.Set(jwk.KeyIDKey, c.keyID)
+	_ = signingKey.Set(jwk.KeyIDKey, c.keyID)
 
 	signedToken, err := jwt.Sign(token, jwa.RS256, signingKey)
 	if err != nil {

@@ -3,8 +3,9 @@ package queries
 import (
 	"errors"
 	"fmt"
-	"github.com/thoas/go-funk"
 	"time"
+
+	"github.com/thoas/go-funk"
 
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
