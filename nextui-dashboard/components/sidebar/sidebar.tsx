@@ -12,6 +12,7 @@ import useLanguageBrowser from '@/helpers/locale';
 import { RoutesLocation } from '@/components/routes';
 import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
 import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
+import { RouterIcon } from '@/components/icons/breadcrumb/router-icon';
 
 export const SidebarWrapper = () => {
   const { pathname } = useLocation();
@@ -34,16 +35,22 @@ export const SidebarWrapper = () => {
             <SidebarItem title={locale.Sidebar.Home} icon={<HomeIcon />} isActive={pathname === '/'} href='/' />
             <SidebarMenu title={locale.Sidebar.MainMenu}>
               <SidebarItem
-                isActive={pathname === RoutesLocation.accounts()}
-                title={locale.Sidebar.Users}
-                icon={<AccountsIcon />}
-                href={RoutesLocation.accounts()}
+                isActive={pathname === RoutesLocation.ltiRouting()}
+                title={locale.Sidebar.LTIRouting}
+                icon={<RouterIcon />}
+                href={RoutesLocation.ltiRouting()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.ltiForms()}
                 title={locale.Sidebar.LTIIntegrations}
                 icon={<LtiIcon />}
                 href={RoutesLocation.ltiForms()}
+              />
+              <SidebarItem
+                isActive={pathname === RoutesLocation.accounts()}
+                title={locale.Sidebar.Users}
+                icon={<AccountsIcon />}
+                href={RoutesLocation.accounts()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.pnetServers()}

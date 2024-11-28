@@ -185,6 +185,67 @@ export const models_LTIFormListItemSchema = {
   }
 } as const;
 
+export const models_LTIRoutingSchema = {
+  type: 'object',
+  required: ['created_at', 'updated_at'],
+  properties: {
+    collaboration: {
+      description: 'Параметры',
+      type: 'integer'
+    },
+    created_at: {
+      type: 'string'
+    },
+    id: {
+      type: 'integer'
+    },
+    lti_description: {
+      type: 'string'
+    },
+    lti_params_task: {
+      type: 'string'
+    },
+    lti_task_id: {
+      type: 'string'
+    },
+    lti_title: {
+      description: 'LTI Params',
+      type: 'string'
+    },
+    name: {
+      type: 'string'
+    },
+    pnet_labs_path: {
+      type: 'string'
+    },
+    pnet_test_path: {
+      type: 'string'
+    },
+    updated_at: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const models_LTIRoutingListItemSchema = {
+  type: 'object',
+  required: ['created_at', 'updated_at'],
+  properties: {
+    created_at: {
+      type: 'string'
+    },
+    id: {
+      type: 'integer'
+    },
+    name: {
+      type: 'string'
+    },
+    updated_at: {
+      type: 'string'
+    }
+  }
+} as const;
+
 export const models_PNETServerSchema = {
   type: 'object',
   required: ['created_at', 'updated_at'],
@@ -580,6 +641,170 @@ export const usecases_LTIFormListResponseSchema = {
     },
     result: {
       $ref: '#/definitions/usecases.LTIFormListOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingDeleteInputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingDeleteResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIRoutingDeleteInputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingEditInputDTOSchema = {
+  type: 'object',
+  properties: {
+    collaboration: {
+      type: 'integer'
+    },
+    id: {
+      type: 'integer'
+    },
+    lti_description: {
+      type: 'string'
+    },
+    lti_params_task: {
+      type: 'string'
+    },
+    lti_task_id: {
+      type: 'string'
+    },
+    lti_title: {
+      type: 'string'
+    },
+    name: {
+      type: 'string'
+    },
+    pnet_labs_path: {
+      type: 'string'
+    },
+    pnet_test_path: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingEditOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingEditResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIRoutingEditOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingGetInputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingGetOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    model: {
+      $ref: '#/definitions/models.LTIRouting'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingGetResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIRoutingGetOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingListInputDTOSchema = {
+  type: 'object',
+  properties: {
+    limit: {
+      type: 'integer'
+    },
+    offset: {
+      type: 'integer'
+    },
+    search: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingListOutputDTOSchema = {
+  type: 'object',
+  required: ['model', 'total_count'],
+  properties: {
+    model: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/models.LTIRoutingListItem'
+      }
+    },
+    total_count: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIRoutingListResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIRoutingListOutputDTO'
     }
   }
 } as const;

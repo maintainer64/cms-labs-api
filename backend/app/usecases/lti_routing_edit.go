@@ -1,0 +1,43 @@
+package usecases
+
+import (
+	"gitlab.com/a10869/api-modules/backend/app/models"
+	"gitlab.com/a10869/api-modules/backend/app/queries"
+)
+
+type LTIRoutingEditUC struct {
+	LTIRoutingQueries *queries.LTIRoutingQueries
+}
+
+type LTIRoutingEditInputDTO struct {
+	ID             uint   `json:"id"`
+	Name           string `json:"name"`
+	LTITitle       string `json:"lti_title"`
+	LTIDescription string `json:"lti_description"`
+	LTITaskID      string `json:"lti_task_id"`
+	LTIParamsTask  string `json:"lti_params_task"`
+	Collaboration  int    `json:"collaboration"`
+	PNETLabsPath   string `json:"pnet_labs_path"`
+	PNETTestPath   string `json:"pnet_test_path"`
+}
+
+type LTIRoutingEditOutputDTO struct {
+	ID uint `json:"id" required:"true"`
+}
+
+type LTIRoutingEditResponse = Response[LTIRoutingEditOutputDTO]
+
+func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOutputDTO, error) {
+	entity := &models.LTIRouting{}
+	entity.ID = dto.ID
+	entity.Name = dto.Name
+	entity.LTITitle = dto.LTITitle
+	entity.LTIDescription = dto.LTIDescription
+	entity.LTITaskID = dto.LTITaskID
+	entity.LTIParamsTask = dto.LTIParamsTask
+	entity.Collaboration = dto.Collaboration
+	entity.PNETLabsPath = dto.PNETLabsPath
+	entity.PNETTestPath = dto.PNETTestPath
+	err := u.LTIRoutingQueries.Upsert(entity)
+	return LTIRoutingEditOutputDTO{ID: entity.ID}, err
+}

@@ -199,7 +199,11 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
               onChange={handleChange('lti_deployment_id')}
             />
             <Accordion>
-              <AccordionItem key='1' aria-label='Параметры для Moodle' title='Параметры для Moodle'>
+              <AccordionItem
+                key='1'
+                aria-label={LTIForm.MoodleProviderParams.SectionTitle}
+                title={LTIForm.MoodleProviderParams.SectionTitle}
+              >
                 <div className='flex flex-col gap-4'>
                   <Input
                     variant='bordered'

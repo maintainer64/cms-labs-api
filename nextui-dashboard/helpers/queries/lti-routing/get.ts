@@ -1,11 +1,11 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { postV1UserList, postV1UserGet, usecases_UserListInputDTO } from '@/helpers/api';
+import { postV1LtiRoutingGet, postV1LtiRoutingList, usecases_LTIRoutingListInputDTO } from '@/helpers/api';
 
-export const useUsersList = (params?: usecases_UserListInputDTO) => {
+export const useLTIRoutingList = (params?: usecases_LTIRoutingListInputDTO) => {
   return useInfiniteQuery({
-    queryKey: ['postV1UserList', params?.search],
+    queryKey: ['postV1LtiRoutingList', params?.search],
     queryFn: ({ pageParam }) => {
-      return postV1UserList({
+      return postV1LtiRoutingList({
         form: {
           limit: params?.limit ?? 100,
           offset: pageParam,
@@ -26,11 +26,11 @@ export const useUsersList = (params?: usecases_UserListInputDTO) => {
   });
 };
 
-export const useUserByID = (id?: number) => {
+export const useLTIRoutingByID = (id?: number) => {
   return useQuery({
-    queryKey: ['postV1UserGet', id],
+    queryKey: ['postV1LtiRoutingGet', id],
     queryFn: () => {
-      return id ? postV1UserGet({ form: { id: id } }) : undefined;
+      return id ? postV1LtiRoutingGet({ form: { id: id } }) : undefined;
     },
     retry: 3
   });

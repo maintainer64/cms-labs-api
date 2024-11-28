@@ -467,7 +467,7 @@ func (u *UserFormLegacyListUC) Execute(dto UserFormLegacyListInputDTO) (UserForm
 	entities, count, err := u.UserFormLegacyQueries.List(dto.Search, dto.Limit, dto.Offset)
 	return UserFormLegacyListOutputDTO{
 		Model: entities,
-		TotalCount: count
+		TotalCount: count,
 	}, err
 }
 

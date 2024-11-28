@@ -179,6 +179,162 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/lti-routing/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIRouting"
+                ],
+                "summary": "delete lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/lti-routing/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIRouting"
+                ],
+                "summary": "get lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/lti-routing/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIRouting"
+                ],
+                "summary": "list lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingListInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/lti-routing/upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIRouting"
+                ],
+                "summary": "create lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingEditInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingEditResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/pnet-server-queue/list": {
             "post": {
                 "security": [
@@ -938,6 +1094,71 @@ const docTemplate = `{
                 }
             }
         },
+        "models.LTIRouting": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "collaboration": {
+                    "description": "Параметры",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lti_description": {
+                    "type": "string"
+                },
+                "lti_params_task": {
+                    "type": "string"
+                },
+                "lti_task_id": {
+                    "type": "string"
+                },
+                "lti_title": {
+                    "description": "LTI Params",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pnet_labs_path": {
+                    "type": "string"
+                },
+                "pnet_test_path": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.LTIRoutingListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.PNETServer": {
             "type": "object",
             "required": [
@@ -1357,6 +1578,174 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIRoutingDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIRoutingDeleteResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIRoutingDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.LTIRoutingEditInputDTO": {
+            "type": "object",
+            "properties": {
+                "collaboration": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lti_description": {
+                    "type": "string"
+                },
+                "lti_params_task": {
+                    "type": "string"
+                },
+                "lti_task_id": {
+                    "type": "string"
+                },
+                "lti_title": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pnet_labs_path": {
+                    "type": "string"
+                },
+                "pnet_test_path": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIRoutingEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIRoutingEditResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIRoutingEditOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIRoutingGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIRoutingGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.LTIRouting"
+                }
+            }
+        },
+        "usecases.LTIRoutingGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIRoutingGetOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIRoutingListInputDTO": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIRoutingListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LTIRoutingListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIRoutingListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIRoutingListOutputDTO"
                 }
             }
         },

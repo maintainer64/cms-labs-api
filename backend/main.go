@@ -56,6 +56,7 @@ func main() {
 	routes.V1PNETServerRoutes(app)
 	routes.V1PNETServerQueueRoutes(app)
 	routes.V2LTIRoutes(app)
+	routes.V1LTIRoutingRoutes(app)
 	routes.NotFoundRoute(app)
 
 	// Start server (with or without graceful shutdown).

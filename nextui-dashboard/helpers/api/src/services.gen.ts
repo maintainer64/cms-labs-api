@@ -12,6 +12,14 @@ import type {
   PostV1LtiFormListResponse,
   PostV1LtiFormUpsertData,
   PostV1LtiFormUpsertResponse,
+  PostV1LtiRoutingDeleteData,
+  PostV1LtiRoutingDeleteResponse,
+  PostV1LtiRoutingGetData,
+  PostV1LtiRoutingGetResponse,
+  PostV1LtiRoutingListData,
+  PostV1LtiRoutingListResponse,
+  PostV1LtiRoutingUpsertData,
+  PostV1LtiRoutingUpsertResponse,
   PostV1PnetServerQueueListResponse,
   PostV1PnetServerQueueUpsertResponse,
   PostV1PnetServerDeleteData,
@@ -101,6 +109,76 @@ export const postV1LtiFormUpsert = (data: PostV1LtiFormUpsertData): CancelablePr
   return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-form/upsert',
+    body: data.form
+  });
+};
+
+/**
+ * delete lti_routing
+ * Delete lti_routing. Roles [admin, instructor]
+ * @param data The data for the request.
+ * @param data.form lti_routing id
+ * @returns usecases_LTIRoutingDeleteResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiRoutingDelete = (
+  data: PostV1LtiRoutingDeleteData
+): CancelablePromise<PostV1LtiRoutingDeleteResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-routing/delete',
+    body: data.form
+  });
+};
+
+/**
+ * get lti_routing
+ * get lti_routing. Roles [admin, instructor]
+ * @param data The data for the request.
+ * @param data.form lti_routing id
+ * @returns usecases_LTIRoutingGetResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiRoutingGet = (data: PostV1LtiRoutingGetData): CancelablePromise<PostV1LtiRoutingGetResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-routing/get',
+    body: data.form
+  });
+};
+
+/**
+ * list lti_routing
+ * List lti_routing. Roles [admin, instructor]
+ * @param data The data for the request.
+ * @param data.form lti_routing list info
+ * @returns usecases_LTIRoutingListResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiRoutingList = (
+  data: PostV1LtiRoutingListData
+): CancelablePromise<PostV1LtiRoutingListResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-routing/list',
+    body: data.form
+  });
+};
+
+/**
+ * create lti_routing
+ * Create lti_routing. Roles [admin, instructor]
+ * @param data The data for the request.
+ * @param data.form lti_routing form info
+ * @returns usecases_LTIRoutingEditResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiRoutingUpsert = (
+  data: PostV1LtiRoutingUpsertData
+): CancelablePromise<PostV1LtiRoutingUpsertResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-routing/upsert',
     body: data.form
   });
 };

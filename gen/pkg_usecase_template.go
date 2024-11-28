@@ -119,7 +119,7 @@ func (u *{{.Name}}ListUC) Execute(dto {{.Name}}ListInputDTO) ({{.Name}}ListOutpu
 	entities, count, err := u.{{.Name}}Queries.List(dto.Search, dto.Limit, dto.Offset)
 	return {{.Name}}ListOutputDTO{
 		Model: entities,
-		TotalCount: count
+		TotalCount: count,
 	}, err
 }
 

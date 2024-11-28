@@ -26,6 +26,7 @@ const en = {
     Users: 'Users',
     Servers: 'Servers',
     LTIIntegrations: 'LTIs',
+    LTIRouting: 'LTI Routes',
     AnyList: 'List',
     Profile: 'Profile',
     Edit: 'Edit',
@@ -62,6 +63,17 @@ const en = {
       Title: 'LTI Integration',
       ButtonAdd: 'Create',
       SearchBar: 'Search integrations',
+      ButtonEdit: 'Edit',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'NAME', uid: 'name' },
+        { name: 'ACTIONS', uid: 'actions' }
+      ]
+    },
+    LTIRoutingTable: {
+      Title: 'LTI Routing',
+      ButtonAdd: 'Create',
+      SearchBar: 'Search route',
       ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
@@ -130,6 +142,7 @@ const en = {
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     MoodleProviderParams: {
+      SectionTitle: 'Params for moodle',
       ToolURL: 'Tool URL',
       LTIVersion: 'LTI version',
       LTIVersionValue: 'LTI 1.3',
@@ -191,6 +204,26 @@ const en = {
   PnetServersQueue: {
     RoundRobinChart: {
       Title: 'PNET distribution'
+    }
+  },
+  LTIRouting: {
+    FieldID: 'ID',
+    FieldName: 'Name',
+    SectionRouteParams: 'Route params',
+    SectionRouteParamsDescription: 'Set the parameters for performing actions on this route',
+    FieldLTITitle: 'Name course element',
+    FieldLTIDescription: 'Description course element',
+    FieldLTITaskID: 'ID or URI course element',
+    FieldLTIParamsTask: 'Query LTI course element',
+    SectionActionParams: 'Action when connecting',
+    FieldCollaboration: 'Number of people to work together',
+    FieldPNETLabsPath: 'Connecting to laboratory work',
+    FieldPNETTestPath: 'Running lab tests',
+    FieldCreatedAt: 'Created at',
+    FieldUpdatedAt: 'Updated at',
+    DeletePopup: {
+      Title: 'Deleting an LTI-Routing entity',
+      Description: 'Routing for this task from the LMS system will be terminated'
     }
   },
   UserFormPasswordChange: {

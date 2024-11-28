@@ -24,7 +24,7 @@ export const usePnetServerList = (params?: usecases_PNETServerListInputDTO) => {
       return totalCount && totalCount > count ? count : undefined;
     },
     initialPageParam: 0,
-    retry: 0
+    retry: 3
   });
 };
 
@@ -34,6 +34,6 @@ export const usePnetServerByID = (id?: number) => {
     queryFn: () => {
       return id ? postV1PnetServerGet({ form: { id: id } }) : undefined;
     },
-    retry: 0
+    retry: 3
   });
 };

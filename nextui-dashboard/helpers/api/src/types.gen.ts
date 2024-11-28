@@ -65,6 +65,33 @@ export type models_LTIFormListItem = {
   updated_at: string;
 };
 
+export type models_LTIRouting = {
+  /**
+   * Параметры
+   */
+  collaboration?: number;
+  created_at: string;
+  id?: number;
+  lti_description?: string;
+  lti_params_task?: string;
+  lti_task_id?: string;
+  /**
+   * LTI Params
+   */
+  lti_title?: string;
+  name?: string;
+  pnet_labs_path?: string;
+  pnet_test_path?: string;
+  updated_at: string;
+};
+
+export type models_LTIRoutingListItem = {
+  created_at: string;
+  id?: number;
+  name?: string;
+  updated_at: string;
+};
+
 export type models_PNETServer = {
   created_at: string;
   id?: number;
@@ -206,6 +233,69 @@ export type usecases_LTIFormListResponse = {
   error: boolean;
   msg: string;
   result?: usecases_LTIFormListOutputDTO;
+};
+
+export type usecases_LTIRoutingDeleteInputDTO = {
+  id?: number;
+};
+
+export type usecases_LTIRoutingDeleteResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIRoutingDeleteInputDTO;
+};
+
+export type usecases_LTIRoutingEditInputDTO = {
+  collaboration?: number;
+  id?: number;
+  lti_description?: string;
+  lti_params_task?: string;
+  lti_task_id?: string;
+  lti_title?: string;
+  name?: string;
+  pnet_labs_path?: string;
+  pnet_test_path?: string;
+};
+
+export type usecases_LTIRoutingEditOutputDTO = {
+  id?: number;
+};
+
+export type usecases_LTIRoutingEditResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIRoutingEditOutputDTO;
+};
+
+export type usecases_LTIRoutingGetInputDTO = {
+  id?: number;
+};
+
+export type usecases_LTIRoutingGetOutputDTO = {
+  model?: models_LTIRouting;
+};
+
+export type usecases_LTIRoutingGetResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIRoutingGetOutputDTO;
+};
+
+export type usecases_LTIRoutingListInputDTO = {
+  limit?: number;
+  offset?: number;
+  search?: string;
+};
+
+export type usecases_LTIRoutingListOutputDTO = {
+  model: Array<models_LTIRoutingListItem>;
+  total_count: number;
+};
+
+export type usecases_LTIRoutingListResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIRoutingListOutputDTO;
 };
 
 export type usecases_PNETServerDeleteInputDTO = {
@@ -381,6 +471,42 @@ export type PostV1LtiFormUpsertData = {
 };
 
 export type PostV1LtiFormUpsertResponse = usecases_LTIFormEditResponse;
+
+export type PostV1LtiRoutingDeleteData = {
+  /**
+   * lti_routing id
+   */
+  form: usecases_LTIRoutingDeleteInputDTO;
+};
+
+export type PostV1LtiRoutingDeleteResponse = usecases_LTIRoutingDeleteResponse;
+
+export type PostV1LtiRoutingGetData = {
+  /**
+   * lti_routing id
+   */
+  form: usecases_LTIRoutingGetInputDTO;
+};
+
+export type PostV1LtiRoutingGetResponse = usecases_LTIRoutingGetResponse;
+
+export type PostV1LtiRoutingListData = {
+  /**
+   * lti_routing list info
+   */
+  form: usecases_LTIRoutingListInputDTO;
+};
+
+export type PostV1LtiRoutingListResponse = usecases_LTIRoutingListResponse;
+
+export type PostV1LtiRoutingUpsertData = {
+  /**
+   * lti_routing form info
+   */
+  form: usecases_LTIRoutingEditInputDTO;
+};
+
+export type PostV1LtiRoutingUpsertResponse = usecases_LTIRoutingEditResponse;
 
 export type PostV1PnetServerQueueListResponse = round_queue_pool_pnet_RoundQueuePoolPnetListResponse;
 

@@ -20,6 +20,7 @@ func main() {
 		&models.User{},
 		&models.UserToken{},
 		&models.RoundQueuePool{},
+		&models.LTIRouting{},
 	)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load gorm schema: %v\n", err)

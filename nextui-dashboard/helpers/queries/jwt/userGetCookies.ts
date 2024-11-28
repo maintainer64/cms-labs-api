@@ -7,6 +7,6 @@ export const userGetCookies = () => {
     queryFn: () => {
       return postV1TokenCheck({ form: {} });
     },
-    retry: 0
+    retry: 3
   });
 };

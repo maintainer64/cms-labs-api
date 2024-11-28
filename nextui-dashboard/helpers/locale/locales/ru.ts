@@ -26,6 +26,7 @@ const ru = {
     Users: 'Пользователи',
     Servers: 'Серверы',
     LTIIntegrations: 'LTIs',
+    LTIRouting: 'Маршруты LTI',
     AnyList: 'Список',
     Profile: 'Профиль',
     Edit: 'Редактирование',
@@ -62,6 +63,17 @@ const ru = {
       Title: 'Интеграции LTI',
       ButtonAdd: 'Создать',
       SearchBar: 'Поиск интеграций',
+      ButtonEdit: 'Редактировать',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'НАЗВАНИЕ', uid: 'name' },
+        { name: 'ДЕЙСТВИЕ', uid: 'actions' }
+      ]
+    },
+    LTIRoutingTable: {
+      Title: 'Маршруты LTI',
+      ButtonAdd: 'Создать',
+      SearchBar: 'Поиск маршрутов',
       ButtonEdit: 'Редактировать',
       Columns: [
         { name: 'ID', uid: 'id' },
@@ -130,6 +142,7 @@ const ru = {
     FieldCreatedAt: 'Создана в',
     FieldUpdatedAt: 'Обновлена в',
     MoodleProviderParams: {
+      SectionTitle: 'Параметры для Moodle',
       ToolURL: 'Базовый URL-адрес инструмента',
       LTIVersion: 'Версия LTI',
       LTIVersionValue: 'LTI 1.3',
@@ -192,6 +205,26 @@ const ru = {
   PnetServersQueue: {
     RoundRobinChart: {
       Title: 'PNET распределение'
+    }
+  },
+  LTIRouting: {
+    FieldID: 'ID',
+    FieldName: 'Название',
+    SectionRouteParams: 'Параметры маршрутизации',
+    SectionRouteParamsDescription: 'Задайте параметры для выполнения действий по данному маршруту',
+    FieldLTITitle: 'Название элемента курса',
+    FieldLTIDescription: 'Описание элемента курса',
+    FieldLTITaskID: 'ID или адрес элемента курса',
+    FieldLTIParamsTask: 'Query LTI для элемента курса',
+    SectionActionParams: 'Действие при подключении',
+    FieldCollaboration: 'Кол-во человек для совместной работы',
+    FieldPNETLabsPath: 'Подключение к лабораторной работе',
+    FieldPNETTestPath: 'Запуск тестов лабораторной работы',
+    FieldCreatedAt: 'Создан в',
+    FieldUpdatedAt: 'Обновлен в',
+    DeletePopup: {
+      Title: 'Удаление сущности LTI-Routing',
+      Description: 'Маршрутизация по данному заданию из LMS системы будет прекращена'
     }
   },
   UserFormPasswordChange: {
