@@ -218,6 +218,7 @@ const ru = {
     FieldLTIParamsTask: 'Query LTI для элемента курса',
     SectionActionParams: 'Действие при подключении',
     FieldCollaboration: 'Кол-во человек для совместной работы',
+    FieldPinnedSessionMinutes: 'Закрепить сессию в минутах',
     FieldPNETLabsPath: 'Подключение к лабораторной работе',
     FieldPNETTestPath: 'Запуск тестов лабораторной работы',
     FieldCreatedAt: 'Создан в',

@@ -23,6 +23,201 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/lti-attempt/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create or get exists lti_attempt. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIAttempt"
+                ],
+                "summary": "create lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptCreateInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/lti-attempt/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete lti_attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIAttempt"
+                ],
+                "summary": "delete lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/lti-attempt/edit": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edit lti_attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIAttempt"
+                ],
+                "summary": "edit lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptEditInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/lti-attempt/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get lti_attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIAttempt"
+                ],
+                "summary": "get lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/lti-attempt/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List lti_attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIAttempt"
+                ],
+                "summary": "list lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptListInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptListResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/lti-form/delete": {
             "post": {
                 "security": [
@@ -1006,6 +1201,65 @@ const docTemplate = `{
                 }
             }
         },
+        "models.LTIAttempt": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lti_routing_id": {
+                    "type": "integer"
+                },
+                "pnet_server_id": {
+                    "type": "integer"
+                },
+                "room_number": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.LTIAttemptListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lti_routing_id": {
+                    "type": "integer"
+                },
+                "pnet_server_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.LTIForm": {
             "type": "object",
             "required": [
@@ -1126,6 +1380,9 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "pinned_session_minutes": {
+                    "type": "integer"
                 },
                 "pnet_labs_path": {
                     "type": "string"
@@ -1403,6 +1660,214 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIAttemptCreateInputDTO": {
+            "type": "object"
+        },
+        "usecases.LTIAttemptCreateOutputDTO": {
+            "type": "object",
+            "properties": {
+                "auto_redirect": {
+                    "type": "boolean"
+                },
+                "collaboration": {
+                    "type": "integer"
+                },
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserListItem"
+                    }
+                },
+                "next_url": {
+                    "type": "string"
+                },
+                "room_number": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIAttemptCreateResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIAttemptCreateOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIAttemptDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIAttemptDeleteResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIAttemptDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.LTIAttemptEditInputDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "token",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "unit_rate": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIAttemptEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIAttemptEditResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIAttemptEditOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIAttemptGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIAttemptGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.LTIAttempt"
+                }
+            }
+        },
+        "usecases.LTIAttemptGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIAttemptGetOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIAttemptListInputDTO": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIAttemptListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LTIAttemptListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIAttemptListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIAttemptListOutputDTO"
+                }
+            }
+        },
         "usecases.LTIFormDeleteInputDTO": {
             "type": "object",
             "properties": {
@@ -1630,6 +2095,9 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "pinned_session_minutes": {
+                    "type": "integer"
                 },
                 "pnet_labs_path": {
                     "type": "string"

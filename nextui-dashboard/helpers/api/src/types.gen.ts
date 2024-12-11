@@ -40,6 +40,25 @@ export type auth_Tokens = {
   refresh?: auth_TokenDataWithExp;
 };
 
+export type models_LTIAttempt = {
+  created_at: string;
+  id?: number;
+  lti_routing_id?: number;
+  pnet_server_id?: number;
+  room_number?: number;
+  updated_at: string;
+  user_id?: number;
+};
+
+export type models_LTIAttemptListItem = {
+  created_at: string;
+  id?: number;
+  lti_routing_id?: number;
+  pnet_server_id?: number;
+  updated_at: string;
+  user_id?: number;
+};
+
 export type models_LTIForm = {
   base_uri: string;
   created_at: string;
@@ -80,6 +99,7 @@ export type models_LTIRouting = {
    */
   lti_title?: string;
   name?: string;
+  pinned_session_minutes?: number;
   pnet_labs_path?: string;
   pnet_test_path?: string;
   updated_at: string;
@@ -172,6 +192,82 @@ export type round_queue_pool_pnet_RoundQueuePoolPnetUpsertResponse = {
   result?: round_queue_pool_pnet_RoundQueuePoolPnetUpsertOutputDTO;
 };
 
+export type usecases_LTIAttemptCreateInputDTO = unknown;
+
+export type usecases_LTIAttemptCreateOutputDTO = {
+  auto_redirect?: boolean;
+  collaboration?: number;
+  members?: Array<models_UserListItem>;
+  next_url?: string;
+  room_number?: number;
+};
+
+export type usecases_LTIAttemptCreateResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIAttemptCreateOutputDTO;
+};
+
+export type usecases_LTIAttemptDeleteInputDTO = {
+  id?: number;
+};
+
+export type usecases_LTIAttemptDeleteResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIAttemptDeleteInputDTO;
+};
+
+export type usecases_LTIAttemptEditInputDTO = {
+  id?: number;
+  is_active?: boolean;
+  name: string;
+  token: string;
+  unit_rate?: number;
+  url: string;
+};
+
+export type usecases_LTIAttemptEditOutputDTO = {
+  id?: number;
+};
+
+export type usecases_LTIAttemptEditResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIAttemptEditOutputDTO;
+};
+
+export type usecases_LTIAttemptGetInputDTO = {
+  id?: number;
+};
+
+export type usecases_LTIAttemptGetOutputDTO = {
+  model?: models_LTIAttempt;
+};
+
+export type usecases_LTIAttemptGetResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIAttemptGetOutputDTO;
+};
+
+export type usecases_LTIAttemptListInputDTO = {
+  limit?: number;
+  offset?: number;
+  search?: string;
+};
+
+export type usecases_LTIAttemptListOutputDTO = {
+  model: Array<models_LTIAttemptListItem>;
+  total_count: number;
+};
+
+export type usecases_LTIAttemptListResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIAttemptListOutputDTO;
+};
+
 export type usecases_LTIFormDeleteInputDTO = {
   id?: number;
 };
@@ -253,6 +349,7 @@ export type usecases_LTIRoutingEditInputDTO = {
   lti_task_id?: string;
   lti_title?: string;
   name?: string;
+  pinned_session_minutes?: number;
   pnet_labs_path?: string;
   pnet_test_path?: string;
 };
@@ -435,6 +532,51 @@ export type usecases_UserPasswordRecoverResponse = {
   msg: string;
   result?: usecases_UserPasswordChangeOutputDTO;
 };
+
+export type PostV1LtiAttemptCreateData = {
+  /**
+   * lti_attempt form info
+   */
+  form: usecases_LTIAttemptCreateInputDTO;
+};
+
+export type PostV1LtiAttemptCreateResponse = usecases_LTIAttemptCreateResponse;
+
+export type PostV1LtiAttemptDeleteData = {
+  /**
+   * lti_attempt id
+   */
+  form: usecases_LTIAttemptDeleteInputDTO;
+};
+
+export type PostV1LtiAttemptDeleteResponse = usecases_LTIAttemptDeleteResponse;
+
+export type PostV1LtiAttemptEditData = {
+  /**
+   * lti_attempt form info
+   */
+  form: usecases_LTIAttemptEditInputDTO;
+};
+
+export type PostV1LtiAttemptEditResponse = usecases_LTIAttemptEditResponse;
+
+export type PostV1LtiAttemptGetData = {
+  /**
+   * lti_attempt id
+   */
+  form: usecases_LTIAttemptGetInputDTO;
+};
+
+export type PostV1LtiAttemptGetResponse = usecases_LTIAttemptGetResponse;
+
+export type PostV1LtiAttemptListData = {
+  /**
+   * lti_attempt list info
+   */
+  form: usecases_LTIAttemptListInputDTO;
+};
+
+export type PostV1LtiAttemptListResponse = usecases_LTIAttemptListResponse;
 
 export type PostV1LtiFormDeleteData = {
   /**

@@ -20,6 +20,7 @@ type Queries struct {
 	*queries.PNETServerQueries
 	*queries.RoundQueuePoolQueries
 	*queries.LTIRoutingQueries
+	*queries.LTIAttemptQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -54,5 +55,6 @@ func OpenDBConnection() (*Queries, error) {
 		PNETServerQueries:     &queries.PNETServerQueries{DB: db},
 		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db},
 		LTIRoutingQueries:     &queries.LTIRoutingQueries{DB: db},
+		LTIAttemptQueries:     &queries.LTIAttemptQueries{DB: db},
 	}, nil
 }

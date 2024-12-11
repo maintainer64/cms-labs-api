@@ -19,6 +19,7 @@ export const useLTIRoutingUpsert = (
           lti_task_id: values.lti_task_id,
           lti_title: values.lti_title,
           name: values.name,
+          pinned_session_minutes: values.pinned_session_minutes || 0,
           pnet_labs_path: values.pnet_labs_path,
           pnet_test_path: values.pnet_test_path
         }

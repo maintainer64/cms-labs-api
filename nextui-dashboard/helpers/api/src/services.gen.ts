@@ -4,6 +4,16 @@ import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type {
+  PostV1LtiAttemptCreateData,
+  PostV1LtiAttemptCreateResponse,
+  PostV1LtiAttemptDeleteData,
+  PostV1LtiAttemptDeleteResponse,
+  PostV1LtiAttemptEditData,
+  PostV1LtiAttemptEditResponse,
+  PostV1LtiAttemptGetData,
+  PostV1LtiAttemptGetResponse,
+  PostV1LtiAttemptListData,
+  PostV1LtiAttemptListResponse,
   PostV1LtiFormDeleteData,
   PostV1LtiFormDeleteResponse,
   PostV1LtiFormGetData,
@@ -48,6 +58,94 @@ import type {
   GetV2LtiLoginResponse,
   PostV2LtiLoginResponse
 } from './types.gen';
+
+/**
+ * create lti_attempt
+ * Create or get exists lti_attempt. Roles: [admin, instructor, student]
+ * @param data The data for the request.
+ * @param data.form lti_attempt form info
+ * @returns usecases_LTIAttemptCreateResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiAttemptCreate = (
+  data: PostV1LtiAttemptCreateData
+): CancelablePromise<PostV1LtiAttemptCreateResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-attempt/create',
+    body: data.form
+  });
+};
+
+/**
+ * delete lti_attempt
+ * Delete lti_attempt.
+ * @param data The data for the request.
+ * @param data.form lti_attempt id
+ * @returns usecases_LTIAttemptDeleteResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiAttemptDelete = (
+  data: PostV1LtiAttemptDeleteData
+): CancelablePromise<PostV1LtiAttemptDeleteResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-attempt/delete',
+    body: data.form
+  });
+};
+
+/**
+ * edit lti_attempt
+ * Edit lti_attempt.
+ * @param data The data for the request.
+ * @param data.form lti_attempt form info
+ * @returns usecases_LTIAttemptEditResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiAttemptEdit = (
+  data: PostV1LtiAttemptEditData
+): CancelablePromise<PostV1LtiAttemptEditResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-attempt/edit',
+    body: data.form
+  });
+};
+
+/**
+ * get lti_attempt
+ * get lti_attempt.
+ * @param data The data for the request.
+ * @param data.form lti_attempt id
+ * @returns usecases_LTIAttemptGetResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiAttemptGet = (data: PostV1LtiAttemptGetData): CancelablePromise<PostV1LtiAttemptGetResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-attempt/get',
+    body: data.form
+  });
+};
+
+/**
+ * list lti_attempt
+ * List lti_attempt.
+ * @param data The data for the request.
+ * @param data.form lti_attempt list info
+ * @returns usecases_LTIAttemptListResponse OK
+ * @throws ApiError
+ */
+export const postV1LtiAttemptList = (
+  data: PostV1LtiAttemptListData
+): CancelablePromise<PostV1LtiAttemptListResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/lti-attempt/list',
+    body: data.form
+  });
+};
 
 /**
  * delete lti_form

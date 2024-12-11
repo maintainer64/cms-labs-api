@@ -12,4 +12,3 @@ func V1LTIRoutingRoutes(a *fiber.App) {
 	group.Post("/delete", controllers.LTIRoutingDelete)
 	group.Post("/get", controllers.LTIRoutingGet)
 }
-

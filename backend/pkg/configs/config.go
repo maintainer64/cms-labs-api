@@ -23,6 +23,7 @@ type DBConfig struct {
 	MaxConnections         int
 	MaxIdleConnections     int
 	MaxLifetimeConnections int
+	TablePrefix            string
 }
 
 type JWTConfig struct {
@@ -66,6 +67,7 @@ func NewAppConfigModel() *AppConfigModel {
 			MaxConnections:         getEnvInt("DB_MAX_CONNECTIONS"),
 			MaxIdleConnections:     getEnvInt("DB_MAX_IDLE_CONNECTIONS"),
 			MaxLifetimeConnections: getEnvInt("DB_MAX_LIFETIME_CONNECTIONS"),
+			TablePrefix:            os.Getenv("DB_TABLE_PREFIX"),
 		},
 		JWT: &JWTConfig{
 			SecretKey:                os.Getenv("JWT_SECRET_KEY"),

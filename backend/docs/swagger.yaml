@@ -65,6 +65,46 @@ definitions:
       refresh:
         $ref: '#/definitions/auth.TokenDataWithExp'
     type: object
+  models.LTIAttempt:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      lti_routing_id:
+        type: integer
+      pnet_server_id:
+        type: integer
+      room_number:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - created_at
+    - updated_at
+    - updated_at
+    type: object
+  models.LTIAttemptListItem:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      lti_routing_id:
+        type: integer
+      pnet_server_id:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - created_at
+    - updated_at
+    - updated_at
+    type: object
   models.LTIForm:
     properties:
       base_uri:
@@ -148,6 +188,8 @@ definitions:
         type: string
       name:
         type: string
+      pinned_session_minutes:
+        type: integer
       pnet_labs_path:
         type: string
       pnet_test_path:
@@ -336,6 +378,143 @@ definitions:
     - error
     - msg
     type: object
+  usecases.LTIAttemptCreateInputDTO:
+    type: object
+  usecases.LTIAttemptCreateOutputDTO:
+    properties:
+      auto_redirect:
+        type: boolean
+      collaboration:
+        type: integer
+      members:
+        items:
+          $ref: '#/definitions/models.UserListItem'
+        type: array
+      next_url:
+        type: string
+      room_number:
+        type: integer
+    type: object
+  usecases.LTIAttemptCreateResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIAttemptCreateOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIAttemptDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LTIAttemptDeleteResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIAttemptDeleteInputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIAttemptEditInputDTO:
+    properties:
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      name:
+        type: string
+      token:
+        type: string
+      unit_rate:
+        type: integer
+      url:
+        type: string
+    required:
+    - name
+    - token
+    - url
+    type: object
+  usecases.LTIAttemptEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LTIAttemptEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIAttemptEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIAttemptGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LTIAttemptGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.LTIAttempt'
+    type: object
+  usecases.LTIAttemptGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIAttemptGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIAttemptListInputDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+    type: object
+  usecases.LTIAttemptListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.LTIAttemptListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.LTIAttemptListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIAttemptListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
   usecases.LTIFormDeleteInputDTO:
     properties:
       id:
@@ -488,6 +667,8 @@ definitions:
         type: string
       name:
         type: string
+      pinned_session_minutes:
+        type: integer
       pnet_labs_path:
         type: string
       pnet_test_path:
@@ -814,6 +995,126 @@ info:
   title: API
   version: "1.0"
 paths:
+  /v1/lti-attempt/create:
+    post:
+      consumes:
+      - application/json
+      description: 'Create or get exists lti_attempt. Roles: [admin, instructor, student]'
+      parameters:
+      - description: lti_attempt form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptCreateInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptCreateResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create lti_attempt
+      tags:
+      - LTIAttempt
+  /v1/lti-attempt/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete lti_attempt.
+      parameters:
+      - description: lti_attempt id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete lti_attempt
+      tags:
+      - LTIAttempt
+  /v1/lti-attempt/edit:
+    post:
+      consumes:
+      - application/json
+      description: Edit lti_attempt.
+      parameters:
+      - description: lti_attempt form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: edit lti_attempt
+      tags:
+      - LTIAttempt
+  /v1/lti-attempt/get:
+    post:
+      consumes:
+      - application/json
+      description: get lti_attempt.
+      parameters:
+      - description: lti_attempt id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get lti_attempt
+      tags:
+      - LTIAttempt
+  /v1/lti-attempt/list:
+    post:
+      consumes:
+      - application/json
+      description: List lti_attempt.
+      parameters:
+      - description: lti_attempt list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list lti_attempt
+      tags:
+      - LTIAttempt
   /v1/lti-form/delete:
     post:
       consumes:

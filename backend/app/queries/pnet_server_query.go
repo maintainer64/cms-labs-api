@@ -44,6 +44,12 @@ const (
 	PNETServerListInputDTOOrderByLastCountUsers = "lastCountUsers"
 )
 
+func (q *PNETServerQueries) tableName(object interface{}) string {
+	stmt := &gorm.Statement{DB: q.DB}
+	stmt.Parse(object)
+	return stmt.Schema.Table
+}
+
 func (q *PNETServerQueries) Get(id uint) (models.PNETServer, error) {
 	var entity models.PNETServer
 	result := q.First(&entity, id)
@@ -115,6 +121,7 @@ func (q *PNETServerQueries) List(filter PNETServerQueriesListDTO) ([]models.PNET
 }
 
 func (q *PNETServerQueries) listFilter(filter PNETServerQueriesListDTO, tx *gorm.DB) *gorm.DB {
+	tx = tx.Table(q.tableName(&models.PNETServer{}) + " AS pnet_servers")
 	if filter.OrderBy == PNETServerListInputDTOOrderByLastCountUsers {
 		tx = tx.Order(`last_count_users desc`)
 	}

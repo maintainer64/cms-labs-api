@@ -25,4 +25,3 @@ func (u *LTIRoutingGetUC) Execute(dto LTIRoutingGetInputDTO) (LTIRoutingGetOutpu
 		Model: form,
 	}, err
 }
-

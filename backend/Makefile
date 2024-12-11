@@ -3,9 +3,6 @@
 APP_NAME = apiserver
 CUR_DIR = $(PWD)
 BUILD_DIR = $(PWD)/build
-MIGRATIONS_FOLDER = $(PWD)/platform/migrations
-
-DATABASE_URL = mysql://user:pnetlab@tcp(localhost:3306)/db?parseTime=true
 
 clean:
 	rm -rf ./build
@@ -30,13 +27,13 @@ run: swag build
 	$(BUILD_DIR)/$(APP_NAME)
 
 migrate.up:
-	migrate -path $(MIGRATIONS_FOLDER) -database "$(DATABASE_URL)" up
+	$(PWD)/migrate.sh up
 
 migrate.down:
-	migrate -path $(MIGRATIONS_FOLDER) -database "$(DATABASE_URL)" down
+	$(PWD)/migrate.sh d
 
-migrate.force:
-	migrate -path $(MIGRATIONS_FOLDER) -database "$(DATABASE_URL)" force $(version)
+migrate.status:
+	$(PWD)/migrate.sh s
 
 swag:
 	swag init

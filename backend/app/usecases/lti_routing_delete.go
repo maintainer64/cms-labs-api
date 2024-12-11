@@ -18,4 +18,3 @@ func (u *LTIRoutingDeleteUC) Execute(dto LTIRoutingDeleteInputDTO) (LTIRoutingDe
 	err := u.LTIRoutingQueries.Delete(dto.ID)
 	return dto, err
 }
-

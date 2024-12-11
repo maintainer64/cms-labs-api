@@ -27,6 +27,7 @@ const defaultValues: models_LTIRouting = {
   lti_task_id: '',
   lti_title: '',
   name: '',
+  pinned_session_minutes: 0,
   pnet_labs_path: '',
   pnet_test_path: '',
   updated_at: ''
@@ -146,6 +147,13 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     type='number'
                     value={(values.collaboration || 0).toString()}
                     onChange={handleChange('collaboration')}
+                  />
+                  <Input
+                    variant='bordered'
+                    label={LTIRouting.FieldPinnedSessionMinutes}
+                    type='number'
+                    value={(values.pinned_session_minutes || 0).toString()}
+                    onChange={handleChange('pinned_session_minutes')}
                   />
                   <Input
                     variant='bordered'

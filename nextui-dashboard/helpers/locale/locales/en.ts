@@ -217,6 +217,7 @@ const en = {
     FieldLTIParamsTask: 'Query LTI course element',
     SectionActionParams: 'Action when connecting',
     FieldCollaboration: 'Number of people to work together',
+    FieldPinnedSessionMinutes: 'Pinned session on minutes',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',
     FieldCreatedAt: 'Created at',

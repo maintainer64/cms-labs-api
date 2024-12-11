@@ -5,14 +5,14 @@ import useLanguageBrowser from '@/helpers/locale';
 import { models_LTIRoutingListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
 
-interface LTIFormsTableWrapperProps {
+interface LTIRoutingTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
   rows?: models_LTIRoutingListItem[];
 }
 
-export const LTIRoutingTableWrapper = ({ rows, isLoading, loadMore }: LTIFormsTableWrapperProps) => {
+export const LTIRoutingTableWrapper = ({ rows, isLoading, loadMore }: LTIRoutingTableWrapperProps) => {
   const {
     locale: {
       Tables: { LTIRoutingTable }

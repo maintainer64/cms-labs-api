@@ -1,0 +1,31 @@
+package models
+
+import "time"
+
+// LTIAttemptBase struct to describe LTIAttempt object.
+type LTIAttemptBase struct {
+	UserID       uint      `gorm:"type:int" json:"user_id"`
+	PNETServerID uint      `gorm:"type:int" json:"pnet_server_id"`
+	LTIRoutingID uint      `gorm:"type:int" json:"lti_routing_id"`
+	ExpiredAt    time.Time `gorm:"type:datetime(3)" json:"updated_at" validate:"required"`
+}
+
+type LTIAttemptSecret struct {
+	RoomNumber *int `gorm:"type:int" json:"room_number"`
+}
+
+type LTIAttemptListItem struct {
+	Base
+	LTIAttemptBase
+}
+
+// TableName переопределяет название таблицы для LTIAttemptListItem на `lti_attempts`
+func (LTIAttemptListItem) TableName() string {
+	return "lti_attempts"
+}
+
+type LTIAttempt struct {
+	Base
+	LTIAttemptBase
+	LTIAttemptSecret
+}

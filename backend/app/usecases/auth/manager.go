@@ -102,10 +102,11 @@ func (m *TokenManager) newJWTByUserId(userId uint) (*Tokens, error) {
 		return nil, err
 	}
 	tokens, err := GenerateNewTokens(&TokenPublicData{
-		Id:    userModel.ID,
-		Email: userModel.Email,
-		Name:  userModel.Name,
-		Role:  userModel.UserRole,
+		Id:           userModel.ID,
+		Email:        userModel.Email,
+		Name:         userModel.Name,
+		LastLaunchId: userModel.LastLaunchID,
+		Role:         userModel.UserRole,
 	})
 	if err != nil {
 		return nil, err

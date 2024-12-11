@@ -5,6 +5,7 @@
 # Dev build
 build/
 tmp/
+processed_migrations/
 
 # Test
 *.out

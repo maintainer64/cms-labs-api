@@ -12,9 +12,10 @@ type LTIRoutingSecret struct {
 	LTITaskID      string `gorm:"type:varchar(255);column:lti_task_id" json:"lti_task_id"`
 	LTIParamsTask  string `gorm:"type:varchar(255);column:lti_params_task" json:"lti_params_task"`
 	// Параметры
-	Collaboration int    `gorm:"type:int;column:collaboration" json:"collaboration"`
-	PNETLabsPath  string `gorm:"type:varchar(255);column:pnet_labs_path" json:"pnet_labs_path"`
-	PNETTestPath  string `gorm:"type:varchar(255);column:pnet_test_path" json:"pnet_test_path"`
+	Collaboration        int    `gorm:"type:int;column:collaboration" json:"collaboration"`
+	PinnedSessionMinutes int    `gorm:"type:int;column:pinned_session_minutes" json:"pinned_session_minutes"`
+	PNETLabsPath         string `gorm:"type:varchar(255);column:pnet_labs_path" json:"pnet_labs_path"`
+	PNETTestPath         string `gorm:"type:varchar(255);column:pnet_test_path" json:"pnet_test_path"`
 }
 
 type LTIRoutingListItem struct {

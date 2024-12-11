@@ -82,6 +82,7 @@ func (q *{{.Name}}Queries) List(
 }
 
 func (q *{{.Name}}Queries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Model(&models.{{.Name}}{})
 	tx = tx.Order(` + "`created_at desc`" + `)
 	if search == "" {
 		return tx

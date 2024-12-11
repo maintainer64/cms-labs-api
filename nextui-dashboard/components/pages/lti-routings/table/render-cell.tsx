@@ -1,6 +1,6 @@
 import React from 'react';
 import { EditIcon } from '../../../icons/table/edit-icon';
-import { models_LTIFormListItem, models_LTIRoutingListItem } from '@/helpers/api';
+import { models_LTIRoutingListItem } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 
@@ -31,7 +31,7 @@ export const RenderCell = ({ item, columnKey }: Props) => {
       return (
         <div className='flex items-center gap-4 '>
           <div>
-            <Link to={RoutesLocation.ltiFormsEdit(item.id?.toString())}>
+            <Link to={RoutesLocation.ltiRoutingEdit(item.id?.toString())}>
               <EditIcon size={20} fill='#979797' />
             </Link>
           </div>

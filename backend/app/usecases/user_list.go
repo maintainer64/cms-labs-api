@@ -23,7 +23,7 @@ type UserListOutputDTO struct {
 type UserListResponse = Response[UserListOutputDTO]
 
 func (u *UserListUC) Execute(dto UserListInputDTO) (UserListOutputDTO, error) {
-	entities, count, err := u.UserQueries.List(dto.Search, dto.Limit, dto.Offset)
+	entities, count, err := u.UserQueries.List(dto.Search, []uint{}, dto.Limit, dto.Offset)
 	return UserListOutputDTO{
 		Model:      entities,
 		TotalCount: count,

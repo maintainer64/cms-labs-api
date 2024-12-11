@@ -53,6 +53,7 @@ func main() {
 	routes.V1AuthRoute(app)
 	routes.V1UserRoutes(app)
 	routes.V1LTIFormRoutes(app)
+	routes.V1LTIAttemptRoutes(app)
 	routes.V1PNETServerRoutes(app)
 	routes.V1PNETServerQueueRoutes(app)
 	routes.V2LTIRoutes(app)

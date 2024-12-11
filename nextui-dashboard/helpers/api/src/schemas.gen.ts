@@ -101,6 +101,59 @@ export const auth_TokensSchema = {
   }
 } as const;
 
+export const models_LTIAttemptSchema = {
+  type: 'object',
+  required: ['created_at', 'updated_at', 'updated_at'],
+  properties: {
+    created_at: {
+      type: 'string'
+    },
+    id: {
+      type: 'integer'
+    },
+    lti_routing_id: {
+      type: 'integer'
+    },
+    pnet_server_id: {
+      type: 'integer'
+    },
+    room_number: {
+      type: 'integer'
+    },
+    updated_at: {
+      type: 'string'
+    },
+    user_id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const models_LTIAttemptListItemSchema = {
+  type: 'object',
+  required: ['created_at', 'updated_at', 'updated_at'],
+  properties: {
+    created_at: {
+      type: 'string'
+    },
+    id: {
+      type: 'integer'
+    },
+    lti_routing_id: {
+      type: 'integer'
+    },
+    pnet_server_id: {
+      type: 'integer'
+    },
+    updated_at: {
+      type: 'string'
+    },
+    user_id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
 export const models_LTIFormSchema = {
   type: 'object',
   required: [
@@ -214,6 +267,9 @@ export const models_LTIRoutingSchema = {
     },
     name: {
       type: 'string'
+    },
+    pinned_session_minutes: {
+      type: 'integer'
     },
     pnet_labs_path: {
       type: 'string'
@@ -471,6 +527,206 @@ export const round_queue_pool_pnet_RoundQueuePoolPnetUpsertResponseSchema = {
   }
 } as const;
 
+export const usecases_LTIAttemptCreateInputDTOSchema = {
+  type: 'object'
+} as const;
+
+export const usecases_LTIAttemptCreateOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    auto_redirect: {
+      type: 'boolean'
+    },
+    collaboration: {
+      type: 'integer'
+    },
+    members: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/models.UserListItem'
+      }
+    },
+    next_url: {
+      type: 'string'
+    },
+    room_number: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptCreateResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIAttemptCreateOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptDeleteInputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptDeleteResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIAttemptDeleteInputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptEditInputDTOSchema = {
+  type: 'object',
+  required: ['name', 'token', 'url'],
+  properties: {
+    id: {
+      type: 'integer'
+    },
+    is_active: {
+      type: 'boolean'
+    },
+    name: {
+      type: 'string'
+    },
+    token: {
+      type: 'string'
+    },
+    unit_rate: {
+      type: 'integer'
+    },
+    url: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptEditOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptEditResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIAttemptEditOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptGetInputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptGetOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    model: {
+      $ref: '#/definitions/models.LTIAttempt'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptGetResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIAttemptGetOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptListInputDTOSchema = {
+  type: 'object',
+  properties: {
+    limit: {
+      type: 'integer'
+    },
+    offset: {
+      type: 'integer'
+    },
+    search: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptListOutputDTOSchema = {
+  type: 'object',
+  required: ['model', 'total_count'],
+  properties: {
+    model: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/models.LTIAttemptListItem'
+      }
+    },
+    total_count: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_LTIAttemptListResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.LTIAttemptListOutputDTO'
+    }
+  }
+} as const;
+
 export const usecases_LTIFormDeleteInputDTOSchema = {
   type: 'object',
   properties: {
@@ -693,6 +949,9 @@ export const usecases_LTIRoutingEditInputDTOSchema = {
     },
     name: {
       type: 'string'
+    },
+    pinned_session_minutes: {
+      type: 'integer'
     },
     pnet_labs_path: {
       type: 'string'

@@ -45,4 +45,3 @@ func (di *DIContainer) LTIRoutingDeleteUC() (*usecases.LTIRoutingDeleteUC, error
 		LTIRoutingQueries: db.LTIRoutingQueries,
 	}, nil
 }
-

@@ -3,11 +3,12 @@ package queries
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 	"gorm.io/gorm"
-	"time"
 )
 
 type LTIRoutingQueries struct {
@@ -37,14 +38,6 @@ func (q *LTIRoutingQueries) Upsert(entity *models.LTIRouting) error {
 		log.Debug().Msg(fmt.Sprintf("LTIRoutingQueries: entity update: %+v", entityDB))
 		log.Info().Msg(fmt.Sprintf("LTIRoutingQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
-		entity.Name = entityDB.Name
-		entity.LTITitle = entityDB.LTITitle
-		entity.LTIDescription = entityDB.LTIDescription
-		entity.LTITaskID = entityDB.LTITaskID
-		entity.LTIParamsTask = entityDB.LTIParamsTask
-		entity.Collaboration = entityDB.Collaboration
-		entity.PNETLabsPath = entityDB.PNETLabsPath
-		entity.PNETTestPath = entityDB.PNETTestPath
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
 		result := q.Save(&entity)
@@ -82,12 +75,67 @@ func (q *LTIRoutingQueries) List(
 }
 
 func (q *LTIRoutingQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Model(&models.LTIRouting{})
 	tx = tx.Order(`created_at desc`)
 	if search == "" {
 		return tx
 	}
 	tx = tx.Or("id = ?", search)
 	return tx
+}
+
+func (q *LTIRoutingQueries) GetRelevantRouting(
+	linkId string,
+	title string,
+	description string,
+	customParams []string,
+) (models.LTIRouting, error) {
+	var entity models.LTIRouting
+	tx := q.Model(&models.LTIRouting{})
+	tx = tx.Order(`created_at desc`).Limit(1).Offset(0)
+	execute := false
+	log.Debug().Msg(
+		fmt.Sprintf(
+			"LTIRoutingQueries: GetRelevantRouting execute by params linkId=%+v title=%+v description=%+v customParams=%+v",
+			linkId,
+			title,
+			description,
+			customParams,
+		),
+	)
+	if title != "" {
+		tx = tx.Or("lti_title = ?", title)
+		execute = true
+	}
+	if description != "" {
+		tx = tx.Or("lti_description = ?", title)
+		execute = true
+	}
+	if linkId != "" {
+		tx = tx.Or("lti_task_id = ?", linkId)
+		execute = true
+	}
+	if len(customParams) > 0 {
+		tx = tx.Or("lti_params_task IN ?", customParams)
+		execute = true
+	}
+	if !execute {
+		log.Info().Msg("LTIRoutingQueries: GetRelevantRouting not execute null params")
+		return entity, utils.FiberValidationException{
+			Status:    fiber.StatusNotFound,
+			Exception: errors.New("LTIRouting not found"),
+		}
+	}
+	result := tx.Scan(&entity)
+	log.Info().Msg(
+		fmt.Sprintf(
+			"LTIRoutingQueries: GetRelevantRouting execute by params linkId=%+v; result: routingId=%+v routingName=%+v",
+			linkId,
+			entity.ID,
+			entity.Name,
+		),
+	)
+	return entity, result.Error
 }
 
 func (q *LTIRoutingQueries) Delete(id uint) error {

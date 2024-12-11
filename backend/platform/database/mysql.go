@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"gorm.io/gorm/schema"
+
 	. "gitlab.com/a10869/api-modules/shared/logs"
 	_ "gitlab.com/a10869/api-modules/shared/logs"
 
@@ -37,6 +39,8 @@ func MysqlConnection() (*gorm.DB, error) {
 		return nil, err
 	}
 
+	log.Debug().Msg(fmt.Sprintf("Table prefix MysqlConnection %+v", configs.AppConfig.DB.TablePrefix))
+
 	// Define database connection for Mysql.
 	db, err := gorm.Open(
 		mysql.Open(mysqlConnURL),
@@ -50,6 +54,9 @@ func MysqlConnection() (*gorm.DB, error) {
 					IgnoreRecordNotFoundError: false,
 					Colorful:                  false,
 				}),
+			NamingStrategy: schema.NamingStrategy{
+				TablePrefix: configs.AppConfig.DB.TablePrefix,
+			},
 		},
 	)
 	if err != nil {

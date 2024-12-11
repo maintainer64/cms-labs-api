@@ -124,32 +124,38 @@ func (q *UserQueries) GetByLaunchID(launchID string) (models.User, error) {
 
 func (q *UserQueries) List(
 	search string,
+	ids []uint,
 	limit int,
 	offset int,
 ) ([]models.UserListItem, int64, error) {
 	var entities []models.UserListItem
 	result := q.listFilter(
 		search,
+		ids,
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	log.Debug().Msg(fmt.Sprintf("UserQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
+		ids,
 		q.Limit(limit).Offset(offset),
 	).Find(&entities)
 	log.Debug().Msg(fmt.Sprintf("UserQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
-func (q *UserQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+func (q *UserQueries) listFilter(search string, ids []uint, tx *gorm.DB) *gorm.DB {
+	tx = tx.Model(&models.User{})
 	tx = tx.Order(`created_at desc`)
-	if search == "" {
-		return tx
+	if search != "" {
+		tx = tx.Or("email LIKE ?", fmt.Sprintf("%%%s%%", search))
+		tx = tx.Or("name LIKE ?", fmt.Sprintf("%%%s%%", search))
+		tx = tx.Or("id = ?", search)
 	}
-	tx = tx.Where("email LIKE ?", fmt.Sprintf("%%%s%%", search))
-	tx = tx.Or("name LIKE ?", fmt.Sprintf("%%%s%%", search))
-	tx = tx.Or("id = ?", search)
+	if len(ids) > 0 {
+		tx = tx.Or("id IN ?", ids)
+	}
 	return tx
 }
 

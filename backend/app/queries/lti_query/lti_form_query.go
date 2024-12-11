@@ -116,6 +116,7 @@ func (q *LTIFormQueries) List(
 }
 
 func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Model(&models.LTIForm{})
 	tx = tx.Order(`created_at desc`)
 	if search == "" {
 		return tx
