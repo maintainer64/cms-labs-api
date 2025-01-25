@@ -192,6 +192,11 @@ definitions:
         type: integer
       pnet_labs_path:
         type: string
+      pnet_labs_type:
+        description: |-
+          The type of PNETLabsType
+          enum: default,enumeration
+        type: string
       pnet_test_path:
         type: string
       updated_at:
@@ -271,6 +276,62 @@ definitions:
     required:
     - created_at
     - updated_at
+    type: object
+  models.ServiceCard:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      order:
+        type: integer
+      updated_at:
+        type: string
+      url:
+        type: string
+    required:
+    - created_at
+    - description
+    - image_url
+    - name
+    - updated_at
+    - url
+    type: object
+  models.ServiceCardListItem:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      order:
+        type: integer
+      updated_at:
+        type: string
+      url:
+        type: string
+    required:
+    - created_at
+    - description
+    - image_url
+    - name
+    - updated_at
+    - url
     type: object
   models.User:
     properties:
@@ -671,6 +732,8 @@ definitions:
         type: integer
       pnet_labs_path:
         type: string
+      pnet_labs_type:
+        type: string
       pnet_test_path:
         type: string
     type: object
@@ -861,6 +924,119 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.PNETServerListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.ServiceCardDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.ServiceCardDeleteResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServiceCardDeleteInputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.ServiceCardEditInputDTO:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      order:
+        type: integer
+      url:
+        type: string
+    required:
+    - description
+    - image_url
+    - is_active
+    - name
+    - order
+    - url
+    type: object
+  usecases.ServiceCardEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.ServiceCardEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServiceCardEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.ServiceCardGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.ServiceCardGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.ServiceCard'
+    type: object
+  usecases.ServiceCardGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServiceCardGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.ServiceCardListInputDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+    type: object
+  usecases.ServiceCardListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.ServiceCardListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.ServiceCardListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServiceCardListOutputDTO'
     required:
     - error
     - msg
@@ -1437,6 +1613,102 @@ paths:
       summary: create pnet_server
       tags:
       - PNETServer
+  /v1/service-card/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete service_card.
+      parameters:
+      - description: service_card id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.ServiceCardDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.ServiceCardDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete service_card
+      tags:
+      - ServiceCard
+  /v1/service-card/get:
+    post:
+      consumes:
+      - application/json
+      description: get service_card.
+      parameters:
+      - description: service_card id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.ServiceCardGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.ServiceCardGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get service_card
+      tags:
+      - ServiceCard
+  /v1/service-card/list:
+    post:
+      consumes:
+      - application/json
+      description: List service_card.
+      parameters:
+      - description: service_card list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.ServiceCardListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.ServiceCardListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list service_card
+      tags:
+      - ServiceCard
+  /v1/service-card/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create service_card.
+      parameters:
+      - description: service_card form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.ServiceCardEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.ServiceCardEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create service_card
+      tags:
+      - ServiceCard
   /v1/token/check:
     post:
       consumes:

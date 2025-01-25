@@ -3,7 +3,69 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostV1LtiAttemptCreateData, PostV1LtiAttemptCreateResponse, PostV1LtiAttemptDeleteData, PostV1LtiAttemptDeleteResponse, PostV1LtiAttemptEditData, PostV1LtiAttemptEditResponse, PostV1LtiAttemptGetData, PostV1LtiAttemptGetResponse, PostV1LtiAttemptListData, PostV1LtiAttemptListResponse, PostV1LtiFormDeleteData, PostV1LtiFormDeleteResponse, PostV1LtiFormGetData, PostV1LtiFormGetResponse, PostV1LtiFormListData, PostV1LtiFormListResponse, PostV1LtiFormUpsertData, PostV1LtiFormUpsertResponse, PostV1LtiRoutingDeleteData, PostV1LtiRoutingDeleteResponse, PostV1LtiRoutingGetData, PostV1LtiRoutingGetResponse, PostV1LtiRoutingListData, PostV1LtiRoutingListResponse, PostV1LtiRoutingUpsertData, PostV1LtiRoutingUpsertResponse, PostV1PnetServerQueueListResponse, PostV1PnetServerQueueUpsertResponse, PostV1PnetServerDeleteData, PostV1PnetServerDeleteResponse, PostV1PnetServerGetData, PostV1PnetServerGetResponse, PostV1PnetServerListData, PostV1PnetServerListResponse, PostV1PnetServerUpsertData, PostV1PnetServerUpsertResponse, PostV1TokenCheckData, PostV1TokenCheckResponse, PostV1TokenLoginData, PostV1TokenLoginResponse, PostV1TokenLogoutResponse, PostV1TokenPasswordChangeData, PostV1TokenPasswordChangeResponse, PostV1TokenRenewData, PostV1TokenRenewResponse, PostV1UserGetData, PostV1UserGetResponse, PostV1UserListData, PostV1UserListResponse, PostV1UserUpsertData, PostV1UserUpsertResponse, GetV2LtiLoginResponse, PostV2LtiLoginResponse } from './types.gen';
+import type {
+  PostV1LtiAttemptCreateData,
+  PostV1LtiAttemptCreateResponse,
+  PostV1LtiAttemptDeleteData,
+  PostV1LtiAttemptDeleteResponse,
+  PostV1LtiAttemptEditData,
+  PostV1LtiAttemptEditResponse,
+  PostV1LtiAttemptGetData,
+  PostV1LtiAttemptGetResponse,
+  PostV1LtiAttemptListData,
+  PostV1LtiAttemptListResponse,
+  PostV1LtiFormDeleteData,
+  PostV1LtiFormDeleteResponse,
+  PostV1LtiFormGetData,
+  PostV1LtiFormGetResponse,
+  PostV1LtiFormListData,
+  PostV1LtiFormListResponse,
+  PostV1LtiFormUpsertData,
+  PostV1LtiFormUpsertResponse,
+  PostV1LtiRoutingDeleteData,
+  PostV1LtiRoutingDeleteResponse,
+  PostV1LtiRoutingGetData,
+  PostV1LtiRoutingGetResponse,
+  PostV1LtiRoutingListData,
+  PostV1LtiRoutingListResponse,
+  PostV1LtiRoutingUpsertData,
+  PostV1LtiRoutingUpsertResponse,
+  PostV1PnetServerQueueListResponse,
+  PostV1PnetServerQueueUpsertResponse,
+  PostV1PnetServerDeleteData,
+  PostV1PnetServerDeleteResponse,
+  PostV1PnetServerGetData,
+  PostV1PnetServerGetResponse,
+  PostV1PnetServerListData,
+  PostV1PnetServerListResponse,
+  PostV1PnetServerUpsertData,
+  PostV1PnetServerUpsertResponse,
+  PostV1ServiceCardDeleteData,
+  PostV1ServiceCardDeleteResponse,
+  PostV1ServiceCardGetData,
+  PostV1ServiceCardGetResponse,
+  PostV1ServiceCardListData,
+  PostV1ServiceCardListResponse,
+  PostV1ServiceCardUpsertData,
+  PostV1ServiceCardUpsertResponse,
+  PostV1TokenCheckData,
+  PostV1TokenCheckResponse,
+  PostV1TokenLoginData,
+  PostV1TokenLoginResponse,
+  PostV1TokenLogoutResponse,
+  PostV1TokenPasswordChangeData,
+  PostV1TokenPasswordChangeResponse,
+  PostV1TokenRenewData,
+  PostV1TokenRenewResponse,
+  PostV1UserGetData,
+  PostV1UserGetResponse,
+  PostV1UserListData,
+  PostV1UserListResponse,
+  PostV1UserUpsertData,
+  PostV1UserUpsertResponse,
+  GetV2LtiLoginResponse,
+  PostV2LtiLoginResponse
+} from './types.gen';
 
 /**
  * create lti_attempt
@@ -13,11 +75,15 @@ import type { PostV1LtiAttemptCreateData, PostV1LtiAttemptCreateResponse, PostV1
  * @returns usecases_LTIAttemptCreateResponse OK
  * @throws ApiError
  */
-export const postV1LtiAttemptCreate = (data: PostV1LtiAttemptCreateData): CancelablePromise<PostV1LtiAttemptCreateResponse> => { return __request(OpenAPI, {
+export const postV1LtiAttemptCreate = (
+  data: PostV1LtiAttemptCreateData
+): CancelablePromise<PostV1LtiAttemptCreateResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-attempt/create',
     body: data.form
-}); };
+  });
+};
 
 /**
  * delete lti_attempt
@@ -27,11 +93,15 @@ export const postV1LtiAttemptCreate = (data: PostV1LtiAttemptCreateData): Cancel
  * @returns usecases_LTIAttemptDeleteResponse OK
  * @throws ApiError
  */
-export const postV1LtiAttemptDelete = (data: PostV1LtiAttemptDeleteData): CancelablePromise<PostV1LtiAttemptDeleteResponse> => { return __request(OpenAPI, {
+export const postV1LtiAttemptDelete = (
+  data: PostV1LtiAttemptDeleteData
+): CancelablePromise<PostV1LtiAttemptDeleteResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-attempt/delete',
     body: data.form
-}); };
+  });
+};
 
 /**
  * edit lti_attempt
@@ -41,11 +111,15 @@ export const postV1LtiAttemptDelete = (data: PostV1LtiAttemptDeleteData): Cancel
  * @returns usecases_LTIAttemptEditResponse OK
  * @throws ApiError
  */
-export const postV1LtiAttemptEdit = (data: PostV1LtiAttemptEditData): CancelablePromise<PostV1LtiAttemptEditResponse> => { return __request(OpenAPI, {
+export const postV1LtiAttemptEdit = (
+  data: PostV1LtiAttemptEditData
+): CancelablePromise<PostV1LtiAttemptEditResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-attempt/edit',
     body: data.form
-}); };
+  });
+};
 
 /**
  * get lti_attempt
@@ -55,11 +129,13 @@ export const postV1LtiAttemptEdit = (data: PostV1LtiAttemptEditData): Cancelable
  * @returns usecases_LTIAttemptGetResponse OK
  * @throws ApiError
  */
-export const postV1LtiAttemptGet = (data: PostV1LtiAttemptGetData): CancelablePromise<PostV1LtiAttemptGetResponse> => { return __request(OpenAPI, {
+export const postV1LtiAttemptGet = (data: PostV1LtiAttemptGetData): CancelablePromise<PostV1LtiAttemptGetResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-attempt/get',
     body: data.form
-}); };
+  });
+};
 
 /**
  * list lti_attempt
@@ -69,11 +145,15 @@ export const postV1LtiAttemptGet = (data: PostV1LtiAttemptGetData): CancelablePr
  * @returns usecases_LTIAttemptListResponse OK
  * @throws ApiError
  */
-export const postV1LtiAttemptList = (data: PostV1LtiAttemptListData): CancelablePromise<PostV1LtiAttemptListResponse> => { return __request(OpenAPI, {
+export const postV1LtiAttemptList = (
+  data: PostV1LtiAttemptListData
+): CancelablePromise<PostV1LtiAttemptListResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-attempt/list',
     body: data.form
-}); };
+  });
+};
 
 /**
  * delete lti_form
@@ -83,11 +163,13 @@ export const postV1LtiAttemptList = (data: PostV1LtiAttemptListData): Cancelable
  * @returns usecases_LTIFormDeleteResponse OK
  * @throws ApiError
  */
-export const postV1LtiFormDelete = (data: PostV1LtiFormDeleteData): CancelablePromise<PostV1LtiFormDeleteResponse> => { return __request(OpenAPI, {
+export const postV1LtiFormDelete = (data: PostV1LtiFormDeleteData): CancelablePromise<PostV1LtiFormDeleteResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-form/delete',
     body: data.form
-}); };
+  });
+};
 
 /**
  * get lti_form
@@ -97,11 +179,13 @@ export const postV1LtiFormDelete = (data: PostV1LtiFormDeleteData): CancelablePr
  * @returns usecases_LTIFormGetResponse OK
  * @throws ApiError
  */
-export const postV1LtiFormGet = (data: PostV1LtiFormGetData): CancelablePromise<PostV1LtiFormGetResponse> => { return __request(OpenAPI, {
+export const postV1LtiFormGet = (data: PostV1LtiFormGetData): CancelablePromise<PostV1LtiFormGetResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-form/get',
     body: data.form
-}); };
+  });
+};
 
 /**
  * list lti_form
@@ -111,11 +195,13 @@ export const postV1LtiFormGet = (data: PostV1LtiFormGetData): CancelablePromise<
  * @returns usecases_LTIFormListResponse OK
  * @throws ApiError
  */
-export const postV1LtiFormList = (data: PostV1LtiFormListData): CancelablePromise<PostV1LtiFormListResponse> => { return __request(OpenAPI, {
+export const postV1LtiFormList = (data: PostV1LtiFormListData): CancelablePromise<PostV1LtiFormListResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-form/list',
     body: data.form
-}); };
+  });
+};
 
 /**
  * create lti_form
@@ -125,11 +211,13 @@ export const postV1LtiFormList = (data: PostV1LtiFormListData): CancelablePromis
  * @returns usecases_LTIFormEditResponse OK
  * @throws ApiError
  */
-export const postV1LtiFormUpsert = (data: PostV1LtiFormUpsertData): CancelablePromise<PostV1LtiFormUpsertResponse> => { return __request(OpenAPI, {
+export const postV1LtiFormUpsert = (data: PostV1LtiFormUpsertData): CancelablePromise<PostV1LtiFormUpsertResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-form/upsert',
     body: data.form
-}); };
+  });
+};
 
 /**
  * delete lti_routing
@@ -139,11 +227,15 @@ export const postV1LtiFormUpsert = (data: PostV1LtiFormUpsertData): CancelablePr
  * @returns usecases_LTIRoutingDeleteResponse OK
  * @throws ApiError
  */
-export const postV1LtiRoutingDelete = (data: PostV1LtiRoutingDeleteData): CancelablePromise<PostV1LtiRoutingDeleteResponse> => { return __request(OpenAPI, {
+export const postV1LtiRoutingDelete = (
+  data: PostV1LtiRoutingDeleteData
+): CancelablePromise<PostV1LtiRoutingDeleteResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-routing/delete',
     body: data.form
-}); };
+  });
+};
 
 /**
  * get lti_routing
@@ -153,11 +245,13 @@ export const postV1LtiRoutingDelete = (data: PostV1LtiRoutingDeleteData): Cancel
  * @returns usecases_LTIRoutingGetResponse OK
  * @throws ApiError
  */
-export const postV1LtiRoutingGet = (data: PostV1LtiRoutingGetData): CancelablePromise<PostV1LtiRoutingGetResponse> => { return __request(OpenAPI, {
+export const postV1LtiRoutingGet = (data: PostV1LtiRoutingGetData): CancelablePromise<PostV1LtiRoutingGetResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-routing/get',
     body: data.form
-}); };
+  });
+};
 
 /**
  * list lti_routing
@@ -167,11 +261,15 @@ export const postV1LtiRoutingGet = (data: PostV1LtiRoutingGetData): CancelablePr
  * @returns usecases_LTIRoutingListResponse OK
  * @throws ApiError
  */
-export const postV1LtiRoutingList = (data: PostV1LtiRoutingListData): CancelablePromise<PostV1LtiRoutingListResponse> => { return __request(OpenAPI, {
+export const postV1LtiRoutingList = (
+  data: PostV1LtiRoutingListData
+): CancelablePromise<PostV1LtiRoutingListResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-routing/list',
     body: data.form
-}); };
+  });
+};
 
 /**
  * create lti_routing
@@ -181,11 +279,15 @@ export const postV1LtiRoutingList = (data: PostV1LtiRoutingListData): Cancelable
  * @returns usecases_LTIRoutingEditResponse OK
  * @throws ApiError
  */
-export const postV1LtiRoutingUpsert = (data: PostV1LtiRoutingUpsertData): CancelablePromise<PostV1LtiRoutingUpsertResponse> => { return __request(OpenAPI, {
+export const postV1LtiRoutingUpsert = (
+  data: PostV1LtiRoutingUpsertData
+): CancelablePromise<PostV1LtiRoutingUpsertResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/lti-routing/upsert',
     body: data.form
-}); };
+  });
+};
 
 /**
  * list pnet_server_queue
@@ -193,10 +295,12 @@ export const postV1LtiRoutingUpsert = (data: PostV1LtiRoutingUpsertData): Cancel
  * @returns round_queue_pool_pnet_RoundQueuePoolPnetListResponse OK
  * @throws ApiError
  */
-export const postV1PnetServerQueueList = (): CancelablePromise<PostV1PnetServerQueueListResponse> => { return __request(OpenAPI, {
+export const postV1PnetServerQueueList = (): CancelablePromise<PostV1PnetServerQueueListResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/pnet-server-queue/list'
-}); };
+  });
+};
 
 /**
  * create pnet_server_queue
@@ -204,10 +308,12 @@ export const postV1PnetServerQueueList = (): CancelablePromise<PostV1PnetServerQ
  * @returns round_queue_pool_pnet_RoundQueuePoolPnetUpsertResponse OK
  * @throws ApiError
  */
-export const postV1PnetServerQueueUpsert = (): CancelablePromise<PostV1PnetServerQueueUpsertResponse> => { return __request(OpenAPI, {
+export const postV1PnetServerQueueUpsert = (): CancelablePromise<PostV1PnetServerQueueUpsertResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/pnet-server-queue/upsert'
-}); };
+  });
+};
 
 /**
  * delete pnet_server
@@ -217,11 +323,15 @@ export const postV1PnetServerQueueUpsert = (): CancelablePromise<PostV1PnetServe
  * @returns usecases_PNETServerDeleteResponse OK
  * @throws ApiError
  */
-export const postV1PnetServerDelete = (data: PostV1PnetServerDeleteData): CancelablePromise<PostV1PnetServerDeleteResponse> => { return __request(OpenAPI, {
+export const postV1PnetServerDelete = (
+  data: PostV1PnetServerDeleteData
+): CancelablePromise<PostV1PnetServerDeleteResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/pnet-server/delete',
     body: data.form
-}); };
+  });
+};
 
 /**
  * get pnet_server
@@ -231,11 +341,13 @@ export const postV1PnetServerDelete = (data: PostV1PnetServerDeleteData): Cancel
  * @returns usecases_PNETServerGetResponse OK
  * @throws ApiError
  */
-export const postV1PnetServerGet = (data: PostV1PnetServerGetData): CancelablePromise<PostV1PnetServerGetResponse> => { return __request(OpenAPI, {
+export const postV1PnetServerGet = (data: PostV1PnetServerGetData): CancelablePromise<PostV1PnetServerGetResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/pnet-server/get',
     body: data.form
-}); };
+  });
+};
 
 /**
  * list pnet_server
@@ -245,11 +357,15 @@ export const postV1PnetServerGet = (data: PostV1PnetServerGetData): CancelablePr
  * @returns usecases_PNETServerListResponse OK
  * @throws ApiError
  */
-export const postV1PnetServerList = (data: PostV1PnetServerListData): CancelablePromise<PostV1PnetServerListResponse> => { return __request(OpenAPI, {
+export const postV1PnetServerList = (
+  data: PostV1PnetServerListData
+): CancelablePromise<PostV1PnetServerListResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/pnet-server/list',
     body: data.form
-}); };
+  });
+};
 
 /**
  * create pnet_server
@@ -259,11 +375,87 @@ export const postV1PnetServerList = (data: PostV1PnetServerListData): Cancelable
  * @returns usecases_PNETServerEditResponse OK
  * @throws ApiError
  */
-export const postV1PnetServerUpsert = (data: PostV1PnetServerUpsertData): CancelablePromise<PostV1PnetServerUpsertResponse> => { return __request(OpenAPI, {
+export const postV1PnetServerUpsert = (
+  data: PostV1PnetServerUpsertData
+): CancelablePromise<PostV1PnetServerUpsertResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/pnet-server/upsert',
     body: data.form
-}); };
+  });
+};
+
+/**
+ * delete service_card
+ * Delete service_card.
+ * @param data The data for the request.
+ * @param data.form service_card id
+ * @returns usecases_ServiceCardDeleteResponse OK
+ * @throws ApiError
+ */
+export const postV1ServiceCardDelete = (
+  data: PostV1ServiceCardDeleteData
+): CancelablePromise<PostV1ServiceCardDeleteResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/service-card/delete',
+    body: data.form
+  });
+};
+
+/**
+ * get service_card
+ * get service_card.
+ * @param data The data for the request.
+ * @param data.form service_card id
+ * @returns usecases_ServiceCardGetResponse OK
+ * @throws ApiError
+ */
+export const postV1ServiceCardGet = (
+  data: PostV1ServiceCardGetData
+): CancelablePromise<PostV1ServiceCardGetResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/service-card/get',
+    body: data.form
+  });
+};
+
+/**
+ * list service_card
+ * List service_card.
+ * @param data The data for the request.
+ * @param data.form service_card list info
+ * @returns usecases_ServiceCardListResponse OK
+ * @throws ApiError
+ */
+export const postV1ServiceCardList = (
+  data: PostV1ServiceCardListData
+): CancelablePromise<PostV1ServiceCardListResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/service-card/list',
+    body: data.form
+  });
+};
+
+/**
+ * create service_card
+ * Create service_card.
+ * @param data The data for the request.
+ * @param data.form service_card form info
+ * @returns usecases_ServiceCardEditResponse OK
+ * @throws ApiError
+ */
+export const postV1ServiceCardUpsert = (
+  data: PostV1ServiceCardUpsertData
+): CancelablePromise<PostV1ServiceCardUpsertResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/service-card/upsert',
+    body: data.form
+  });
+};
 
 /**
  * view data from access token
@@ -273,11 +465,13 @@ export const postV1PnetServerUpsert = (data: PostV1PnetServerUpsertData): Cancel
  * @returns auth_RenewManagerUserResponse OK
  * @throws ApiError
  */
-export const postV1TokenCheck = (data: PostV1TokenCheckData): CancelablePromise<PostV1TokenCheckResponse> => { return __request(OpenAPI, {
+export const postV1TokenCheck = (data: PostV1TokenCheckData): CancelablePromise<PostV1TokenCheckResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/token/check',
     body: data.form
-}); };
+  });
+};
 
 /**
  * login by email and password
@@ -287,11 +481,13 @@ export const postV1TokenCheck = (data: PostV1TokenCheckData): CancelablePromise<
  * @returns auth_RenewManagerResponse OK
  * @throws ApiError
  */
-export const postV1TokenLogin = (data: PostV1TokenLoginData): CancelablePromise<PostV1TokenLoginResponse> => { return __request(OpenAPI, {
+export const postV1TokenLogin = (data: PostV1TokenLoginData): CancelablePromise<PostV1TokenLoginResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/token/login',
     body: data.form
-}); };
+  });
+};
 
 /**
  * logout
@@ -299,10 +495,12 @@ export const postV1TokenLogin = (data: PostV1TokenLoginData): CancelablePromise<
  * @returns auth_RenewManagerResponse OK
  * @throws ApiError
  */
-export const postV1TokenLogout = (): CancelablePromise<PostV1TokenLogoutResponse> => { return __request(OpenAPI, {
+export const postV1TokenLogout = (): CancelablePromise<PostV1TokenLogoutResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/token/logout'
-}); };
+  });
+};
 
 /**
  * change password
@@ -312,11 +510,15 @@ export const postV1TokenLogout = (): CancelablePromise<PostV1TokenLogoutResponse
  * @returns usecases_UserPasswordRecoverResponse OK
  * @throws ApiError
  */
-export const postV1TokenPasswordChange = (data: PostV1TokenPasswordChangeData): CancelablePromise<PostV1TokenPasswordChangeResponse> => { return __request(OpenAPI, {
+export const postV1TokenPasswordChange = (
+  data: PostV1TokenPasswordChangeData
+): CancelablePromise<PostV1TokenPasswordChangeResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/token/password_change',
     body: data.form
-}); };
+  });
+};
 
 /**
  * renew access and refresh tokens
@@ -326,11 +528,13 @@ export const postV1TokenPasswordChange = (data: PostV1TokenPasswordChangeData): 
  * @returns auth_RenewManagerResponse OK
  * @throws ApiError
  */
-export const postV1TokenRenew = (data: PostV1TokenRenewData): CancelablePromise<PostV1TokenRenewResponse> => { return __request(OpenAPI, {
+export const postV1TokenRenew = (data: PostV1TokenRenewData): CancelablePromise<PostV1TokenRenewResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/token/renew',
     body: data.form
-}); };
+  });
+};
 
 /**
  * get user
@@ -340,11 +544,13 @@ export const postV1TokenRenew = (data: PostV1TokenRenewData): CancelablePromise<
  * @returns usecases_UserGetResponse OK
  * @throws ApiError
  */
-export const postV1UserGet = (data: PostV1UserGetData): CancelablePromise<PostV1UserGetResponse> => { return __request(OpenAPI, {
+export const postV1UserGet = (data: PostV1UserGetData): CancelablePromise<PostV1UserGetResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/user/get',
     body: data.form
-}); };
+  });
+};
 
 /**
  * list user
@@ -354,11 +560,13 @@ export const postV1UserGet = (data: PostV1UserGetData): CancelablePromise<PostV1
  * @returns usecases_UserListResponse OK
  * @throws ApiError
  */
-export const postV1UserList = (data: PostV1UserListData): CancelablePromise<PostV1UserListResponse> => { return __request(OpenAPI, {
+export const postV1UserList = (data: PostV1UserListData): CancelablePromise<PostV1UserListResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/user/list',
     body: data.form
-}); };
+  });
+};
 
 /**
  * create user
@@ -368,37 +576,43 @@ export const postV1UserList = (data: PostV1UserListData): CancelablePromise<Post
  * @returns usecases_UserEditResponse OK
  * @throws ApiError
  */
-export const postV1UserUpsert = (data: PostV1UserUpsertData): CancelablePromise<PostV1UserUpsertResponse> => { return __request(OpenAPI, {
+export const postV1UserUpsert = (data: PostV1UserUpsertData): CancelablePromise<PostV1UserUpsertResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/user/upsert',
     body: data.form
-}); };
+  });
+};
 
 /**
  * инициализация подключения к LTI
  * инициализация подключения к LTI.
  * @throws ApiError
  */
-export const getV2LtiLaunch = (): CancelablePromise<void> => { return __request(OpenAPI, {
+export const getV2LtiLaunch = (): CancelablePromise<void> => {
+  return __request(OpenAPI, {
     method: 'GET',
     url: '/v2/lti/launch',
     errors: {
-        302: 'Found'
+      302: 'Found'
     }
-}); };
+  });
+};
 
 /**
  * инициализация подключения к LTI
  * инициализация подключения к LTI.
  * @throws ApiError
  */
-export const postV2LtiLaunch = (): CancelablePromise<void> => { return __request(OpenAPI, {
+export const postV2LtiLaunch = (): CancelablePromise<void> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v2/lti/launch',
     errors: {
-        302: 'Found'
+      302: 'Found'
     }
-}); };
+  });
+};
 
 /**
  * аутентификация через LTI
@@ -406,10 +620,12 @@ export const postV2LtiLaunch = (): CancelablePromise<void> => { return __request
  * @returns unknown OK
  * @throws ApiError
  */
-export const getV2LtiLogin = (): CancelablePromise<GetV2LtiLoginResponse> => { return __request(OpenAPI, {
+export const getV2LtiLogin = (): CancelablePromise<GetV2LtiLoginResponse> => {
+  return __request(OpenAPI, {
     method: 'GET',
     url: '/v2/lti/login'
-}); };
+  });
+};
 
 /**
  * аутентификация через LTI
@@ -417,7 +633,9 @@ export const getV2LtiLogin = (): CancelablePromise<GetV2LtiLoginResponse> => { r
  * @returns unknown OK
  * @throws ApiError
  */
-export const postV2LtiLogin = (): CancelablePromise<PostV2LtiLoginResponse> => { return __request(OpenAPI, {
+export const postV2LtiLogin = (): CancelablePromise<PostV2LtiLoginResponse> => {
+  return __request(OpenAPI, {
     method: 'POST',
     url: '/v2/lti/login'
-}); };
+  });
+};

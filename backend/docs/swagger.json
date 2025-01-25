@@ -735,6 +735,162 @@
                 }
             }
         },
+        "/v1/service-card/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete service_card.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServiceCard"
+                ],
+                "summary": "delete service_card",
+                "parameters": [
+                    {
+                        "description": "service_card id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/service-card/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get service_card.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServiceCard"
+                ],
+                "summary": "get service_card",
+                "parameters": [
+                    {
+                        "description": "service_card id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/service-card/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List service_card.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServiceCard"
+                ],
+                "summary": "list service_card",
+                "parameters": [
+                    {
+                        "description": "service_card list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardListInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/service-card/upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create service_card.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServiceCard"
+                ],
+                "summary": "create service_card",
+                "parameters": [
+                    {
+                        "description": "service_card form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardEditInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ServiceCardEditResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/token/check": {
             "post": {
                 "security": [
@@ -1380,6 +1536,10 @@
                 "pnet_labs_path": {
                     "type": "string"
                 },
+                "pnet_labs_type": {
+                    "description": "The type of PNETLabsType\nenum: default,enumeration",
+                    "type": "string"
+                },
                 "pnet_test_path": {
                     "type": "string"
                 },
@@ -1486,6 +1646,86 @@
                     "type": "string"
                 },
                 "unit_rate": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ServiceCard": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "description",
+                "image_url",
+                "name",
+                "updated_at",
+                "url"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ServiceCardListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "description",
+                "image_url",
+                "name",
+                "updated_at",
+                "url"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
                     "type": "integer"
                 },
                 "updated_at": {
@@ -2095,6 +2335,9 @@
                 "pnet_labs_path": {
                     "type": "string"
                 },
+                "pnet_labs_type": {
+                    "type": "string"
+                },
                 "pnet_test_path": {
                     "type": "string"
                 }
@@ -2381,6 +2624,176 @@
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.PNETServerListOutputDTO"
+                }
+            }
+        },
+        "usecases.ServiceCardDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServiceCardDeleteResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServiceCardDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.ServiceCardEditInputDTO": {
+            "type": "object",
+            "required": [
+                "description",
+                "image_url",
+                "is_active",
+                "name",
+                "order",
+                "url"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.ServiceCardEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServiceCardEditResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServiceCardEditOutputDTO"
+                }
+            }
+        },
+        "usecases.ServiceCardGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServiceCardGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.ServiceCard"
+                }
+            }
+        },
+        "usecases.ServiceCardGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServiceCardGetOutputDTO"
+                }
+            }
+        },
+        "usecases.ServiceCardListInputDTO": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.ServiceCardListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ServiceCardListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServiceCardListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServiceCardListOutputDTO"
                 }
             }
         },

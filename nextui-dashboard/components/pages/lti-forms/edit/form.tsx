@@ -117,7 +117,7 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
             setFieldValue('key_set_uri', `${baseURI}/mod/lti/certs.php`);
           })}
           {ltiFormDeletePopup.component({})}
-          <div className='flex flex-col w-1/2 gap-4 mb-4'>
+          <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
               label={LTIForm.FieldID}

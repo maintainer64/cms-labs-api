@@ -76,7 +76,7 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
         <>
-          <div className='flex flex-col w-1/2 gap-4 mb-4'>
+          <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
               label={UserForm.FieldID}

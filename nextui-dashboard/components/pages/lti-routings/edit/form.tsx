@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Accordion, AccordionItem, Button, Input } from '@nextui-org/react';
+import { Accordion, AccordionItem, Button, Input, Select, SelectItem } from '@nextui-org/react';
 import { Formik } from 'formik';
 import { models_LTIRouting } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
@@ -28,9 +28,20 @@ const defaultValues: models_LTIRouting = {
   lti_title: '',
   name: '',
   pinned_session_minutes: 0,
+  pnet_labs_type: 'default',
   pnet_labs_path: '',
   pnet_test_path: '',
   updated_at: ''
+};
+
+export const LtiRoutingLabsType = () => {
+  const {
+    locale: { LTIRouting }
+  } = useLanguageBrowser();
+  return [
+    { key: 'default', label: LTIRouting.FieldPNETLabsTypeDefault },
+    { key: 'enumeration', label: LTIRouting.FieldPNETLabsTypeEnumeration }
+  ];
 };
 
 export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
@@ -40,6 +51,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
   const { showAlert } = useAlert();
   const navigate = useNavigate();
   const response = useLTIRoutingByID(id);
+  const routingTypes = LtiRoutingLabsType();
   const initialValues = response.data?.result?.model ?? defaultValues;
   const { mutate } = useLTIRoutingUpsert({
     onSuccess: (data, { formikHelpers }) => {
@@ -90,7 +102,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
         <>
           {ltiFormDeletePopup.component({})}
-          <div className='flex flex-col w-1/2 gap-4 mb-4'>
+          <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
               label={LTIRouting.FieldID}
@@ -155,6 +167,16 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     value={(values.pinned_session_minutes || 0).toString()}
                     onChange={handleChange('pinned_session_minutes')}
                   />
+                  <Select
+                    variant='bordered'
+                    label={LTIRouting.FieldPNETLabsType}
+                    selectedKeys={[values.pnet_labs_type ?? '']}
+                    onSelectionChange={(keys) => setFieldValue('pnet_labs_type', keys.currentKey || 'default')}
+                  >
+                    {routingTypes.map((type) => (
+                      <SelectItem key={type.key}>{type.label}</SelectItem>
+                    ))}
+                  </Select>
                   <Input
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsPath}

@@ -18,6 +18,7 @@ type LTIRoutingEditInputDTO struct {
 	LTIParamsTask        string `json:"lti_params_task"`
 	Collaboration        int    `json:"collaboration"`
 	PinnedSessionMinutes int    `json:"pinned_session_minutes"`
+	PNETLabsType         string `json:"pnet_labs_type"`
 	PNETLabsPath         string `json:"pnet_labs_path"`
 	PNETTestPath         string `json:"pnet_test_path"`
 }
@@ -38,6 +39,7 @@ func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOu
 	entity.LTIParamsTask = dto.LTIParamsTask
 	entity.Collaboration = dto.Collaboration
 	entity.PinnedSessionMinutes = dto.PinnedSessionMinutes
+	entity.PNETLabsType = dto.PNETLabsType
 	entity.PNETLabsPath = dto.PNETLabsPath
 	entity.PNETTestPath = dto.PNETTestPath
 	err := u.LTIRoutingQueries.Upsert(entity)

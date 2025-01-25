@@ -22,12 +22,12 @@ export const usePnetServerDelete = (
     },
     ...options,
     async onSuccess(...args) {
-      await queryClient.invalidateQueries({ queryKey: ['postV1PnetServerList'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1PnetServerGet'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1PnetServerQueueList'] });
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
+      await queryClient.invalidateQueries({ queryKey: ['postV1PnetServerList'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1PnetServerGet'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1PnetServerQueueList'] });
     }
   });
 };

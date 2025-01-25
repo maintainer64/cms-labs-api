@@ -144,6 +144,7 @@ CREATE TABLE `{{.DB_TABLE_PREFIX}}lti_routings`
   `lti_params_task`        varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `collaboration`          bigint,
   `pinned_session_minutes` bigint,
+  `pnet_labs_type`         varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `pnet_labs_path`         varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `pnet_test_path`         varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),

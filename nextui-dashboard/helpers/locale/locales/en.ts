@@ -17,14 +17,14 @@ const en = {
   },
   CompaniesDropdown: {
     Title: 'CMS LABS',
-    Description: 'UrFU',
-    ContentService: 'Services'
+    Description: 'UrFU'
   },
   Sidebar: {
     Home: 'Home',
     MainMenu: 'Main Menu',
     Users: 'Users',
     Servers: 'Servers',
+    ServiceCards: 'Сервисы',
     LTIIntegrations: 'LTIs',
     LTIRouting: 'LTI Routes',
     AnyList: 'List',
@@ -99,6 +99,22 @@ const en = {
         Activated: 'Active',
         Deactivated: 'Deactivated'
       }
+    },
+    ServiceCardsTable: {
+      Title: 'Services',
+      ButtonAdd: 'Create',
+      ButtonEdit: 'Edit Service-Card',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'NAME', uid: 'name' },
+        { name: 'ORDER', uid: 'order' },
+        { name: 'ACTIVE', uid: 'is_active' },
+        { name: 'ACTIONS', uid: 'actions' }
+      ],
+      ColumnStatus: {
+        Activated: 'Active',
+        Deactivated: 'Deactivated'
+      }
     }
   },
   Forms: {
@@ -156,12 +172,12 @@ const en = {
       IMSLTIAssignmentGradeServices: 'IMS LTI Assignment and Grade Services',
       IMSLTIAssignmentGradeServicesValue: 'Use this service for grade sync and column management',
       IMSLTINamesRoleProvisioning: 'IMS LTI Names and Role Provisioning',
-      IMSLTINamesRoleProvisioningValue: 'Use this service to retrieve members\' information as per privacy settings',
+      IMSLTINamesRoleProvisioningValue: "Use this service to retrieve members' information as per privacy settings",
       ToolSettings: 'Tool Settings',
       ToolSettingsValue: 'Use this service',
-      ShareLauncherNameWithTool: 'Share launcher\'s name with tool',
+      ShareLauncherNameWithTool: "Share launcher's name with tool",
       ShareLauncherNameWithToolValue: 'Always',
-      ShareLauncherEmailWithTool: 'Share launcher\'s email with tool',
+      ShareLauncherEmailWithTool: "Share launcher's email with tool",
       ShareLauncherEmailWithToolValue: 'Always',
       AcceptGradesTool: 'Accept grades from the tool',
       AcceptGradesToolValue: 'Always'
@@ -188,7 +204,7 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
       Title: 'Deleting a PNET Server entity',
-      Description: 'When you take the PNET out, the PNET and CMS won\'t work together anymore'
+      Description: "When you take the PNET out, the PNET and CMS won't work together anymore"
     },
     StatsChart: {
       Title: 'PNET stats',
@@ -199,6 +215,21 @@ const en = {
       OrderByValueUnitRate: '% rate.',
       OrderByValueLastCountUsers: 'count users',
       OrderByValueCreatedAt: 'date'
+    }
+  },
+  ServiceCards: {
+    FieldID: 'ID',
+    FieldImageURL: 'Image URL',
+    FieldURL: 'Redirect URL',
+    FieldIsActive: 'Active',
+    FieldName: 'Title',
+    FieldDescription: 'Description',
+    FieldOrder: 'Order',
+    FieldCreatedAt: 'Created at',
+    FieldUpdatedAt: 'Updated at',
+    DeletePopup: {
+      Title: 'Deleting a Service Card entity',
+      Description: 'When you delete the service, it will no longer be displayed on the main screen'
     }
   },
   PnetServersQueue: {
@@ -222,6 +253,9 @@ const en = {
     SectionActionParams: 'Action when connecting',
     FieldCollaboration: 'Number of people to work together',
     FieldPinnedSessionMinutes: 'Pinned session on minutes',
+    FieldPNETLabsType: 'Type connection',
+    FieldPNETLabsTypeDefault: 'Default',
+    FieldPNETLabsTypeEnumeration: 'Enumeration',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',
     FieldCreatedAt: 'Created at',

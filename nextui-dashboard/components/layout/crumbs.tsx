@@ -1,14 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useLockedBody } from '../hooks/useBodyLock';
-import { NavbarWrapper } from '../navbar/navbar';
-import { SidebarWrapper } from '../sidebar/sidebar';
-import { SidebarContext } from './layout-context';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
 import { Link } from 'react-router-dom';
-import { RoutesLocation } from '@/components/routes';
-import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
 
 export interface CrumbsItem {
   icon?: React.ReactNode;

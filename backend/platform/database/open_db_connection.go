@@ -21,6 +21,7 @@ type Queries struct {
 	*queries.RoundQueuePoolQueries
 	*queries.LTIRoutingQueries
 	*queries.LTIAttemptQueries
+	*queries.ServiceCardQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -56,5 +57,6 @@ func OpenDBConnection() (*Queries, error) {
 		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db},
 		LTIRoutingQueries:     &queries.LTIRoutingQueries{DB: db},
 		LTIAttemptQueries:     &queries.LTIAttemptQueries{DB: db},
+		ServiceCardQueries:    &queries.ServiceCardQueries{DB: db},
 	}, nil
 }

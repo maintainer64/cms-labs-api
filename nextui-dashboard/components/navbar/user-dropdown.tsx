@@ -1,9 +1,9 @@
-import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@nextui-org/react';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@nextui-org/react';
 import React, { useCallback } from 'react';
 import { DarkModeSwitch } from './darkmodeswitch';
 import { userClearCookies } from '@/helpers/queries/jwt/userClearCookies';
 import useLanguageBrowser from '@/helpers/locale';
-import { useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
 import CustomAvatar from '@/components/sidebar/avatar';
 import { RoutesLocation } from '@/components/routes';
@@ -20,6 +20,10 @@ export const UserDropdown = () => {
 
   const handleChangeLanguage = useCallback(() => {
     navigate(RoutesLocation.language());
+  }, [navigate]);
+
+  const handleToServicesCards = useCallback(() => {
+    navigate(RoutesLocation.serviceCards());
   }, [navigate]);
 
   return (
@@ -46,6 +50,9 @@ export const UserDropdown = () => {
         </DropdownItem>
         <DropdownItem key='language' onPress={handleChangeLanguage}>
           {locale.UserNavBar.LanguageChange}
+        </DropdownItem>
+        <DropdownItem key='services' onPress={handleToServicesCards}>
+          {locale.Sidebar.ServiceCards}
         </DropdownItem>
         <DropdownItem key='logout' color='danger' className='text-danger' onPress={handleLogout}>
           {locale.UserNavBar.Logout}

@@ -17,14 +17,14 @@ const ru = {
   },
   CompaniesDropdown: {
     Title: 'СУиМ Лаб',
-    Description: 'УрФУ',
-    ContentService: 'Сервисы'
+    Description: 'УрФУ'
   },
   Sidebar: {
     Home: 'Главная',
     MainMenu: 'Главное меню',
     Users: 'Пользователи',
     Servers: 'Серверы',
+    ServiceCards: 'Сервисы',
     LTIIntegrations: 'LTIs',
     LTIRouting: 'Маршруты LTI',
     AnyList: 'Список',
@@ -96,6 +96,22 @@ const ru = {
       ColumnStatus: {
         DisconnectDistribution: 'Отключен от трафика',
         ConnectDistribution: 'Принимает трафик',
+        Activated: 'Активен',
+        Deactivated: 'Деактивирован'
+      }
+    },
+    ServiceCardsTable: {
+      Title: 'Сервисы',
+      ButtonAdd: 'Создать',
+      ButtonEdit: 'Редактировать',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'НАЗВАНИЕ', uid: 'name' },
+        { name: 'ПОЗИЦИЯ', uid: 'order' },
+        { name: 'АКТИВЕН', uid: 'is_active' },
+        { name: 'ДЕЙСТВИЕ', uid: 'actions' }
+      ],
+      ColumnStatus: {
         Activated: 'Активен',
         Deactivated: 'Деактивирован'
       }
@@ -202,6 +218,21 @@ const ru = {
       OrderByValueCreatedAt: 'дата'
     }
   },
+  ServiceCards: {
+    FieldID: 'ID',
+    FieldImageURL: 'URL для картинки',
+    FieldURL: 'URL для перехода',
+    FieldIsActive: 'Активный',
+    FieldName: 'Название',
+    FieldDescription: 'Описание',
+    FieldOrder: 'Сортировка',
+    FieldCreatedAt: 'Создан в',
+    FieldUpdatedAt: 'Обновлен в',
+    DeletePopup: {
+      Title: 'Удаление сущности Service Card',
+      Description: 'При удалении сервис перестанет отображаться на главном экране'
+    }
+  },
   PnetServersQueue: {
     RoundRobinChart: {
       Title: 'PNET распределение'
@@ -223,6 +254,9 @@ const ru = {
     SectionActionParams: 'Действие при подключении',
     FieldCollaboration: 'Кол-во человек для совместной работы',
     FieldPinnedSessionMinutes: 'Закрепить сессию в минутах',
+    FieldPNETLabsType: 'Тип подключения',
+    FieldPNETLabsTypeDefault: 'Прямое',
+    FieldPNETLabsTypeEnumeration: 'Перечисление',
     FieldPNETLabsPath: 'Подключение к лабораторной работе',
     FieldPNETTestPath: 'Запуск тестов лабораторной работы',
     FieldCreatedAt: 'Создан в',

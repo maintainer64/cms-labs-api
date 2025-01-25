@@ -24,11 +24,11 @@ export const useUserUpsert = (
     },
     ...options,
     async onSuccess(...args) {
-      await queryClient.invalidateQueries({ queryKey: ['postV1UserList'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1UserGet'] });
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
+      await queryClient.invalidateQueries({ queryKey: ['postV1UserList'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1UserGet'] });
     }
   });
 };

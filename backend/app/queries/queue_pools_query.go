@@ -59,7 +59,7 @@ func (q *RoundQueuePoolQueries) UpsertQueueByPnetServerIds(ids []uint) error {
 		func(tx *gorm.DB) error {
 			if err := tx.Where("type = ?", models.RoundQueuePoolTypePNET).Delete(&models.RoundQueuePool{}).Error; err != nil {
 				return err
-			}g
+			}
 			if err := tx.CreateInBatches(entities, 10).Error; err != nil {
 				return err
 			}
