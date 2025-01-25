@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/thoas/go-funk"
-
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
@@ -45,22 +43,23 @@ func (q *RoundQueuePoolQueries) Get(id uint) (models.RoundQueuePool, error) {
 
 func (q *RoundQueuePoolQueries) UpsertQueueByPnetServerIds(ids []uint) error {
 	log.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries upsert queue by pnet-server-ids: count %+v", len(ids)))
-	entities := funk.Map(ids, func(pnetServerId uint) models.RoundQueuePool {
+	var entities []models.RoundQueuePool
+	for index, pnetServerId := range ids {
 		entity := models.RoundQueuePool{}
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		entity.ConnectedAt = time.Now().UTC()
+		entity.ConnectedAt = time.Now().UTC().Add(time.Duration(index-len(ids)) * time.Minute)
 		entity.LastUsed = false
 		entity.IsActive = true
 		entity.PNETServerID = pnetServerId
 		entity.Type = models.RoundQueuePoolTypePNET
-		return entity
-	}).([]models.RoundQueuePool)
+		entities = append(entities, entity)
+	}
 	err := q.Transaction(
 		func(tx *gorm.DB) error {
 			if err := tx.Where("type = ?", models.RoundQueuePoolTypePNET).Delete(&models.RoundQueuePool{}).Error; err != nil {
 				return err
-			}
+			}g
 			if err := tx.CreateInBatches(entities, 10).Error; err != nil {
 				return err
 			}

@@ -156,12 +156,12 @@ const en = {
       IMSLTIAssignmentGradeServices: 'IMS LTI Assignment and Grade Services',
       IMSLTIAssignmentGradeServicesValue: 'Use this service for grade sync and column management',
       IMSLTINamesRoleProvisioning: 'IMS LTI Names and Role Provisioning',
-      IMSLTINamesRoleProvisioningValue: "Use this service to retrieve members' information as per privacy settings",
+      IMSLTINamesRoleProvisioningValue: 'Use this service to retrieve members\' information as per privacy settings',
       ToolSettings: 'Tool Settings',
       ToolSettingsValue: 'Use this service',
-      ShareLauncherNameWithTool: "Share launcher's name with tool",
+      ShareLauncherNameWithTool: 'Share launcher\'s name with tool',
       ShareLauncherNameWithToolValue: 'Always',
-      ShareLauncherEmailWithTool: "Share launcher's email with tool",
+      ShareLauncherEmailWithTool: 'Share launcher\'s email with tool',
       ShareLauncherEmailWithToolValue: 'Always',
       AcceptGradesTool: 'Accept grades from the tool',
       AcceptGradesToolValue: 'Always'
@@ -188,7 +188,7 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
       Title: 'Deleting a PNET Server entity',
-      Description: "When you take the PNET out, the PNET and CMS won't work together anymore"
+      Description: 'When you take the PNET out, the PNET and CMS won\'t work together anymore'
     },
     StatsChart: {
       Title: 'PNET stats',
@@ -204,6 +204,10 @@ const en = {
   PnetServersQueue: {
     RoundRobinChart: {
       Title: 'PNET distribution'
+    },
+    LTIAttemptRoom: {
+      ErrorPageTitle: 'Distribution error',
+      ErrorPageRefresh: 'Try again'
     }
   },
   LTIRouting: {

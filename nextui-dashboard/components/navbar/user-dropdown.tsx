@@ -31,6 +31,7 @@ export const UserDropdown = () => {
             as: 'button',
             size: 'md',
             username: user.name,
+            name: user.name,
             email: user.email
           })}
         </DropdownTrigger>

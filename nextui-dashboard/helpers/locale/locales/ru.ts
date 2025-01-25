@@ -205,6 +205,10 @@ const ru = {
   PnetServersQueue: {
     RoundRobinChart: {
       Title: 'PNET распределение'
+    },
+    LTIAttemptRoom: {
+      ErrorPageTitle: 'Ошибка при распределении',
+      ErrorPageRefresh: 'Попробовать снова'
     }
   },
   LTIRouting: {

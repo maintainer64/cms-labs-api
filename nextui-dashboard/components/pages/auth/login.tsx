@@ -2,7 +2,6 @@
 
 import { LoginSchema } from '@/helpers/schemas';
 import { LoginFormType } from '@/helpers/types';
-import { useNavigate } from 'react-router-dom';
 import { Button, Input } from '@nextui-org/react';
 import { Formik } from 'formik';
 import { useCallback } from 'react';
@@ -12,7 +11,6 @@ import { FormikHelpers } from 'formik/dist/types';
 import { RoutesLocation } from '@/components/routes';
 
 export const Login = () => {
-  const navigate = useNavigate();
   const { locale } = useLanguageBrowser();
 
   const initialValues: LoginFormType = {
@@ -32,25 +30,25 @@ export const Login = () => {
 
   return (
     <>
-      <div className='text-center text-[25px] font-bold mb-6'>{locale.Login.PageName}</div>
+      <div className="text-center text-[25px] font-bold mb-6">{locale.Login.PageName}</div>
 
       <Formik initialValues={initialValues} validationSchema={LoginSchema()} onSubmit={handleLogin}>
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <>
-            <div className='flex flex-col w-1/2 gap-4 mb-4'>
+            <div className="flex flex-col w-1/2 gap-4 mb-4">
               <Input
-                variant='bordered'
+                variant="bordered"
                 label={locale.Login.FieldEmail}
-                type='email'
+                type="email"
                 value={values.email}
                 isInvalid={!!errors.email && !!touched.email}
                 errorMessage={errors.email}
                 onChange={handleChange('email')}
               />
               <Input
-                variant='bordered'
+                variant="bordered"
                 label={locale.Login.FieldPassword}
-                type='password'
+                type="password"
                 value={values.password}
                 isInvalid={!!errors.password && !!touched.password}
                 errorMessage={errors.password}
@@ -58,7 +56,7 @@ export const Login = () => {
               />
             </div>
 
-            <Button onPress={() => handleSubmit()} variant='flat' color='primary'>
+            <Button onPress={() => handleSubmit()} variant="flat" color="primary">
               {locale.Login.Submit}
             </Button>
           </>

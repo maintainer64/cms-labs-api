@@ -14,6 +14,7 @@ export const RoutesLocation = {
   pnetServersEdit: (id = ':id') => `/pnet-servers/edit/${id}`,
   pnetServersCreate: () => `/pnet-servers/create`,
   profileChangePassword: () => `/profile/password`,
+  ltiAttemptCreate: () => '/lti-attempt/create',
   tasks: () => '/tasks',
   home: () => '/'
 };

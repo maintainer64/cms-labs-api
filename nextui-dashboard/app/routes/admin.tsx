@@ -8,6 +8,7 @@ import { RoutesLocation } from '@/components/routes';
 import { LTIFormsPage, LTIFormsPageEdit } from '@/app/(app)/lti-forms/page';
 import { PnetServersPage, PnetServersPageEdit } from '@/app/(app)/pnet-servers/page';
 import { LTIRoutingPage, LTIRoutingPageEdit } from '@/app/(app)/lti-routings/page';
+import { LTIAttemptsPageCreate } from '@/app/(app)/lti-attempts/page';
 
 const RoutesAdmin = () => {
   return (
@@ -22,6 +23,7 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.ltiRouting()} element={<LTIRoutingPage />} />
       <Route path={RoutesLocation.ltiRoutingEdit()} element={<LTIRoutingPageEdit />} />
       <Route path={RoutesLocation.ltiRoutingCreate()} element={<LTIRoutingPageEdit />} />
+      <Route path={RoutesLocation.ltiAttemptCreate()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.pnetServers()} element={<PnetServersPage />} />
       <Route path={RoutesLocation.pnetServersEdit()} element={<PnetServersPageEdit />} />
       <Route path={RoutesLocation.pnetServersCreate()} element={<PnetServersPageEdit />} />
