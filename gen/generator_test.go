@@ -25,7 +25,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/simple-app/backend/app/di"
 	"github.com/simple-app/backend/app/usecases"
-	"github.com/simple-app/backend/pkg/utils"
+	"github.com/simple-app/backend/pkg/response"
 )
 
 // UserFormLegacyCreate func for creates a new UserFormLegacy.
@@ -40,7 +40,7 @@ import (
 // @Router /v1/user-form-legacy/upsert [post]
 func UserFormLegacyCreate(c *fiber.Ctx) error {
 	dto := usecases.UserFormLegacyEditInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func UserFormLegacyCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 // UserFormLegacyList func for view of list UserFormLegacy.
@@ -67,7 +67,7 @@ func UserFormLegacyCreate(c *fiber.Ctx) error {
 // @Router /v1/user-form-legacy/list [post]
 func UserFormLegacyList(c *fiber.Ctx) error {
 	dto := usecases.UserFormLegacyListInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func UserFormLegacyList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 // UserFormLegacyDelete func for delete UserFormLegacy.
@@ -94,7 +94,7 @@ func UserFormLegacyList(c *fiber.Ctx) error {
 // @Router /v1/user-form-legacy/delete [post]
 func UserFormLegacyDelete(c *fiber.Ctx) error {
 	dto := usecases.UserFormLegacyDeleteInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func UserFormLegacyDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 // UserFormLegacyGet func for full model UserFormLegacy.
@@ -121,7 +121,7 @@ func UserFormLegacyDelete(c *fiber.Ctx) error {
 // @Router /v1/user-form-legacy/get [post]
 func UserFormLegacyGet(c *fiber.Ctx) error {
 	dto := usecases.UserFormLegacyGetInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -133,7 +133,7 @@ func UserFormLegacyGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 `,
@@ -145,13 +145,13 @@ func UserFormLegacyGet(c *fiber.Ctx) error {
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/simple-app/backend/app/usecases"
-	"github.com/simple-app/backend/pkg/utils"
+	"github.com/simple-app/backend/pkg/response"
 )
 
 func (di *DIContainer) UserFormLegacyEditUC() (*usecases.UserFormLegacyEditUC, error) {
 	db, err := di.Queries()
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, response.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyEditUC{
 		UserFormLegacyQueries: db.UserFormLegacyQueries,
@@ -161,7 +161,7 @@ func (di *DIContainer) UserFormLegacyEditUC() (*usecases.UserFormLegacyEditUC, e
 func (di *DIContainer) UserFormLegacyGetUC() (*usecases.UserFormLegacyGetUC, error) {
 	db, err := di.Queries()
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, response.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyGetUC{
 		UserFormLegacyQueries: db.UserFormLegacyQueries,
@@ -171,7 +171,7 @@ func (di *DIContainer) UserFormLegacyGetUC() (*usecases.UserFormLegacyGetUC, err
 func (di *DIContainer) UserFormLegacyListUC() (*usecases.UserFormLegacyListUC, error) {
 	db, err := di.Queries()
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, response.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyListUC{
 		UserFormLegacyQueries: db.UserFormLegacyQueries,
@@ -181,7 +181,7 @@ func (di *DIContainer) UserFormLegacyListUC() (*usecases.UserFormLegacyListUC, e
 func (di *DIContainer) UserFormLegacyDeleteUC() (*usecases.UserFormLegacyDeleteUC, error) {
 	db, err := di.Queries()
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, response.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &usecases.UserFormLegacyDeleteUC{
 		UserFormLegacyQueries: db.UserFormLegacyQueries,
@@ -230,7 +230,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/simple-app/backend/app/models"
-	"github.com/simple-app/backend/pkg/utils"
+	"github.com/simple-app/backend/pkg/response"
 	"gorm.io/gorm"
 	"time"
 )
@@ -243,7 +243,7 @@ func (q *UserFormLegacyQueries) Get(id uint) (models.UserFormLegacy, error) {
 	var entity models.UserFormLegacy
 	result := q.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
+		return entity, response.FiberValidationException{
 			Status:    fiber.StatusNotFound,
 			Exception: errors.New("UserFormLegacy not found"),
 		}
@@ -356,7 +356,7 @@ type UserFormLegacyDeleteInputDTO struct {
 	ID uint ` + "`json:\"id\" required:\"true\"`" + `
 }
 
-type UserFormLegacyDeleteResponse = Response[UserFormLegacyDeleteInputDTO]
+type UserFormLegacyDeleteResponse = response.Response[UserFormLegacyDeleteInputDTO]
 
 func (u *UserFormLegacyDeleteUC) Execute(dto UserFormLegacyDeleteInputDTO) (UserFormLegacyDeleteInputDTO, error) {
 	err := u.UserFormLegacyQueries.Delete(dto.ID)
@@ -391,7 +391,7 @@ type UserFormLegacyEditOutputDTO struct {
 	ID uint ` + "`json:\"id\" required:\"true\"`" + `
 }
 
-type UserFormLegacyEditResponse = Response[UserFormLegacyEditOutputDTO]
+type UserFormLegacyEditResponse = response.Response[UserFormLegacyEditOutputDTO]
 
 func (u *UserFormLegacyEditUC) Execute(dto UserFormLegacyEditInputDTO) (UserFormLegacyEditOutputDTO, error) {
 	entity := &models.UserFormLegacy{}
@@ -426,7 +426,7 @@ type UserFormLegacyGetOutputDTO struct {
 	Model models.UserFormLegacy ` + "`json:\"model\" required:\"true\"`" + `
 }
 
-type UserFormLegacyGetResponse = Response[UserFormLegacyGetOutputDTO]
+type UserFormLegacyGetResponse = response.Response[UserFormLegacyGetOutputDTO]
 
 func (u *UserFormLegacyGetUC) Execute(dto UserFormLegacyGetInputDTO) (UserFormLegacyGetOutputDTO, error) {
 	form, err := u.UserFormLegacyQueries.Get(dto.ID)
@@ -461,7 +461,7 @@ type UserFormLegacyListOutputDTO struct {
 	TotalCount int64                      ` + "`json:\"total_count\" validate:\"required\"`" + `
 }
 
-type UserFormLegacyListResponse = Response[UserFormLegacyListOutputDTO]
+type UserFormLegacyListResponse = response.Response[UserFormLegacyListOutputDTO]
 
 func (u *UserFormLegacyListUC) Execute(dto UserFormLegacyListInputDTO) (UserFormLegacyListOutputDTO, error) {
 	entities, count, err := u.UserFormLegacyQueries.List(dto.Search, dto.Limit, dto.Offset)

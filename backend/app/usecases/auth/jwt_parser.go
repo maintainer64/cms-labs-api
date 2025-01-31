@@ -13,7 +13,10 @@ import (
 )
 
 // ExtractTokenMetadata func to extract metadata from JWT.
-func ExtractTokenMetadata(c *fiber.Ctx, roles []string) (*TokenPublicData, error) {
+func ExtractTokenMetadata(
+	c *fiber.Ctx,
+	roles []string,
+) (*SSOTokenPublicData, error) {
 	token, err := verifyToken(c)
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
@@ -24,8 +27,9 @@ func ExtractTokenMetadata(c *fiber.Ctx, roles []string) (*TokenPublicData, error
 	if !ok || !token.Valid {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
-	tokenData := TokenPublicData{
+	tokenData := SSOTokenPublicData{
 		Id:           uint(claims["id"].(float64)),
+		ServerID:     uint(claims["server_id"].(float64)),
 		Email:        claims["email"].(string),
 		Name:         claims["name"].(string),
 		Role:         claims["role"].(string),

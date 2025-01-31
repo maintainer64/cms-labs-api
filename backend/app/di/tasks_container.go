@@ -12,7 +12,7 @@ func (di *DIContainer) TaskStartup() (*tasks.StartupFiberUC, error) {
 		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	return &tasks.StartupFiberUC{
-		UserQueries:      db.UserQueries,
-		UserTokenQueries: db.UserTokenQueries,
+		UserQueries:         db.UserQueries,
+		UserPasswordQueries: db.UserPasswordQueries,
 	}, nil
 }

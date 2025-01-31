@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { postV1TokenCheck } from '@/helpers/api';
+import { postV1SsoUserinfo } from '@/helpers/api';
 
 export const userGetCookies = () => {
   return useQuery({
     queryKey: ['userGetCookies'],
     queryFn: () => {
-      return postV1TokenCheck({ form: {} });
+      return postV1SsoUserinfo({ authorization: '' });
     },
     retry: 0
   });

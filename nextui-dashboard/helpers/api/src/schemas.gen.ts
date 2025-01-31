@@ -21,7 +21,55 @@ export const auth_RenewManagerInputDTOSchema = {
   }
 } as const;
 
-export const auth_RenewManagerResponseSchema = {
+export const auth_SSOAuthorizeInputDTOSchema = {
+  type: 'object',
+  properties: {
+    client_id: {
+      type: 'string'
+    },
+    path: {
+      type: 'string'
+    },
+    redirect_uri: {
+      type: 'string'
+    },
+    response_type: {
+      type: 'string'
+    },
+    scope: {
+      type: 'string'
+    },
+    state: {
+      type: 'string'
+    },
+    user_id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const auth_SSOAuthorizeOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    application: {
+      type: 'string'
+    },
+    code: {
+      type: 'string'
+    },
+    path: {
+      type: 'string'
+    },
+    redirect_uri: {
+      type: 'string'
+    },
+    state: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const auth_SSOAuthorizeResponseSchema = {
   type: 'object',
   required: ['error', 'msg'],
   properties: {
@@ -32,40 +80,82 @@ export const auth_RenewManagerResponseSchema = {
       type: 'string'
     },
     result: {
-      $ref: '#/definitions/auth.Tokens'
+      $ref: '#/definitions/auth.SSOAuthorizeOutputDTO'
     }
   }
 } as const;
 
-export const auth_RenewManagerUserResponseSchema = {
+export const auth_SSOTokenSchema = {
   type: 'object',
-  required: ['error', 'msg'],
   properties: {
-    error: {
-      type: 'boolean'
-    },
-    msg: {
+    access_token: {
       type: 'string'
     },
-    result: {
-      $ref: '#/definitions/auth.TokenPublicData'
+    expires_in: {
+      type: 'integer'
+    },
+    refresh_token: {
+      type: 'string'
+    },
+    state: {
+      type: 'string'
+    },
+    token_type: {
+      type: 'string'
+    },
+    user_id: {
+      type: 'integer'
     }
   }
 } as const;
 
-export const auth_TokenDataWithExpSchema = {
+export const auth_SSOTokenIntrospectSchema = {
   type: 'object',
   properties: {
+    active: {
+      type: 'boolean'
+    },
+    client_id: {
+      type: 'string'
+    },
     exp: {
       type: 'integer'
     },
-    token: {
+    iat: {
+      type: 'integer'
+    },
+    scope: {
+      type: 'string'
+    },
+    sub: {
+      type: 'string'
+    },
+    token_type: {
+      type: 'string'
+    },
+    username: {
       type: 'string'
     }
   }
 } as const;
 
-export const auth_TokenPublicDataSchema = {
+export const auth_SSOTokenIntrospectResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/auth.SSOTokenIntrospect'
+    }
+  }
+} as const;
+
+export const auth_SSOTokenPublicDataSchema = {
   type: 'object',
   properties: {
     email: {
@@ -85,18 +175,81 @@ export const auth_TokenPublicDataSchema = {
     },
     role: {
       type: 'string'
+    },
+    server_id: {
+      type: 'integer'
     }
   }
 } as const;
 
-export const auth_TokensSchema = {
+export const auth_SSOTokenResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/auth.SSOToken'
+    }
+  }
+} as const;
+
+export const auth_SsoTokenPublicDataResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/auth.SSOTokenPublicData'
+    }
+  }
+} as const;
+
+export const auth_UserPasswordChangeInputDTOSchema = {
   type: 'object',
   properties: {
-    access: {
-      $ref: '#/definitions/auth.TokenDataWithExp'
+    again_password: {
+      type: 'string'
     },
-    refresh: {
-      $ref: '#/definitions/auth.TokenDataWithExp'
+    new_password: {
+      type: 'string'
+    },
+    old_password: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const auth_UserPasswordChangeOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const auth_UserPasswordRecoverResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/auth.UserPasswordChangeOutputDTO'
     }
   }
 } as const;
@@ -311,6 +464,9 @@ export const models_PNETServerSchema = {
   type: 'object',
   required: ['created_at', 'updated_at'],
   properties: {
+    client_id: {
+      type: 'string'
+    },
     created_at: {
       type: 'string'
     },
@@ -336,6 +492,9 @@ export const models_PNETServerSchema = {
       type: 'string'
     },
     token: {
+      type: 'string'
+    },
+    type: {
       type: 'string'
     },
     unit_rate: {
@@ -376,6 +535,9 @@ export const models_PNETServerListItemSchema = {
       type: 'integer'
     },
     name: {
+      type: 'string'
+    },
+    type: {
       type: 'string'
     },
     unit_rate: {
@@ -1171,8 +1333,11 @@ export const usecases_PNETServerDeleteResponseSchema = {
 
 export const usecases_PNETServerEditInputDTOSchema = {
   type: 'object',
-  required: ['name', 'url'],
+  required: ['name', 'type', 'url'],
   properties: {
+    client_id: {
+      type: 'string'
+    },
     id: {
       type: 'integer'
     },
@@ -1186,6 +1351,9 @@ export const usecases_PNETServerEditInputDTOSchema = {
       type: 'integer'
     },
     name: {
+      type: 'string'
+    },
+    type: {
       type: 'string'
     },
     unit_rate: {
@@ -1340,7 +1508,6 @@ export const usecases_ServiceCardDeleteResponseSchema = {
 
 export const usecases_ServiceCardEditInputDTOSchema = {
   type: 'object',
-  required: ['description', 'image_url', 'is_active', 'name', 'order', 'url'],
   properties: {
     description: {
       type: 'string'
@@ -1602,46 +1769,6 @@ export const usecases_UserListResponseSchema = {
     },
     result: {
       $ref: '#/definitions/usecases.UserListOutputDTO'
-    }
-  }
-} as const;
-
-export const usecases_UserPasswordChangeInputDTOSchema = {
-  type: 'object',
-  properties: {
-    again_password: {
-      type: 'string'
-    },
-    new_password: {
-      type: 'string'
-    },
-    old_password: {
-      type: 'string'
-    }
-  }
-} as const;
-
-export const usecases_UserPasswordChangeOutputDTOSchema = {
-  type: 'object',
-  properties: {
-    id: {
-      type: 'integer'
-    }
-  }
-} as const;
-
-export const usecases_UserPasswordRecoverResponseSchema = {
-  type: 'object',
-  required: ['error', 'msg'],
-  properties: {
-    error: {
-      type: 'boolean'
-    },
-    msg: {
-      type: 'string'
-    },
-    result: {
-      $ref: '#/definitions/usecases.UserPasswordChangeOutputDTO'
     }
   }
 } as const;

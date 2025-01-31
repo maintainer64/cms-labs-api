@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIRoutingEditUC struct {
@@ -27,7 +28,7 @@ type LTIRoutingEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LTIRoutingEditResponse = Response[LTIRoutingEditOutputDTO]
+type LTIRoutingEditResponse = response.Response[LTIRoutingEditOutputDTO]
 
 func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOutputDTO, error) {
 	entity := &models.LTIRouting{}

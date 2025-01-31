@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type ServiceCardEditUC struct {
@@ -23,7 +24,7 @@ type ServiceCardEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type ServiceCardEditResponse = Response[ServiceCardEditOutputDTO]
+type ServiceCardEditResponse = response.Response[ServiceCardEditOutputDTO]
 
 func (u *ServiceCardEditUC) Execute(dto ServiceCardEditInputDTO) (ServiceCardEditOutputDTO, error) {
 	entity := &models.ServiceCard{}

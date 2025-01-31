@@ -3,6 +3,8 @@ package usecases
 import (
 	"strings"
 
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
+
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 )
@@ -19,7 +21,7 @@ type LTIFormGetOutputDTO struct {
 	Model models.LTIForm `json:"model" required:"true"`
 }
 
-type LTIFormGetResponse = Response[LTIFormGetOutputDTO]
+type LTIFormGetResponse = response.Response[LTIFormGetOutputDTO]
 
 func (u *LTIFormGetUC) ReplacePublicKey(publicKey string) string {
 	return strings.Replace(

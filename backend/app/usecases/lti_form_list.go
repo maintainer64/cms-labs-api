@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIFormListUC struct {
@@ -20,7 +21,7 @@ type LTIFormListOutputDTO struct {
 	TotalCount int64                    `json:"total_count" validate:"required"`
 }
 
-type LTIFormListResponse = Response[LTIFormListOutputDTO]
+type LTIFormListResponse = response.Response[LTIFormListOutputDTO]
 
 func (u *LTIFormListUC) Execute(dto LTIFormListInputDTO) (LTIFormListOutputDTO, error) {
 	entities, count, err := u.LTIFormQueries.List(dto.Search, dto.Limit, dto.Offset)

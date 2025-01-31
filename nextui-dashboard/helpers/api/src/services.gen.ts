@@ -48,8 +48,16 @@ import type {
   PostV1ServiceCardListResponse,
   PostV1ServiceCardUpsertData,
   PostV1ServiceCardUpsertResponse,
-  PostV1TokenCheckData,
-  PostV1TokenCheckResponse,
+  GetV1SsoAuthorizeData,
+  GetV1SsoAuthorizeResponse,
+  PostV1SsoAuthorizeData,
+  PostV1SsoAuthorizeResponse,
+  PostV1SsoIntrospectData,
+  PostV1SsoIntrospectResponse,
+  PostV1SsoTokenData,
+  PostV1SsoTokenResponse,
+  PostV1SsoUserinfoData,
+  PostV1SsoUserinfoResponse,
   PostV1TokenLoginData,
   PostV1TokenLoginResponse,
   PostV1TokenLogoutResponse,
@@ -458,18 +466,114 @@ export const postV1ServiceCardUpsert = (
 };
 
 /**
- * view data from access token
- * View data access token.
+ * Получение кода авторизации по OpenID.
+ * Получение кода авторизации по OpenID.
  * @param data The data for the request.
- * @param data.form renew token form info
- * @returns auth_RenewManagerUserResponse OK
+ * @param data.clientId Код приложения клиента
+ * @param data.redirectUri Адрес переадресации клиента
+ * @param data.responseType Тип ответа. Возможные значения: [code]
+ * @param data.scope Область доступа (значения, разделённые запятой). Возможные значения: [default, openid]
+ * @param data.path Путь, возвращается в параметрах редиректа
+ * @param data.state Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации
+ * @returns auth_SSOAuthorizeResponse OK
  * @throws ApiError
  */
-export const postV1TokenCheck = (data: PostV1TokenCheckData): CancelablePromise<PostV1TokenCheckResponse> => {
+export const getV1SsoAuthorize = (data: GetV1SsoAuthorizeData): CancelablePromise<GetV1SsoAuthorizeResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/sso/authorize',
+    query: {
+      client_id: data.clientId,
+      redirect_uri: data.redirectUri,
+      response_type: data.responseType,
+      scope: data.scope,
+      path: data.path,
+      state: data.state
+    }
+  });
+};
+
+/**
+ * Получение кода авторизации по OpenID.
+ * Получение кода авторизации по OpenID.
+ * @param data The data for the request.
+ * @param data.form renew token form info
+ * @returns auth_SSOAuthorizeResponse OK
+ * @throws ApiError
+ */
+export const postV1SsoAuthorize = (data: PostV1SsoAuthorizeData): CancelablePromise<PostV1SsoAuthorizeResponse> => {
   return __request(OpenAPI, {
     method: 'POST',
-    url: '/v1/token/check',
+    url: '/v1/sso/authorize',
     body: data.form
+  });
+};
+
+/**
+ * Проверка состояния токена.
+ * Проверка состояния токена.
+ * @param data The data for the request.
+ * @param data.token Токен доступа или токен обновления
+ * @param data.authorization Basic-токен, созданный клиентом
+ * @returns auth_SSOTokenIntrospectResponse OK
+ * @throws ApiError
+ */
+export const postV1SsoIntrospect = (data: PostV1SsoIntrospectData): CancelablePromise<PostV1SsoIntrospectResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/sso/introspect',
+    headers: {
+      Authorization: data.authorization
+    },
+    formData: {
+      token: data.token
+    }
+  });
+};
+
+/**
+ * Получение токена доступа и токена обновления.
+ * Получение токена доступа и токена обновления.
+ * @param data The data for the request.
+ * @param data.grantType Тип авторизации [authorization_code, refresh_token]
+ * @param data.authorization Basic-токен, созданный клиентом
+ * @param data.redirectUri Адрес переадресации клиента
+ * @param data.code Код авторизации
+ * @param data.refreshToken Токен обновления
+ * @returns auth_SSOTokenResponse OK
+ * @throws ApiError
+ */
+export const postV1SsoToken = (data: PostV1SsoTokenData): CancelablePromise<PostV1SsoTokenResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/sso/token',
+    headers: {
+      Authorization: data.authorization
+    },
+    formData: {
+      grant_type: data.grantType,
+      redirect_uri: data.redirectUri,
+      code: data.code,
+      refresh_token: data.refreshToken
+    }
+  });
+};
+
+/**
+ * Получить информацию о пользователе.
+ * Получить информацию о пользователе.
+ * @param data The data for the request.
+ * @param data.authorization Bearer токен
+ * @returns auth_SsoTokenPublicDataResponse OK
+ * @throws ApiError
+ */
+export const postV1SsoUserinfo = (data: PostV1SsoUserinfoData): CancelablePromise<PostV1SsoUserinfoResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/sso/userinfo',
+    headers: {
+      Authorization: data.authorization
+    }
   });
 };
 
@@ -478,7 +582,7 @@ export const postV1TokenCheck = (data: PostV1TokenCheckData): CancelablePromise<
  * Login by email and password.
  * @param data The data for the request.
  * @param data.form credentials form info
- * @returns auth_RenewManagerResponse OK
+ * @returns auth_SSOTokenResponse OK
  * @throws ApiError
  */
 export const postV1TokenLogin = (data: PostV1TokenLoginData): CancelablePromise<PostV1TokenLoginResponse> => {
@@ -492,7 +596,7 @@ export const postV1TokenLogin = (data: PostV1TokenLoginData): CancelablePromise<
 /**
  * logout
  * Logout.
- * @returns auth_RenewManagerResponse OK
+ * @returns auth_SSOTokenResponse OK
  * @throws ApiError
  */
 export const postV1TokenLogout = (): CancelablePromise<PostV1TokenLogoutResponse> => {
@@ -507,7 +611,7 @@ export const postV1TokenLogout = (): CancelablePromise<PostV1TokenLogoutResponse
  * Change password.
  * @param data The data for the request.
  * @param data.form credentials form info
- * @returns usecases_UserPasswordRecoverResponse OK
+ * @returns auth_UserPasswordRecoverResponse OK
  * @throws ApiError
  */
 export const postV1TokenPasswordChange = (
@@ -525,7 +629,7 @@ export const postV1TokenPasswordChange = (
  * Renew access and refresh tokens.
  * @param data The data for the request.
  * @param data.form renew token form info
- * @returns auth_RenewManagerResponse OK
+ * @returns auth_SSOTokenResponse OK
  * @throws ApiError
  */
 export const postV1TokenRenew = (data: PostV1TokenRenewData): CancelablePromise<PostV1TokenRenewResponse> => {

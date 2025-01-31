@@ -9,7 +9,6 @@ import (
 func V1AuthRoute(a *fiber.App) {
 	group := a.Group("/api/v1/token")
 	group.Post("/renew", controllers.TokensRenew)
-	group.Post("/check", controllers.TokensCheck)
 	group.Post("/password_change", controllers.TokensPasswordRecover)
 	group.Post("/login", controllers.TokensByCredentials)
 	group.Post("/logout", controllers.TokensRemove)

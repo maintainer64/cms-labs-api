@@ -1,4 +1,4 @@
-package usecases
+package response
 
 type Response[T any] struct {
 	Error  bool   `json:"error" validate:"required"`

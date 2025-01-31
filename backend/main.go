@@ -51,6 +51,7 @@ func main() {
 	// Routes.
 	routes.SwaggerRoute(app)
 	routes.V1AuthRoute(app)
+	routes.V1SSORoute(app)
 	routes.V1UserRoutes(app)
 	routes.V1LTIFormRoutes(app)
 	routes.V1LTIAttemptRoutes(app)

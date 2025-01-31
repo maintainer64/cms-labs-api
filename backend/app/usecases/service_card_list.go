@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type ServiceCardListUC struct {
@@ -20,7 +21,7 @@ type ServiceCardListOutputDTO struct {
 	TotalCount int64                        `json:"total_count" validate:"required"`
 }
 
-type ServiceCardListResponse = Response[ServiceCardListOutputDTO]
+type ServiceCardListResponse = response.Response[ServiceCardListOutputDTO]
 
 func (u *ServiceCardListUC) Execute(dto ServiceCardListInputDTO) (ServiceCardListOutputDTO, error) {
 	entities, count, err := u.ServiceCardQueries.List(dto.Search, dto.Limit, dto.Offset)

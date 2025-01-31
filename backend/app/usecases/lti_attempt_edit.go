@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIAttemptEditUC struct {
@@ -22,7 +23,7 @@ type LTIAttemptEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LTIAttemptEditResponse = Response[LTIAttemptEditOutputDTO]
+type LTIAttemptEditResponse = response.Response[LTIAttemptEditOutputDTO]
 
 func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOutputDTO, error) {
 	entity := &models.LTIAttempt{}

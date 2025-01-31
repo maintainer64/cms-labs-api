@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Button, Checkbox, Input } from '@nextui-org/react';
+import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react';
 import { Formik } from 'formik';
 import { models_PNETServer } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
@@ -20,6 +20,8 @@ interface EditFormProps {
 }
 
 const defaultValues: models_PNETServer = {
+  client_id: '',
+  type: 'pnet',
   created_at: '',
   is_active: true,
   last_count_users: 0,
@@ -112,51 +114,72 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
               value={values.url ?? ''}
               onChange={handleChange('url')}
             />
+            <Input
+              variant='bordered'
+              label={PnetServers.FieldClientID}
+              description={PnetServers.FieldClientIDDescription}
+              type='text'
+              value={values.client_id ?? ''}
+              onChange={handleChange('client_id')}
+            />
+            <Select
+              variant='bordered'
+              label={PnetServers.FieldType}
+              selectedKeys={[values.type ?? '']}
+              onSelectionChange={(keys) => setFieldValue('type', keys.currentKey || 'pnet')}
+            >
+              <SelectItem key='pnet'>PNET</SelectItem>
+              <SelectItem key='openid'>OpenID</SelectItem>
+            </Select>
             <Checkbox type='checkbox' defaultSelected={!!values.is_active} onChange={handleChange('is_active')}>
               {PnetServers.FieldIsActive}
             </Checkbox>
-            <Input
-              variant='bordered'
-              label={PnetServers.FieldUnitRate}
-              type='number'
-              value={(values.unit_rate ?? '').toString()}
-              onChange={handleChange('unit_rate')}
-            />
-            <Input
-              variant='bordered'
-              label={PnetServers.FieldMinutesForDisconnect}
-              description={PnetServers.DescriptionMinutesForDisconnect}
-              type='number'
-              value={(values.minutes_for_disconnect ?? '').toString()}
-              onChange={handleChange('minutes_for_disconnect')}
-            />
-            <Input
-              variant='bordered'
-              label={PnetServers.FieldMaxCountUsers}
-              description={PnetServers.DescriptionMaxCountUsers}
-              type='number'
-              value={(values.max_count_users_limit ?? '').toString()}
-              onChange={handleChange('max_count_users_limit')}
-            />
+            {values.type === 'pnet' && (
+              <>
+                <Input
+                  variant='bordered'
+                  label={PnetServers.FieldUnitRate}
+                  type='number'
+                  value={(values.unit_rate ?? '').toString()}
+                  onChange={handleChange('unit_rate')}
+                />
+                <Input
+                  variant='bordered'
+                  label={PnetServers.FieldMinutesForDisconnect}
+                  description={PnetServers.DescriptionMinutesForDisconnect}
+                  type='number'
+                  value={(values.minutes_for_disconnect ?? '').toString()}
+                  onChange={handleChange('minutes_for_disconnect')}
+                />
+                <Input
+                  variant='bordered'
+                  label={PnetServers.FieldMaxCountUsers}
+                  description={PnetServers.DescriptionMaxCountUsers}
+                  type='number'
+                  value={(values.max_count_users_limit ?? '').toString()}
+                  onChange={handleChange('max_count_users_limit')}
+                />
+                <Input
+                  variant='bordered'
+                  label={PnetServers.FieldLastOnlineStatus}
+                  type='datetime-local'
+                  value={dayjs(initialValues.last_online_status ?? '').format('YYYY-MM-DDTHH:mm')}
+                  isReadOnly
+                />
+                <Input
+                  variant='bordered'
+                  label={PnetServers.FieldLastCountUsers}
+                  type='number'
+                  value={(initialValues.last_count_users ?? '').toString()}
+                  isReadOnly
+                />
+              </>
+            )}
             <PasswordInput
               variant='bordered'
               label={PnetServers.FieldToken}
               type='password'
               value={initialValues.token ?? ''}
-            />
-            <Input
-              variant='bordered'
-              label={PnetServers.FieldLastOnlineStatus}
-              type='datetime-local'
-              value={dayjs(initialValues.last_online_status ?? '').format('YYYY-MM-DDTHH:mm')}
-              isReadOnly
-            />
-            <Input
-              variant='bordered'
-              label={PnetServers.FieldLastCountUsers}
-              type='number'
-              value={(initialValues.last_count_users ?? '').toString()}
-              isReadOnly
             />
             <Input
               variant='bordered'

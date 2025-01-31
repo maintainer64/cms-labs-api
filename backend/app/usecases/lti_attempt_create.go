@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"time"
 
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ory/go-convenience/mapx"
@@ -25,7 +27,7 @@ type LTIAttemptCreateUC struct {
 	LTIRoutingQueries     *queries.LTIRoutingQueries
 	PNETServerQueries     *queries.PNETServerQueries
 	UserQueries           *queries.UserQueries
-	user                  *auth.TokenPublicData
+	user                  *auth.SSOTokenPublicData
 }
 
 type LTIAttemptCreateInputDTO struct {
@@ -39,9 +41,9 @@ type LTIAttemptCreateOutputDTO struct {
 	Members       []models.UserListItem `json:"members"`
 }
 
-type LTIAttemptCreateResponse = Response[LTIAttemptCreateOutputDTO]
+type LTIAttemptCreateResponse = response.Response[LTIAttemptCreateOutputDTO]
 
-func (u *LTIAttemptCreateUC) SetContext(user *auth.TokenPublicData) *LTIAttemptCreateUC {
+func (u *LTIAttemptCreateUC) SetContext(user *auth.SSOTokenPublicData) *LTIAttemptCreateUC {
 	u.user = user
 	return u
 }

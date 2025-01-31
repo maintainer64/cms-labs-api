@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type PNETServerListUC struct {
@@ -16,7 +17,7 @@ type PNETServerListOutputDTO struct {
 	TotalCount int64                       `json:"total_count" validate:"required"`
 }
 
-type PNETServerListResponse = Response[PNETServerListOutputDTO]
+type PNETServerListResponse = response.Response[PNETServerListOutputDTO]
 
 func (u *PNETServerListUC) Execute(dto PNETServerListInputDTO) (PNETServerListOutputDTO, error) {
 	entities, count, err := u.PNETServerQueries.List(dto)

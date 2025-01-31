@@ -24,6 +24,8 @@ func FiberMiddleware(a *fiber.App) {
 		}),
 		// Add simple healthcheck.
 		healthcheck.New(),
+		// Service middleware
+		NewServiceAuthMiddleware(),
 		// InternalFormatterException
 		InternalFormatterNew(configs.AppConfig.Debug),
 	)

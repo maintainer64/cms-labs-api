@@ -3,10 +3,11 @@ package round_queue_pool_pnet
 import (
 	"fmt"
 
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
+
 	"github.com/thoas/go-funk"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases"
 )
 
 type RoundQueuePoolPnetUpsert struct {
@@ -17,7 +18,7 @@ type RoundQueuePoolPnetUpsert struct {
 type RoundQueuePoolPnetUpsertOutputDTO struct {
 }
 
-type RoundQueuePoolPnetUpsertResponse = usecases.Response[RoundQueuePoolPnetUpsertOutputDTO]
+type RoundQueuePoolPnetUpsertResponse = response.Response[RoundQueuePoolPnetUpsertOutputDTO]
 
 func (u *RoundQueuePoolPnetUpsert) pnetServerEntityToStats(item models.PNETServerListItem) ServerStats {
 	return ServerStats{

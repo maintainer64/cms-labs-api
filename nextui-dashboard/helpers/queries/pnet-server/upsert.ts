@@ -18,7 +18,9 @@ export const usePnetServerUpsert = (
           minutes_for_disconnect: values.minutes_for_disconnect || 0,
           max_count_users_limit: values.max_count_users_limit || 0,
           unit_rate: values.unit_rate,
-          url: values.url || ''
+          url: values.url || '',
+          type: values.type || 'pnet',
+          client_id: values.client_id || ''
         }
       });
     },

@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"{{.Root}}/app/di"
 	"{{.Root}}/app/usecases"
-	"{{.Root}}/pkg/utils"
+	"{{.Root}}/pkg/response"
 )
 
 // {{.Name}}Create func for creates a new {{.Name}}.
@@ -21,7 +21,7 @@ import (
 // @Router /v1/{{.NameDash}}/upsert [post]
 func {{.Name}}Create(c *fiber.Ctx) error {
 	dto := usecases.{{.Name}}EditInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func {{.Name}}Create(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 // {{.Name}}List func for view of list {{.Name}}.
@@ -48,7 +48,7 @@ func {{.Name}}Create(c *fiber.Ctx) error {
 // @Router /v1/{{.NameDash}}/list [post]
 func {{.Name}}List(c *fiber.Ctx) error {
 	dto := usecases.{{.Name}}ListInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func {{.Name}}List(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 // {{.Name}}Delete func for delete {{.Name}}.
@@ -75,7 +75,7 @@ func {{.Name}}List(c *fiber.Ctx) error {
 // @Router /v1/{{.NameDash}}/delete [post]
 func {{.Name}}Delete(c *fiber.Ctx) error {
 	dto := usecases.{{.Name}}DeleteInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func {{.Name}}Delete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 // {{.Name}}Get func for full model {{.Name}}.
@@ -102,7 +102,7 @@ func {{.Name}}Delete(c *fiber.Ctx) error {
 // @Router /v1/{{.NameDash}}/get [post]
 func {{.Name}}Get(c *fiber.Ctx) error {
 	dto := usecases.{{.Name}}GetInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := response.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -114,7 +114,7 @@ func {{.Name}}Get(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return response.FiberSuccessResponse{Result: output}
 }
 
 `

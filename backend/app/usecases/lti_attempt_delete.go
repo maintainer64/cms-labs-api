@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIAttemptDeleteUC struct {
@@ -12,7 +13,7 @@ type LTIAttemptDeleteInputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LTIAttemptDeleteResponse = Response[LTIAttemptDeleteInputDTO]
+type LTIAttemptDeleteResponse = response.Response[LTIAttemptDeleteInputDTO]
 
 func (u *LTIAttemptDeleteUC) Execute(dto LTIAttemptDeleteInputDTO) (LTIAttemptDeleteInputDTO, error) {
 	err := u.LTIAttemptQueries.Delete(dto.ID)

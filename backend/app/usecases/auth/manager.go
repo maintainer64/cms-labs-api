@@ -11,8 +11,9 @@ import (
 )
 
 type TokenManager struct {
-	UserQueries      *queries.UserQueries
-	UserTokenQueries *queries.UserTokenQueries
+	UserQueries         *queries.UserQueries
+	UserPasswordQueries *queries.UserPasswordQueries
+	TokenAttemptQueries *queries.TokenAttemptQueries
 }
 
 type RenewManagerInputDTO struct {
@@ -24,46 +25,8 @@ type RenewManagerCredentialsInputDTO struct {
 	Password string `json:"password" required:"true"`
 }
 
-type RenewManagerResponse struct {
-	Error  bool   `json:"error" validate:"required"`
-	Msg    string `json:"msg" validate:"required"`
-	Result Tokens `json:"result"`
-}
-
-type RenewManagerUserResponse struct {
-	Error  bool            `json:"error" validate:"required"`
-	Msg    string          `json:"msg" validate:"required"`
-	Result TokenPublicData `json:"result"`
-}
-
-// NewJWTByUserId генерирует новый JWT по пользователю
-func (m *TokenManager) NewJWTByUserId(
-	userId uint,
-) (*Tokens, error) {
-	return m.newJWTByUserId(userId)
-}
-
-// NewJWTByRefreshToken генерирует новый JWT по Refresh token'у
-func (m *TokenManager) NewJWTByRefreshToken(
-	refreshToken string,
-) (*Tokens, error) {
-	expiresRefreshToken, err := ParseRefreshToken(refreshToken)
-	if err != nil {
-		return nil, err
-	}
-	now := time.Now().Unix()
-	if now >= expiresRefreshToken {
-		return nil, errors.New("refresh token is expired")
-	}
-	refreshTokenEntity, err := m.UserTokenQueries.GetByRefreshToken(refreshToken)
-	if err != nil {
-		return nil, err
-	}
-	return m.newJWTByUserId(refreshTokenEntity.UserID)
-}
-
 // NewJWTByCredentials генерирует новый JWT по логину/паролю
-func (m *TokenManager) NewJWTByCredentials(email string, password string) (*Tokens, error) {
+func (m *TokenManager) NewJWTByCredentials(email string, password string) (*SSOToken, error) {
 	invalidCreds := errors.New("username or password is incorrect")
 	if email == "" {
 		return nil, invalidCreds
@@ -76,7 +39,7 @@ func (m *TokenManager) NewJWTByCredentials(email string, password string) (*Toke
 	if err != nil {
 		return nil, invalidCreds
 	}
-	creds, err := m.UserTokenQueries.Get(entity.ID)
+	creds, err := m.UserPasswordQueries.Get(entity.ID)
 	if err != nil {
 		return nil, invalidCreds
 	}
@@ -84,39 +47,42 @@ func (m *TokenManager) NewJWTByCredentials(email string, password string) (*Toke
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.newJWTByUserId(entity.ID)
+	return m.newJWTByUserId(entity.ID, 0, "")
 }
 
-// NewJWTByLaunchID генерирует новый JWT по входу LTI
-func (m *TokenManager) NewJWTByLaunchID(launchID string) (*Tokens, error) {
+func (m *TokenManager) NewJWTByLaunchID(launchID string) (*SSOToken, error) {
+	invalidCreds := errors.New("LTI process is incorrect")
+	if launchID == "" {
+		return nil, invalidCreds
+	}
 	entity, err := m.UserQueries.GetByLaunchID(launchID)
 	if err != nil {
-		return nil, err
+		return nil, invalidCreds
 	}
-	return m.newJWTByUserId(entity.ID)
+	return m.newJWTByUserId(entity.ID, 0, "")
 }
 
-func (m *TokenManager) newJWTByUserId(userId uint) (*Tokens, error) {
+func (m *TokenManager) newJWTByUserId(userId uint, serverID uint, state string) (*SSOToken, error) {
 	userModel, err := m.UserQueries.Get(userId)
 	if err != nil {
 		return nil, err
 	}
-	tokens, err := GenerateNewTokens(&TokenPublicData{
+	tokens, err := GenerateNewTokens(&SSOTokenPublicData{
 		Id:           userModel.ID,
 		Email:        userModel.Email,
+		ServerID:     serverID,
 		Name:         userModel.Name,
 		LastLaunchId: userModel.LastLaunchID,
 		Role:         userModel.UserRole,
-	})
+	}, state)
 	if err != nil {
 		return nil, err
 	}
-	if err = m.UserTokenQueries.Upsert(
-		&models.UserToken{
-			UserID:       userModel.ID,
-			RefreshToken: tokens.Refresh.Token,
-		},
-	); err != nil {
+	refreshModel := &models.TokenAttempt{}
+	refreshModel.UserID = userId
+	refreshModel.ServerID = serverID
+	refreshModel.Token = tokens.RefreshToken
+	if err = m.TokenAttemptQueries.Upsert(refreshModel); err != nil {
 		return nil, err
 	}
 	return tokens, nil

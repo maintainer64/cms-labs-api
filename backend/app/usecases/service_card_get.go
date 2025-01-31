@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type ServiceCardGetUC struct {
@@ -17,7 +18,7 @@ type ServiceCardGetOutputDTO struct {
 	Model models.ServiceCard `json:"model" required:"true"`
 }
 
-type ServiceCardGetResponse = Response[ServiceCardGetOutputDTO]
+type ServiceCardGetResponse = response.Response[ServiceCardGetOutputDTO]
 
 func (u *ServiceCardGetUC) Execute(dto ServiceCardGetInputDTO) (ServiceCardGetOutputDTO, error) {
 	form, err := u.ServiceCardQueries.Get(dto.ID)

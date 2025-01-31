@@ -1,10 +1,10 @@
 import { createContext, ReactNode } from 'react';
 import { userGetCookies } from '@/helpers/queries/jwt/userGetCookies';
-import { auth_TokenPublicData } from '@/helpers/api';
+import { auth_SSOTokenPublicData } from '@/helpers/api';
 import AuthLoadingWrapper from '@/components/pages/auth/loader';
 
 type UserProfileProfile = {
-  profile?: auth_TokenPublicData;
+  profile?: auth_SSOTokenPublicData;
 };
 
 type UserProfileProvider = {

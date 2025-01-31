@@ -9,35 +9,92 @@ export type auth_RenewManagerInputDTO = {
   refresh_token?: string;
 };
 
-export type auth_RenewManagerResponse = {
-  error: boolean;
-  msg: string;
-  result?: auth_Tokens;
+export type auth_SSOAuthorizeInputDTO = {
+  client_id?: string;
+  path?: string;
+  redirect_uri?: string;
+  response_type?: string;
+  scope?: string;
+  state?: string;
+  user_id?: number;
 };
 
-export type auth_RenewManagerUserResponse = {
-  error: boolean;
-  msg: string;
-  result?: auth_TokenPublicData;
+export type auth_SSOAuthorizeOutputDTO = {
+  application?: string;
+  code?: string;
+  path?: string;
+  redirect_uri?: string;
+  state?: string;
 };
 
-export type auth_TokenDataWithExp = {
+export type auth_SSOAuthorizeResponse = {
+  error: boolean;
+  msg: string;
+  result?: auth_SSOAuthorizeOutputDTO;
+};
+
+export type auth_SSOToken = {
+  access_token?: string;
+  expires_in?: number;
+  refresh_token?: string;
+  state?: string;
+  token_type?: string;
+  user_id?: number;
+};
+
+export type auth_SSOTokenIntrospect = {
+  active?: boolean;
+  client_id?: string;
   exp?: number;
-  token?: string;
+  iat?: number;
+  scope?: string;
+  sub?: string;
+  token_type?: string;
+  username?: string;
 };
 
-export type auth_TokenPublicData = {
+export type auth_SSOTokenIntrospectResponse = {
+  error: boolean;
+  msg: string;
+  result?: auth_SSOTokenIntrospect;
+};
+
+export type auth_SSOTokenPublicData = {
   email?: string;
   exp?: number;
   id?: number;
   last_launch_id?: string;
   name?: string;
   role?: string;
+  server_id?: number;
 };
 
-export type auth_Tokens = {
-  access?: auth_TokenDataWithExp;
-  refresh?: auth_TokenDataWithExp;
+export type auth_SSOTokenResponse = {
+  error: boolean;
+  msg: string;
+  result?: auth_SSOToken;
+};
+
+export type auth_SsoTokenPublicDataResponse = {
+  error: boolean;
+  msg: string;
+  result?: auth_SSOTokenPublicData;
+};
+
+export type auth_UserPasswordChangeInputDTO = {
+  again_password?: string;
+  new_password?: string;
+  old_password?: string;
+};
+
+export type auth_UserPasswordChangeOutputDTO = {
+  id?: number;
+};
+
+export type auth_UserPasswordRecoverResponse = {
+  error: boolean;
+  msg: string;
+  result?: auth_UserPasswordChangeOutputDTO;
 };
 
 export type models_LTIAttempt = {
@@ -118,6 +175,7 @@ export type models_LTIRoutingListItem = {
 };
 
 export type models_PNETServer = {
+  client_id?: string;
   created_at: string;
   id?: number;
   is_active?: boolean;
@@ -127,6 +185,7 @@ export type models_PNETServer = {
   minutes_for_disconnect?: number;
   name?: string;
   token?: string;
+  type?: string;
   unit_rate?: number;
   updated_at: string;
   url?: string;
@@ -141,6 +200,7 @@ export type models_PNETServerListItem = {
   max_count_users_limit?: number;
   minutes_for_disconnect?: number;
   name?: string;
+  type?: string;
   unit_rate?: number;
   updated_at: string;
   url?: string;
@@ -436,11 +496,13 @@ export type usecases_PNETServerDeleteResponse = {
 };
 
 export type usecases_PNETServerEditInputDTO = {
+  client_id?: string;
   id?: number;
   is_active?: boolean;
   max_count_users_limit?: number;
   minutes_for_disconnect?: number;
   name: string;
+  type: string;
   unit_rate?: number;
   url: string;
 };
@@ -507,13 +569,13 @@ export type usecases_ServiceCardDeleteResponse = {
 };
 
 export type usecases_ServiceCardEditInputDTO = {
-  description: string;
+  description?: string;
   id?: number;
-  image_url: string;
-  is_active: boolean;
-  name: string;
-  order: number;
-  url: string;
+  image_url?: string;
+  is_active?: boolean;
+  name?: string;
+  order?: number;
+  url?: string;
 };
 
 export type usecases_ServiceCardEditOutputDTO = {
@@ -606,22 +668,6 @@ export type usecases_UserListResponse = {
   error: boolean;
   msg: string;
   result?: usecases_UserListOutputDTO;
-};
-
-export type usecases_UserPasswordChangeInputDTO = {
-  again_password?: string;
-  new_password?: string;
-  old_password?: string;
-};
-
-export type usecases_UserPasswordChangeOutputDTO = {
-  id?: number;
-};
-
-export type usecases_UserPasswordRecoverResponse = {
-  error: boolean;
-  msg: string;
-  result?: usecases_UserPasswordChangeOutputDTO;
 };
 
 export type PostV1LtiAttemptCreateData = {
@@ -817,14 +863,90 @@ export type PostV1ServiceCardUpsertData = {
 
 export type PostV1ServiceCardUpsertResponse = usecases_ServiceCardEditResponse;
 
-export type PostV1TokenCheckData = {
+export type GetV1SsoAuthorizeData = {
+  /**
+   * Код приложения клиента
+   */
+  clientId: string;
+  /**
+   * Путь, возвращается в параметрах редиректа
+   */
+  path?: string;
+  /**
+   * Адрес переадресации клиента
+   */
+  redirectUri: string;
+  /**
+   * Тип ответа. Возможные значения: [code]
+   */
+  responseType: 'code';
+  /**
+   * Область доступа (значения, разделённые запятой). Возможные значения: [default, openid]
+   */
+  scope: 'default' | 'openid';
+  /**
+   * Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации
+   */
+  state?: string;
+};
+
+export type GetV1SsoAuthorizeResponse = auth_SSOAuthorizeResponse;
+
+export type PostV1SsoAuthorizeData = {
   /**
    * renew token form info
    */
-  form: auth_RenewManagerInputDTO;
+  form: auth_SSOAuthorizeInputDTO;
 };
 
-export type PostV1TokenCheckResponse = auth_RenewManagerUserResponse;
+export type PostV1SsoAuthorizeResponse = auth_SSOAuthorizeResponse;
+
+export type PostV1SsoIntrospectData = {
+  /**
+   * Basic-токен, созданный клиентом
+   */
+  authorization: string;
+  /**
+   * Токен доступа или токен обновления
+   */
+  token: string;
+};
+
+export type PostV1SsoIntrospectResponse = auth_SSOTokenIntrospectResponse;
+
+export type PostV1SsoTokenData = {
+  /**
+   * Basic-токен, созданный клиентом
+   */
+  authorization: string;
+  /**
+   * Код авторизации
+   */
+  code?: string;
+  /**
+   * Тип авторизации [authorization_code, refresh_token]
+   */
+  grantType: 'authorization_code' | 'refresh_token';
+  /**
+   * Адрес переадресации клиента
+   */
+  redirectUri?: string;
+  /**
+   * Токен обновления
+   */
+  refreshToken?: string;
+};
+
+export type PostV1SsoTokenResponse = auth_SSOTokenResponse;
+
+export type PostV1SsoUserinfoData = {
+  /**
+   * Bearer токен
+   */
+  authorization: string;
+};
+
+export type PostV1SsoUserinfoResponse = auth_SsoTokenPublicDataResponse;
 
 export type PostV1TokenLoginData = {
   /**
@@ -833,18 +955,18 @@ export type PostV1TokenLoginData = {
   form: auth_RenewManagerCredentialsInputDTO;
 };
 
-export type PostV1TokenLoginResponse = auth_RenewManagerResponse;
+export type PostV1TokenLoginResponse = auth_SSOTokenResponse;
 
-export type PostV1TokenLogoutResponse = auth_RenewManagerResponse;
+export type PostV1TokenLogoutResponse = auth_SSOTokenResponse;
 
 export type PostV1TokenPasswordChangeData = {
   /**
    * credentials form info
    */
-  form: usecases_UserPasswordChangeInputDTO;
+  form: auth_UserPasswordChangeInputDTO;
 };
 
-export type PostV1TokenPasswordChangeResponse = usecases_UserPasswordRecoverResponse;
+export type PostV1TokenPasswordChangeResponse = auth_UserPasswordRecoverResponse;
 
 export type PostV1TokenRenewData = {
   /**
@@ -853,7 +975,7 @@ export type PostV1TokenRenewData = {
   form: auth_RenewManagerInputDTO;
 };
 
-export type PostV1TokenRenewResponse = auth_RenewManagerResponse;
+export type PostV1TokenRenewResponse = auth_SSOTokenResponse;
 
 export type PostV1UserGetData = {
   /**

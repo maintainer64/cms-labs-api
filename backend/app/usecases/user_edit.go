@@ -3,6 +3,8 @@ package usecases
 import (
 	"time"
 
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
+
 	"github.com/ory/go-convenience/stringsx"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
@@ -26,7 +28,7 @@ type UserEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type UserEditResponse = Response[UserEditOutputDTO]
+type UserEditResponse = response.Response[UserEditOutputDTO]
 
 func (u *UserEditUC) Execute(dto UserEditInputDTO) (UserEditOutputDTO, error) {
 	now := time.Now().UTC()

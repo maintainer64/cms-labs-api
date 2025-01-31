@@ -9,6 +9,9 @@ import useLanguageBrowser from '@/helpers/locale';
 import { postV1TokenLogin } from '@/helpers/api';
 import { FormikHelpers } from 'formik/dist/types';
 import { RoutesLocation } from '@/components/routes';
+import { SSOAuthorizationComplete, SSOAuthorizationParams } from '@/components/pages/auth/sso';
+import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
+import { useSSOAuth } from '@/helpers/queries/sso/auth';
 
 export const Login = () => {
   const { locale } = useLanguageBrowser();
@@ -17,16 +20,32 @@ export const Login = () => {
     email: '',
     password: ''
   };
+  const params = SSOAuthorizationParams();
+  const user = useUserProfile();
 
   const handleLogin = useCallback(async (values: LoginFormType, formikHelpers: FormikHelpers<LoginFormType>) => {
     try {
-      const response = await postV1TokenLogin({ form: { email: values.email, password: values.password } });
+      await postV1TokenLogin({ form: { email: values.email, password: values.password } });
       window.location.href = RoutesLocation.home();
     } catch (error: any) {
       formikHelpers.setErrors({});
       formikHelpers.setErrors({ password: error.body.msg });
     }
   }, []);
+
+  if (user && user.id && params.redirect_uri) {
+    const authSSO = useSSOAuth(params);
+    if (authSSO.data?.result) {
+      window.location.href = SSOAuthorizationComplete(authSSO.data?.result);
+    }
+    // @ts-ignore
+    const text = authSSO.error?.body?.msg || locale.SSO.Wait;
+    return (
+      <>
+        <div className='text-center text-[25px] font-bold mb-6'>{text}</div>
+      </>
+    );
+  }
 
   return (
     <>

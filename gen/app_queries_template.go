@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"{{.Root}}/app/models"
-	"{{.Root}}/pkg/utils"
+	"{{.Root}}/pkg/response"
 	"gorm.io/gorm"
 	"time"
 )
@@ -20,7 +20,7 @@ func (q *{{.Name}}Queries) Get(id uint) (models.{{.Name}}, error) {
 	var entity models.{{.Name}}
 	result := q.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
+		return entity, response.FiberValidationException{
 			Status:    fiber.StatusNotFound,
 			Exception: errors.New("{{.Name}} not found"),
 		}

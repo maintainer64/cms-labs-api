@@ -16,12 +16,13 @@ type Queries struct {
 	*lti_query.LTIAccessTokenQueries
 	*lti_query.LTILaunchDataQueries
 	*queries.UserQueries
-	*queries.UserTokenQueries
+	*queries.UserPasswordQueries
 	*queries.PNETServerQueries
 	*queries.RoundQueuePoolQueries
 	*queries.LTIRoutingQueries
 	*queries.LTIAttemptQueries
 	*queries.ServiceCardQueries
+	*queries.TokenAttemptQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -52,11 +53,12 @@ func OpenDBConnection() (*Queries, error) {
 		LTIAccessTokenQueries: &lti_query.LTIAccessTokenQueries{DB: db},
 		LTILaunchDataQueries:  &lti_query.LTILaunchDataQueries{DB: db},
 		UserQueries:           &queries.UserQueries{DB: db},
-		UserTokenQueries:      &queries.UserTokenQueries{DB: db},
+		UserPasswordQueries:   &queries.UserPasswordQueries{DB: db},
 		PNETServerQueries:     &queries.PNETServerQueries{DB: db},
 		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db},
 		LTIRoutingQueries:     &queries.LTIRoutingQueries{DB: db},
 		LTIAttemptQueries:     &queries.LTIAttemptQueries{DB: db},
 		ServiceCardQueries:    &queries.ServiceCardQueries{DB: db},
+		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db},
 	}, nil
 }

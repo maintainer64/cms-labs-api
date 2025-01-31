@@ -898,14 +898,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/token/check": {
-            "post": {
+        "/v1/sso/authorize": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "View data access token.",
+                "description": "Получение кода авторизации по OpenID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -913,9 +913,84 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Token"
+                    "SSO"
                 ],
-                "summary": "view data from access token",
+                "summary": "Получение кода авторизации по OpenID.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Код приложения клиента",
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Адрес переадресации клиента",
+                        "name": "redirect_uri",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "code"
+                        ],
+                        "type": "string",
+                        "description": "Тип ответа. Возможные значения: [code]",
+                        "name": "response_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "default",
+                            "openid"
+                        ],
+                        "type": "string",
+                        "description": "Область доступа (значения, разделённые запятой). Возможные значения: [default, openid]",
+                        "name": "scope",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Путь, возвращается в параметрах редиректа",
+                        "name": "path",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации",
+                        "name": "state",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOAuthorizeResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение кода авторизации по OpenID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Получение кода авторизации по OpenID.",
                 "parameters": [
                     {
                         "description": "renew token form info",
@@ -923,7 +998,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.RenewManagerInputDTO"
+                            "$ref": "#/definitions/auth.SSOAuthorizeInputDTO"
                         }
                     }
                 ],
@@ -931,7 +1006,154 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.RenewManagerUserResponse"
+                            "$ref": "#/definitions/auth.SSOAuthorizeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/sso/introspect": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Проверка состояния токена.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Проверка состояния токена.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Токен доступа или токен обновления",
+                        "name": "token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOTokenIntrospectResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/sso/token": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение токена доступа и токена обновления.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Получение токена доступа и токена обновления.",
+                "parameters": [
+                    {
+                        "enum": [
+                            "authorization_code",
+                            "refresh_token"
+                        ],
+                        "type": "string",
+                        "description": "Тип авторизации [authorization_code, refresh_token]",
+                        "name": "grant_type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Адрес переадресации клиента",
+                        "name": "redirect_uri",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Код авторизации",
+                        "name": "code",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Токен обновления",
+                        "name": "refresh_token",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOTokenResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/sso/userinfo": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получить информацию о пользователе.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Получить информацию о пользователе.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer токен",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SsoTokenPublicDataResponse"
                         }
                     }
                 }
@@ -965,7 +1187,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.RenewManagerResponse"
+                            "$ref": "#/definitions/auth.SSOTokenResponse"
                         }
                     }
                 }
@@ -988,7 +1210,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.RenewManagerResponse"
+                            "$ref": "#/definitions/auth.SSOTokenResponse"
                         }
                     }
                 }
@@ -1014,7 +1236,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.UserPasswordChangeInputDTO"
+                            "$ref": "#/definitions/auth.UserPasswordChangeInputDTO"
                         }
                     }
                 ],
@@ -1022,7 +1244,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.UserPasswordRecoverResponse"
+                            "$ref": "#/definitions/auth.UserPasswordRecoverResponse"
                         }
                     }
                 }
@@ -1056,7 +1278,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.RenewManagerResponse"
+                            "$ref": "#/definitions/auth.SSOTokenResponse"
                         }
                     }
                 }
@@ -1276,7 +1498,53 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.RenewManagerResponse": {
+        "auth.SSOAuthorizeInputDTO": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "redirect_uri": {
+                    "type": "string"
+                },
+                "response_type": {
+                    "type": "string"
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "auth.SSOAuthorizeOutputDTO": {
+            "type": "object",
+            "properties": {
+                "application": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "redirect_uri": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.SSOAuthorizeResponse": {
             "type": "object",
             "required": [
                 "error",
@@ -1290,40 +1558,81 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "result": {
-                    "$ref": "#/definitions/auth.Tokens"
+                    "$ref": "#/definitions/auth.SSOAuthorizeOutputDTO"
                 }
             }
         },
-        "auth.RenewManagerUserResponse": {
+        "auth.SSOToken": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
+                "access_token": {
                     "type": "string"
                 },
-                "result": {
-                    "$ref": "#/definitions/auth.TokenPublicData"
+                "expires_in": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
-        "auth.TokenDataWithExp": {
+        "auth.SSOTokenIntrospect": {
             "type": "object",
             "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "client_id": {
+                    "type": "string"
+                },
                 "exp": {
                     "type": "integer"
                 },
-                "token": {
+                "iat": {
+                    "type": "integer"
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "sub": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
         },
-        "auth.TokenPublicData": {
+        "auth.SSOTokenIntrospectResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/auth.SSOTokenIntrospect"
+                }
+            }
+        },
+        "auth.SSOTokenPublicData": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1343,17 +1652,85 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
+                },
+                "server_id": {
+                    "type": "integer"
                 }
             }
         },
-        "auth.Tokens": {
+        "auth.SSOTokenResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/auth.SSOToken"
+                }
+            }
+        },
+        "auth.SsoTokenPublicDataResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/auth.SSOTokenPublicData"
+                }
+            }
+        },
+        "auth.UserPasswordChangeInputDTO": {
             "type": "object",
             "properties": {
-                "access": {
-                    "$ref": "#/definitions/auth.TokenDataWithExp"
+                "again_password": {
+                    "type": "string"
                 },
-                "refresh": {
-                    "$ref": "#/definitions/auth.TokenDataWithExp"
+                "new_password": {
+                    "type": "string"
+                },
+                "old_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.UserPasswordChangeOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "auth.UserPasswordRecoverResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/auth.UserPasswordChangeOutputDTO"
                 }
             }
         },
@@ -1583,6 +1960,9 @@ const docTemplate = `{
                 "updated_at"
             ],
             "properties": {
+                "client_id": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -1608,6 +1988,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "token": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 },
                 "unit_rate": {
@@ -1650,6 +2033,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 },
                 "unit_rate": {
@@ -2490,9 +2876,13 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
+                "type",
                 "url"
             ],
             "properties": {
+                "client_id": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2506,6 +2896,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 },
                 "unit_rate": {
@@ -2662,14 +3055,6 @@ const docTemplate = `{
         },
         "usecases.ServiceCardEditInputDTO": {
             "type": "object",
-            "required": [
-                "description",
-                "image_url",
-                "is_active",
-                "name",
-                "order",
-                "url"
-            ],
             "properties": {
                 "description": {
                     "type": "string"
@@ -2941,46 +3326,6 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.UserListOutputDTO"
-                }
-            }
-        },
-        "usecases.UserPasswordChangeInputDTO": {
-            "type": "object",
-            "properties": {
-                "again_password": {
-                    "type": "string"
-                },
-                "new_password": {
-                    "type": "string"
-                },
-                "old_password": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.UserPasswordChangeOutputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.UserPasswordRecoverResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.UserPasswordChangeOutputDTO"
                 }
             }
         }

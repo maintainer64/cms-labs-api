@@ -12,38 +12,95 @@ definitions:
       refresh_token:
         type: string
     type: object
-  auth.RenewManagerResponse:
+  auth.SSOAuthorizeInputDTO:
+    properties:
+      client_id:
+        type: string
+      path:
+        type: string
+      redirect_uri:
+        type: string
+      response_type:
+        type: string
+      scope:
+        type: string
+      state:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  auth.SSOAuthorizeOutputDTO:
+    properties:
+      application:
+        type: string
+      code:
+        type: string
+      path:
+        type: string
+      redirect_uri:
+        type: string
+      state:
+        type: string
+    type: object
+  auth.SSOAuthorizeResponse:
     properties:
       error:
         type: boolean
       msg:
         type: string
       result:
-        $ref: '#/definitions/auth.Tokens'
+        $ref: '#/definitions/auth.SSOAuthorizeOutputDTO'
     required:
     - error
     - msg
     type: object
-  auth.RenewManagerUserResponse:
+  auth.SSOToken:
     properties:
-      error:
-        type: boolean
-      msg:
+      access_token:
         type: string
-      result:
-        $ref: '#/definitions/auth.TokenPublicData'
-    required:
-    - error
-    - msg
+      expires_in:
+        type: integer
+      refresh_token:
+        type: string
+      state:
+        type: string
+      token_type:
+        type: string
+      user_id:
+        type: integer
     type: object
-  auth.TokenDataWithExp:
+  auth.SSOTokenIntrospect:
     properties:
+      active:
+        type: boolean
+      client_id:
+        type: string
       exp:
         type: integer
-      token:
+      iat:
+        type: integer
+      scope:
+        type: string
+      sub:
+        type: string
+      token_type:
+        type: string
+      username:
         type: string
     type: object
-  auth.TokenPublicData:
+  auth.SSOTokenIntrospectResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/auth.SSOTokenIntrospect'
+    required:
+    - error
+    - msg
+    type: object
+  auth.SSOTokenPublicData:
     properties:
       email:
         type: string
@@ -57,13 +114,58 @@ definitions:
         type: string
       role:
         type: string
+      server_id:
+        type: integer
     type: object
-  auth.Tokens:
+  auth.SSOTokenResponse:
     properties:
-      access:
-        $ref: '#/definitions/auth.TokenDataWithExp'
-      refresh:
-        $ref: '#/definitions/auth.TokenDataWithExp'
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/auth.SSOToken'
+    required:
+    - error
+    - msg
+    type: object
+  auth.SsoTokenPublicDataResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/auth.SSOTokenPublicData'
+    required:
+    - error
+    - msg
+    type: object
+  auth.UserPasswordChangeInputDTO:
+    properties:
+      again_password:
+        type: string
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
+  auth.UserPasswordChangeOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  auth.UserPasswordRecoverResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/auth.UserPasswordChangeOutputDTO'
+    required:
+    - error
+    - msg
     type: object
   models.LTIAttempt:
     properties:
@@ -221,6 +323,8 @@ definitions:
     type: object
   models.PNETServer:
     properties:
+      client_id:
+        type: string
       created_at:
         type: string
       id:
@@ -238,6 +342,8 @@ definitions:
       name:
         type: string
       token:
+        type: string
+      type:
         type: string
       unit_rate:
         type: integer
@@ -266,6 +372,8 @@ definitions:
       minutes_for_disconnect:
         type: integer
       name:
+        type: string
+      type:
         type: string
       unit_rate:
         type: integer
@@ -828,6 +936,8 @@ definitions:
     type: object
   usecases.PNETServerEditInputDTO:
     properties:
+      client_id:
+        type: string
       id:
         type: integer
       is_active:
@@ -838,12 +948,15 @@ definitions:
         type: integer
       name:
         type: string
+      type:
+        type: string
       unit_rate:
         type: integer
       url:
         type: string
     required:
     - name
+    - type
     - url
     type: object
   usecases.PNETServerEditOutputDTO:
@@ -961,13 +1074,6 @@ definitions:
         type: integer
       url:
         type: string
-    required:
-    - description
-    - image_url
-    - is_active
-    - name
-    - order
-    - url
     type: object
   usecases.ServiceCardEditOutputDTO:
     properties:
@@ -1129,32 +1235,6 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.UserListOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.UserPasswordChangeInputDTO:
-    properties:
-      again_password:
-        type: string
-      new_password:
-        type: string
-      old_password:
-        type: string
-    type: object
-  usecases.UserPasswordChangeOutputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.UserPasswordRecoverResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.UserPasswordChangeOutputDTO'
     required:
     - error
     - msg
@@ -1709,30 +1789,176 @@ paths:
       summary: create service_card
       tags:
       - ServiceCard
-  /v1/token/check:
-    post:
+  /v1/sso/authorize:
+    get:
       consumes:
       - application/json
-      description: View data access token.
+      description: Получение кода авторизации по OpenID.
       parameters:
-      - description: renew token form info
-        in: body
-        name: form
+      - description: Код приложения клиента
+        in: query
+        name: client_id
         required: true
-        schema:
-          $ref: '#/definitions/auth.RenewManagerInputDTO'
+        type: string
+      - description: Адрес переадресации клиента
+        in: query
+        name: redirect_uri
+        required: true
+        type: string
+      - description: 'Тип ответа. Возможные значения: [code]'
+        enum:
+        - code
+        in: query
+        name: response_type
+        required: true
+        type: string
+      - description: 'Область доступа (значения, разделённые запятой). Возможные значения:
+          [default, openid]'
+        enum:
+        - default
+        - openid
+        in: query
+        name: scope
+        required: true
+        type: string
+      - description: Путь, возвращается в параметрах редиректа
+        in: query
+        name: path
+        type: string
+      - description: Состояние, возвращается в параметрах редиректа, участвует в генерации
+          кода авторизации
+        in: query
+        name: state
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.RenewManagerUserResponse'
+            $ref: '#/definitions/auth.SSOAuthorizeResponse'
       security:
       - ApiKeyAuth: []
-      summary: view data from access token
+      summary: Получение кода авторизации по OpenID.
       tags:
-      - Token
+      - SSO
+    post:
+      consumes:
+      - application/json
+      description: Получение кода авторизации по OpenID.
+      parameters:
+      - description: renew token form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SSOAuthorizeInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SSOAuthorizeResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получение кода авторизации по OpenID.
+      tags:
+      - SSO
+  /v1/sso/introspect:
+    post:
+      consumes:
+      - application/json
+      description: Проверка состояния токена.
+      parameters:
+      - description: Токен доступа или токен обновления
+        in: formData
+        name: token
+        required: true
+        type: string
+      - description: Basic-токен, созданный клиентом
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SSOTokenIntrospectResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Проверка состояния токена.
+      tags:
+      - SSO
+  /v1/sso/token:
+    post:
+      consumes:
+      - application/json
+      description: Получение токена доступа и токена обновления.
+      parameters:
+      - description: Тип авторизации [authorization_code, refresh_token]
+        enum:
+        - authorization_code
+        - refresh_token
+        in: formData
+        name: grant_type
+        required: true
+        type: string
+      - description: Адрес переадресации клиента
+        in: formData
+        name: redirect_uri
+        type: string
+      - description: Код авторизации
+        in: formData
+        name: code
+        type: string
+      - description: Токен обновления
+        in: formData
+        name: refresh_token
+        type: string
+      - description: Basic-токен, созданный клиентом
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SSOTokenResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получение токена доступа и токена обновления.
+      tags:
+      - SSO
+  /v1/sso/userinfo:
+    post:
+      consumes:
+      - application/json
+      description: Получить информацию о пользователе.
+      parameters:
+      - description: Bearer токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SsoTokenPublicDataResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получить информацию о пользователе.
+      tags:
+      - SSO
   /v1/token/login:
     post:
       consumes:
@@ -1751,7 +1977,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.RenewManagerResponse'
+            $ref: '#/definitions/auth.SSOTokenResponse'
       summary: login by email and password
       tags:
       - Token
@@ -1766,7 +1992,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.RenewManagerResponse'
+            $ref: '#/definitions/auth.SSOTokenResponse'
       summary: logout
       tags:
       - Token
@@ -1781,14 +2007,14 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.UserPasswordChangeInputDTO'
+          $ref: '#/definitions/auth.UserPasswordChangeInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.UserPasswordRecoverResponse'
+            $ref: '#/definitions/auth.UserPasswordRecoverResponse'
       summary: change password
       tags:
       - Token
@@ -1810,7 +2036,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.RenewManagerResponse'
+            $ref: '#/definitions/auth.SSOTokenResponse'
       summary: renew access and refresh tokens
       tags:
       - Token

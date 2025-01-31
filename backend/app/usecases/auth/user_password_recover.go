@@ -1,16 +1,17 @@
-package usecases
+package auth
 
 import (
 	"errors"
 
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
+
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserPasswordRecoverUC struct {
-	UserTokenQueries *queries.UserTokenQueries
-	User             *auth.TokenPublicData
+	UserPasswordQueries *queries.UserPasswordQueries
+	User                *SSOTokenPublicData
 }
 
 type UserPasswordChangeInputDTO struct {
@@ -23,9 +24,9 @@ type UserPasswordChangeOutputDTO struct {
 	Id uint `json:"id"`
 }
 
-type UserPasswordRecoverResponse = Response[UserPasswordChangeOutputDTO]
+type UserPasswordRecoverResponse = response.Response[UserPasswordChangeOutputDTO]
 
-func (u *UserPasswordRecoverUC) SetContext(user *auth.TokenPublicData) *UserPasswordRecoverUC {
+func (u *UserPasswordRecoverUC) SetContext(user *SSOTokenPublicData) *UserPasswordRecoverUC {
 	u.User = user
 	return u
 }
@@ -38,7 +39,7 @@ func (u *UserPasswordRecoverUC) Execute(dto UserPasswordChangeInputDTO) (UserPas
 	if dto.NewPassword != dto.AgainPassword {
 		return response, wrongPassword
 	}
-	creds, err := u.UserTokenQueries.Get(u.User.Id)
+	creds, err := u.UserPasswordQueries.Get(u.User.Id)
 	if err != nil {
 		return response, wrongPassword
 	}
@@ -54,7 +55,7 @@ func (u *UserPasswordRecoverUC) Execute(dto UserPasswordChangeInputDTO) (UserPas
 		return response, wrongPassword
 	}
 	creds.HashPassword = string(newHashPassword)
-	_ = u.UserTokenQueries.Upsert(&creds)
+	_ = u.UserPasswordQueries.Upsert(&creds)
 	response.Id = u.User.Id
 	return response, err
 }

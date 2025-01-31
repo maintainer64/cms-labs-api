@@ -150,3 +150,15 @@ func (q *PNETServerQueries) Delete(id uint) error {
 	log.Debug().Msg(fmt.Sprintf("PNETServerQueries: delete entity by id: %+v", id))
 	return tx.Error
 }
+
+func (q *PNETServerQueries) GetByClientId(clientID string) (models.PNETServer, error) {
+	var entity models.PNETServer
+	result := q.Where("client_id = ?", clientID).Limit(1).Find(&entity)
+	if entity.ID == 0 {
+		return entity, utils.FiberValidationException{
+			Status:    fiber.StatusNotFound,
+			Exception: errors.New("PNETServer not found"),
+		}
+	}
+	return entity, result.Error
+}

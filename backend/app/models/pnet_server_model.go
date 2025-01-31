@@ -6,10 +6,16 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	ServerTypePnet   = "pnet"
+	ServerTypeOpenID = "openid"
+)
+
 // PNETServerBase struct to describe PNETServer object.
 type PNETServerBase struct {
 	Name                 string     `gorm:"type:varchar(255)" json:"name"`
 	Url                  string     `gorm:"type:varchar(255)" json:"url"`
+	Type                 string     `gorm:"type:varchar(255)" json:"type"`
 	IsActive             bool       `gorm:"type:bool" json:"is_active"`
 	MinutesForDisconnect int        `gorm:"type:int" json:"minutes_for_disconnect"`
 	MaxCountUsersLimit   int        `gorm:"type:int" json:"max_count_users_limit"`
@@ -20,12 +26,14 @@ type PNETServerBase struct {
 
 func PNETServeIsRealActive(db *gorm.DB) *gorm.DB {
 	return db.Where("pnet_servers.is_active = ?", true).
+		Where("pnet_servers.type = ?", ServerTypePnet).
 		Where("UTC_TIMESTAMP() < DATE_ADD(pnet_servers.last_online_status, INTERVAL pnet_servers.minutes_for_disconnect MINUTE) OR pnet_servers.minutes_for_disconnect = 0").
 		Where("pnet_servers.last_count_users < pnet_servers.max_count_users_limit OR pnet_servers.max_count_users_limit = 0")
 }
 
 type PNETServerSecret struct {
-	Token string `gorm:"type:bool" json:"token" valid:"required"`
+	Token    string `gorm:"type:string" json:"token" valid:"required"`
+	ClientID string `gorm:"type:string" json:"client_id" valid:"required"`
 }
 
 type PNETServerListItem struct {

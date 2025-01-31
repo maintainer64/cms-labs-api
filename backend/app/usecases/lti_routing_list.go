@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIRoutingListUC struct {
@@ -20,7 +21,7 @@ type LTIRoutingListOutputDTO struct {
 	TotalCount int64                       `json:"total_count" validate:"required"`
 }
 
-type LTIRoutingListResponse = Response[LTIRoutingListOutputDTO]
+type LTIRoutingListResponse = response.Response[LTIRoutingListOutputDTO]
 
 func (u *LTIRoutingListUC) Execute(dto LTIRoutingListInputDTO) (LTIRoutingListOutputDTO, error) {
 	entities, count, err := u.LTIRoutingQueries.List(dto.Search, dto.Limit, dto.Offset)

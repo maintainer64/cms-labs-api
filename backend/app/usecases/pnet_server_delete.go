@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type PNETServerDeleteUC struct {
@@ -12,7 +13,7 @@ type PNETServerDeleteInputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type PNETServerDeleteResponse = Response[PNETServerDeleteInputDTO]
+type PNETServerDeleteResponse = response.Response[PNETServerDeleteInputDTO]
 
 func (u *PNETServerDeleteUC) Execute(dto PNETServerDeleteInputDTO) (PNETServerDeleteInputDTO, error) {
 	err := u.PNETServerQueries.Delete(dto.ID)

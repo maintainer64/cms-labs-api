@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIAttemptGetUC struct {
@@ -17,7 +18,7 @@ type LTIAttemptGetOutputDTO struct {
 	Model models.LTIAttempt `json:"model" required:"true"`
 }
 
-type LTIAttemptGetResponse = Response[LTIAttemptGetOutputDTO]
+type LTIAttemptGetResponse = response.Response[LTIAttemptGetOutputDTO]
 
 func (u *LTIAttemptGetUC) Execute(dto LTIAttemptGetInputDTO) (LTIAttemptGetOutputDTO, error) {
 	form, err := u.LTIAttemptQueries.Get(dto.ID)

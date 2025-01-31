@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIFormEditUC struct {
@@ -25,7 +26,7 @@ type LTIFormEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LTIFormEditResponse = Response[LTIFormEditOutputDTO]
+type LTIFormEditResponse = response.Response[LTIFormEditOutputDTO]
 
 func (u *LTIFormEditUC) Execute(dto LTIFormEditInputDTO) (LTIFormEditOutputDTO, error) {
 	entity := &models.LTIForm{}

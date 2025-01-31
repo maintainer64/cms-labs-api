@@ -65,12 +65,14 @@ CREATE TABLE `{{.DB_TABLE_PREFIX}}pnet_servers`
   `updated_at`             datetime(3),
   `name`                   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `url`                    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `type`                   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `is_active`              boolean,
   `minutes_for_disconnect` bigint,
   `max_count_users_limit`  bigint,
   `last_online_status`     datetime(3),
   `last_count_users`       bigint,
   `unit_rate`              bigint,
+  `client_id`              varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `token`                  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `idx_{{.DB_TABLE_PREFIX}}pnet_servers_token` (`token`),
@@ -96,19 +98,16 @@ CREATE TABLE `{{.DB_TABLE_PREFIX}}users`
   INDEX            `idx_{{.DB_TABLE_PREFIX}}users_created_at` (`created_at`)
 );
 
-CREATE TABLE `{{.DB_TABLE_PREFIX}}user_tokens`
+CREATE TABLE `{{.DB_TABLE_PREFIX}}user_passwords`
 (
   `user_id`       bigint unsigned,
-  `refresh_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `hash_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at`    datetime(3),
   `updated_at`    datetime(3),
   PRIMARY KEY (`user_id`),
   FOREIGN KEY (`user_id`)
     REFERENCES `{{.DB_TABLE_PREFIX}}users` (`id`)
-    ON DELETE CASCADE,
-  INDEX           `idx_{{.DB_TABLE_PREFIX}}user_tokens_refresh_token` (`refresh_token`),
-  INDEX           `idx_{{.DB_TABLE_PREFIX}}user_tokens_created_at` (`created_at`)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `{{.DB_TABLE_PREFIX}}round_queue_pools`
@@ -197,6 +196,6 @@ drop table if exists `{{.DB_TABLE_PREFIX}}lti_routings` cascade;
 
 drop table if exists `{{.DB_TABLE_PREFIX}}round_queue_pools` cascade;
 
-drop table if exists `{{.DB_TABLE_PREFIX}}user_tokens` cascade;
+drop table if exists `{{.DB_TABLE_PREFIX}}user_passwords` cascade;
 
 drop table if exists `{{.DB_TABLE_PREFIX}}users` cascade;

@@ -12,8 +12,8 @@ var (
 )
 
 type StartupFiberUC struct {
-	UserQueries      *queries.UserQueries
-	UserTokenQueries *queries.UserTokenQueries
+	UserQueries         *queries.UserQueries
+	UserPasswordQueries *queries.UserPasswordQueries
 }
 
 const UserDefaultEmail = "admin@admin.com"
@@ -28,7 +28,7 @@ func (u *StartupFiberUC) userDefaultCreate() error {
 		entity.UserRole = models.UsersRoleAdmin
 		_ = u.UserQueries.Upsert(&entity)
 	}
-	creds, _ := u.UserTokenQueries.Get(entity.ID)
+	creds, _ := u.UserPasswordQueries.Get(entity.ID)
 	if creds.UserID == entity.ID {
 		return nil
 
@@ -40,9 +40,8 @@ func (u *StartupFiberUC) userDefaultCreate() error {
 	if err != nil {
 		return err
 	}
-	err = u.UserTokenQueries.Upsert(&models.UserToken{
+	err = u.UserPasswordQueries.Upsert(&models.UserPassword{
 		UserID:       entity.ID,
-		RefreshToken: "",
 		HashPassword: string(hashPassword),
 	})
 	return err

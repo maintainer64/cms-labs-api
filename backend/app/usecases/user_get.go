@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type UserGetUC struct {
@@ -17,7 +18,7 @@ type UserGetOutputDTO struct {
 	Model models.User `json:"model" required:"true"`
 }
 
-type UserGetResponse = Response[UserGetOutputDTO]
+type UserGetResponse = response.Response[UserGetOutputDTO]
 
 func (u *UserGetUC) Execute(dto UserGetInputDTO) (UserGetOutputDTO, error) {
 	form, err := u.UserQueries.Get(dto.ID)

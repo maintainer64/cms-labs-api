@@ -8,6 +8,9 @@ const en = {
     ErrorFieldEmailRequired: 'Email is required',
     ErrorFieldPasswordRequired: 'Password is required'
   },
+  SSO: {
+    Wait: 'Please wait...'
+  },
   Auth: {
     ErrorPageTitle: 'Authorization Error',
     ErrorPageDescription: 'Try to go to the login page or log in through the course',
@@ -24,7 +27,7 @@ const en = {
     MainMenu: 'Main Menu',
     Users: 'Users',
     Servers: 'Servers',
-    ServiceCards: 'Сервисы',
+    ServiceCards: 'Services',
     LTIIntegrations: 'LTIs',
     LTIRouting: 'LTI Routes',
     AnyList: 'List',
@@ -191,6 +194,9 @@ const en = {
     FieldID: 'ID',
     FieldName: 'Name',
     FieldURL: 'URL',
+    FieldType: 'Server type',
+    FieldClientID: 'ClientID',
+    FieldClientIDDescription: 'Unique server name for SSO',
     FieldIsActive: 'Active',
     FieldUnitRate: 'Percentage of distribution',
     FieldMinutesForDisconnect: 'Minutes for auto-shutdown',

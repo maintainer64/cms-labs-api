@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type PNETServerEditUC struct {
@@ -11,6 +12,8 @@ type PNETServerEditUC struct {
 
 type PNETServerEditInputDTO struct {
 	ID                   uint   `json:"id"`
+	ClientID             string `json:"client_id"`
+	Type                 string `json:"type" validate:"required"`
 	Name                 string `json:"name" validate:"required"`
 	Url                  string `json:"url" validate:"required"`
 	IsActive             bool   `json:"is_active"`
@@ -23,11 +26,13 @@ type PNETServerEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type PNETServerEditResponse = Response[PNETServerEditOutputDTO]
+type PNETServerEditResponse = response.Response[PNETServerEditOutputDTO]
 
 func (u *PNETServerEditUC) Execute(dto PNETServerEditInputDTO) (PNETServerEditOutputDTO, error) {
 	entity := &models.PNETServer{}
 	entity.ID = dto.ID
+	entity.ClientID = dto.ClientID
+	entity.Type = dto.Type
 	entity.Name = dto.Name
 	entity.Url = dto.Url
 	entity.IsActive = dto.IsActive

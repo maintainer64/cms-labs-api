@@ -34,7 +34,7 @@ func LTILaunch(c *fiber.Ctx) error {
 	}
 	c.Cookie(&fiber.Cookie{
 		Name:     "refresh-token",
-		Value:    token.Refresh.Token,
+		Value:    token.RefreshToken,
 		Path:     "/",
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Expires:  auth.ExpiresRefreshCookie(),

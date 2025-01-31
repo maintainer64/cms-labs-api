@@ -3,6 +3,7 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIAttemptListUC struct {
@@ -20,7 +21,7 @@ type LTIAttemptListOutputDTO struct {
 	TotalCount int64                       `json:"total_count" validate:"required"`
 }
 
-type LTIAttemptListResponse = Response[LTIAttemptListOutputDTO]
+type LTIAttemptListResponse = response.Response[LTIAttemptListOutputDTO]
 
 func (u *LTIAttemptListUC) Execute(dto LTIAttemptListInputDTO) (LTIAttemptListOutputDTO, error) {
 	entities, count, err := u.LTIAttemptQueries.List(dto.Search, dto.Limit, dto.Offset)

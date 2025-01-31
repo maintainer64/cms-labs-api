@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
-	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
 )
@@ -15,7 +14,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param form body auth.RenewManagerInputDTO true "renew token form info"
-// @Success 200 {object} auth.RenewManagerResponse
+// @Success 200 {object} auth.SSOTokenResponse
 // @Router /v1/token/renew [post]
 func TokensRenew(c *fiber.Ctx) error {
 	refreshToken := c.Cookies("refresh-token", "")
@@ -27,41 +26,28 @@ func TokensRenew(c *fiber.Ctx) error {
 		}
 		refreshToken = dto.RefreshToken
 	}
-	uc, err := di.NewDIContainer().AuthTokenManager()
+	uc, err := di.NewDIContainer().SSOTokenUC()
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	token, err := uc.NewJWTByRefreshToken(refreshToken)
+	token, err := uc.Execute(
+		auth.SSOTokenInputDTO{
+			GrantType:    auth.TokenGrantTypeRefreshToken,
+			RefreshToken: refreshToken,
+		},
+	)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	c.Cookie(&fiber.Cookie{
 		Name:     "refresh-token",
-		Value:    token.Refresh.Token,
+		Value:    token.RefreshToken,
 		Path:     "/",
 		Expires:  auth.ExpiresRefreshCookie(),
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Secure:   true,
 	})
 	return utils.FiberSuccessResponse{Result: token}
-}
-
-// TokensCheck method for payload and validate access token.
-// @Description View data access token.
-// @Summary view data from access token
-// @Tags Token
-// @Accept json
-// @Produce json
-// @Param form body auth.RenewManagerInputDTO true "renew token form info"
-// @Success 200 {object} auth.RenewManagerUserResponse
-// @Security ApiKeyAuth
-// @Router /v1/token/check [post]
-func TokensCheck(c *fiber.Ctx) error {
-	claims, err := auth.ExtractTokenMetadata(c, []string{})
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: claims}
 }
 
 // TokensByCredentials method for grant access by email and password
@@ -71,7 +57,7 @@ func TokensCheck(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param form body auth.RenewManagerCredentialsInputDTO true "credentials form info"
-// @Success 200 {object} auth.RenewManagerResponse
+// @Success 200 {object} auth.SSOTokenResponse
 // @Router /v1/token/login [post]
 func TokensByCredentials(c *fiber.Ctx) error {
 	dto := auth.RenewManagerCredentialsInputDTO{}
@@ -86,7 +72,7 @@ func TokensByCredentials(c *fiber.Ctx) error {
 	}
 	c.Cookie(&fiber.Cookie{
 		Name:     "refresh-token",
-		Value:    token.Refresh.Token,
+		Value:    token.RefreshToken,
 		Path:     "/",
 		Expires:  auth.ExpiresRefreshCookie(),
 		SameSite: fiber.CookieSameSiteNoneMode,
@@ -101,7 +87,7 @@ func TokensByCredentials(c *fiber.Ctx) error {
 // @Tags Token
 // @Accept json
 // @Produce json
-// @Success 200 {object} auth.RenewManagerResponse
+// @Success 200 {object} auth.SSOTokenResponse
 // @Router /v1/token/logout [post]
 func TokensRemove(c *fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
@@ -121,15 +107,15 @@ func TokensRemove(c *fiber.Ctx) error {
 // @Tags Token
 // @Accept json
 // @Produce json
-// @Param form body usecases.UserPasswordChangeInputDTO true "credentials form info"
-// @Success 200 {object} usecases.UserPasswordRecoverResponse
+// @Param form body auth.UserPasswordChangeInputDTO true "credentials form info"
+// @Success 200 {object} auth.UserPasswordRecoverResponse
 // @Router /v1/token/password_change [post]
 func TokensPasswordRecover(c *fiber.Ctx) error {
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
 		return err
 	}
-	dto := usecases.UserPasswordChangeInputDTO{}
+	dto := auth.UserPasswordChangeInputDTO{}
 	if err := utils.FiberValidatorBase(c, &dto); err != nil {
 		return err
 	}

@@ -8,6 +8,9 @@ const ru = {
     ErrorFieldEmailRequired: 'Email не указан',
     ErrorFieldPasswordRequired: 'Пароль не указан'
   },
+  SSO: {
+    Wait: 'Подождите...'
+  },
   Auth: {
     ErrorPageTitle: 'Ошибка авторизации',
     ErrorPageDescription: 'Попробуйте перейти на страницу входа в систему или авторизоваться через курс',
@@ -192,6 +195,9 @@ const ru = {
     FieldID: 'ID',
     FieldName: 'Название',
     FieldURL: 'URL',
+    FieldType: 'Тип сервера',
+    FieldClientID: 'ClientID',
+    FieldClientIDDescription: 'Уникальное название сервера для SSO',
     FieldIsActive: 'Активный',
     FieldUnitRate: 'Процент распределения',
     FieldMinutesForDisconnect: 'Минуты для автоотключения',

@@ -1,7 +1,7 @@
-import { auth_Tokens, postV1TokenRenew } from '@/helpers/api/src';
+import { auth_SSOToken, postV1TokenRenew } from '@/helpers/api/src';
 import { ApiRequestOptions } from '@/helpers/api/src/core/ApiRequestOptions'; // Импортируем библиотеку для работы с JWT
 const TokenManager = {
-  cachedTokens: null as auth_Tokens | null,
+  cachedTokens: null as auth_SSOToken | null,
   tokenExpiration: null as number | null,
 
   // Функция для получения токена
@@ -11,11 +11,11 @@ const TokenManager = {
     if (options.method == 'POST' && options.url === '/v1/token/logout') return '';
     const currentTime = Math.floor(Date.now() / 1000); // Текущее время в секундах
     if (this.cachedTokens && this.tokenExpiration && currentTime < this.tokenExpiration) {
-      return this.cachedTokens.access?.token || '';
+      return this.cachedTokens.access_token || '';
     }
     const response = await postV1TokenRenew({ form: {} });
-    const accessToken = response.result?.access?.token || '';
-    const expires = response.result?.access?.exp || 0;
+    const accessToken = response.result?.access_token || '';
+    const expires = response.result?.expires_in || 0;
     if (accessToken && expires) {
       this.tokenExpiration = expires;
       this.cachedTokens = response.result ?? null;

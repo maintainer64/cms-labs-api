@@ -14,7 +14,7 @@ type {{.Name}}DeleteInputDTO struct {
 	ID uint ` + "`json:\"id\" required:\"true\"`" + `
 }
 
-type {{.Name}}DeleteResponse = Response[{{.Name}}DeleteInputDTO]
+type {{.Name}}DeleteResponse = response.Response[{{.Name}}DeleteInputDTO]
 
 func (u *{{.Name}}DeleteUC) Execute(dto {{.Name}}DeleteInputDTO) ({{.Name}}DeleteInputDTO, error) {
 	err := u.{{.Name}}Queries.Delete(dto.ID)
@@ -47,7 +47,7 @@ type {{.Name}}EditOutputDTO struct {
 	ID uint ` + "`json:\"id\" required:\"true\"`" + `
 }
 
-type {{.Name}}EditResponse = Response[{{.Name}}EditOutputDTO]
+type {{.Name}}EditResponse = response.Response[{{.Name}}EditOutputDTO]
 
 func (u *{{.Name}}EditUC) Execute(dto {{.Name}}EditInputDTO) ({{.Name}}EditOutputDTO, error) {
 	entity := &models.{{.Name}}{}
@@ -80,7 +80,7 @@ type {{.Name}}GetOutputDTO struct {
 	Model models.{{.Name}} ` + "`json:\"model\" required:\"true\"`" + `
 }
 
-type {{.Name}}GetResponse = Response[{{.Name}}GetOutputDTO]
+type {{.Name}}GetResponse = response.Response[{{.Name}}GetOutputDTO]
 
 func (u *{{.Name}}GetUC) Execute(dto {{.Name}}GetInputDTO) ({{.Name}}GetOutputDTO, error) {
 	form, err := u.{{.Name}}Queries.Get(dto.ID)
@@ -113,7 +113,7 @@ type {{.Name}}ListOutputDTO struct {
 	TotalCount int64                      ` + "`json:\"total_count\" validate:\"required\"`" + `
 }
 
-type {{.Name}}ListResponse = Response[{{.Name}}ListOutputDTO]
+type {{.Name}}ListResponse = response.Response[{{.Name}}ListOutputDTO]
 
 func (u *{{.Name}}ListUC) Execute(dto {{.Name}}ListInputDTO) ({{.Name}}ListOutputDTO, error) {
 	entities, count, err := u.{{.Name}}Queries.List(dto.Search, dto.Limit, dto.Offset)
