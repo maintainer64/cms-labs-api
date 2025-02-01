@@ -65,7 +65,7 @@ func (q *LTIAttemptQueries) GetActiveByUserId(userId uint) (models.LTIAttempt, e
 	return entity, result.Error
 }
 
-func (q *LTIAttemptQueries) GetByRoomNumber(roomNumber *int) ([]models.LTIAttemptListItem, error) {
+func (q *LTIAttemptQueries) GetByRoomNumber(roomNumber *int64) ([]models.LTIAttemptListItem, error) {
 	var entities []models.LTIAttemptListItem
 	if roomNumber == nil {
 		return entities, nil

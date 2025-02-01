@@ -55,17 +55,17 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 	if err := u.validate(inputDTO); err != nil {
 		return nil, err
 	}
-	log.Info().Msg(fmt.Sprintf("authorize sso authorize with clientID %s and userID %s", inputDTO.ClientID, inputDTO.UserID))
+	log.Info().Msg(fmt.Sprintf("authorize sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 	server, err := u.PNETServerQueries.GetByClientId(inputDTO.ClientID)
 	if err != nil {
 		return nil, err
 	}
 	if !server.IsActive {
-		log.Info().Msg(fmt.Sprintf("server is not active sso authorize with clientID %s and userID %s", inputDTO.ClientID, inputDTO.UserID))
+		log.Info().Msg(fmt.Sprintf("server is not active sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 		return nil, errors.New("server is not active")
 	}
 	if !strings.HasPrefix(inputDTO.RedirectUri, server.Url) {
-		log.Info().Msg(fmt.Sprintf("invalid redirect_uri sso authorize with clientID %s and userID %s", inputDTO.ClientID, inputDTO.UserID))
+		log.Info().Msg(fmt.Sprintf("invalid redirect_uri sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 		return nil, errors.New("invalid redirect_uri")
 	}
 	entityCreate := &models.TokenAttempt{}
@@ -78,7 +78,7 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 	if err != nil {
 		return nil, err
 	}
-	log.Info().Msg(fmt.Sprintf("response second factor sso authorize with clientID %s and userID %s", inputDTO.ClientID, inputDTO.UserID))
+	log.Info().Msg(fmt.Sprintf("response second factor sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 	return &SSOAuthorizeOutputDTO{
 		RedirectUri: inputDTO.RedirectUri,
 		Code:        entityCreate.AuthorizationCode,

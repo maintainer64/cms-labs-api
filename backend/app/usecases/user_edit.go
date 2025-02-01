@@ -32,7 +32,7 @@ type UserEditResponse = response.Response[UserEditOutputDTO]
 
 func (u *UserEditUC) Execute(dto UserEditInputDTO) (UserEditOutputDTO, error) {
 	now := time.Now().UTC()
-	userFromDB, err := u.UserQueries.Get(dto.ID)
+	userFromDB, _ := u.UserQueries.Get(dto.ID)
 	entity := &models.User{}
 	entity.ID = dto.ID
 	entity.Email = stringsx.Coalesce(dto.Email, userFromDB.Email)
@@ -51,6 +51,6 @@ func (u *UserEditUC) Execute(dto UserEditInputDTO) (UserEditOutputDTO, error) {
 	if !dto.IsActive && entity.IsActive() {
 		entity.DeletedAt = &now
 	}
-	err = u.UserQueries.Upsert(entity)
+	err := u.UserQueries.Upsert(entity)
 	return UserEditOutputDTO{ID: entity.ID}, err
 }

@@ -40,7 +40,7 @@ func TestV1PNETServerRouteGet(t *testing.T) {
 		authHeader,
 	)
 	bodyModel := usecases.PNETServerGetResponse{}
-	json.Unmarshal([]byte(body), &bodyModel)
+	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, entity.ID, bodyModel.Result.Model.ID, description)
@@ -162,7 +162,7 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 			authHeader,
 		)
 		bodyModel := usecases.PNETServerListResponse{}
-		json.Unmarshal([]byte(body), &bodyModel)
+		_ = json.Unmarshal([]byte(body), &bodyModel)
 		ids := make([]uint, 0)
 		for _, model := range bodyModel.Result.Model {
 			ids = append(ids, model.ID)
@@ -216,7 +216,7 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 			authHeader,
 		)
 		response := usecases.PNETServerDeleteResponse{}
-		json.Unmarshal([]byte(body), &response)
+		_ = json.Unmarshal([]byte(body), &response)
 		assert.Equal(t, 200, statusCode, test.description)
 		assert.Equal(t, test.id, response.Result.ID, test.description)
 
@@ -226,4 +226,57 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 		var idNotFound uint = 0
 		assert.Equal(t, idNotFound, deletedEntity.ID, test.description)
 	}
+}
+
+func TestV1PNETServerRouteCreate(t *testing.T) {
+	description := "Create new PNET server"
+	f := NewFiberTestHTTP()
+	authHeader := f.AuthorizationUser(0, 0, "")
+
+	// Тестовые данные
+	now := time.Now().UTC()
+	entity := models.PNETServer{}
+
+	entity.Name = "Server " + uuid.New().String()
+	entity.Url = "https://localhost"
+	entity.Type = models.ServerTypePnet
+	entity.IsActive = true
+	entity.MinutesForDisconnect = 10
+	entity.MaxCountUsersLimit = 20
+	entity.LastOnlineStatus = &now
+	entity.UnitRate = 20
+	entity.ClientID = uuid.New().String()
+
+	statusCode, body := f.Request(
+		"POST",
+		"/api/v1/pnet-server/upsert",
+		FiberRequestPayload(usecases.PNETServerEditInputDTO{
+			ClientID:             entity.ClientID,
+			Type:                 entity.Type,
+			Name:                 entity.Name,
+			Url:                  entity.Url,
+			IsActive:             entity.IsActive,
+			MinutesForDisconnect: entity.MinutesForDisconnect,
+			MaxCountUsersLimit:   entity.MaxCountUsersLimit,
+			UnitRate:             entity.UnitRate,
+		}),
+		authHeader,
+	)
+
+	bodyModel := usecases.PNETServerEditResponse{}
+	_ = json.Unmarshal([]byte(body), &bodyModel)
+
+	assert.Equal(t, statusCode, 200, description)
+	assert.Equal(t, true, bodyModel.Result.ID > 0, description)
+
+	// Проверка, что сервер действительно создан в базе данных
+	var createdEntity models.PNETServer
+	f.DB.First(&createdEntity, bodyModel.Result.ID)
+	assert.Equal(t, entity.Name, createdEntity.Name, description)
+	assert.Equal(t, entity.Url, createdEntity.Url, description)
+	assert.Equal(t, entity.Type, createdEntity.Type, description)
+	assert.Equal(t, entity.IsActive, createdEntity.IsActive, description)
+	assert.Equal(t, entity.MinutesForDisconnect, createdEntity.MinutesForDisconnect, description)
+	assert.Equal(t, entity.MaxCountUsersLimit, createdEntity.MaxCountUsersLimit, description)
+	assert.Equal(t, entity.UnitRate, createdEntity.UnitRate, description)
 }

@@ -44,6 +44,7 @@ func (u *StartupFiberUC) userDefaultCreate() error {
 		UserID:       entity.ID,
 		HashPassword: string(hashPassword),
 	})
+	log.Info().Msg("User default create")
 	return err
 }
 

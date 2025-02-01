@@ -1,8 +1,6 @@
 package round_queue_pool_pnet
 
 import (
-	"fmt"
-
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	"github.com/thoas/go-funk"
@@ -30,7 +28,7 @@ func (u *RoundQueuePoolPnetUpsert) pnetServerEntityToStats(item models.PNETServe
 }
 
 func (u *RoundQueuePoolPnetUpsert) Execute() error {
-	log.Info().Msg(fmt.Sprintf("RoundQueuePoolPnetUpsert start to generate new distribution pnet servers"))
+	log.Info().Msg("RoundQueuePoolPnetUpsert start to generate new distribution pnet servers")
 	entities, _, err := u.PNETServerQueries.List(queries.PNETServerQueriesListDTO{
 		Limit:  queries.MaxLimitCount,
 		Offset: 0,

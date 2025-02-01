@@ -27,7 +27,7 @@ type DBLogger struct {
 }
 
 func (l *DBLogger) Printf(format string, ctx ...interface{}) {
-	log.Info().Msg(fmt.Sprintf(format, ctx))
+	log.Info().Msg(fmt.Sprintf(format, ctx...))
 }
 
 // MysqlConnection func for connection to Mysql database.
@@ -50,7 +50,7 @@ func MysqlConnection() (*gorm.DB, error) {
 				&DBLogger{},
 				logger.Config{
 					SlowThreshold:             200 * time.Millisecond,
-					LogLevel:                  logger.Info,
+					LogLevel:                  logger.Warn,
 					IgnoreRecordNotFoundError: false,
 					Colorful:                  false,
 				}),

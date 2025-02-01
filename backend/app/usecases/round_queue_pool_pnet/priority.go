@@ -40,7 +40,7 @@ func (s ByPriority) DefaultUnitRate() int {
 
 func (s ByPriority) NormalizeUnitRate() {
 	defaultUnitRate := s.DefaultUnitRate()
-	for index, _ := range s {
+	for index := range s {
 		// Если UnitRate не указан (меньше единицы, меняем по умолчанию)
 		if s[index].UnitRate < 1 {
 			s[index].UnitRate = defaultUnitRate
@@ -50,10 +50,9 @@ func (s ByPriority) NormalizeUnitRate() {
 	if gcdUnitRate <= 1 {
 		return
 	}
-	for index, _ := range s {
+	for index := range s {
 		s[index].UnitRate /= gcdUnitRate
 	}
-	return
 }
 
 func (s ByPriority) SumUnitRate() int {

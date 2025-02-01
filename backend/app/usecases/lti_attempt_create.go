@@ -1,9 +1,10 @@
 package usecases
 
 import (
+	"crypto/rand"
 	"errors"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"net/url"
 	"time"
 
@@ -34,7 +35,7 @@ type LTIAttemptCreateInputDTO struct {
 }
 
 type LTIAttemptCreateOutputDTO struct {
-	RoomNumber    *int                  `json:"room_number"`
+	RoomNumber    *int64                `json:"room_number"`
 	Collaboration int                   `json:"collaboration"`
 	NextUrl       string                `json:"next_url"`
 	AutoRedirect  bool                  `json:"auto_redirect"`
@@ -87,9 +88,10 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 	attempt.LTIRoutingID = route.ID
 	// Set RoomNumber
 	if route.Collaboration > 1 {
-		minRand := 100000
-		maxRand := 999999
-		roomNumber := rand.Intn(maxRand-minRand+1) + minRand
+		var minRand int64 = 100000
+		var maxRand int64 = 999999
+		roomNumberFrom, _ := rand.Int(rand.Reader, big.NewInt(maxRand-minRand+1))
+		roomNumber := roomNumberFrom.Int64() + minRand
 		attempt.RoomNumber = &roomNumber
 	}
 	// Set ExpiredAt

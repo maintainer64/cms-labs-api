@@ -1,8 +1,6 @@
 module gitlab.com/a10869/api-modules/backend
 
-go 1.22.0
-
-toolchain go1.22.3
+go 1.23.0
 
 replace gitlab.com/a10869/api-modules/shared => ../shared
 
@@ -14,7 +12,6 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/goccy/go-json v0.10.3
 	github.com/gofiber/contrib/fiberzerolog v1.0.2
-	github.com/gofiber/contrib/jwt v1.0.10
 	github.com/gofiber/fiber v1.14.6
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/gofiber/swagger v1.1.0
@@ -38,7 +35,6 @@ require (
 	ariga.io/atlas-go-sdk v0.2.3 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect

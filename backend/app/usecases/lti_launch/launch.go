@@ -308,10 +308,3 @@ func contains(n string, s []string) bool {
 
 	return false
 }
-
-// contextWithLaunchID puts the launch ID into the given context.
-func contextWithLaunchID(ctx context.Context, launchID string) context.Context {
-	key := ContextKey
-
-	return context.WithValue(ctx, key, launchID)
-}

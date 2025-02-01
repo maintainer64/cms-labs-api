@@ -7,11 +7,11 @@ type LTIAttemptBase struct {
 	UserID       uint      `gorm:"type:int" json:"user_id"`
 	PNETServerID uint      `gorm:"type:int" json:"pnet_server_id"`
 	LTIRoutingID uint      `gorm:"type:int" json:"lti_routing_id"`
-	ExpiredAt    time.Time `gorm:"type:datetime(3)" json:"updated_at" validate:"required"`
+	ExpiredAt    time.Time `gorm:"type:datetime(3)" json:"expired_at" validate:"required"`
 }
 
 type LTIAttemptSecret struct {
-	RoomNumber *int `gorm:"type:int" json:"room_number"`
+	RoomNumber *int64 `gorm:"type:int" json:"room_number"`
 }
 
 type LTIAttemptListItem struct {

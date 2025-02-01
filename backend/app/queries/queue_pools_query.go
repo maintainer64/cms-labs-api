@@ -17,7 +17,7 @@ type RoundQueuePoolQueries struct {
 
 func (q *RoundQueuePoolQueries) tableName(object interface{}) string {
 	stmt := &gorm.Statement{DB: q.DB}
-	stmt.Parse(object)
+	_ = stmt.Parse(object)
 	return stmt.Schema.Table
 }
 

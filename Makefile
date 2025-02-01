@@ -14,11 +14,12 @@ security:
 	gosec ./...
 
 lint:
-	golangci-lint run ./...
+	make -C backend lint
+	make -C gen lint
 
 pre_commit:
 	pre-commit run --all-files
 
 test: clean critic security lint pre_commit
-	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
-	go tool cover -func=cover.out
+	make -C backend test
+	make -C gen test

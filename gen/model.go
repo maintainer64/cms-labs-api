@@ -10,6 +10,7 @@ type CliParams struct {
 	ProjectRoot string // путь для import проекта
 	ModelName   string // название модели в БД
 	Directory   string // директория для проекта
+	Type        string // тип генерации
 }
 
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")

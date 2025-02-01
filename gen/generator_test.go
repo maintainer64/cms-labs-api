@@ -305,6 +305,7 @@ func (q *UserFormLegacyQueries) List(
 }
 
 func (q *UserFormLegacyQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Model(&models.UserFormLegacy{})
 	tx = tx.Order(` + "`created_at desc`" + `)
 	if search == "" {
 		return tx

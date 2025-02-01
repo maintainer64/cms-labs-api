@@ -62,6 +62,9 @@ func TokensRenew(c *fiber.Ctx) error {
 func TokensByCredentials(c *fiber.Ctx) error {
 	dto := auth.RenewManagerCredentialsInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
+	if err != nil {
+		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+	}
 	uc, err := di.NewDIContainer().AuthTokenManager()
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}

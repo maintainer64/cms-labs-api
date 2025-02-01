@@ -25,7 +25,7 @@ func NewServiceAuthMiddleware() fiber.Handler {
 				if err != nil {
 					return false
 				}
-				valid := serverModel.IsActive == true && serverModel.Token != "" && serverModel.ClientID != "" && serverModel.Token == password
+				valid := serverModel.IsActive && serverModel.Token != "" && serverModel.ClientID != "" && serverModel.Token == password
 				log.Info().Msg(
 					fmt.Sprintf(
 						"ServiceAuthMiddleware: auth with service: %+v is valid = %+v",
