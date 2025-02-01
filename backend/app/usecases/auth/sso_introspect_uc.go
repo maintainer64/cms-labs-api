@@ -2,11 +2,12 @@ package auth
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"
-	"time"
 )
 
 type SSOIntrospectInputDTO struct {

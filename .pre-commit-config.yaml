@@ -20,6 +20,19 @@ repos:
         stages: [ commit-msg ]
         additional_dependencies: [ '@commitlint/config-conventional' ]
 
+  - repo: local
+    hooks:
+      - id: front-lint
+        name: front-lint
+        entry: yarn --cwd nextui-dashboard lint
+        language: system
+        pass_filenames: false
+
+      - id: front-format
+        name: front-format
+        entry: yarn --cwd nextui-dashboard format
+        language: system
+        pass_filenames: false
 
 exclude: |
   (?x)(

@@ -3,9 +3,10 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"strings"
 	"time"
+
+	"gitlab.com/a10869/api-modules/backend/app/queries"
 )
 
 type SSOTokenInputDTO struct {
@@ -65,7 +66,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
 	if !strings.HasPrefix(inputDTO.RedirectUri, server.Url) {
 		return nil, errors.New("invalid redirect_uri")
 	}
-	return u.TokenManager.newJWTByUserId(attempt.UserID, attempt.ServerID, attempt.State)
+	return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, attempt.State)
 }
 
 func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
@@ -83,7 +84,7 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
 	}
 	log.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
 	if attempt.ServerID == 0 {
-		return u.TokenManager.newJWTByUserId(attempt.UserID, attempt.ServerID, "")
+		return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, "")
 	}
 	server, err := u.PNETServerQueries.Get(attempt.ServerID)
 	if err != nil {
@@ -92,5 +93,5 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
 	if !server.IsActive {
 		return nil, errors.New("server is not active")
 	}
-	return u.TokenManager.newJWTByUserId(attempt.UserID, attempt.ServerID, "")
+	return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, "")
 }

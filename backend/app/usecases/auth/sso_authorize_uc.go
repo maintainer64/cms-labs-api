@@ -3,11 +3,12 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
-	"strings"
 )
 
 type SSOAuthorizeInputDTO struct {

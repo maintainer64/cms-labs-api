@@ -7,13 +7,14 @@ package connector
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/goccy/go-json"
 )
 
 // AGS implements Assignment & Grades Services functions.

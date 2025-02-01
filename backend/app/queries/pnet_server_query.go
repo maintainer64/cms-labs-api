@@ -122,24 +122,23 @@ func (q *PNETServerQueries) List(filter PNETServerQueriesListDTO) ([]models.PNET
 
 func (q *PNETServerQueries) listFilter(filter PNETServerQueriesListDTO, tx *gorm.DB) *gorm.DB {
 	tx = tx.Table(q.tableName(&models.PNETServer{}) + " AS pnet_servers")
-	if filter.OrderBy == PNETServerListInputDTOOrderByLastCountUsers {
-		tx = tx.Order(`last_count_users desc`)
-	}
-	if filter.OrderBy == PNETServerListInputDTOOrderByUnitRate {
-		tx = tx.Order(`unit_rate desc`)
-	}
-	if filter.OrderBy == PNETServerListInputDTOOrderByCreatedAt || filter.OrderBy == "" {
-		tx = tx.Order(`created_at desc`)
-	}
 
-	if filter.Search != "" {
-		tx = tx.Where("name LIKE ?", fmt.Sprintf("%%%s%%", filter.Search))
-		tx = tx.Or("url LIKE ?", fmt.Sprintf("%%%s%%", filter.Search))
-		tx = tx.Or("id = ?", filter.Search)
+	switch filter.OrderBy {
+	case PNETServerListInputDTOOrderByLastCountUsers:
+		tx = tx.Order("last_count_users DESC")
+	case PNETServerListInputDTOOrderByUnitRate:
+		tx = tx.Order("unit_rate DESC")
+	default:
+		tx = tx.Order("created_at DESC")
 	}
 
 	if filter.Status == PNETServerListInputDTOStatusActive {
 		tx = models.PNETServeIsRealActive(tx)
+	}
+
+	if filter.Search != "" {
+		searchPattern := "%" + filter.Search + "%"
+		tx = tx.Where("name LIKE ? OR url LIKE ? OR id = ?", searchPattern, searchPattern, filter.Search)
 	}
 
 	return tx

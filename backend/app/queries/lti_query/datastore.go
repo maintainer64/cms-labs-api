@@ -7,11 +7,12 @@
 package lti_query
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
 	"time"
+
+	"github.com/goccy/go-json"
 )
 
 // Config holds the stores required for LTI packages. New package functions will accept the zero value of this struct,

@@ -6,13 +6,14 @@
 package connector
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/goccy/go-json"
 )
 
 // NRPS implements Names & Roles Provisioning Services functions.

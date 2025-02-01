@@ -27,8 +27,8 @@ type PNETServerBase struct {
 func PNETServeIsRealActive(db *gorm.DB) *gorm.DB {
 	return db.Where("pnet_servers.is_active = ?", true).
 		Where("pnet_servers.type = ?", ServerTypePnet).
-		Where("UTC_TIMESTAMP() < DATE_ADD(pnet_servers.last_online_status, INTERVAL pnet_servers.minutes_for_disconnect MINUTE) OR pnet_servers.minutes_for_disconnect = 0").
-		Where("pnet_servers.last_count_users < pnet_servers.max_count_users_limit OR pnet_servers.max_count_users_limit = 0")
+		Where("(UTC_TIMESTAMP() < DATE_ADD(pnet_servers.last_online_status, INTERVAL pnet_servers.minutes_for_disconnect MINUTE) OR pnet_servers.minutes_for_disconnect = 0)").
+		Where("(pnet_servers.last_count_users < pnet_servers.max_count_users_limit OR pnet_servers.max_count_users_limit = 0)")
 }
 
 type PNETServerSecret struct {

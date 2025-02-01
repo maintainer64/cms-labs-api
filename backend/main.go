@@ -47,20 +47,7 @@ func main() {
 
 	// Middlewares.
 	middleware.FiberMiddleware(app) // Register Fiber's middleware for app.
-
-	// Routes.
-	routes.SwaggerRoute(app)
-	routes.V1AuthRoute(app)
-	routes.V1SSORoute(app)
-	routes.V1UserRoutes(app)
-	routes.V1LTIFormRoutes(app)
-	routes.V1LTIAttemptRoutes(app)
-	routes.V1PNETServerRoutes(app)
-	routes.V1PNETServerQueueRoutes(app)
-	routes.V1ServiceCardRoutes(app)
-	routes.V2LTIRoutes(app)
-	routes.V1LTIRoutingRoutes(app)
-	routes.NotFoundRoute(app)
+	routes.FiberRoutes(app)         // Register Fiber's routes for app.
 
 	// Start server (with or without graceful shutdown).
 	if configs.AppConfig.Server.Layer == "dev" {

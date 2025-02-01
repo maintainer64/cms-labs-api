@@ -12,9 +12,10 @@ import (
 	"context"
 	"crypto/x509"
 	"database/sql"
-	"encoding/json"
 	"encoding/pem"
 	"net/http"
+
+	"github.com/goccy/go-json"
 
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/macewan-cs/lti/connector"

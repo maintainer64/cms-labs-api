@@ -1,10 +1,11 @@
 package lti_query
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/pkg/utils"

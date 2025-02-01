@@ -47,7 +47,7 @@ func (m *TokenManager) NewJWTByCredentials(email string, password string) (*SSOT
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.newJWTByUserId(entity.ID, 0, "")
+	return m.NewJWTByUserId(entity.ID, 0, "")
 }
 
 func (m *TokenManager) NewJWTByLaunchID(launchID string) (*SSOToken, error) {
@@ -59,10 +59,10 @@ func (m *TokenManager) NewJWTByLaunchID(launchID string) (*SSOToken, error) {
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.newJWTByUserId(entity.ID, 0, "")
+	return m.NewJWTByUserId(entity.ID, 0, "")
 }
 
-func (m *TokenManager) newJWTByUserId(userId uint, serverID uint, state string) (*SSOToken, error) {
+func (m *TokenManager) NewJWTByUserId(userId uint, serverID uint, state string) (*SSOToken, error) {
 	userModel, err := m.UserQueries.Get(userId)
 	if err != nil {
 		return nil, err

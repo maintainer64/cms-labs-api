@@ -9,10 +9,11 @@ package lti_launch
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/goccy/go-json"
 
 	"github.com/rs/zerolog/log"
 
