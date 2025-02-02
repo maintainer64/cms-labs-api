@@ -1,7 +1,7 @@
 golang-test:
   stage: test
   extends: .dependencies
-  image: golang:1.23
+  image: $GO_BASE_CI_IMAGE:latest
   services:
     - name: mysql:9.1
       alias: db
@@ -16,7 +16,7 @@ golang-test:
     # Generate HTML coverage report
     - go tool cover -html coverage.out -o coverage.html
     # Generate JUnit report for GitLab
-    - go-junit-report < tests.txt > junit.xml
+    - go-junit-report < tests.out > junit.xml
   coverage: '/total:\s+\(statements\)\s+\d+.\d+%/'
   artifacts:
     expose_as: 'Go Test Coverage Report'
@@ -32,5 +32,6 @@ golang-test:
     - rm -rf coverage.xml
     - rm -rf coverage.html
     - rm -rf junit.xml
-    - rm -rf tests.txt
+    - rm -rf tests.out
+    - cd ./backend && ./migrate.sh up && cd ..
     - make test

@@ -1,18 +1,8 @@
 .dependencies:
   before_script:
-    - apt update -y
-    - apt install make git zip unzip pre-commit -y
-    - curl -sL https://deb.nodesource.com/setup_20.x | bash
-    - apt-get install nodejs -yq
-    - npm install -g yarn
-    - export GOPATH=$(go env GOPATH)
-    - export PATH=$GOPATH/bin:$PATH
-    - go get gotest.tools/gotestsum@latest
-    - go get github.com/go-critic/go-critic/cmd/gocritic@latest
-    - go get github.com/securego/gosec/v2/cmd/gosec@latest
-    - go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
-    - go get github.com/rubenv/sql-migrate/...@latest
-    - go get golang.org/x/tools/cmd/cover
-    - go get github.com/t-yuki/gocover-cobertura
     - go mod download
     - yarn --cwd nextui-dashboard install
+
+.registry_login:
+  before_script:
+    - echo ${REGISTRY_TOKEN} | docker login -u ${REGISTRY_LOGIN} --password-stdin ${REGISTRY_URL}

@@ -50,6 +50,7 @@ MODEL="Users" make crud
 1. make
 2. gocritic
 3. gosec
+4. goimports
 4. golangci-lint
 5. pre-commit
 

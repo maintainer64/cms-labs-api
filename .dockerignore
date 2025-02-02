@@ -3,7 +3,7 @@
 .editorconfig
 .gitignore
 .env.*
-Dockerfile
+CI-CD/Dockerfile.base
 Makefile
 LICENSE
 **/*.md

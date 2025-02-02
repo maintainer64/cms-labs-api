@@ -1,0 +1,3 @@
+variables:
+  REGISTRY_PATH: a10869/api-modules
+  GO_BASE_CI_IMAGE: ${REGISTRY_URL}/${REGISTRY_PATH}/base

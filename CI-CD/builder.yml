@@ -1,0 +1,13 @@
+builder-docker-runner:
+  stage: test
+  extends: .registry_login
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - echo "Building Docker image..."
+    - docker build -t $GO_BASE_CI_IMAGE:latest ./CI-CD
+    - echo "Pushing Docker image to GitLab Registry..."
+    - docker push $GO_BASE_CI_IMAGE:latest
+    - echo "Deploying application..."
+  when: manual

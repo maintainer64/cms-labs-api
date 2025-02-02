@@ -3,7 +3,6 @@
 APP_NAME = gen
 BUILD_DIR = $(PWD)/build
 GO_PACKAGES = ./backend/... ./gen/...
-GO_COVER_PACKAGES=$(go list $(GO_PACKAGES) | tr '\n' ',' | sed 's/,$//')
 
 clean:
 	rm -rf ./build
@@ -21,6 +20,12 @@ lint:
 pre_commit:
 	pre-commit run --all-files
 
-test: clean critic security lint pre_commit
-	go test -v -coverpkg="${GO_COVER_PACKAGES}" -coverprofile=coverage.out -covermode=count $(GO_PACKAGES) | tee `tests.txt`
+test:
+	@set -o pipefail; \
+	go test -v -coverprofile=coverage.out -covermode=count $(GO_PACKAGES) | tee -a tests.out; \
+	TEST_EXIT_CODE=$$?; \
+	if [ $$TEST_EXIT_CODE -ne 0 ]; then \
+		echo "testing failed" >&2; \
+		exit $$TEST_EXIT_CODE; \
+	fi
 	go tool cover -func coverage.out
