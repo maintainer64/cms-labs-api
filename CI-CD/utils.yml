@@ -4,9 +4,10 @@
     - apt install make git zip unzip pre-commit -y
     - curl -sL https://deb.nodesource.com/setup_20.x | bash
     - apt-get install nodejs -yq
+    - npm install -g yarn
     - go get gotest.tools/gotestsum@latest
     - go get github.com/rubenv/sql-migrate/...@latest
-    - go get code.google.com/p/go.tools/cmd/cover
+    - go get golang.org/x/tools/cmd/cover
     - go get github.com/t-yuki/gocover-cobertura
     - go mod download
     - yarn --cwd nextui-dashboard install

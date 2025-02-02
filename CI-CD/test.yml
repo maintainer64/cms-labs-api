@@ -1,4 +1,4 @@
-golang:
+golang-test:
   stage: test
   extends: .dependencies
   image: golang:1.23
