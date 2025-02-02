@@ -20,10 +20,10 @@ lint:
 pre_commit:
 	pre-commit run --all-files
 
-test:
-	@set -o pipefail; \
-	go test -v -coverprofile=coverage.out -covermode=count $(GO_PACKAGES) | tee -a tests.out; \
+test: clean critic security lint pre_commit
+	go test -v -coverprofile=coverage.out -covermode=count $(GO_PACKAGES) > tests.out 2>&1; \
 	TEST_EXIT_CODE=$$?; \
+	cat tests.out; \
 	if [ $$TEST_EXIT_CODE -ne 0 ]; then \
 		echo "testing failed" >&2; \
 		exit $$TEST_EXIT_CODE; \
