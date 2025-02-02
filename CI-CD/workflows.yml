@@ -1,0 +1,12 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_SLUG == "stage"
+      variables:
+        DOCKER_PATH_BRANCH: stage
+        SENTRY_DEPLOY_ENVIRONMENT: stage
+    - if: $CI_COMMIT_REF_SLUG == "master"
+      variables:
+        DOCKER_PATH_BRANCH: master
+        SENTRY_DEPLOY_ENVIRONMENT: prod
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
