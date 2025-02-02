@@ -6,6 +6,9 @@
     - apt-get install nodejs -yq
     - npm install -g yarn
     - go get gotest.tools/gotestsum@latest
+    - go get github.com/go-critic/go-critic/cmd/gocritic@latest
+    - go get github.com/securego/gosec/v2/cmd/gosec@latest
+    - go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
     - go get github.com/rubenv/sql-migrate/...@latest
     - go get golang.org/x/tools/cmd/cover
     - go get github.com/t-yuki/gocover-cobertura

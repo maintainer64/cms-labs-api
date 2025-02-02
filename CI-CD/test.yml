@@ -34,4 +34,3 @@ golang-test:
     - rm -rf junit.xml
     - rm -rf tests.txt
     - make test
-  retry: 2
