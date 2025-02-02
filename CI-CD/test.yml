@@ -1,21 +1,15 @@
 golang:
   stage: test
+  extends: .dependencies
   image: golang:1.23
-  before_script:
-    - !reference [ .add_dependencies ]
-  script:
-    - export GO_COVER_PACKAGES=$(go list ./... | tr '\n' ',' | sed 's/,$//')
-    -
   services:
     - name: mysql:9.1
       alias: db
-      platform: linux/x86_64
       variables:
         MYSQL_DATABASE: 'db'
         MYSQL_USER: 'user'
         MYSQL_PASSWORD: 'pnetlab'
         MYSQL_ROOT_PASSWORD: 'password'
-      command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
   after_script:
     # Generate Cobertura coverage report for GitLab
     - gocover-cobertura -by-files < coverage.out > coverage.xml
@@ -33,3 +27,11 @@ golang:
         coverage_format: cobertura
         path: coverage.xml
       junit: junit.xml
+  script:
+    - rm -rf coverage.out
+    - rm -rf coverage.xml
+    - rm -rf coverage.html
+    - rm -rf junit.xml
+    - rm -rf tests.txt
+    - make test
+  retry: 2
