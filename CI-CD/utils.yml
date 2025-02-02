@@ -5,6 +5,8 @@
     - curl -sL https://deb.nodesource.com/setup_20.x | bash
     - apt-get install nodejs -yq
     - npm install -g yarn
+    - export GOPATH=$(go env GOPATH)
+    - export PATH=$GOPATH/bin:$PATH
     - go get gotest.tools/gotestsum@latest
     - go get github.com/go-critic/go-critic/cmd/gocritic@latest
     - go get github.com/securego/gosec/v2/cmd/gosec@latest
