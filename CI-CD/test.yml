@@ -11,6 +11,7 @@ golang-test:
         MYSQL_PASSWORD: 'pnetlab'
         MYSQL_ROOT_PASSWORD: 'password'
   after_script:
+    - go tool cover -func coverage.out
     # Generate Cobertura coverage report for GitLab
     - gocover-cobertura -by-files < coverage.out > coverage.xml
     # Generate HTML coverage report
@@ -28,10 +29,8 @@ golang-test:
         path: coverage.xml
       junit: junit.xml
   script:
-    - rm -rf coverage.out
-    - rm -rf coverage.xml
-    - rm -rf coverage.html
-    - rm -rf junit.xml
-    - rm -rf tests.out
-    - cd ./backend && ./migrate.sh up && cd ..
+    - cd ./backend
+    - cp .env.test .env
+    - make migrate.up
+    - cd ..
     - make test

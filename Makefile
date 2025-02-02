@@ -28,4 +28,3 @@ test: clean critic security lint pre_commit
 		echo "testing failed" >&2; \
 		exit $$TEST_EXIT_CODE; \
 	fi
-	go tool cover -func coverage.out
