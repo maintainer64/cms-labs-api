@@ -40,6 +40,7 @@ func MysqlConnection() (*gorm.DB, error) {
 	}
 
 	log.Debug().Msg(fmt.Sprintf("Table prefix MysqlConnection %+v", configs.AppConfig.DB.TablePrefix))
+	log.Debug().Msg(fmt.Sprintf("Mysql DSN %+v", mysqlConnURL))
 
 	// Define database connection for Mysql.
 	db, err := gorm.Open(

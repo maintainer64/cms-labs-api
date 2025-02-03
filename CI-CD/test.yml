@@ -4,8 +4,9 @@ golang-test:
   image: $GO_BASE_CI_IMAGE:latest
   services:
     - name: mysql:9.1
-      alias: db
+      alias: mysqldatabase
       variables:
+        MYSQL_HOST: 'mysqldatabase'
         MYSQL_DATABASE: 'db'
         MYSQL_USER: 'user'
         MYSQL_PASSWORD: 'pnetlab'

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Import env variables from ./.env
 set -a
