@@ -56,6 +56,8 @@ func NewFiberTestHTTP() *FiberTestHTTP {
 	if err := godotenv.Load("../../.env.test"); err != nil {
 		panic(err)
 	}
+	// Load .env local file form the additional
+	_ = godotenv.Load("../../.env.test")
 	configs.AppConfig.Reload()
 
 	// Define a new Fiber app.

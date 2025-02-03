@@ -29,8 +29,5 @@ golang-test:
         path: coverage.xml
       junit: junit.xml
   script:
-    - cd ./backend
-    - cp .env.test .env
-    - make migrate.up
-    - cd ..
+    - make -C backend migrate.up
     - make test

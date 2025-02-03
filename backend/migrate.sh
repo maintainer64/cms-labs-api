@@ -2,7 +2,8 @@
 
 # Import env variables from ./.env
 set -a
-[ -f .env ] && . .env
+[ -f .env.test ] && . .env.test || echo "Warning: .env.test file not found"
+[ -f .env ] && . .env || echo "Warning: .env file not found"
 
 # Указываем директорию для сохранения измененных файлов
 output_dir="processed_migrations"

@@ -27,13 +27,13 @@ run: swag build
 	$(BUILD_DIR)/$(APP_NAME)
 
 migrate.up:
-	$(PWD)/migrate.sh up
+	./migrate.sh up
 
 migrate.down:
-	$(PWD)/migrate.sh d
+	./migrate.sh d
 
 migrate.status:
-	$(PWD)/migrate.sh s
+	./migrate.sh s
 
 swag:
 	swag init
