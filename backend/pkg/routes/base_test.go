@@ -1,11 +1,12 @@
 package routes
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http/httptest"
 	"strings"
+
+	"github.com/goccy/go-json"
 
 	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/backend/app/di"
@@ -53,11 +54,11 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 
 func NewFiberTestHTTP() *FiberTestHTTP {
 	// Load .env.test file from the root folder.
+	_ = godotenv.Load("../../.env")
 	if err := godotenv.Load("../../.env.test"); err != nil {
 		panic(err)
 	}
 	// Load .env local file form the additional
-	_ = godotenv.Load("../../.env.test")
 	configs.AppConfig.Reload()
 
 	// Define a new Fiber app.
