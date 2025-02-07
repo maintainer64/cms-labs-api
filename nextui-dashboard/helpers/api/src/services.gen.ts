@@ -475,6 +475,7 @@ export const postV1ServiceCardUpsert = (
  * @param data.scope Область доступа (значения, разделённые запятой). Возможные значения: [default, openid]
  * @param data.path Путь, возвращается в параметрах редиректа
  * @param data.state Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации
+ * @param data.extra Дополнительные параметры вида base64
  * @returns auth_SSOAuthorizeResponse OK
  * @throws ApiError
  */
@@ -488,7 +489,8 @@ export const getV1SsoAuthorize = (data: GetV1SsoAuthorizeData): CancelablePromis
       response_type: data.responseType,
       scope: data.scope,
       path: data.path,
-      state: data.state
+      state: data.state,
+      extra: data.extra
     }
   });
 };

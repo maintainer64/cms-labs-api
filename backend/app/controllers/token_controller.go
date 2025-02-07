@@ -4,7 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 // TokensRenew method for renew access and refresh tokens.
@@ -17,7 +18,7 @@ import (
 // @Success 200 {object} auth.SSOTokenResponse
 // @Router /v1/token/renew [post]
 func TokensRenew(c *fiber.Ctx) error {
-	refreshToken := c.Cookies("refresh-token", "")
+	refreshToken := c.Cookies(cms_client.SSORefreshTokenName, "")
 	if refreshToken == "" {
 		dto := auth.RenewManagerInputDTO{}
 		err := utils.FiberValidatorBase(c, &dto)
@@ -40,7 +41,7 @@ func TokensRenew(c *fiber.Ctx) error {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	c.Cookie(&fiber.Cookie{
-		Name:     "refresh-token",
+		Name:     cms_client.SSORefreshTokenName,
 		Value:    token.RefreshToken,
 		Path:     "/",
 		Expires:  auth.ExpiresRefreshCookie(),
@@ -74,7 +75,7 @@ func TokensByCredentials(c *fiber.Ctx) error {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	c.Cookie(&fiber.Cookie{
-		Name:     "refresh-token",
+		Name:     cms_client.SSORefreshTokenName,
 		Value:    token.RefreshToken,
 		Path:     "/",
 		Expires:  auth.ExpiresRefreshCookie(),
@@ -94,7 +95,7 @@ func TokensByCredentials(c *fiber.Ctx) error {
 // @Router /v1/token/logout [post]
 func TokensRemove(c *fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
-		Name:     "refresh-token",
+		Name:     cms_client.SSORefreshTokenName,
 		Value:    "",
 		Path:     "/",
 		Expires:  auth.ExpiresRefreshCookie(),

@@ -8,6 +8,8 @@ import (
 	"net/url"
 	"time"
 
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	"github.com/goccy/go-json"
@@ -17,8 +19,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 type LTIAttemptCreateUC struct {
@@ -28,7 +29,7 @@ type LTIAttemptCreateUC struct {
 	LTIRoutingQueries     *queries.LTIRoutingQueries
 	PNETServerQueries     *queries.PNETServerQueries
 	UserQueries           *queries.UserQueries
-	user                  *auth.SSOTokenPublicData
+	user                  *cms_client.SSOTokenPublicData
 }
 
 type LTIAttemptCreateInputDTO struct {
@@ -44,7 +45,7 @@ type LTIAttemptCreateOutputDTO struct {
 
 type LTIAttemptCreateResponse = response.Response[LTIAttemptCreateOutputDTO]
 
-func (u *LTIAttemptCreateUC) SetContext(user *auth.SSOTokenPublicData) *LTIAttemptCreateUC {
+func (u *LTIAttemptCreateUC) SetContext(user *cms_client.SSOTokenPublicData) *LTIAttemptCreateUC {
 	u.user = user
 	return u
 }

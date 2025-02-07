@@ -19,6 +19,7 @@ type SSOAuthorizeInputDTO struct {
 	Scope        string `json:"scope"`
 	Path         string `json:"path"`
 	State        string `json:"state"`
+	Extra        string `json:"extra"`
 }
 
 type SSOAuthorizeOutputDTO struct {
@@ -27,20 +28,10 @@ type SSOAuthorizeOutputDTO struct {
 	Application string `json:"application"`
 	Path        string `json:"path"`
 	State       string `json:"state"`
+	Extra       string `json:"extra"`
 }
 
 type SSOAuthorizeResponse = response.Response[SSOAuthorizeOutputDTO]
-
-func (s *SSOAuthorizeOutputDTO) LocationString() string {
-	return fmt.Sprintf(
-		"%s?code=%s&application=%s&path=%s&state=%s",
-		s.RedirectUri,
-		s.Code,
-		s.Application,
-		s.Path,
-		s.State,
-	)
-}
 
 const (
 	SSOAuthorizeResponseType = "code"
@@ -85,6 +76,7 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 		Application: inputDTO.ClientID,
 		Path:        inputDTO.Path,
 		State:       inputDTO.State,
+		Extra:       inputDTO.Extra,
 	}, nil
 
 }

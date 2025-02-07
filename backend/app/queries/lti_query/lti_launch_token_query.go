@@ -8,7 +8,7 @@ import (
 	"github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/utils"
 
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gorm.io/gorm"

@@ -23,7 +23,7 @@ test:
 build:
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(APP_NAME) main.go
 
-run: swag build
+run: generate build
 	$(BUILD_DIR)/$(APP_NAME)
 
 migrate.up:
@@ -35,8 +35,8 @@ migrate.down:
 migrate.status:
 	./migrate.sh s
 
-swag:
-	swag init
+generate:
+	go generate
 
 crud:
 	cd ../gen && go run . -model $(MODEL) -root "gitlab.com/a10869/api-modules/backend" -directory $(CUR_DIR) && cd $(CUR_DIR)

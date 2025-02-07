@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
 )
 

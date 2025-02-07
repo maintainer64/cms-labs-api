@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 )
 
 // LTILaunch функция инициализирует подключение к LTI.
@@ -33,7 +34,7 @@ func LTILaunch(c *fiber.Ctx) error {
 		return err
 	}
 	c.Cookie(&fiber.Cookie{
-		Name:     "refresh-token",
+		Name:     cms_client.SSORefreshTokenName,
 		Value:    token.RefreshToken,
 		Path:     "/",
 		SameSite: fiber.CookieSameSiteNoneMode,

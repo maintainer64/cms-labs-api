@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 // SSOAuthorize Получить код авторизации.
@@ -21,6 +21,7 @@ import (
 // @Param scope query string true "Область доступа (значения, разделённые запятой). Возможные значения: [default, openid]"  Enums(default, openid)
 // @Param path query string false "Путь, возвращается в параметрах редиректа"
 // @Param state query string false "Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации"
+// @Param extra query string false "Дополнительные параметры вида base64"
 // @Success 200 {object} auth.SSOAuthorizeResponse
 // @Security ApiKeyAuth
 // @Router /v1/sso/authorize [get]

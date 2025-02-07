@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -19,20 +21,8 @@ type TokenDataWithExp struct {
 	Exp   int64  `json:"exp"`
 }
 
-func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
-	return jwt.MapClaims{
-		"id":             t.Id,
-		"email":          t.Email,
-		"server_id":      t.ServerID,
-		"name":           t.Name,
-		"role":           t.Role,
-		"last_launch_id": t.LastLaunchId,
-		"expires":        t.Expires,
-	}
-}
-
 // GenerateNewTokens func for generate a new Access & Refresh tokens.
-func GenerateNewTokens(entity *SSOTokenPublicData, state string) (*SSOToken, error) {
+func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cms_client.SSOToken, error) {
 	// Generate JWT Access token.
 	accessToken, err := generateNewAccessToken(entity)
 	if err != nil {
@@ -47,7 +37,7 @@ func GenerateNewTokens(entity *SSOTokenPublicData, state string) (*SSOToken, err
 		return nil, err
 	}
 
-	return &SSOToken{
+	return &cms_client.SSOToken{
 		AccessToken:  accessToken.Token,
 		RefreshToken: refreshToken.Token,
 		TokenType:    "bearer",
@@ -57,7 +47,7 @@ func GenerateNewTokens(entity *SSOTokenPublicData, state string) (*SSOToken, err
 	}, nil
 }
 
-func generateNewAccessToken(entity *SSOTokenPublicData) (*TokenDataWithExp, error) {
+func generateNewAccessToken(entity *cms_client.SSOTokenPublicData) (*TokenDataWithExp, error) {
 	// Set secret key from .env file.
 	secret := configs.AppConfig.JWT.SecretKey
 

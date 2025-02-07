@@ -6,7 +6,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_launch"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_login"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 func (di *DIContainer) LTIProtocolDatastoreConfig() (*lti_connector.LTIConnectorAPI, error) {

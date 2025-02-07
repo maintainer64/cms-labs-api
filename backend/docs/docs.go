@@ -963,6 +963,12 @@ const docTemplate = `{
                         "description": "Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации",
                         "name": "state",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Дополнительные параметры вида base64",
+                        "name": "extra",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1504,6 +1510,9 @@ const docTemplate = `{
                 "client_id": {
                     "type": "string"
                 },
+                "extra": {
+                    "type": "string"
+                },
                 "path": {
                     "type": "string"
                 },
@@ -1531,6 +1540,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "code": {
+                    "type": "string"
+                },
+                "extra": {
                     "type": "string"
                 },
                 "path": {
@@ -1601,7 +1613,10 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "scope": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "sub": {
                     "type": "string"
@@ -1738,11 +1753,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "created_at",
-                "updated_at",
+                "expired_at",
                 "updated_at"
             ],
             "properties": {
                 "created_at": {
+                    "type": "string"
+                },
+                "expired_at": {
                     "type": "string"
                 },
                 "id": {
@@ -1769,11 +1787,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "created_at",
-                "updated_at",
+                "expired_at",
                 "updated_at"
             ],
             "properties": {
                 "created_at": {
+                    "type": "string"
+                },
+                "expired_at": {
                     "type": "string"
                 },
                 "id": {

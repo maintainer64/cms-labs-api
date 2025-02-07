@@ -8,12 +8,13 @@ export const SSOAuthorizationParams = () => {
     redirect_uri: currentURI.searchParams.get('redirect_uri') || '',
     response_type: currentURI.searchParams.get('response_type') || '',
     scope: currentURI.searchParams.get('scope') || '',
-    state: currentURI.searchParams.get('state') || ''
+    state: currentURI.searchParams.get('state') || '',
+    extra: currentURI.searchParams.get('extra') || ''
   };
   return params;
 };
 
 export const SSOAuthorizationComplete = (params?: auth_SSOAuthorizeOutputDTO) => {
   if (!params) return '';
-  return `${params.redirect_uri || '/'}?state=${params.state || ''}&path=${params.path || ''}&code=${params.code || ''}&application=${params.application || ''}`;
+  return `${params.redirect_uri || '/'}?state=${params.state || ''}&path=${params.path || ''}&code=${params.code || ''}&application=${params.application || ''}&extra=${params.extra || ''}`;
 };

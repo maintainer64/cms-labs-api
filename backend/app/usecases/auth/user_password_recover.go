@@ -3,6 +3,8 @@ package auth
 import (
 	"errors"
 
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	"gitlab.com/a10869/api-modules/backend/app/queries"
@@ -11,7 +13,7 @@ import (
 
 type UserPasswordRecoverUC struct {
 	UserPasswordQueries *queries.UserPasswordQueries
-	User                *SSOTokenPublicData
+	User                *cms_client.SSOTokenPublicData
 }
 
 type UserPasswordChangeInputDTO struct {
@@ -26,7 +28,7 @@ type UserPasswordChangeOutputDTO struct {
 
 type UserPasswordRecoverResponse = response.Response[UserPasswordChangeOutputDTO]
 
-func (u *UserPasswordRecoverUC) SetContext(user *SSOTokenPublicData) *UserPasswordRecoverUC {
+func (u *UserPasswordRecoverUC) SetContext(user *cms_client.SSOTokenPublicData) *UserPasswordRecoverUC {
 	u.User = user
 	return u
 }

@@ -27,6 +27,9 @@ export const auth_SSOAuthorizeInputDTOSchema = {
     client_id: {
       type: 'string'
     },
+    extra: {
+      type: 'string'
+    },
     path: {
       type: 'string'
     },
@@ -55,6 +58,9 @@ export const auth_SSOAuthorizeOutputDTOSchema = {
       type: 'string'
     },
     code: {
+      type: 'string'
+    },
+    extra: {
       type: 'string'
     },
     path: {
@@ -125,7 +131,10 @@ export const auth_SSOTokenIntrospectSchema = {
       type: 'integer'
     },
     scope: {
-      type: 'string'
+      type: 'array',
+      items: {
+        type: 'string'
+      }
     },
     sub: {
       type: 'string'
@@ -256,9 +265,12 @@ export const auth_UserPasswordRecoverResponseSchema = {
 
 export const models_LTIAttemptSchema = {
   type: 'object',
-  required: ['created_at', 'updated_at', 'updated_at'],
+  required: ['created_at', 'expired_at', 'updated_at'],
   properties: {
     created_at: {
+      type: 'string'
+    },
+    expired_at: {
       type: 'string'
     },
     id: {
@@ -284,9 +296,12 @@ export const models_LTIAttemptSchema = {
 
 export const models_LTIAttemptListItemSchema = {
   type: 'object',
-  required: ['created_at', 'updated_at', 'updated_at'],
+  required: ['created_at', 'expired_at', 'updated_at'],
   properties: {
     created_at: {
+      type: 'string'
+    },
+    expired_at: {
       type: 'string'
     },
     id: {

@@ -5,8 +5,10 @@ import (
 	"slices"
 	"strings"
 
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
@@ -16,7 +18,7 @@ import (
 func ExtractTokenMetadata(
 	c *fiber.Ctx,
 	roles []string,
-) (*SSOTokenPublicData, error) {
+) (*cms_client.SSOTokenPublicData, error) {
 	token, err := verifyToken(c)
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
@@ -27,7 +29,7 @@ func ExtractTokenMetadata(
 	if !ok || !token.Valid {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
-	tokenData := SSOTokenPublicData{
+	tokenData := cms_client.SSOTokenPublicData{
 		Id:           uint(claims["id"].(float64)),
 		ServerID:     uint(claims["server_id"].(float64)),
 		Email:        claims["email"].(string),

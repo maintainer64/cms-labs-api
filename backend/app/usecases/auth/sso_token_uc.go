@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 )
 
@@ -27,9 +29,9 @@ type SSOTokenUC struct {
 	PNETServerQueries   *queries.PNETServerQueries
 }
 
-func (u *SSOTokenUC) Execute(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
+func (u *SSOTokenUC) Execute(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
 	if err := u.validate(inputDTO); err != nil {
-		return &SSOToken{}, err
+		return &cms_client.SSOToken{}, err
 	}
 	if inputDTO.GrantType == TokenGrantTypeAuthorizationCode {
 		return u.ByAuthCode(inputDTO)
@@ -50,7 +52,7 @@ func (u *SSOTokenUC) validate(inputDTO SSOTokenInputDTO) error {
 	return errors.New("Invalid params grant_type")
 }
 
-func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
+func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
 	attempt, err := u.TokenAttemptQueries.GetByAuthCode(inputDTO.Code)
 	if err != nil {
 		return nil, err
@@ -69,7 +71,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
 	return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, attempt.State)
 }
 
-func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*SSOToken, error) {
+func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
 	expiresRefreshToken, err := ParseRefreshToken(inputDTO.RefreshToken)
 	if err != nil {
 		return nil, err

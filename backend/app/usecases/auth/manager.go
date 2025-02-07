@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
@@ -26,7 +28,7 @@ type RenewManagerCredentialsInputDTO struct {
 }
 
 // NewJWTByCredentials генерирует новый JWT по логину/паролю
-func (m *TokenManager) NewJWTByCredentials(email string, password string) (*SSOToken, error) {
+func (m *TokenManager) NewJWTByCredentials(email string, password string) (*cms_client.SSOToken, error) {
 	invalidCreds := errors.New("username or password is incorrect")
 	if email == "" {
 		return nil, invalidCreds
@@ -50,7 +52,7 @@ func (m *TokenManager) NewJWTByCredentials(email string, password string) (*SSOT
 	return m.NewJWTByUserId(entity.ID, 0, "")
 }
 
-func (m *TokenManager) NewJWTByLaunchID(launchID string) (*SSOToken, error) {
+func (m *TokenManager) NewJWTByLaunchID(launchID string) (*cms_client.SSOToken, error) {
 	invalidCreds := errors.New("LTI process is incorrect")
 	if launchID == "" {
 		return nil, invalidCreds
@@ -62,12 +64,12 @@ func (m *TokenManager) NewJWTByLaunchID(launchID string) (*SSOToken, error) {
 	return m.NewJWTByUserId(entity.ID, 0, "")
 }
 
-func (m *TokenManager) NewJWTByUserId(userId uint, serverID uint, state string) (*SSOToken, error) {
+func (m *TokenManager) NewJWTByUserId(userId uint, serverID uint, state string) (*cms_client.SSOToken, error) {
 	userModel, err := m.UserQueries.Get(userId)
 	if err != nil {
 		return nil, err
 	}
-	tokens, err := GenerateNewTokens(&SSOTokenPublicData{
+	tokens, err := GenerateNewTokens(&cms_client.SSOTokenPublicData{
 		Id:           userModel.ID,
 		Email:        userModel.Email,
 		ServerID:     serverID,

@@ -956,6 +956,12 @@
                         "description": "Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации",
                         "name": "state",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Дополнительные параметры вида base64",
+                        "name": "extra",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1497,6 +1503,9 @@
                 "client_id": {
                     "type": "string"
                 },
+                "extra": {
+                    "type": "string"
+                },
                 "path": {
                     "type": "string"
                 },
@@ -1524,6 +1533,9 @@
                     "type": "string"
                 },
                 "code": {
+                    "type": "string"
+                },
+                "extra": {
                     "type": "string"
                 },
                 "path": {
@@ -1594,7 +1606,10 @@
                     "type": "integer"
                 },
                 "scope": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "sub": {
                     "type": "string"
@@ -1731,11 +1746,14 @@
             "type": "object",
             "required": [
                 "created_at",
-                "updated_at",
+                "expired_at",
                 "updated_at"
             ],
             "properties": {
                 "created_at": {
+                    "type": "string"
+                },
+                "expired_at": {
                     "type": "string"
                 },
                 "id": {
@@ -1762,11 +1780,14 @@
             "type": "object",
             "required": [
                 "created_at",
-                "updated_at",
+                "expired_at",
                 "updated_at"
             ],
             "properties": {
                 "created_at": {
+                    "type": "string"
+                },
+                "expired_at": {
                     "type": "string"
                 },
                 "id": {

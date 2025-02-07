@@ -11,6 +11,7 @@ export type auth_RenewManagerInputDTO = {
 
 export type auth_SSOAuthorizeInputDTO = {
   client_id?: string;
+  extra?: string;
   path?: string;
   redirect_uri?: string;
   response_type?: string;
@@ -22,6 +23,7 @@ export type auth_SSOAuthorizeInputDTO = {
 export type auth_SSOAuthorizeOutputDTO = {
   application?: string;
   code?: string;
+  extra?: string;
   path?: string;
   redirect_uri?: string;
   state?: string;
@@ -47,7 +49,7 @@ export type auth_SSOTokenIntrospect = {
   client_id?: string;
   exp?: number;
   iat?: number;
-  scope?: string;
+  scope?: Array<string>;
   sub?: string;
   token_type?: string;
   username?: string;
@@ -99,6 +101,7 @@ export type auth_UserPasswordRecoverResponse = {
 
 export type models_LTIAttempt = {
   created_at: string;
+  expired_at: string;
   id?: number;
   lti_routing_id?: number;
   pnet_server_id?: number;
@@ -109,6 +112,7 @@ export type models_LTIAttempt = {
 
 export type models_LTIAttemptListItem = {
   created_at: string;
+  expired_at: string;
   id?: number;
   lti_routing_id?: number;
   pnet_server_id?: number;
@@ -868,6 +872,10 @@ export type GetV1SsoAuthorizeData = {
    * Код приложения клиента
    */
   clientId: string;
+  /**
+   * Дополнительные параметры вида base64
+   */
+  extra?: string;
   /**
    * Путь, возвращается в параметрах редиректа
    */

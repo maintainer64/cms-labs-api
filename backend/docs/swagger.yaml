@@ -16,6 +16,8 @@ definitions:
     properties:
       client_id:
         type: string
+      extra:
+        type: string
       path:
         type: string
       redirect_uri:
@@ -34,6 +36,8 @@ definitions:
       application:
         type: string
       code:
+        type: string
+      extra:
         type: string
       path:
         type: string
@@ -80,7 +84,9 @@ definitions:
       iat:
         type: integer
       scope:
-        type: string
+        items:
+          type: string
+        type: array
       sub:
         type: string
       token_type:
@@ -171,6 +177,8 @@ definitions:
     properties:
       created_at:
         type: string
+      expired_at:
+        type: string
       id:
         type: integer
       lti_routing_id:
@@ -185,12 +193,14 @@ definitions:
         type: integer
     required:
     - created_at
-    - updated_at
+    - expired_at
     - updated_at
     type: object
   models.LTIAttemptListItem:
     properties:
       created_at:
+        type: string
+      expired_at:
         type: string
       id:
         type: integer
@@ -204,7 +214,7 @@ definitions:
         type: integer
     required:
     - created_at
-    - updated_at
+    - expired_at
     - updated_at
     type: object
   models.LTIForm:
@@ -1829,6 +1839,10 @@ paths:
           кода авторизации
         in: query
         name: state
+        type: string
+      - description: Дополнительные параметры вида base64
+        in: query
+        name: extra
         type: string
       produces:
       - application/json

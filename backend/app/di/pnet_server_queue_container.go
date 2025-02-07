@@ -3,7 +3,7 @@ package di
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/round_queue_pool_pnet"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
+	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 func (di *DIContainer) PnetServerChangeDistributionUC() (*round_queue_pool_pnet.RoundQueuePoolPnetUpsert, error) {
