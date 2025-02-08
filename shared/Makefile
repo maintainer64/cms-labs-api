@@ -1,10 +1,8 @@
-.PHONY: clean critic security lint test generate build run
+.PHONY: critic security lint test generate
 
-APP_NAME = gen
+APP_NAME = shared
+CUR_DIR = $(PWD)
 BUILD_DIR = $(PWD)/build
-
-clean:
-	rm -rf ./build
 
 critic:
 	gocritic check -enableAll ./...
@@ -15,9 +13,9 @@ security:
 lint:
 	golangci-lint run ./...
 
-generate:
-	go generate
-
 test:
 	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
 	go tool cover -func=cover.out
+
+generate:
+	go generate

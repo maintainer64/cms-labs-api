@@ -15,7 +15,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param form body auth.RenewManagerInputDTO true "renew token form info"
-// @Success 200 {object} auth.SSOTokenResponse
+// @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Router /v1/token/renew [post]
 func TokensRenew(c *fiber.Ctx) error {
 	refreshToken := c.Cookies(cms_client.SSORefreshTokenName, "")
@@ -58,7 +58,7 @@ func TokensRenew(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param form body auth.RenewManagerCredentialsInputDTO true "credentials form info"
-// @Success 200 {object} auth.SSOTokenResponse
+// @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Router /v1/token/login [post]
 func TokensByCredentials(c *fiber.Ctx) error {
 	dto := auth.RenewManagerCredentialsInputDTO{}
@@ -91,7 +91,7 @@ func TokensByCredentials(c *fiber.Ctx) error {
 // @Tags Token
 // @Accept json
 // @Produce json
-// @Success 200 {object} auth.SSOTokenResponse
+// @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Router /v1/token/logout [post]
 func TokensRemove(c *fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{

@@ -6,6 +6,6 @@ go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 go install github.com/jstemmer/go-junit-report/v2@latest
 go install github.com/rubenv/sql-migrate/...@latest
 go install golang.org/x/tools/cmd/cover@latest
-go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
 go install golang.org/x/tools/cmd/goimports@latest
 go install github.com/t-yuki/gocover-cobertura@latest
+go install github.com/robertkrimen/godocdown/godocdown@latest

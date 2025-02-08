@@ -1,3 +1,4 @@
+// Package logs общие компоненты для Fiber логирования
 package logs
 
 import (

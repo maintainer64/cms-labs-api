@@ -20,7 +20,9 @@ pre_commit:
 
 generate:
 	make -C backend generate
+	make -C gen generate
 	make -C pnetlabaddon generate
+	make -C shared generate
 	yarn --cwd nextui-dashboard generate
 
 test: clean critic security lint pre_commit

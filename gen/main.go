@@ -1,3 +1,4 @@
+// Package main автоматический генератор моделей проекта
 package main
 
 import (

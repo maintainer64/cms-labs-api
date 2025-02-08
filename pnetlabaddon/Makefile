@@ -1,4 +1,4 @@
-.PHONY: clean critic security lint test build run
+.PHONY: clean critic security lint test generate build run
 
 APP_NAME = pnetlabaddon
 CUR_DIR = $(PWD)

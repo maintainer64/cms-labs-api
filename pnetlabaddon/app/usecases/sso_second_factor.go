@@ -90,9 +90,17 @@ func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFact
 		HTML5:      true,
 		UserStatus: 1,
 	})
+	if err != nil {
+		log.Info().Msg(
+			fmt.Sprintf(
+				"Get or create user user_id=%d, email=%s with error=%+v", user.Id, user.Email, err,
+			),
+		)
+		return nil, err
+	}
 	log.Info().Msg(
 		fmt.Sprintf(
-			"Get or create user user_id=%d, email=%s", user.Id, user.Email,
+			"Get or create user user_id=%d, email=%s user_pod=%d", user.Id, user.Email, userDB.Pod,
 		),
 	)
 	userDB.Name = fmt.Sprintf("%d", user.Id)

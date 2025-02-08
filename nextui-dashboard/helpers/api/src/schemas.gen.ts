@@ -91,30 +91,6 @@ export const auth_SSOAuthorizeResponseSchema = {
   }
 } as const;
 
-export const auth_SSOTokenSchema = {
-  type: 'object',
-  properties: {
-    access_token: {
-      type: 'string'
-    },
-    expires_in: {
-      type: 'integer'
-    },
-    refresh_token: {
-      type: 'string'
-    },
-    state: {
-      type: 'string'
-    },
-    token_type: {
-      type: 'string'
-    },
-    user_id: {
-      type: 'integer'
-    }
-  }
-} as const;
-
 export const auth_SSOTokenIntrospectSchema = {
   type: 'object',
   properties: {
@@ -164,7 +140,31 @@ export const auth_SSOTokenIntrospectResponseSchema = {
   }
 } as const;
 
-export const auth_SSOTokenPublicDataSchema = {
+export const auth_SwaggerSSOTokenSchema = {
+  type: 'object',
+  properties: {
+    access_token: {
+      type: 'string'
+    },
+    expires_in: {
+      type: 'integer'
+    },
+    refresh_token: {
+      type: 'string'
+    },
+    state: {
+      type: 'string'
+    },
+    token_type: {
+      type: 'string'
+    },
+    user_id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const auth_SwaggerSSOTokenPublicDataSchema = {
   type: 'object',
   properties: {
     email: {
@@ -191,7 +191,7 @@ export const auth_SSOTokenPublicDataSchema = {
   }
 } as const;
 
-export const auth_SSOTokenResponseSchema = {
+export const auth_SwaggerSSOTokenPublicDataResponseSchema = {
   type: 'object',
   required: ['error', 'msg'],
   properties: {
@@ -202,12 +202,12 @@ export const auth_SSOTokenResponseSchema = {
       type: 'string'
     },
     result: {
-      $ref: '#/definitions/auth.SSOToken'
+      $ref: '#/definitions/auth.SwaggerSSOTokenPublicData'
     }
   }
 } as const;
 
-export const auth_SsoTokenPublicDataResponseSchema = {
+export const auth_SwaggerSSOTokenResponseSchema = {
   type: 'object',
   required: ['error', 'msg'],
   properties: {
@@ -218,7 +218,7 @@ export const auth_SsoTokenPublicDataResponseSchema = {
       type: 'string'
     },
     result: {
-      $ref: '#/definitions/auth.SSOTokenPublicData'
+      $ref: '#/definitions/auth.SwaggerSSOToken'
     }
   }
 } as const;

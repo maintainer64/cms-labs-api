@@ -1122,7 +1122,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SSOTokenResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
                         }
                     }
                 }
@@ -1159,7 +1159,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SsoTokenPublicDataResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenPublicDataResponse"
                         }
                     }
                 }
@@ -1193,7 +1193,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SSOTokenResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
                         }
                     }
                 }
@@ -1216,7 +1216,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SSOTokenResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
                         }
                     }
                 }
@@ -1284,7 +1284,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SSOTokenResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
                         }
                     }
                 }
@@ -1574,29 +1574,6 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.SSOToken": {
-            "type": "object",
-            "properties": {
-                "access_token": {
-                    "type": "string"
-                },
-                "expires_in": {
-                    "type": "integer"
-                },
-                "refresh_token": {
-                    "type": "string"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "token_type": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "auth.SSOTokenIntrospect": {
             "type": "object",
             "properties": {
@@ -1647,7 +1624,30 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.SSOTokenPublicData": {
+        "auth.SwaggerSSOToken": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "auth.SwaggerSSOTokenPublicData": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1673,7 +1673,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.SSOTokenResponse": {
+        "auth.SwaggerSSOTokenPublicDataResponse": {
             "type": "object",
             "required": [
                 "error",
@@ -1687,11 +1687,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "result": {
-                    "$ref": "#/definitions/auth.SSOToken"
+                    "$ref": "#/definitions/auth.SwaggerSSOTokenPublicData"
                 }
             }
         },
-        "auth.SsoTokenPublicDataResponse": {
+        "auth.SwaggerSSOTokenResponse": {
             "type": "object",
             "required": [
                 "error",
@@ -1705,7 +1705,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "result": {
-                    "$ref": "#/definitions/auth.SSOTokenPublicData"
+                    "$ref": "#/definitions/auth.SwaggerSSOToken"
                 }
             }
         },

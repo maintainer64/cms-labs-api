@@ -58,21 +58,6 @@ definitions:
     - error
     - msg
     type: object
-  auth.SSOToken:
-    properties:
-      access_token:
-        type: string
-      expires_in:
-        type: integer
-      refresh_token:
-        type: string
-      state:
-        type: string
-      token_type:
-        type: string
-      user_id:
-        type: integer
-    type: object
   auth.SSOTokenIntrospect:
     properties:
       active:
@@ -106,7 +91,22 @@ definitions:
     - error
     - msg
     type: object
-  auth.SSOTokenPublicData:
+  auth.SwaggerSSOToken:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      refresh_token:
+        type: string
+      state:
+        type: string
+      token_type:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  auth.SwaggerSSOTokenPublicData:
     properties:
       email:
         type: string
@@ -123,26 +123,26 @@ definitions:
       server_id:
         type: integer
     type: object
-  auth.SSOTokenResponse:
+  auth.SwaggerSSOTokenPublicDataResponse:
     properties:
       error:
         type: boolean
       msg:
         type: string
       result:
-        $ref: '#/definitions/auth.SSOToken'
+        $ref: '#/definitions/auth.SwaggerSSOTokenPublicData'
     required:
     - error
     - msg
     type: object
-  auth.SsoTokenPublicDataResponse:
+  auth.SwaggerSSOTokenResponse:
     properties:
       error:
         type: boolean
       msg:
         type: string
       result:
-        $ref: '#/definitions/auth.SSOTokenPublicData'
+        $ref: '#/definitions/auth.SwaggerSSOToken'
     required:
     - error
     - msg
@@ -1944,7 +1944,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SSOTokenResponse'
+            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
       security:
       - ApiKeyAuth: []
       summary: Получение токена доступа и токена обновления.
@@ -1967,7 +1967,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SsoTokenPublicDataResponse'
+            $ref: '#/definitions/auth.SwaggerSSOTokenPublicDataResponse'
       security:
       - ApiKeyAuth: []
       summary: Получить информацию о пользователе.
@@ -1991,7 +1991,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SSOTokenResponse'
+            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
       summary: login by email and password
       tags:
       - Token
@@ -2006,7 +2006,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SSOTokenResponse'
+            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
       summary: logout
       tags:
       - Token
@@ -2050,7 +2050,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SSOTokenResponse'
+            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
       summary: renew access and refresh tokens
       tags:
       - Token

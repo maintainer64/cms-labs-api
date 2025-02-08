@@ -8,6 +8,13 @@
 4. [Go-Lang Shared](shared/README.md)
 5. [Gen Model](gen/README.md)
 
+## Документация
+
+1. [CMS Labs Core](backend/docs/swagger.yaml)
+3. [PNET Lab Addon](pnetlabaddon/docs/swagger.yaml)
+2. [Gen Model](shared/docs/README.md)
+3. [Go-Lang Shared](shared/docs/README.md)
+
 ## ⚡️ Быстрый старт
 
 1. Для установки всех зависимостей GoLang выполните:

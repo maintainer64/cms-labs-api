@@ -1,3 +1,4 @@
+// Package cms_client клиент до CMS Labs Core
 package cms_client
 
 import (

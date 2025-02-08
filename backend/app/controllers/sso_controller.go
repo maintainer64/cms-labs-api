@@ -91,7 +91,7 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 // @Param code formData string false "Код авторизации"
 // @Param refresh_token formData string false "Токен обновления"
 // @Param Authorization header string true "Basic-токен, созданный клиентом"
-// @Success 200 {object} auth.SSOTokenResponse
+// @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Security ApiKeyAuth
 // @Router /v1/sso/token [post]
 func SSOToken(c *fiber.Ctx) error {
@@ -143,7 +143,7 @@ func SSOIntrospect(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer токен"
-// @Success 200 {object} auth.SsoTokenPublicDataResponse
+// @Success 200 {object} auth.SwaggerSSOTokenPublicDataResponse
 // @Security ApiKeyAuth
 // @Router /v1/sso/userinfo [post]
 func SSOUserInfo(c *fiber.Ctx) error {

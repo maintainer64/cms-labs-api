@@ -1,3 +1,4 @@
+// Package utils общие компоненты для Fiber моделей
 package utils
 
 import (

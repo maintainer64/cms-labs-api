@@ -1,3 +1,4 @@
+// Package main CMS Labs Core проект LTI <-> SSO компонентов
 package main
 
 import (

@@ -35,15 +35,6 @@ export type auth_SSOAuthorizeResponse = {
   result?: auth_SSOAuthorizeOutputDTO;
 };
 
-export type auth_SSOToken = {
-  access_token?: string;
-  expires_in?: number;
-  refresh_token?: string;
-  state?: string;
-  token_type?: string;
-  user_id?: number;
-};
-
 export type auth_SSOTokenIntrospect = {
   active?: boolean;
   client_id?: string;
@@ -61,7 +52,16 @@ export type auth_SSOTokenIntrospectResponse = {
   result?: auth_SSOTokenIntrospect;
 };
 
-export type auth_SSOTokenPublicData = {
+export type auth_SwaggerSSOToken = {
+  access_token?: string;
+  expires_in?: number;
+  refresh_token?: string;
+  state?: string;
+  token_type?: string;
+  user_id?: number;
+};
+
+export type auth_SwaggerSSOTokenPublicData = {
   email?: string;
   exp?: number;
   id?: number;
@@ -71,16 +71,16 @@ export type auth_SSOTokenPublicData = {
   server_id?: number;
 };
 
-export type auth_SSOTokenResponse = {
+export type auth_SwaggerSSOTokenPublicDataResponse = {
   error: boolean;
   msg: string;
-  result?: auth_SSOToken;
+  result?: auth_SwaggerSSOTokenPublicData;
 };
 
-export type auth_SsoTokenPublicDataResponse = {
+export type auth_SwaggerSSOTokenResponse = {
   error: boolean;
   msg: string;
-  result?: auth_SSOTokenPublicData;
+  result?: auth_SwaggerSSOToken;
 };
 
 export type auth_UserPasswordChangeInputDTO = {
@@ -945,7 +945,7 @@ export type PostV1SsoTokenData = {
   refreshToken?: string;
 };
 
-export type PostV1SsoTokenResponse = auth_SSOTokenResponse;
+export type PostV1SsoTokenResponse = auth_SwaggerSSOTokenResponse;
 
 export type PostV1SsoUserinfoData = {
   /**
@@ -954,7 +954,7 @@ export type PostV1SsoUserinfoData = {
   authorization: string;
 };
 
-export type PostV1SsoUserinfoResponse = auth_SsoTokenPublicDataResponse;
+export type PostV1SsoUserinfoResponse = auth_SwaggerSSOTokenPublicDataResponse;
 
 export type PostV1TokenLoginData = {
   /**
@@ -963,9 +963,9 @@ export type PostV1TokenLoginData = {
   form: auth_RenewManagerCredentialsInputDTO;
 };
 
-export type PostV1TokenLoginResponse = auth_SSOTokenResponse;
+export type PostV1TokenLoginResponse = auth_SwaggerSSOTokenResponse;
 
-export type PostV1TokenLogoutResponse = auth_SSOTokenResponse;
+export type PostV1TokenLogoutResponse = auth_SwaggerSSOTokenResponse;
 
 export type PostV1TokenPasswordChangeData = {
   /**
@@ -983,7 +983,7 @@ export type PostV1TokenRenewData = {
   form: auth_RenewManagerInputDTO;
 };
 
-export type PostV1TokenRenewResponse = auth_SSOTokenResponse;
+export type PostV1TokenRenewResponse = auth_SwaggerSSOTokenResponse;
 
 export type PostV1UserGetData = {
   /**

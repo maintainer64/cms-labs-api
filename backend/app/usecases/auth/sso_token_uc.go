@@ -29,6 +29,41 @@ type SSOTokenUC struct {
 	PNETServerQueries   *queries.PNETServerQueries
 }
 
+// SwaggerSSOToken copy of cms_client.SSOToken
+type SwaggerSSOToken struct {
+	AccessToken  string `json:"access_token" required:"true"`
+	RefreshToken string `json:"refresh_token" required:"true"`
+	TokenType    string `json:"token_type" required:"true"`
+	ExpiresIn    int64  `json:"expires_in" required:"true"`
+	State        string `json:"state"`
+	UserId       uint   `json:"user_id"`
+}
+
+// SwaggerSSOTokenResponse copy of cms_client.SSOTokenResponse
+type SwaggerSSOTokenResponse struct {
+	Error  bool            `json:"error" validate:"required"`
+	Msg    string          `json:"msg" validate:"required"`
+	Result SwaggerSSOToken `json:"result"`
+}
+
+// SwaggerSSOTokenPublicData copy of cms_client.SSOTokenPublicData
+type SwaggerSSOTokenPublicData struct {
+	Id           uint   `json:"id"`
+	ServerID     uint   `json:"server_id"`
+	Email        string `json:"email"`
+	Name         string `json:"name"`
+	Role         string `json:"role"`
+	LastLaunchId string `json:"last_launch_id"`
+	Expires      int64  `json:"exp"`
+}
+
+// SwaggerSSOTokenPublicDataResponse copy of  cms_client.SSOTokenPublicDataResponse
+type SwaggerSSOTokenPublicDataResponse struct {
+	Error  bool                      `json:"error" validate:"required"`
+	Msg    string                    `json:"msg" validate:"required"`
+	Result SwaggerSSOTokenPublicData `json:"result"`
+}
+
 func (u *SSOTokenUC) Execute(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
 	if err := u.validate(inputDTO); err != nil {
 		return &cms_client.SSOToken{}, err

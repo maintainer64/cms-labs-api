@@ -542,7 +542,7 @@ export const postV1SsoIntrospect = (data: PostV1SsoIntrospectData): CancelablePr
  * @param data.redirectUri Адрес переадресации клиента
  * @param data.code Код авторизации
  * @param data.refreshToken Токен обновления
- * @returns auth_SSOTokenResponse OK
+ * @returns auth_SwaggerSSOTokenResponse OK
  * @throws ApiError
  */
 export const postV1SsoToken = (data: PostV1SsoTokenData): CancelablePromise<PostV1SsoTokenResponse> => {
@@ -566,7 +566,7 @@ export const postV1SsoToken = (data: PostV1SsoTokenData): CancelablePromise<Post
  * Получить информацию о пользователе.
  * @param data The data for the request.
  * @param data.authorization Bearer токен
- * @returns auth_SsoTokenPublicDataResponse OK
+ * @returns auth_SwaggerSSOTokenPublicDataResponse OK
  * @throws ApiError
  */
 export const postV1SsoUserinfo = (data: PostV1SsoUserinfoData): CancelablePromise<PostV1SsoUserinfoResponse> => {
@@ -584,7 +584,7 @@ export const postV1SsoUserinfo = (data: PostV1SsoUserinfoData): CancelablePromis
  * Login by email and password.
  * @param data The data for the request.
  * @param data.form credentials form info
- * @returns auth_SSOTokenResponse OK
+ * @returns auth_SwaggerSSOTokenResponse OK
  * @throws ApiError
  */
 export const postV1TokenLogin = (data: PostV1TokenLoginData): CancelablePromise<PostV1TokenLoginResponse> => {
@@ -598,7 +598,7 @@ export const postV1TokenLogin = (data: PostV1TokenLoginData): CancelablePromise<
 /**
  * logout
  * Logout.
- * @returns auth_SSOTokenResponse OK
+ * @returns auth_SwaggerSSOTokenResponse OK
  * @throws ApiError
  */
 export const postV1TokenLogout = (): CancelablePromise<PostV1TokenLogoutResponse> => {
@@ -631,7 +631,7 @@ export const postV1TokenPasswordChange = (
  * Renew access and refresh tokens.
  * @param data The data for the request.
  * @param data.form renew token form info
- * @returns auth_SSOTokenResponse OK
+ * @returns auth_SwaggerSSOTokenResponse OK
  * @throws ApiError
  */
 export const postV1TokenRenew = (data: PostV1TokenRenewData): CancelablePromise<PostV1TokenRenewResponse> => {

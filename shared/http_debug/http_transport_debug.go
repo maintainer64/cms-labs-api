@@ -1,3 +1,4 @@
+// Package http_debug общие компоненты для Fiber транспортного уровня
 package http_debug
 
 import (

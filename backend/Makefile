@@ -1,4 +1,4 @@
-.PHONY: clean critic security lint test build run
+.PHONY: clean critic security lint test build generate run
 
 APP_NAME = apiserver
 CUR_DIR = $(PWD)
