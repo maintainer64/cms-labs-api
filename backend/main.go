@@ -41,11 +41,6 @@ func main() {
 	// Define a new Fiber app with config.
 	app := fiber.New(config)
 
-	app.Static("/", "./public", fiber.Static{
-		Compress: true,
-		MaxAge:   5 * 60 * 60, // 5 minutes
-	})
-
 	// Middlewares.
 	middleware.FiberMiddleware(app) // Register Fiber's middleware for app.
 	routes.FiberRoutes(app)         // Register Fiber's routes for app.

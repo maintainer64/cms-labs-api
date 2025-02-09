@@ -1,0 +1,7 @@
+Package: pnetlabaddon
+Version: 1.0
+Section: custom
+Priority: optional
+Architecture: amd64
+Maintainer: Danil Gubanov gitlab.com/a10869
+Description: PNET lab addon SSO server

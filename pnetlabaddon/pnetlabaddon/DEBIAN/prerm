@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Остановка и отключение сервиса
+systemctl stop pnetlabaddon
+systemctl disable pnetlabaddon

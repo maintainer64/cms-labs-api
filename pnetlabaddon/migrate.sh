@@ -27,6 +27,15 @@ replace_template() {
   fi
 }
 
+# Функция для вызова sql-migrate независимо от окружения
+sql-migrate-cmd() {
+  if [ -f /usr/local/bin/sql-migrate ]; then
+      /usr/local/bin/sql-migrate $@
+  else
+    sql-migrate $@
+  fi
+}
+
 # Указываем директорию или файлы, в которых нужно произвести замену
 # Например, platform/migrations и конфигурационный файл
 files_to_process=(
@@ -60,15 +69,15 @@ command="$1"
 if [[ $command == 'up' ]]
 then
     echo "⚡️ (Sql-Migrate) up"
-    sql-migrate up sslmode=disable
+    sql-migrate-cmd up sslmode=disable
 elif [[ $command == 'd' ]]
 then
     echo "⚡️ (Sql-Migrate) down"
-    sql-migrate down sslmode=disable
+    sql-migrate-cmd down sslmode=disable
 elif [[ $command == 's' ]]
 then
     echo "⚡️ (Sql-Migrate) status"
-    sql-migrate status sslmode=disable
+    sql-migrate-cmd status sslmode=disable
 else
     echo "⚡️ (Sql-Migrate) Type: <up | d | s> "
 fi

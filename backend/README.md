@@ -32,7 +32,7 @@ make migrate.up
 make run
 ```
 
-4. API Docs страница (Swagger): [127.0.0.1:5000/docs](http://127.0.0.1:5000/docs)
+4. API Docs страница (Swagger): [127.0.0.1:5000/api/docs](http://127.0.0.1:5000/api/docs)
 
 ![Screenshot](https://user-images.githubusercontent.com/11155743/112715187-07dab100-8ef0-11eb-97ea-68d34f2178f6.png)
 

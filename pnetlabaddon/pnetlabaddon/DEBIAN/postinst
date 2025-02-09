@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Создание .env файла, если его нет
+if [ ! -f /etc/pnetlabaddon/.env ]; then
+    cp /etc/pnetlabaddon/.env.test /etc/pnetlabaddon/.env
+fi
+
+/etc/pnetlabaddon/migrate.sh up
+
+# Перезагрузка systemd и запуск сервиса
+systemctl daemon-reload
+systemctl enable pnetlabaddon
+systemctl start pnetlabaddon

@@ -1,0 +1,12 @@
+[Unit]
+Description=PNET lab addon Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/pnetlabaddon
+Restart=always
+User=root
+EnvironmentFile=/etc/pnetlabaddon/.env
+
+[Install]
+WantedBy=multi-user.target

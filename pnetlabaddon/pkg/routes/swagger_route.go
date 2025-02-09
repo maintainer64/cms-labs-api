@@ -9,7 +9,7 @@ import (
 // SwaggerRoute func for describe group of API Docs routes.
 func SwaggerRoute(a *fiber.App) {
 	// Create routes group.
-	route := a.Group("/pnet-lab-addon/docs")
+	route := a.Group("/pnet-lab-addon/api/docs")
 	// Routes for GET method:
 	route.Get("*", swagger.HandlerDefault) // get one user by ID
 }

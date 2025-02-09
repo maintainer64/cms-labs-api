@@ -1,0 +1,29 @@
+core-build:
+  stage: build
+  extends:
+    - .dependencies
+    - .registry_login
+  image: $GO_BASE_CI_IMAGE:latest
+  script:
+    - cd backend
+    - make build
+    - echo "Building Docker image..."
+    - docker build -no-cache -t $BACKEND_CI_IMAGE:$PIPELINE_VERSION .
+    - echo "Pushing Docker image to GitLab Registry..."
+    - docker push $BACKEND_CI_IMAGE:$PIPELINE_VERSION
+    - echo "Deploying application..."
+
+frontend-build:
+  stage: build
+  extends:
+    - .dependencies
+    - .registry_login
+  image: $GO_BASE_CI_IMAGE:latest
+  script:
+    - cd nextui-dashboard
+    - make build
+    - echo "Building Docker image..."
+    - docker build -t $FRONTEND_CI_IMAGE:$PIPELINE_VERSION  ./CI-CD
+    - echo "Pushing Docker image to GitLab Registry..."
+    - docker push $FRONTEND_CI_IMAGE:$PIPELINE_VERSION
+    - echo "Deploying application..."

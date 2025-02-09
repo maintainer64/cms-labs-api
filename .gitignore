@@ -16,6 +16,10 @@ processed_migrations/
 # Go builds
 **/build/
 **/local_db/
+**/pnetlabaddon/etc/pnetlabaddon/migrate.sh
+**/pnetlabaddon/etc/pnetlabaddon/migrations
+**/pnetlabaddon/usr/local/bin/sql-migrate
+**/pnetlabaddon/usr/local/bin/pnetlabaddon
 
 # Node.js dependencies
 **/node_modules/

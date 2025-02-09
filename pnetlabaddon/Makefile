@@ -2,7 +2,7 @@
 
 APP_NAME = pnetlabaddon
 CUR_DIR = $(PWD)
-BUILD_DIR = $(PWD)/build
+BUILD_DIR = $(PWD)/pnetlabaddon/usr/local/bin
 
 clean:
 	rm -rf ./build
@@ -21,7 +21,11 @@ test:
 	go tool cover -func=cover.out
 
 build:
-	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(APP_NAME) main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install github.com/rubenv/sql-migrate/...@latest
+	cp ${HOME}/go/bin/sql-migrate $(PWD)/pnetlabaddon/usr/local/bin/
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -a -installsuffix cgo -o $(BUILD_DIR)/$(APP_NAME) main.go
+	cp -R $(PWD)/platform/migrations $(PWD)/pnetlabaddon/etc/pnetlabaddon
+	cp -R $(PWD)/migrate.sh $(PWD)/pnetlabaddon/etc/pnetlabaddon
 
 run: generate build
 	$(BUILD_DIR)/$(APP_NAME)

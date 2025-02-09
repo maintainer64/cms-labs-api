@@ -10,3 +10,5 @@ workflow:
         SENTRY_DEPLOY_ENVIRONMENT: prod
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
+        DOCKER_PATH_BRANCH: stage
+        SENTRY_DEPLOY_ENVIRONMENT: stage

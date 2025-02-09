@@ -34,5 +34,10 @@ test: clean critic security lint pre_commit
 		exit $$TEST_EXIT_CODE; \
 	fi
 
+generate_certs:
+	@sudo openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout ./certs/private.key -out ./certs/public.crt
+	@sudo chmod -R 755 ./certs
+
+
 dev:
 	./CI-CD/dev.sh
