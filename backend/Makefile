@@ -14,18 +14,20 @@ security:
 	gosec ./...
 
 lint:
-	golangci-lint run ./...
+	golangci-lint run ./... --timeout=10m
 
 test:
 	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
 	go tool cover -func=cover.out
 
 build: clean
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -a -installsuffix cgo -o "$(BUILD_DIR)/$(APP_NAME)" main.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install github.com/rubenv/sql-migrate/...@latest
-	cp ${HOME}/go/bin/sql-migrate $(BUILD_DIR)
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -a -installsuffix cgo -o $(BUILD_DIR)/$(APP_NAME) main.go
-	cp -R $(PWD)/platform/migrations $(BUILD_DIR)/migrations
+	cp $(GOPATH)/bin/sql-migrate $(BUILD_DIR)/sql-migrate
+	mkdir -p $(BUILD_DIR)/platform/migrations
+	cp -R $(PWD)/platform/migrations $(BUILD_DIR)/platform
 	cp -R $(PWD)/migrate.sh $(BUILD_DIR)
+	cp -R $(PWD)/start.sh $(BUILD_DIR)
 
 run: generate build
 	$(BUILD_DIR)/$(APP_NAME)

@@ -14,7 +14,7 @@ security:
 	gosec ./...
 
 lint:
-	golangci-lint run ./...
+	golangci-lint run ./... --timeout=10m
 
 test:
 	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
@@ -22,9 +22,10 @@ test:
 
 build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install github.com/rubenv/sql-migrate/...@latest
-	cp ${HOME}/go/bin/sql-migrate $(PWD)/pnetlabaddon/usr/local/bin/
+	cp $(GOPATH)/bin/sql-migrate $(BUILD_DIR)/
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -a -installsuffix cgo -o $(BUILD_DIR)/$(APP_NAME) main.go
-	cp -R $(PWD)/platform/migrations $(PWD)/pnetlabaddon/etc/pnetlabaddon
+	mkdir -p $(PWD)/pnetlabaddon/etc/pnetlabaddon/platform/migrations
+	cp -R $(PWD)/platform/migrations $(PWD)/pnetlabaddon/etc/pnetlabaddon/platform
 	cp -R $(PWD)/migrate.sh $(PWD)/pnetlabaddon/etc/pnetlabaddon
 
 run: generate build

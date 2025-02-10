@@ -1,21 +1,16 @@
-.PHONY: clean critic security lint test generate build run
+.PHONY: clean security pre_commit test generate dev
 
-BUILD_DIR = $(PWD)/build
 GO_PACKAGES = ./backend/... ./gen/... ./shared/... ./pnetlabaddon/...
 
 clean:
 	rm -rf ./build
 
-critic:
+security: clean
 	gocritic check -enableAll ./...
-
-security:
 	gosec ./...
+	golangci-lint run ${GO_PACKAGES} --timeout=10m
 
-lint:
-	golangci-lint run ${GO_PACKAGES}
-
-pre_commit:
+pre_commit: clean
 	pre-commit run --all-files
 
 generate:
@@ -25,7 +20,7 @@ generate:
 	make -C shared generate
 	yarn --cwd nextui-dashboard generate
 
-test: clean critic security lint pre_commit
+test: clean
 	go test -v -coverprofile=coverage.out -covermode=count $(GO_PACKAGES) > tests.out 2>&1; \
 	TEST_EXIT_CODE=$$?; \
 	cat tests.out; \

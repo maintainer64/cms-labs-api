@@ -1,9 +1,30 @@
-#!/bin/bash
+#!/bin/sh
 
-# Import env variables from ./.env
-set -a
-[ -f .env.test ] && . .env.test || echo "Warning: .env.test file not found"
-[ -f .env ] && . .env || echo "Warning: .env file not found"
+# Функция для загрузки переменных из .env файла
+load_env_file() {
+  ENV_FILE="$1"  # Первый аргумент функции — имя файла
+
+  # Проверяем, существует ли файл
+  if [ -f "$ENV_FILE" ]; then
+    # Читаем файл, игнорируем комментарии и пустые строки
+    while IFS= read -r line; do
+      # Убираем строки, начинающиеся с комментариев или пустые строки
+      if [ -n "$line" ] && [ "$(echo "$line" | cut -c1)" != "#" ]; then
+        # Убираем комментарии в конце строки
+        line=$(echo "$line" | sed 's/\s*#.*//')
+        # Экспортируем переменную
+        eval "export $line"
+      fi
+    done < "$ENV_FILE"
+  else
+    # Если файл не найден, выводим предупреждение
+    echo "Warning: Файл $ENV_FILE не найден"
+  fi
+}
+
+# Импортируем переменные окружения из .env.test, если файл существует
+load_env_file ".env.test"
+load_env_file ".env"
 
 # Указываем директорию для сохранения измененных файлов
 output_dir="processed_migrations"
@@ -20,7 +41,7 @@ replace_template() {
   cp "$input_file" "$output_file"
   # Используем sed для замены шаблона на значение переменной
   # Проверяем операционную систему
-  if [[ "$(uname)" == "Darwin" ]]; then
+  if [ "$(uname)" = "Darwin" ]; then
       sed -i '' -e "s/{{.DB_TABLE_PREFIX}}/$DB_TABLE_PREFIX/g" "$output_file"
   else
       sed -i -e "s/{{.DB_TABLE_PREFIX}}/$DB_TABLE_PREFIX/g" "$output_file"
@@ -28,25 +49,27 @@ replace_template() {
 }
 
 # Функция для вызова sql-migrate независимо от окружения
-sql-migrate-cmd() {
+sql_migrate_cmd() {
   if [ -f /usr/local/bin/sql-migrate ]; then
-      /usr/local/bin/sql-migrate $@
+      /usr/local/bin/sql-migrate "$@"
+  elif [ -f ./sql-migrate ]; then
+      ./sql-migrate "$@"
+  elif [ -f /app/sql-migrate ]; then
+      /app/sql-migrate "$@"
   else
-    sql-migrate $@
+    sql-migrate "$@"
   fi
 }
 
 # Указываем директорию или файлы, в которых нужно произвести замену
 # Например, platform/migrations и конфигурационный файл
-files_to_process=(
-  "platform/migrations"
-)
+files_to_process="platform/migrations"
 
 # Проходим по каждому файлу или директории
-for item in "${files_to_process[@]}"; do
+for item in $files_to_process; do
   if [ -d "$item" ]; then
     # Если это директория, обрабатываем все файлы в ней
-    find "$item" -type f -name '*.sql' -or -name '*.yml' | while read -r file; do
+    find "$item" -type f \( -name '*.sql' -o -name '*.yml' \) | while read -r file; do
       # Определяем путь для сохранения измененного файла
       relative_path="${file#$item/}"
       output_file="$output_dir/$relative_path"
@@ -64,22 +87,19 @@ for item in "${files_to_process[@]}"; do
 done
 
 echo "Замена шаблонов завершена. Измененные файлы сохранены в директории $output_dir."
-cd "$output_dir"
+cd "$output_dir" || exit
 command="$1"
-if [[ $command == 'up' ]]
-then
+if [ "$command" = 'up' ]; then
     echo "⚡️ (Sql-Migrate) up"
-    sql-migrate-cmd up sslmode=disable
-elif [[ $command == 'd' ]]
-then
+    sql_migrate_cmd up sslmode=disable
+elif [ "$command" = 'd' ]; then
     echo "⚡️ (Sql-Migrate) down"
-    sql-migrate-cmd down sslmode=disable
-elif [[ $command == 's' ]]
-then
+    sql_migrate_cmd down sslmode=disable
+elif [ "$command" = 's' ]; then
     echo "⚡️ (Sql-Migrate) status"
-    sql-migrate-cmd status sslmode=disable
+    sql_migrate_cmd status sslmode=disable
 else
     echo "⚡️ (Sql-Migrate) Type: <up | d | s> "
 fi
-cd -
+cd - || exit
 rm -rf "$output_dir"

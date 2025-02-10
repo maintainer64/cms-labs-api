@@ -1,3 +1,16 @@
+check-security:
+  stage: test
+  image: $GO_BASE_CI_IMAGE:latest
+  script:
+    - make security
+
+check-pre-commit:
+  stage: test
+  extends: .dependencies
+  image: $GO_BASE_CI_IMAGE:latest
+  script:
+    - make pre_commit
+
 golang-test:
   stage: test
   extends: .dependencies
@@ -31,4 +44,5 @@ golang-test:
       junit: junit.xml
   script:
     - make -C backend migrate.up
+    - make -C pnetlabaddon migrate.up
     - make test

@@ -13,7 +13,7 @@ security:
 	gosec ./...
 
 lint:
-	golangci-lint run ./...
+	golangci-lint run ./... --timeout=10m
 
 generate:
 	go generate

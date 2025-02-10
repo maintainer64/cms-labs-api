@@ -4,6 +4,8 @@ include:
   - '/CI-CD/workflows.yml'
   - '/CI-CD/base-builder.yml'
   - '/CI-CD/test.yml'
+  - '/CI-CD/build.yml'
 
 stages:
   - test
+  - build

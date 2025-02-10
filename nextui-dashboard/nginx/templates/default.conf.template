@@ -2,7 +2,7 @@ server {
     index index.html;
     error_log  /var/log/nginx/error.log;
     access_log /var/log/nginx/access.log;
-    resolver ${SYSTEM_DNS:-127.0.0.11} valid=1s ipv6=off;
+    resolver ${SYSTEM_DNS} valid=1s ipv6=off;
 
     gzip on;
     gzip_http_version 1.1;
@@ -15,15 +15,12 @@ server {
 
     root /usr/share/nginx/html/;
 
-    listen 443 ssl;
+    ${SSL_CONF}
     listen 80 default;
 
-    ssl_certificate /etc/certs/public.crt;
-    ssl_certificate_key /etc/certs/private.key;
-
     # Обслуживание статических файлов
-    location /new/agents {
-        alias /usr/share/nginx/html/;
+    location / {
+        root /usr/share/nginx/html/;
         try_files $uri /index.html;
     }
 
@@ -36,18 +33,5 @@ server {
         proxy_set_header X-Original-URI $request_uri;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Real-IP $remote_addr;
-    }
-
-    # Проксирование /godoc/ с удалением префикса
-    location /godoc/ {
-        set $target_host ${GODOC_SERVICE};
-        proxy_pass $target_host;
-        proxy_set_header Host $host;
-        proxy_set_header X-Scheme $scheme;
-        proxy_set_header X-Original-URI $request_uri;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        rewrite ^/godoc/(.*) /$1 break;
     }
 }

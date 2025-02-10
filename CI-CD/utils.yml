@@ -1,5 +1,12 @@
 .dependencies:
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .cache/go-build/
+      - nextui-dashboard/node_modules/
   before_script:
+    - mkdir -p .cache
+    - export GOPATH="$CI_PROJECT_DIR/.cache"
     - go mod download
     - yarn --cwd nextui-dashboard install
 
