@@ -1,0 +1,29 @@
+core-deploy:
+  stage: deploy
+  extends: .deploy-base-ssh
+  image: ${DOCKER_IMAGE}
+  environment:
+    name: core-${CI_COMMIT_REF_SLUG}
+  variables:
+    FOLDER: core
+    VERSION: ${PIPELINE_VERSION}
+
+frontend-deploy:
+  stage: deploy
+  extends: .deploy-base-ssh
+  image: ${DOCKER_IMAGE}
+  environment:
+    name: front-${CI_COMMIT_REF_SLUG}
+  variables:
+    FOLDER: front
+    VERSION: ${PIPELINE_VERSION}
+
+docs-deploy:
+  stage: deploy
+  extends: .deploy-base-ssh
+  image: ${DOCKER_IMAGE}
+  environment:
+    name: docs
+  variables:
+    FOLDER: docs
+    VERSION: ${PIPELINE_VERSION}

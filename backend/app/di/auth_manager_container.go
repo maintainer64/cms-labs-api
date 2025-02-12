@@ -1,10 +1,8 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/backend/platform/database"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 func (di *DIContainer) authTokenManager(db *database.Queries) *auth.TokenManager {
@@ -15,44 +13,28 @@ func (di *DIContainer) authTokenManager(db *database.Queries) *auth.TokenManager
 	}
 }
 
-func (di *DIContainer) AuthTokenManager() (*auth.TokenManager, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
-	return di.authTokenManager(db), nil
+func (di *DIContainer) AuthTokenManager() *auth.TokenManager {
+	return di.authTokenManager(di.Queries)
 }
 
-func (di *DIContainer) SSOTokenUC() (*auth.SSOTokenUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) SSOTokenUC() *auth.SSOTokenUC {
 	return &auth.SSOTokenUC{
-		TokenAttemptQueries: db.TokenAttemptQueries,
-		TokenManager:        di.authTokenManager(db),
-		PNETServerQueries:   db.PNETServerQueries,
-	}, nil
+		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
+		TokenManager:        di.authTokenManager(di.Queries),
+		PNETServerQueries:   di.Queries.PNETServerQueries,
+	}
 }
 
-func (di *DIContainer) SSOIntrospectUC() (*auth.SSOIntrospectUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) SSOIntrospectUC() *auth.SSOIntrospectUC {
 	return &auth.SSOIntrospectUC{
-		TokenAttemptQueries: db.TokenAttemptQueries,
-		PNETServerQueries:   db.PNETServerQueries,
-	}, nil
+		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
+		PNETServerQueries:   di.Queries.PNETServerQueries,
+	}
 }
 
-func (di *DIContainer) SSOAuthorizeUC() (*auth.SSOAuthorizeUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) SSOAuthorizeUC() *auth.SSOAuthorizeUC {
 	return &auth.SSOAuthorizeUC{
-		TokenAttemptQueries: db.TokenAttemptQueries,
-		PNETServerQueries:   db.PNETServerQueries,
-	}, nil
+		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
+		PNETServerQueries:   di.Queries.PNETServerQueries,
+	}
 }

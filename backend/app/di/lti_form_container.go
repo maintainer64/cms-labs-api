@@ -1,47 +1,29 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-func (di *DIContainer) LTIFormEditUC() (*usecases.LTIFormEditUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIFormEditUC() *usecases.LTIFormEditUC {
 	return &usecases.LTIFormEditUC{
-		LTIFormQueries: db.LTIFormQueries,
-	}, nil
+		LTIFormQueries: di.Queries.LTIFormQueries,
+	}
 }
 
-func (di *DIContainer) LTIFormGetUC() (*usecases.LTIFormGetUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIFormGetUC() *usecases.LTIFormGetUC {
 	return &usecases.LTIFormGetUC{
-		LTIFormQueries: db.LTIFormQueries,
-	}, nil
+		LTIFormQueries: di.Queries.LTIFormQueries,
+	}
 }
 
-func (di *DIContainer) LTIFormListUC() (*usecases.LTIFormListUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIFormListUC() *usecases.LTIFormListUC {
 	return &usecases.LTIFormListUC{
-		LTIFormQueries: db.LTIFormQueries,
-	}, nil
+		LTIFormQueries: di.Queries.LTIFormQueries,
+	}
 }
 
-func (di *DIContainer) LTIFormDeleteUC() (*usecases.LTIFormDeleteUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIFormDeleteUC() *usecases.LTIFormDeleteUC {
 	return &usecases.LTIFormDeleteUC{
-		LTIFormQueries: db.LTIFormQueries,
-	}, nil
+		LTIFormQueries: di.Queries.LTIFormQueries,
+	}
 }

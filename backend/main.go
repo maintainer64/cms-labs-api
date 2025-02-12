@@ -30,10 +30,12 @@ func main() {
 	config := configs.FiberConfig()
 	logs.ZeroLogInit(configs.AppConfig.Debug)
 
-	startup, err := di.NewDIContainer().TaskStartup()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		panic(err)
 	}
+
+	startup := container.TaskStartup()
 	if err = startup.Startup(); err != nil {
 		panic(err)
 	}

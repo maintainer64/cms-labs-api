@@ -69,10 +69,12 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	dto.UserID = claims.Id
-	uc, err := di.NewDIContainer().SSOAuthorizeUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return err
 	}
+	defer container.Close()
+	uc := container.SSOAuthorizeUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
@@ -100,10 +102,12 @@ func SSOToken(c *fiber.Ctx) error {
 	dto.RedirectUri = c.FormValue("redirect_uri", "")
 	dto.Code = c.FormValue("code", "")
 	dto.RefreshToken = c.FormValue("refresh_token", "")
-	uc, err := di.NewDIContainer().SSOTokenUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.SSOTokenUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -125,10 +129,12 @@ func SSOToken(c *fiber.Ctx) error {
 func SSOIntrospect(c *fiber.Ctx) error {
 	dto := auth.SSOIntrospectInputDTO{}
 	dto.Token = c.FormValue("token", "")
-	uc, err := di.NewDIContainer().SSOIntrospectUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.SSOIntrospectUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err

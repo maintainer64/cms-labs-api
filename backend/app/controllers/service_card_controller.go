@@ -23,10 +23,12 @@ func ServiceCardCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().ServiceCardEditUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.ServiceCardEditUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -50,10 +52,12 @@ func ServiceCardList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().ServiceCardListUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.ServiceCardListUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -77,10 +81,12 @@ func ServiceCardDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().ServiceCardDeleteUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.ServiceCardDeleteUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -104,10 +110,12 @@ func ServiceCardGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().ServiceCardGetUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.ServiceCardGetUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err

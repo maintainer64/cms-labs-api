@@ -31,10 +31,12 @@ func LTIRoutingCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIRoutingEditUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIRoutingEditUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -64,10 +66,12 @@ func LTIRoutingList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIRoutingListUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIRoutingListUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -97,10 +101,12 @@ func LTIRoutingDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIRoutingDeleteUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIRoutingDeleteUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -130,10 +136,12 @@ func LTIRoutingGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIRoutingGetUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIRoutingGetUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err

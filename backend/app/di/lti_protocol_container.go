@@ -1,45 +1,33 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	datastore "gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_launch"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_login"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-func (di *DIContainer) LTIProtocolDatastoreConfig() (*lti_connector.LTIConnectorAPI, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIProtocolDatastoreConfig() *lti_connector.LTIConnectorAPI {
 	return &lti_connector.LTIConnectorAPI{
-		LTIFormQueries:       db.LTIFormQueries,
-		LTILaunchDataQueries: db.LTILaunchDataQueries,
-		UserQueries:          db.UserQueries,
+		LTIFormQueries:       di.Queries.LTIFormQueries,
+		LTILaunchDataQueries: di.Queries.LTILaunchDataQueries,
+		UserQueries:          di.Queries.UserQueries,
 		LTIProtocolDatastoreConfig: &datastore.Config{
-			Registrations: db.LTIFormQueries,
-			Nonces:        db.LTINonceTokenQueries,
-			LaunchData:    db.LTILaunchDataQueries,
-			AccessTokens:  db.LTIAccessTokenQueries,
-			UserStore:     db.UserQueries,
+			Registrations: di.Queries.LTIFormQueries,
+			Nonces:        di.Queries.LTINonceTokenQueries,
+			LaunchData:    di.Queries.LTILaunchDataQueries,
+			AccessTokens:  di.Queries.LTIAccessTokenQueries,
+			UserStore:     di.Queries.UserQueries,
 		},
-	}, nil
+	}
 }
 
-func (di *DIContainer) LTIProtocolLogin() (*lti_login.Login, error) {
-	config, err := di.LTIProtocolDatastoreConfig()
-	if err != nil {
-		return nil, err
-	}
-	return lti_login.New(config.LTIProtocolDatastoreConfig), nil
+func (di *DIContainer) LTIProtocolLogin() *lti_login.Login {
+	config := di.LTIProtocolDatastoreConfig()
+	return lti_login.New(config.LTIProtocolDatastoreConfig)
 }
 
-func (di *DIContainer) LTIProtocolLaunch() (*lti_launch.Launch, error) {
-	config, err := di.LTIProtocolDatastoreConfig()
-	if err != nil {
-		return nil, err
-	}
-	return lti_launch.New(config.LTIProtocolDatastoreConfig), nil
+func (di *DIContainer) LTIProtocolLaunch() *lti_launch.Launch {
+	config := di.LTIProtocolDatastoreConfig()
+	return lti_launch.New(config.LTIProtocolDatastoreConfig)
 }

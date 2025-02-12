@@ -26,6 +26,10 @@ export const UserDropdown = () => {
     navigate(RoutesLocation.serviceCards());
   }, [navigate]);
 
+  const handleToPasswordChange = useCallback(() => {
+    navigate(RoutesLocation.profileChangePassword());
+  }, [navigate]);
+
   return (
     <Dropdown>
       <NavbarItem>
@@ -45,7 +49,7 @@ export const UserDropdown = () => {
           <p>{locale.UserNavBar.SignedAs}</p>
           <p>{user.email}</p>
         </DropdownItem>
-        <DropdownItem href={RoutesLocation.profileChangePassword()} key='password'>
+        <DropdownItem key='password' onPress={handleToPasswordChange}>
           {locale.UserNavBar.PasswordChange}
         </DropdownItem>
         <DropdownItem key='language' onPress={handleChangeLanguage}>

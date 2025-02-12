@@ -24,10 +24,12 @@ func PNETServerQueueCreate(c *fiber.Ctx) error {
 	); err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().PnetServerChangeDistributionUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.PnetServerChangeDistributionUC()
 	err = uc.Execute()
 	if err != nil {
 		return err
@@ -51,10 +53,12 @@ func PNETServerQueueList(c *fiber.Ctx) error {
 	); err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().PnetServerListDistributionUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.PnetServerListDistributionUC()
 	output, err := uc.Execute()
 	if err != nil {
 		return err

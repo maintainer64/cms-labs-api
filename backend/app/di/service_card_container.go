@@ -1,47 +1,29 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-func (di *DIContainer) ServiceCardEditUC() (*usecases.ServiceCardEditUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) ServiceCardEditUC() *usecases.ServiceCardEditUC {
 	return &usecases.ServiceCardEditUC{
-		ServiceCardQueries: db.ServiceCardQueries,
-	}, nil
+		ServiceCardQueries: di.Queries.ServiceCardQueries,
+	}
 }
 
-func (di *DIContainer) ServiceCardGetUC() (*usecases.ServiceCardGetUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) ServiceCardGetUC() *usecases.ServiceCardGetUC {
 	return &usecases.ServiceCardGetUC{
-		ServiceCardQueries: db.ServiceCardQueries,
-	}, nil
+		ServiceCardQueries: di.Queries.ServiceCardQueries,
+	}
 }
 
-func (di *DIContainer) ServiceCardListUC() (*usecases.ServiceCardListUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) ServiceCardListUC() *usecases.ServiceCardListUC {
 	return &usecases.ServiceCardListUC{
-		ServiceCardQueries: db.ServiceCardQueries,
-	}, nil
+		ServiceCardQueries: di.Queries.ServiceCardQueries,
+	}
 }
 
-func (di *DIContainer) ServiceCardDeleteUC() (*usecases.ServiceCardDeleteUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) ServiceCardDeleteUC() *usecases.ServiceCardDeleteUC {
 	return &usecases.ServiceCardDeleteUC{
-		ServiceCardQueries: db.ServiceCardQueries,
-	}, nil
+		ServiceCardQueries: di.Queries.ServiceCardQueries,
+	}
 }

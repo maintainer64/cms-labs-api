@@ -47,7 +47,8 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 		f.DB.Create(&entity)
 		userID = entity.ID
 	}
-	uc, _ := di.NewDIContainer().AuthTokenManager()
+	container, _ := di.NewDIContainer()
+	uc := container.AuthTokenManager()
 	token, _ := uc.NewJWTByUserId(userID, serverID, state)
 	return "Bearer " + token.AccessToken
 }

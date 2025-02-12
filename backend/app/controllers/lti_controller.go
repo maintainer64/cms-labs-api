@@ -17,18 +17,16 @@ import (
 // @Router /v2/lti/launch [post]
 // @Router /v2/lti/launch [get]
 func LTILaunch(c *fiber.Ctx) error {
-	diContainer := di.NewDIContainer()
-	uc, err := diContainer.LTIProtocolLaunch()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIProtocolLaunch()
 	if err = uc.ServeHTTP(c); err != nil {
 		return err
 	}
-	authManager, err := diContainer.AuthTokenManager()
-	if err != nil {
-		return err
-	}
+	authManager := container.AuthTokenManager()
 	token, err := authManager.NewJWTByLaunchID(c.Locals("LTILaunchID").(string))
 	if err != nil {
 		return err
@@ -54,9 +52,11 @@ func LTILaunch(c *fiber.Ctx) error {
 // @Router /v2/lti/login [post]
 // @Router /v2/lti/login [get]
 func LTILogin(c *fiber.Ctx) error {
-	uc, err := di.NewDIContainer().LTIProtocolLogin()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIProtocolLogin()
 	return uc.ServeHTTP(c)
 }

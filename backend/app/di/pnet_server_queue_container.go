@@ -1,28 +1,18 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/round_queue_pool_pnet"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-func (di *DIContainer) PnetServerChangeDistributionUC() (*round_queue_pool_pnet.RoundQueuePoolPnetUpsert, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) PnetServerChangeDistributionUC() *round_queue_pool_pnet.RoundQueuePoolPnetUpsert {
 	return &round_queue_pool_pnet.RoundQueuePoolPnetUpsert{
-		PNETServerQueries:     db.PNETServerQueries,
-		RoundQueuePoolQueries: db.RoundQueuePoolQueries,
-	}, nil
+		PNETServerQueries:     di.Queries.PNETServerQueries,
+		RoundQueuePoolQueries: di.Queries.RoundQueuePoolQueries,
+	}
 }
 
-func (di *DIContainer) PnetServerListDistributionUC() (*round_queue_pool_pnet.RoundQueuePoolPnetList, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) PnetServerListDistributionUC() *round_queue_pool_pnet.RoundQueuePoolPnetList {
 	return &round_queue_pool_pnet.RoundQueuePoolPnetList{
-		RoundQueuePoolQueries: db.RoundQueuePoolQueries,
-	}, nil
+		RoundQueuePoolQueries: di.Queries.RoundQueuePoolQueries,
+	}
 }

@@ -1,47 +1,29 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-func (di *DIContainer) LTIRoutingEditUC() (*usecases.LTIRoutingEditUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIRoutingEditUC() *usecases.LTIRoutingEditUC {
 	return &usecases.LTIRoutingEditUC{
-		LTIRoutingQueries: db.LTIRoutingQueries,
-	}, nil
+		LTIRoutingQueries: di.Queries.LTIRoutingQueries,
+	}
 }
 
-func (di *DIContainer) LTIRoutingGetUC() (*usecases.LTIRoutingGetUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIRoutingGetUC() *usecases.LTIRoutingGetUC {
 	return &usecases.LTIRoutingGetUC{
-		LTIRoutingQueries: db.LTIRoutingQueries,
-	}, nil
+		LTIRoutingQueries: di.Queries.LTIRoutingQueries,
+	}
 }
 
-func (di *DIContainer) LTIRoutingListUC() (*usecases.LTIRoutingListUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIRoutingListUC() *usecases.LTIRoutingListUC {
 	return &usecases.LTIRoutingListUC{
-		LTIRoutingQueries: db.LTIRoutingQueries,
-	}, nil
+		LTIRoutingQueries: di.Queries.LTIRoutingQueries,
+	}
 }
 
-func (di *DIContainer) LTIRoutingDeleteUC() (*usecases.LTIRoutingDeleteUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIRoutingDeleteUC() *usecases.LTIRoutingDeleteUC {
 	return &usecases.LTIRoutingDeleteUC{
-		LTIRoutingQueries: db.LTIRoutingQueries,
-	}, nil
+		LTIRoutingQueries: di.Queries.LTIRoutingQueries,
+	}
 }

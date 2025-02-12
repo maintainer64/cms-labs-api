@@ -10,6 +10,7 @@ import (
 
 // Queries struct for collect all app queries.
 type Queries struct {
+	*gorm.DB
 	*queries.UserQueries
 	*queries.UserRoleQueries
 }
@@ -37,7 +38,16 @@ func OpenDBConnection() (*Queries, error) {
 
 	return &Queries{
 		// Set queries from models:
+		DB:              db,
 		UserQueries:     &queries.UserQueries{DB: db},
 		UserRoleQueries: &queries.UserRoleQueries{DB: db},
 	}, nil
+}
+
+func (q *Queries) Close() error {
+	dbInstance, err := q.DB.DB()
+	if err != nil {
+		return err
+	}
+	return dbInstance.Close()
 }

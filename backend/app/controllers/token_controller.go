@@ -27,10 +27,12 @@ func TokensRenew(c *fiber.Ctx) error {
 		}
 		refreshToken = dto.RefreshToken
 	}
-	uc, err := di.NewDIContainer().SSOTokenUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return err
 	}
+	defer container.Close()
+	uc := container.SSOTokenUC()
 	token, err := uc.Execute(
 		auth.SSOTokenInputDTO{
 			GrantType:    auth.TokenGrantTypeRefreshToken,
@@ -66,10 +68,12 @@ func TokensByCredentials(c *fiber.Ctx) error {
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	uc, err := di.NewDIContainer().AuthTokenManager()
+	container, err := di.NewDIContainer()
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return err
 	}
+	defer container.Close()
+	uc := container.AuthTokenManager()
 	token, err := uc.NewJWTByCredentials(dto.Email, dto.Password)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
@@ -123,10 +127,12 @@ func TokensPasswordRecover(c *fiber.Ctx) error {
 	if err := utils.FiberValidatorBase(c, &dto); err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().UserPasswordRecoverUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return err
 	}
+	defer container.Close()
+	uc := container.UserPasswordRecoverUC()
 	response, err := uc.SetContext(claims).Execute(dto)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}

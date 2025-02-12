@@ -31,10 +31,11 @@ func LTIFormCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIFormEditUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	uc := container.LTIFormEditUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -64,10 +65,11 @@ func LTIFormList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIFormListUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	uc := container.LTIFormListUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -97,10 +99,12 @@ func LTIFormDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIFormDeleteUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIFormDeleteUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -130,10 +134,12 @@ func LTIFormGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIFormGetUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIFormGetUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err

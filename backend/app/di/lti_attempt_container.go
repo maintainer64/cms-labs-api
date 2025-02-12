@@ -1,62 +1,40 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-func (di *DIContainer) LTIAttemptCreateUC() (*usecases.LTIAttemptCreateUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIAttemptCreateUC() *usecases.LTIAttemptCreateUC {
 	return &usecases.LTIAttemptCreateUC{
-		LTIAttemptQueries:     db.LTIAttemptQueries,
-		LaunchData:            db.LTILaunchDataQueries,
-		RoundQueuePoolQueries: db.RoundQueuePoolQueries,
-		LTIRoutingQueries:     db.LTIRoutingQueries,
-		PNETServerQueries:     db.PNETServerQueries,
-		UserQueries:           db.UserQueries,
-	}, nil
+		LTIAttemptQueries:     di.Queries.LTIAttemptQueries,
+		LaunchData:            di.Queries.LTILaunchDataQueries,
+		RoundQueuePoolQueries: di.Queries.RoundQueuePoolQueries,
+		LTIRoutingQueries:     di.Queries.LTIRoutingQueries,
+		PNETServerQueries:     di.Queries.PNETServerQueries,
+		UserQueries:           di.Queries.UserQueries,
+	}
 }
 
-func (di *DIContainer) LTIAttemptEditUC() (*usecases.LTIAttemptEditUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIAttemptEditUC() *usecases.LTIAttemptEditUC {
 	return &usecases.LTIAttemptEditUC{
-		LTIAttemptQueries: db.LTIAttemptQueries,
-	}, nil
+		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
+	}
 }
 
-func (di *DIContainer) LTIAttemptGetUC() (*usecases.LTIAttemptGetUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIAttemptGetUC() *usecases.LTIAttemptGetUC {
 	return &usecases.LTIAttemptGetUC{
-		LTIAttemptQueries: db.LTIAttemptQueries,
-	}, nil
+		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
+	}
 }
 
-func (di *DIContainer) LTIAttemptListUC() (*usecases.LTIAttemptListUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIAttemptListUC() *usecases.LTIAttemptListUC {
 	return &usecases.LTIAttemptListUC{
-		LTIAttemptQueries: db.LTIAttemptQueries,
-	}, nil
+		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
+	}
 }
 
-func (di *DIContainer) LTIAttemptDeleteUC() (*usecases.LTIAttemptDeleteUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) LTIAttemptDeleteUC() *usecases.LTIAttemptDeleteUC {
 	return &usecases.LTIAttemptDeleteUC{
-		LTIAttemptQueries: db.LTIAttemptQueries,
-	}, nil
+		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
+	}
 }

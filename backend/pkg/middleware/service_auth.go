@@ -17,11 +17,12 @@ func NewServiceAuthMiddleware() fiber.Handler {
 		basicauth.Config{
 			Authorizer: func(username string, password string) bool {
 				log.Info().Msg(fmt.Sprintf("ServiceAuthMiddleware: auth with service: %+v", username))
-				repos, err := di.NewDIContainer().Queries()
+				repos, err := di.NewDIContainer()
 				if err != nil {
 					return false
 				}
-				serverModel, err := repos.PNETServerQueries.GetByClientId(username)
+				defer repos.Close()
+				serverModel, err := repos.Queries.PNETServerQueries.GetByClientId(username)
 				if err != nil {
 					return false
 				}

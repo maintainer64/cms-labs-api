@@ -31,10 +31,12 @@ func UserCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().UserEditUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.UserEditUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -64,10 +66,12 @@ func UserList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().UserListUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.UserListUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -97,10 +101,12 @@ func UserGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().UserGetUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.UserGetUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err

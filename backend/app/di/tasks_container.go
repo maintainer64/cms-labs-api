@@ -1,18 +1,12 @@
 package di
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/tasks"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-func (di *DIContainer) TaskStartup() (*tasks.StartupFiberUC, error) {
-	db, err := di.Queries()
-	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
+func (di *DIContainer) TaskStartup() *tasks.StartupFiberUC {
 	return &tasks.StartupFiberUC{
-		UserQueries:         db.UserQueries,
-		UserPasswordQueries: db.UserPasswordQueries,
-	}, nil
+		UserQueries:         di.Queries.UserQueries,
+		UserPasswordQueries: di.Queries.UserPasswordQueries,
+	}
 }

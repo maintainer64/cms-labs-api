@@ -31,18 +31,17 @@ func PNETServerCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().PNETServerEditUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.PNETServerEditUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
 	}
-	ucDistribution, err := di.NewDIContainer().PnetServerChangeDistributionUC()
-	if err != nil {
-		return err
-	}
+	ucDistribution := container.PnetServerChangeDistributionUC()
 	err = ucDistribution.Execute()
 	if err != nil {
 		return err
@@ -72,10 +71,12 @@ func PNETServerList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().PNETServerListUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.PNETServerListUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -105,18 +106,17 @@ func PNETServerDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().PNETServerDeleteUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.PNETServerDeleteUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
 	}
-	ucDistribution, err := di.NewDIContainer().PnetServerChangeDistributionUC()
-	if err != nil {
-		return err
-	}
+	ucDistribution := container.PnetServerChangeDistributionUC()
 	err = ucDistribution.Execute()
 	if err != nil {
 		return err
@@ -146,10 +146,12 @@ func PNETServerGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().PNETServerGetUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.PNETServerGetUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err

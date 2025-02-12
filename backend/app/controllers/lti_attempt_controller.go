@@ -28,10 +28,12 @@ func LTIAttemptCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIAttemptCreateUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIAttemptCreateUC()
 	output, err := uc.SetContext(token).Execute(dto)
 	if err != nil {
 		return err
@@ -55,10 +57,12 @@ func LTIAttemptEdit(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIAttemptEditUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIAttemptEditUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -82,10 +86,12 @@ func LTIAttemptList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIAttemptListUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIAttemptListUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -109,10 +115,12 @@ func LTIAttemptDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIAttemptDeleteUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIAttemptDeleteUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err
@@ -136,10 +144,12 @@ func LTIAttemptGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uc, err := di.NewDIContainer().LTIAttemptGetUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
 		return err
 	}
+	defer container.Close()
+	uc := container.LTIAttemptGetUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return err

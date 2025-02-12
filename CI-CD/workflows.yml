@@ -4,6 +4,10 @@ workflow:
       variables:
         DOCKER_PATH_BRANCH: stage
         SENTRY_DEPLOY_ENVIRONMENT: stage
+        SSH_USER: ${STAGE_SSH_USER}
+        SSH_HOST: ${STAGE_SSH_HOST}
+        SSH_PORT: ${STAGE_SSH_PORT}
+        SSH_PRIVATE_KEY: ${STAGE_SSH_PRIVATE_KEY}
     - if: $CI_COMMIT_REF_SLUG == "master"
       variables:
         DOCKER_PATH_BRANCH: master
@@ -12,3 +16,7 @@ workflow:
       variables:
         DOCKER_PATH_BRANCH: stage
         SENTRY_DEPLOY_ENVIRONMENT: stage
+        SSH_USER: ${STAGE_SSH_USER}
+        SSH_HOST: ${STAGE_SSH_HOST}
+        SSH_PORT: ${STAGE_SSH_PORT}
+        SSH_PRIVATE_KEY: ${STAGE_SSH_PRIVATE_KEY}

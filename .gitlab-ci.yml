@@ -5,7 +5,9 @@ include:
   - '/CI-CD/base-builder.yml'
   - '/CI-CD/test.yml'
   - '/CI-CD/build.yml'
+  - '/CI-CD/deploy.yml'
 
 stages:
+  - deploy
   - test
   - build

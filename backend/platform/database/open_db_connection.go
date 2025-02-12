@@ -11,6 +11,7 @@ import (
 
 // Queries struct for collect all app queries.
 type Queries struct {
+	*gorm.DB
 	*lti_query.LTIFormQueries
 	*lti_query.LTINonceTokenQueries
 	*lti_query.LTIAccessTokenQueries
@@ -48,6 +49,7 @@ func OpenDBConnection() (*Queries, error) {
 
 	return &Queries{
 		// Set queries from models:
+		DB:                    db,
 		LTIFormQueries:        &lti_query.LTIFormQueries{DB: db},
 		LTINonceTokenQueries:  &lti_query.LTINonceTokenQueries{DB: db},
 		LTIAccessTokenQueries: &lti_query.LTIAccessTokenQueries{DB: db},
@@ -61,4 +63,12 @@ func OpenDBConnection() (*Queries, error) {
 		ServiceCardQueries:    &queries.ServiceCardQueries{DB: db},
 		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db},
 	}, nil
+}
+
+func (q *Queries) Close() error {
+	dbInstance, err := q.DB.DB()
+	if err != nil {
+		return err
+	}
+	return dbInstance.Close()
 }

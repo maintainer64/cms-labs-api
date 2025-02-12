@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/usecases"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 // SSOFirstFactor Переадресация пользователя на сервер аутентификации.
@@ -20,7 +21,16 @@ import (
 func SSOFirstFactor(c *fiber.Ctx) error {
 	extra := c.Query("extra", "")
 	path := c.Query("path", "/")
-	client := di.NewDIContainer().CMSClient()
+	container, err := di.NewDIContainer()
+	if err != nil {
+		return utils.FiberValidationException{
+			Status:    fiber.StatusInternalServerError,
+			Exception: err,
+		}
+	}
+	defer container.Close()
+
+	client := container.CMSClient()
 
 	newURL := client.SSOAuthorizeURI(
 		c.BaseURL()+"/pnet-lab-addon/api/v1/sso/openid",
@@ -47,10 +57,15 @@ func SSOFirstFactor(c *fiber.Ctx) error {
 // @Success 307
 // @Router /v1/sso/openid [get]
 func SSOSecondFactor(c *fiber.Ctx) error {
-	uc, err := di.NewDIContainer().SSOSecondFactorUC()
+	container, err := di.NewDIContainer()
 	if err != nil {
-		return err
+		return utils.FiberValidationException{
+			Status:    fiber.StatusInternalServerError,
+			Exception: err,
+		}
 	}
+	defer container.Close()
+	uc := container.SSOSecondFactorUC()
 	dto := usecases.SSOSecondFactorInputDTO{
 		Code:        c.Query("code", ""),
 		Application: c.Query("application", ""),
