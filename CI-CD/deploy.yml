@@ -1,7 +1,11 @@
 core-deploy:
   stage: deploy
-  extends: .deploy-base-ssh
+  extends:
+    - .deploy-base-ssh
+    - .releases-branch
   image: ${DOCKER_IMAGE}
+  needs:
+    - core-build-docker
   environment:
     name: core-${CI_COMMIT_REF_SLUG}
   variables:
@@ -10,8 +14,12 @@ core-deploy:
 
 frontend-deploy:
   stage: deploy
-  extends: .deploy-base-ssh
+  extends:
+    - .deploy-base-ssh
+    - .releases-branch
   image: ${DOCKER_IMAGE}
+  needs:
+    - frontend-build-docker
   environment:
     name: front-${CI_COMMIT_REF_SLUG}
   variables:
@@ -20,10 +28,15 @@ frontend-deploy:
 
 docs-deploy:
   stage: deploy
-  extends: .deploy-base-ssh
+  needs:
+    - docs-build
+  extends:
+    - .deploy-base-ssh
+  only:
+    - stage
   image: ${DOCKER_IMAGE}
   environment:
-    name: docs
+    name: docs-${CI_COMMIT_REF_SLUG}
   variables:
     FOLDER: docs
     VERSION: ${PIPELINE_VERSION}

@@ -11,6 +11,9 @@
     - yarn --cwd nextui-dashboard install
 
 .registry_login:
+  # REGISTRY_TOKEN - Токен пользователя (в группе)
+  # REGISTRY_LOGIN - Логин пользователя
+  # REGISTRY_URL - URL хранилища (ex registry.gitlab.com)
   before_script:
     - echo ${REGISTRY_TOKEN} | docker login -u ${REGISTRY_LOGIN} --password-stdin ${REGISTRY_URL}
 
@@ -22,17 +25,18 @@
   # FOLDER - папка проекта пользователя
   # VERSION - версия выкатываемой версии PIPELINE
   before_script:
-    - echo "Настраиваем SSH"
+    - echo "Настраиваем SSH $SSH_USER@$SSH_HOST:$SSH_PORT"
     - mkdir -p ~/.ssh
     - echo "$(echo ${SSH_PRIVATE_KEY} | base64 -d)" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+    - echo "SSH настроен"
   script:
     - echo "Подключаемся к серверу и выполняем docker-compose"
-    - |
-      ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT"
-        export VERSION=$VERSION && \
-        echo 'Используем версию: $VERSION' && \
-        cd $FOLDER && \
-        docker compose down && \
-        docker compose up -d"
+    - ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT "export VERSION=$VERSION && echo 'Используем версию $VERSION' && cd $FOLDER && docker compose up -d"
+
+.releases-branch:
+  # Ветки для основного pipeline
+  only:
+    - stage
+    - pre
+    - master

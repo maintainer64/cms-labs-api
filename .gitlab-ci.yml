@@ -8,6 +8,6 @@ include:
   - '/CI-CD/deploy.yml'
 
 stages:
-  - deploy
   - test
   - build
+  - deploy

@@ -2,6 +2,7 @@ core-build:
   stage: build
   extends:
     - .dependencies
+    - .releases-branch
   image: $GO_BASE_CI_IMAGE:latest
   needs:
     - golang-test
@@ -18,6 +19,7 @@ core-build-docker:
   stage: build
   extends:
     - .registry_login
+    - .releases-branch
   image: ${DOCKER_IMAGE}
   services:
     - ${DOCKER_IMAGE}-dind
@@ -35,6 +37,7 @@ frontend-build:
   stage: build
   extends:
     - .dependencies
+    - .releases-branch
   image: $GO_BASE_CI_IMAGE:latest
   needs:
     - golang-test
@@ -51,6 +54,7 @@ frontend-build-docker:
   stage: build
   extends:
     - .registry_login
+    - .releases-branch
   image: ${DOCKER_IMAGE}
   services:
     - ${DOCKER_IMAGE}-dind
@@ -69,6 +73,8 @@ docs-build:
   stage: build
   extends:
     - .registry_login
+  only:
+    - stage
   image: ${DOCKER_IMAGE}
   services:
     - ${DOCKER_IMAGE}-dind
@@ -85,6 +91,7 @@ pnet-lab-addon-build:
   stage: build
   extends:
     - .dependencies
+    - .releases-branch
   image: $GO_BASE_CI_IMAGE:latest
   needs:
     - golang-test
