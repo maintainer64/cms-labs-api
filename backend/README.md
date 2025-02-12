@@ -86,8 +86,6 @@ make lint
 pre-commit run --all-files
 ```
 
-## ⚙️ DevOps
-
 ```bash
 make test
 make lint

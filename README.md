@@ -6,7 +6,12 @@
 
 [![Latest Release](https://gitlab.com/a10869/api-modules/-/badges/release.svg)](https://gitlab.com/a10869/api-modules/-/releases)
 
-Монорепозиторий для модулей:
+## CI-CD:
+
+1. [Pipelines](CI-CD/README.md)
+2. [Docker files](CI-CD/docker.md)
+
+## Монорепозиторий для модулей:
 
 1. [CMS Labs Core](//gitlab.com/a10869/api-modules/backend)
 2. [CMS Labs Front](//gitlab.com/a10869/api-modules/backend/nextui-dashboard)

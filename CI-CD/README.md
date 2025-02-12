@@ -12,6 +12,7 @@
 4. [Задачи](#задачи)
 5. [Правила Workflow](#правила-workflow)
 6. [Диаграммы](#диаграммы)
+7. [Docker files](#docker-files)
 
 ## Обзор Pipeline
 
@@ -173,3 +174,7 @@ workflow:
 ### Схема Pipeline
 
 ![](01.jpg)
+
+## Docker files
+
+[Подробнее про docker](docker.md)
