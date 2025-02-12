@@ -1,6 +1,5 @@
 variables:
   DOCKER_IMAGE: docker:27.5
-  DOCKER_SERVICE_IMAGE: docker:27.5-dind
   REGISTRY_PATH: a10869/api-modules
   PIPELINE_VERSION: version-${CI_PIPELINE_ID}
   GO_BASE_CI_IMAGE: ${REGISTRY_URL}/${REGISTRY_PATH}/base

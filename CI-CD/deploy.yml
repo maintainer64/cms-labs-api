@@ -39,4 +39,4 @@ docs-deploy:
     name: docs-${CI_COMMIT_REF_SLUG}
   variables:
     FOLDER: docs
-    VERSION: ${PIPELINE_VERSION}
+    VERSION: latest
