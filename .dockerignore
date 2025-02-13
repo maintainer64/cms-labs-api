@@ -3,10 +3,7 @@
 .editorconfig
 .gitignore
 .env.*
-CI-CD/Dockerfile.base
-Makefile
 LICENSE
-**/*.md
 **/*_test.go
 *.out
 local_db/
