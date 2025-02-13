@@ -5,19 +5,19 @@ import { useLocalStorage } from '@uidotdev/usehooks';
 export type LanguageType = 'ru' | 'en';
 
 const languageResource = (lang: LanguageType) => {
-  return lang === 'ru' ? ru : en;
+  return lang === 'en' ? en : ru;
 };
 
 const useLanguageBrowser = () => {
   try {
-    const [lang, setLang] = useLocalStorage('lang', 'en' as LanguageType);
+    const [lang, setLang] = useLocalStorage('lang', 'ru' as LanguageType);
     return {
       locale: languageResource(lang),
       setLang: (lang: LanguageType) => setLang(lang)
     };
   } catch (error) {
     return {
-      locale: languageResource('en'),
+      locale: languageResource('ru'),
       setLang: (lang: LanguageType) => {
         console.debug(lang);
       }

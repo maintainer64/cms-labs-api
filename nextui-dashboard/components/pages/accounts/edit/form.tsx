@@ -65,7 +65,7 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  if (response.isLoading) return <Loading />;
+  if (response.isLoading) return <Loading size={8} />;
   return (
     <Formik
       initialValues={initialValues}
@@ -123,7 +123,7 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
               onChange={handleChange('lti_user_id')}
             />
             <Checkbox type='checkbox' defaultSelected={!values.deleted_at} onChange={handleChange('deleted_at')}>
-              {UserForm.FieldIsActive}
+              {UserForm.FieldIsDeactivated}
             </Checkbox>
             <Input
               variant='bordered'

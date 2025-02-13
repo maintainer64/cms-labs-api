@@ -420,6 +420,9 @@ export const models_LTIRoutingSchema = {
     id: {
       type: 'integer'
     },
+    is_default: {
+      type: 'boolean'
+    },
     lti_description: {
       type: 'string'
     },
@@ -1184,6 +1187,9 @@ export const usecases_LTIRoutingEditInputDTOSchema = {
     },
     id: {
       type: 'integer'
+    },
+    is_default: {
+      type: 'boolean'
     },
     lti_description: {
       type: 'string'

@@ -51,7 +51,7 @@ func MysqlConnection() (*gorm.DB, error) {
 				&DBLogger{},
 				logger.Config{
 					SlowThreshold:             200 * time.Millisecond,
-					LogLevel:                  logger.Warn,
+					LogLevel:                  logger.Info,
 					IgnoreRecordNotFoundError: false,
 					Colorful:                  false,
 				}),

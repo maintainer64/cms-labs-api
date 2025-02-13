@@ -101,6 +101,7 @@ func (q *RoundQueuePoolQueries) GetNextByType(poolType string) (models.RoundQueu
 			return q.finishDistribution(tx, entity.Type, entity.ID)
 		},
 	)
+	log.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries: get by id: %+v", entityID))
 	if err != nil {
 		return models.RoundQueuePool{}, err
 	}
@@ -125,6 +126,15 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 	// Получаем следующую сущность для распределения относительно времени
 	selectNextDistribution := tx.Table(
 		q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools",
+	).Select(
+		"round_queue_pools.id, "+
+			"round_queue_pools.created_at, "+
+			"round_queue_pools.updated_at, "+
+			"round_queue_pools.type, "+
+			"round_queue_pools.connected_at, "+
+			"round_queue_pools.last_used, "+
+			"round_queue_pools.is_active, "+
+			"round_queue_pools.pnet_server_id",
 	).Joins(
 		"join "+q.tableName(&models.PNETServer{})+" pnet_servers on pnet_servers.id = round_queue_pools.pnet_server_id",
 		q.tableName(&models.PNETServer{}),
@@ -168,7 +178,14 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 	}
 	// Get first entity on distribution
 	selectFirstDistribution := tx.Table(q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools").Select(
-		"pnet_servers.id, pnet_servers.name, round_queue_pools.type, round_queue_pools.last_used, round_queue_pools.connected_at",
+		"round_queue_pools.id, "+
+			"round_queue_pools.created_at, "+
+			"round_queue_pools.updated_at, "+
+			"round_queue_pools.type, "+
+			"round_queue_pools.connected_at, "+
+			"round_queue_pools.last_used, "+
+			"round_queue_pools.is_active, "+
+			"round_queue_pools.pnet_server_id",
 	).Joins(
 		"join "+q.tableName(&models.PNETServer{})+" pnet_servers on pnet_servers.id = round_queue_pools.pnet_server_id",
 	).Where(

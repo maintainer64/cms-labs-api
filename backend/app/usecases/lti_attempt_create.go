@@ -170,7 +170,10 @@ func (u *LTIAttemptCreateUC) PreparedResponseByAttempt(attempt models.LTIAttempt
 	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
 	}
-	nextUrl, err := url.JoinPath(pnetServer.Url, "/cms-labs/api/v1/oauth/login")
+	nextUrl, err := url.JoinPath(
+		pnetServer.Url,
+		"/pnet-lab-addon/api/v1/sso/login",
+	)
 	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
 	}

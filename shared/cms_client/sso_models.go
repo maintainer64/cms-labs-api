@@ -1,6 +1,8 @@
 package cms_client
 
-import "github.com/golang-jwt/jwt/v5"
+import (
+	"github.com/golang-jwt/jwt/v5"
+)
 
 const SSORefreshTokenName = "cms-labs-refresh-token" // #nosec G101
 
@@ -46,4 +48,7 @@ func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 		"last_launch_id": t.LastLaunchId,
 		"expires":        t.Expires,
 	}
+}
+
+type SSOTokenPublicExtraParams struct {
 }

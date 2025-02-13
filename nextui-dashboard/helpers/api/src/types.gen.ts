@@ -152,6 +152,7 @@ export type models_LTIRouting = {
   collaboration?: number;
   created_at: string;
   id?: number;
+  is_default?: boolean;
   lti_description?: string;
   lti_params_task?: string;
   lti_task_id?: string;
@@ -437,6 +438,7 @@ export type usecases_LTIRoutingDeleteResponse = {
 export type usecases_LTIRoutingEditInputDTO = {
   collaboration?: number;
   id?: number;
+  is_default?: boolean;
   lti_description?: string;
   lti_params_task?: string;
   lti_task_id?: string;

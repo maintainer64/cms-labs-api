@@ -22,6 +22,7 @@ type LTIRoutingEditInputDTO struct {
 	PNETLabsType         string `json:"pnet_labs_type"`
 	PNETLabsPath         string `json:"pnet_labs_path"`
 	PNETTestPath         string `json:"pnet_test_path"`
+	IsDefault            bool   `json:"is_default"`
 }
 
 type LTIRoutingEditOutputDTO struct {
@@ -43,6 +44,7 @@ func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOu
 	entity.PNETLabsType = dto.PNETLabsType
 	entity.PNETLabsPath = dto.PNETLabsPath
 	entity.PNETTestPath = dto.PNETTestPath
+	entity.IsDefault = dto.IsDefault
 	err := u.LTIRoutingQueries.Upsert(entity)
 	return LTIRoutingEditOutputDTO{ID: entity.ID}, err
 }

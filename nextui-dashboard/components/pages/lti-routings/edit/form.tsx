@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Accordion, AccordionItem, Button, Input, Select, SelectItem } from '@nextui-org/react';
+import { Accordion, AccordionItem, Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react';
 import { Formik } from 'formik';
 import { models_LTIRouting } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
@@ -31,6 +31,7 @@ const defaultValues: models_LTIRouting = {
   pnet_labs_type: 'default',
   pnet_labs_path: '',
   pnet_test_path: '',
+  is_default: false,
   updated_at: ''
 };
 
@@ -117,6 +118,9 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
               value={values.name ?? ''}
               onChange={handleChange('name')}
             />
+            <Checkbox type='checkbox' defaultSelected={values.is_default} onChange={handleChange('is_default')}>
+              {LTIRouting.FieldIsDefault}
+            </Checkbox>
             <Accordion>
               <AccordionItem key='1' aria-label={LTIRouting.SectionRouteParams} title={LTIRouting.SectionRouteParams}>
                 <div className='flex flex-col gap-4'>
@@ -183,6 +187,13 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     type='url'
                     value={values.pnet_labs_path ?? ''}
                     onChange={handleChange('pnet_labs_path')}
+                  />
+                  <Input
+                    variant='bordered'
+                    label={LTIRouting.FieldPNETTestPath}
+                    type='url'
+                    value={values.pnet_test_path ?? ''}
+                    onChange={handleChange('pnet_test_path')}
                   />
                   <Input
                     variant='bordered'

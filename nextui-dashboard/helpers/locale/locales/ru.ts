@@ -15,7 +15,7 @@ const ru = {
     ErrorPageTitle: 'Ошибка авторизации',
     ErrorPageDescription: 'Попробуйте перейти на страницу входа в систему или авторизоваться через курс',
     MainTitle: 'СУиМ Лаб',
-    MainDescription: 'Система Управления и Мониторинга лаболаторных работ. Сделано на Next.js',
+    MainDescription: 'Система Управления и Мониторинга лаболаторных работ. Сделано на Next UI',
     MainChangeLanguage: 'Сменить язык'
   },
   CompaniesDropdown: {
@@ -136,7 +136,7 @@ const ru = {
     FieldUserRoleAdmin: 'Администратор',
     FieldGroupName: 'Группа',
     FieldExternalLTIID: 'LTI ID',
-    FieldIsActive: 'Активный',
+    FieldIsDeactivated: 'Деактивирован',
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в'
   },
@@ -265,6 +265,7 @@ const ru = {
     FieldPNETLabsTypeEnumeration: 'Перечисление',
     FieldPNETLabsPath: 'Подключение к лабораторной работе',
     FieldPNETTestPath: 'Запуск тестов лабораторной работы',
+    FieldIsDefault: 'Маршрут по умолчанию',
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в',
     DeletePopup: {

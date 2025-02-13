@@ -15,7 +15,7 @@ const en = {
     ErrorPageTitle: 'Authorization Error',
     ErrorPageDescription: 'Try to go to the login page or log in through the course',
     MainTitle: 'CMS LABS',
-    MainDescription: '[Admin] Control Management System labs by Next.js',
+    MainDescription: '[Admin] Control Management System labs by Next UI',
     MainChangeLanguage: 'Change language'
   },
   CompaniesDropdown: {
@@ -136,7 +136,7 @@ const en = {
     FieldUserRoleAdmin: 'Admin',
     FieldGroupName: 'Group',
     FieldExternalLTIID: 'LTI ID',
-    FieldIsActive: 'Is active',
+    FieldIsDeactivated: 'Is deactivated',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at'
   },
@@ -264,6 +264,7 @@ const en = {
     FieldPNETLabsTypeEnumeration: 'Enumeration',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',
+    FieldIsDefault: 'Route is default',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {

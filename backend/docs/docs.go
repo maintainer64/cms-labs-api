@@ -1919,6 +1919,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "is_default": {
+                    "type": "boolean"
+                },
                 "lti_description": {
                     "type": "string"
                 },
@@ -2727,6 +2730,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "is_default": {
+                    "type": "boolean"
                 },
                 "lti_description": {
                     "type": "string"

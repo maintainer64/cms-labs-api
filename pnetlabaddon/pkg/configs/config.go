@@ -60,8 +60,7 @@ func (c *AppConfigModel) Reload() {
 		Debug:             c.Debug,
 		MaxTimeoutSeconds: int64(getEnvInt("CMS_MAX_TIMEOUT")),
 		ClientID:          os.Getenv("CMS_CLIENT_ID"),
-		Username:          os.Getenv("CMS_USERNAME"),
-		Password:          os.Getenv("CMS_PASSWORD"),
+		Token:             os.Getenv("CMS_TOKEN"),
 		BaseUrl:           os.Getenv("CMS_BASE_URL"),
 	}
 }

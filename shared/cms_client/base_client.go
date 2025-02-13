@@ -11,6 +11,7 @@ import (
 type CMSClient struct {
 	debug   bool
 	ClintID string
+	BaseURL string
 	client  *resty.Client
 }
 
@@ -20,11 +21,12 @@ func NewCMSClient(config *CMSClientConfig) *CMSClient {
 	client.SetTimeout(time.Duration(config.MaxTimeoutSeconds) * time.Second)
 	client.SetBaseURL(config.BaseUrl)
 	client.SetHeader("Accept", "application/json")
-	client.SetBasicAuth(config.Username, config.Password)
+	client.SetBasicAuth(config.ClientID, config.Token)
 	client.SetHeader("X-Client-ID", config.ClientID)
 	return &CMSClient{
 		debug:   config.Debug,
 		ClintID: config.ClientID,
+		BaseURL: config.BaseUrl,
 		client:  client,
 	}
 }

@@ -1912,6 +1912,9 @@
                 "id": {
                     "type": "integer"
                 },
+                "is_default": {
+                    "type": "boolean"
+                },
                 "lti_description": {
                     "type": "string"
                 },
@@ -2720,6 +2723,9 @@
                 },
                 "id": {
                     "type": "integer"
+                },
+                "is_default": {
+                    "type": "boolean"
                 },
                 "lti_description": {
                     "type": "string"

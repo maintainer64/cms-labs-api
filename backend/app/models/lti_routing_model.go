@@ -19,6 +19,7 @@ type LTIRoutingSecret struct {
 	PNETLabsType string `gorm:"type:varchar(255);column:pnet_labs_type" json:"pnet_labs_type"`
 	PNETLabsPath string `gorm:"type:varchar(255);column:pnet_labs_path" json:"pnet_labs_path"`
 	PNETTestPath string `gorm:"type:varchar(255);column:pnet_test_path" json:"pnet_test_path"`
+	IsDefault    bool   `gorm:"type:bool;column:is_default" json:"is_default"`
 }
 
 const (

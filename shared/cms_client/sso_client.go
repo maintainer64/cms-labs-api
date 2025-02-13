@@ -53,7 +53,7 @@ func (c *CMSClient) SSOAuthorizeURI(
 	}
 	return fmt.Sprintf(
 		"%s%s?redirect_uri=%s&scope=%s&state=%s&path=%s&extra=%s",
-		c.client.BaseURL,
+		c.BaseURL,
 		url,
 		redirectUri,
 		scope,

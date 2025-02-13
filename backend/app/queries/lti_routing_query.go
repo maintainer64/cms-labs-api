@@ -135,6 +135,17 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 			entity.Name,
 		),
 	)
+	if entity.ID == 0 {
+		log.Info().Msg("LTIRoutingQueries: GetRelevantRouting default params")
+		q.Model(&models.LTIRouting{}).Where("is_default = ?", true).Scan(&entity).Order(`created_at desc`).Limit(1).Offset(0)
+		log.Info().Msg(
+			fmt.Sprintf(
+				"LTIRoutingQueries: GetRelevantRouting fetch default result: routingId=%+v routingName=%+v",
+				entity.ID,
+				entity.Name,
+			),
+		)
+	}
 	return entity, result.Error
 }
 

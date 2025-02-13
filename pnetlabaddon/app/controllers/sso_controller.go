@@ -38,7 +38,7 @@ func SSOFirstFactor(c *fiber.Ctx) error {
 		path,
 		extra,
 	)
-	return c.Redirect(newURL, fiber.StatusTemporaryRedirect)
+	return c.Redirect(newURL, fiber.StatusFound)
 }
 
 // SSOSecondFactor Получение токена пользователя второй фактор OpenID.
