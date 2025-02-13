@@ -32,7 +32,7 @@
     - echo "SSH настроен"
   script:
     - echo "Подключаемся к серверу и выполняем docker-compose"
-    - ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT "export VERSION=$VERSION && echo 'Используем версию $VERSION' && docker compose pull && cd $FOLDER && docker compose up -d"
+    - ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT "export VERSION=$VERSION && echo 'Используем версию $VERSION' && cd $FOLDER && docker compose pull && docker compose up -d"
 
 .releases-branch:
   # Ветки для основного pipeline
