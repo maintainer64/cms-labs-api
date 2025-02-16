@@ -1,6 +1,7 @@
 package round_queue_pool_pnet
 
 import (
+	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	"github.com/thoas/go-funk"
@@ -11,6 +12,7 @@ import (
 type RoundQueuePoolPnetUpsert struct {
 	PNETServerQueries     *queries.PNETServerQueries
 	RoundQueuePoolQueries *queries.RoundQueuePoolQueries
+	*zerolog.Logger
 }
 
 type RoundQueuePoolPnetUpsertOutputDTO struct {
@@ -28,7 +30,7 @@ func (u *RoundQueuePoolPnetUpsert) pnetServerEntityToStats(item models.PNETServe
 }
 
 func (u *RoundQueuePoolPnetUpsert) Execute() error {
-	log.Info().Msg("RoundQueuePoolPnetUpsert start to generate new distribution pnet servers")
+	u.Logger.Info().Msg("RoundQueuePoolPnetUpsert start to generate new distribution pnet servers")
 	entities, _, err := u.PNETServerQueries.List(queries.PNETServerQueriesListDTO{
 		Limit:  queries.MaxLimitCount,
 		Offset: 0,
@@ -37,6 +39,6 @@ func (u *RoundQueuePoolPnetUpsert) Execute() error {
 		return err
 	}
 	stats := funk.Map(entities, u.pnetServerEntityToStats).([]ServerStats)
-	distribute := ByPriority(stats).GenerateSequencePriorityDistribute()
+	distribute := ByPriority(stats).GenerateSequencePriorityDistribute(u.Logger)
 	return u.RoundQueuePoolQueries.UpsertQueueByPnetServerIds(distribute)
 }

@@ -6,14 +6,12 @@ import (
 	"net/http"
 	"net/http/httputil"
 
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/rs/zerolog"
 )
 
-var (
-	log = logs.NewZeroLogger("http_transport")
-)
-
-type LoggingTransport struct{}
+type LoggingTransport struct {
+	*zerolog.Logger
+}
 
 func (s *LoggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	bytes, _ := httputil.DumpRequestOut(r, true)
@@ -24,7 +22,7 @@ func (s *LoggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	respBytes, _ := httputil.DumpResponse(resp, true)
 	bytes = append(bytes, respBytes...)
 
-	log.Debug().Msg(fmt.Sprintf("%s\n", bytes))
+	s.Logger.Debug().Msg(fmt.Sprintf("%s\n", bytes))
 	fmt.Printf("%s\n", bytes)
 
 	return resp, err

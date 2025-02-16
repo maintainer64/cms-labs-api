@@ -12,7 +12,16 @@ import (
 
 func main() {
 	stmts, err := gormschema.New("mysql").Load(
-		&models.User{},
+		models.Wireshark{},
+		models.User{},
+		models.UserRole{},
+		models.UserPermission{},
+		models.ProcessDevice{},
+		models.Process{},
+		models.NodeSession{},
+		models.LabSession{},
+		models.IfSession{},
+		models.HTML5{},
 	)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load gorm schema: %v\n", err)

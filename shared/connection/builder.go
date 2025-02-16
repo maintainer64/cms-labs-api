@@ -1,13 +1,9 @@
-package utils
+package connection
 
-import (
-	"fmt"
-
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
-)
+import "fmt"
 
 // ConnectionURLBuilder func for building URL connection.
-func ConnectionURLBuilder(n string) (string, error) {
+func ConnectionURLBuilder(n string, dbConfig *DBConfig, fiberConfig *ServerConfig) (string, error) {
 	// Define URL to connection.
 	var url string
 
@@ -17,18 +13,18 @@ func ConnectionURLBuilder(n string) (string, error) {
 		// URL for Mysql connection.
 		url = fmt.Sprintf(
 			"%s:%s@tcp(%s:%s)/%s?parseTime=true",
-			configs.AppConfig.DB.User,
-			configs.AppConfig.DB.Password,
-			configs.AppConfig.DB.Host,
-			configs.AppConfig.DB.Port,
-			configs.AppConfig.DB.Name,
+			dbConfig.User,
+			dbConfig.Password,
+			dbConfig.Host,
+			dbConfig.Port,
+			dbConfig.Name,
 		)
 	case "fiber":
 		// URL for Fiber connection.
 		url = fmt.Sprintf(
 			"%s:%s",
-			configs.AppConfig.Server.Host,
-			configs.AppConfig.Server.Port,
+			fiberConfig.Host,
+			fiberConfig.Port,
 		)
 	default:
 		// Return error message.

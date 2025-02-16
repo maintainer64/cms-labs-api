@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,6 +18,7 @@ import (
 
 type LTILaunchDataQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 func (q *LTILaunchDataQueries) Get(id string) (models.LTILaunchData, error) {
@@ -40,8 +43,8 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 	}
 	if entityDB.ID != "" {
 		// Update
-		log.Debug().Msg(fmt.Sprintf("LTILaunchDataQueries: entity update: %+v", entityDB))
-		log.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: entity update launch_id=%+v", entityDB.ID))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTILaunchDataQueries: entity update: %+v", entityDB))
+		q.Logger.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: entity update launch_id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -49,8 +52,8 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create: %+v", entity))
-		log.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create launch_id=%+v", entity.ID))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create: %+v", entity))
+		q.Logger.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create launch_id=%+v", entity.ID))
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
 		result := q.Create(entity)
@@ -60,7 +63,7 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 
 // StoreLaunchData stores the JSON launch data associated with the supplied launch ID.
 func (q *LTILaunchDataQueries) StoreLaunchData(launchID string, launchData json.RawMessage, regUid uint) error {
-	log.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: StoreLaunchData by launch_id=%+v", launchID))
+	q.Logger.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: StoreLaunchData by launch_id=%+v", launchID))
 	entity := models.LTILaunchData{}
 	entity.ID = launchID
 	entity.LaunchData = string(launchData)
@@ -71,7 +74,7 @@ func (q *LTILaunchDataQueries) StoreLaunchData(launchID string, launchData json.
 // FindLaunchData retrieves previously-stored launch data using the `launchID'. If the launch data cannot be
 // found, it returns ErrLaunchDataNotFound.
 func (q *LTILaunchDataQueries) FindLaunchData(launchID string) (json.RawMessage, error) {
-	log.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: FindLaunchData by launch_id: %+v", launchID))
+	q.Logger.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: FindLaunchData by launch_id: %+v", launchID))
 	entity, err := q.Get(launchID)
 	if err != nil {
 		return []byte{}, err

@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+	"gitlab.com/a10869/api-modules/shared/connection"
+
 	"gorm.io/gorm/schema"
 
-	. "gitlab.com/a10869/api-modules/shared/logs"
-	_ "gitlab.com/a10869/api-modules/shared/logs"
-
 	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -19,28 +18,25 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	log = NewZeroLogger("db")
-)
-
 type DBLogger struct {
+	*zerolog.Logger
 }
 
 func (l *DBLogger) Printf(format string, ctx ...interface{}) {
-	log.Info().Msg(fmt.Sprintf(format, ctx...))
+	l.Logger.Info().Msg(fmt.Sprintf(format, ctx...))
 }
 
 // MysqlConnection func for connection to Mysql database.
-func MysqlConnection() (*gorm.DB, error) {
+func MysqlConnection(l *zerolog.Logger) (*gorm.DB, error) {
 
 	// Build Mysql connection URL.
-	mysqlConnURL, err := utils.ConnectionURLBuilder("mysql")
+	mysqlConnURL, err := connection.ConnectionURLBuilder("mysql", configs.AppConfig.DB, configs.AppConfig.Server)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Debug().Msg(fmt.Sprintf("Table prefix MysqlConnection %+v", configs.AppConfig.DB.TablePrefix))
-	log.Debug().Msg(fmt.Sprintf("Mysql DSN %+v", mysqlConnURL))
+	l.Debug().Msg(fmt.Sprintf("Table prefix MysqlConnection %+v", configs.AppConfig.DB.TablePrefix))
+	l.Debug().Msg(fmt.Sprintf("Mysql DSN %+v", mysqlConnURL))
 
 	// Define database connection for Mysql.
 	db, err := gorm.Open(
@@ -48,7 +44,7 @@ func MysqlConnection() (*gorm.DB, error) {
 		&gorm.Config{
 			QueryFields: true,
 			Logger: logger.New(
-				&DBLogger{},
+				&DBLogger{Logger: l},
 				logger.Config{
 					SlowThreshold:             200 * time.Millisecond,
 					LogLevel:                  logger.Warn,
@@ -62,14 +58,14 @@ func MysqlConnection() (*gorm.DB, error) {
 	)
 	if err != nil {
 		errText := fmt.Sprintf("error, not connected to database, %+v", err)
-		log.Error().Msg(errText)
+		l.Error().Msg(errText)
 		return nil, errors.New(errText)
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
 		errText := fmt.Sprintf("error, not opened connected to database, %+v", err)
-		log.Error().Msg(errText)
+		l.Error().Msg(errText)
 		return nil, errors.New(errText)
 	}
 

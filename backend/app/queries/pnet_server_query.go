@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/google/uuid"
 	"github.com/ory/go-convenience/stringsx"
 	"golang.org/x/crypto/bcrypt"
@@ -19,6 +21,7 @@ import (
 
 type PNETServerQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 type PNETServerQueriesListDTO struct {
@@ -66,7 +69,7 @@ func (q *PNETServerQueries) securityTokenGenerate() string {
 	uid := uuid.New().String()
 	hash, err := bcrypt.GenerateFromPassword([]byte(uid), bcrypt.DefaultCost)
 	if err != nil {
-		log.Warn().Msg(fmt.Sprintf("PNETServerQueries: securityTokenGenerate error: %+v", err))
+		q.Logger.Warn().Msg(fmt.Sprintf("PNETServerQueries: securityTokenGenerate error: %+v", err))
 		return ""
 	}
 	hasher := sha256.New()
@@ -82,8 +85,8 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug().Msg(fmt.Sprintf("PNETServerQueries: entity update: %+v", entityDB))
-		log.Info().Msg(fmt.Sprintf("PNETServerQueries: entity update id=%+v", entityDB.ID))
+		q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries: entity update: %+v", entityDB))
+		q.Logger.Info().Msg(fmt.Sprintf("PNETServerQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -93,8 +96,8 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug().Msg(fmt.Sprintf("PNETServerQueries: entity create: %+v", entity))
-		log.Info().Msg(fmt.Sprintf("PNETServerQueries: entity create name=%+v", entity.Name))
+		q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries: entity create: %+v", entity))
+		q.Logger.Info().Msg(fmt.Sprintf("PNETServerQueries: entity create name=%+v", entity.Name))
 		entity.ID = 0
 		entity.Token = q.securityTokenGenerate()
 		entity.CreatedAt = time.Now().UTC()
@@ -111,12 +114,12 @@ func (q *PNETServerQueries) List(filter PNETServerQueriesListDTO) ([]models.PNET
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
-	log.Debug().Msg(fmt.Sprintf("PNETServerQueries list: count %+v", count))
+	q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries list: count %+v", count))
 	result = q.listFilter(
 		filter,
 		q.Limit(filter.Limit).Offset(filter.Offset),
 	).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("PNETServerQueries list: entities %+v", entities))
+	q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
@@ -146,7 +149,7 @@ func (q *PNETServerQueries) listFilter(filter PNETServerQueriesListDTO, tx *gorm
 
 func (q *PNETServerQueries) Delete(id uint) error {
 	tx := q.Where("id = ?", id).Delete(&models.PNETServer{})
-	log.Debug().Msg(fmt.Sprintf("PNETServerQueries: delete entity by id: %+v", id))
+	q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries: delete entity by id: %+v", id))
 	return tx.Error
 }
 

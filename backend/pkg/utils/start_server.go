@@ -5,6 +5,9 @@ import (
 	"os"
 	"os/signal"
 
+	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+	"gitlab.com/a10869/api-modules/shared/connection"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -28,7 +31,7 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 	}()
 
 	// Build Fiber connection URL.
-	fiberConnURL, _ := ConnectionURLBuilder("fiber")
+	fiberConnURL, _ := connection.ConnectionURLBuilder("fiber", configs.AppConfig.DB, configs.AppConfig.Server)
 
 	// Run server.
 	if err := a.Listen(fiberConnURL); err != nil {
@@ -41,7 +44,7 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 // StartServer func for starting a simple server.
 func StartServer(a *fiber.App) {
 	// Build Fiber connection URL.
-	fiberConnURL, _ := ConnectionURLBuilder("fiber")
+	fiberConnURL, _ := connection.ConnectionURLBuilder("fiber", configs.AppConfig.DB, configs.AppConfig.Server)
 
 	// Run server.
 	if err := a.Listen(fiberConnURL); err != nil {

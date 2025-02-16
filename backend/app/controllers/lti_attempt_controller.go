@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
@@ -19,6 +20,7 @@ import (
 // @Security ApiKeyAuth
 // @Router /v1/lti-attempt/create [post]
 func LTIAttemptCreate(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	token, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
 		return err
@@ -28,7 +30,7 @@ func LTIAttemptCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -52,12 +54,13 @@ func LTIAttemptCreate(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/lti-attempt/edit [post]
 func LTIAttemptEdit(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.LTIAttemptEditInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -81,12 +84,13 @@ func LTIAttemptEdit(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/lti-attempt/list [post]
 func LTIAttemptList(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.LTIAttemptListInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -110,12 +114,13 @@ func LTIAttemptList(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/lti-attempt/delete [post]
 func LTIAttemptDelete(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.LTIAttemptDeleteInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -139,12 +144,13 @@ func LTIAttemptDelete(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/lti-attempt/get [post]
 func LTIAttemptGet(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.LTIAttemptGetInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}

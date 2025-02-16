@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_launch"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_login"
+	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
 func (di *DIContainer) LTIProtocolDatastoreConfig() *lti_connector.LTIConnectorAPI {
@@ -19,6 +20,7 @@ func (di *DIContainer) LTIProtocolDatastoreConfig() *lti_connector.LTIConnectorA
 			AccessTokens:  di.Queries.LTIAccessTokenQueries,
 			UserStore:     di.Queries.UserQueries,
 		},
+		Logger: logs.NewZeroLogger(di.ZeroLogConf.SetName("lti_connector.LTIConnectorAPI")),
 	}
 }
 

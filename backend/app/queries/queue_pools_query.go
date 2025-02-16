@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
@@ -13,6 +15,7 @@ import (
 
 type RoundQueuePoolQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 func (q *RoundQueuePoolQueries) tableName(object interface{}) string {
@@ -42,7 +45,7 @@ func (q *RoundQueuePoolQueries) Get(id uint) (models.RoundQueuePool, error) {
 }
 
 func (q *RoundQueuePoolQueries) UpsertQueueByPnetServerIds(ids []uint) error {
-	log.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries upsert queue by pnet-server-ids: count %+v", len(ids)))
+	q.Logger.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries upsert queue by pnet-server-ids: count %+v", len(ids)))
 	var entities []models.RoundQueuePool
 	for index, pnetServerId := range ids {
 		entity := models.RoundQueuePool{}
@@ -101,7 +104,7 @@ func (q *RoundQueuePoolQueries) GetNextByType(poolType string) (models.RoundQueu
 			return q.finishDistribution(tx, entity.Type, entity.ID)
 		},
 	)
-	log.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries: get by id: %+v", entityID))
+	q.Logger.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries: get by id: %+v", entityID))
 	if err != nil {
 		return models.RoundQueuePool{}, err
 	}
@@ -110,7 +113,7 @@ func (q *RoundQueuePoolQueries) GetNextByType(poolType string) (models.RoundQueu
 
 func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string) (models.RoundQueuePool, error) {
 	var entities []models.RoundQueuePool
-	log.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries get next pool item from queue by type: %+v", poolType))
+	q.Logger.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries get next pool item from queue by type: %+v", poolType))
 	// Получаем последнюю сущность last_used = true
 	selectCurrentDistribution := tx.Table(
 		q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools",
@@ -156,7 +159,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		"round_queue_pools.connected_at asc",
 	)
 	if err := selectNextDistribution.Scan(&entities).Error; err != nil {
-		log.Info().Msg(
+		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"RoundQueuePoolQueries exception for get next pool item from queue by type: %+v",
 				poolType,
@@ -166,7 +169,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 	}
 	if len(entities) > 0 {
 		entity := entities[0]
-		log.Info().Msg(
+		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"RoundQueuePoolQueries success get id: %+v, pnetServerId: %+v, pool item from queue by type: %+v",
 				entity.ID,
@@ -200,7 +203,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		"round_queue_pools.connected_at asc",
 	)
 	if err := selectFirstDistribution.Scan(&entities).Error; err != nil {
-		log.Info().Msg(
+		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"RoundQueuePoolQueries exception for get first pool item from queue by type: %+v",
 				poolType,
@@ -210,7 +213,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 	}
 	if len(entities) > 0 {
 		entity := entities[0]
-		log.Info().Msg(
+		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"RoundQueuePoolQueries success get first entity id: %+v, pnetServerId: %+v, pool item from queue by type: %+v",
 				entity.ID,
@@ -220,7 +223,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		)
 		return entity, nil
 	}
-	log.Info().Msg(
+	q.Logger.Info().Msg(
 		fmt.Sprintf(
 			"RoundQueuePoolQueries not success get entity from queue by type: %+v",
 			poolType,
@@ -233,7 +236,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 }
 
 func (q *RoundQueuePoolQueries) finishDistribution(tx *gorm.DB, poolType string, id uint) error {
-	log.Info().Msg(
+	q.Logger.Info().Msg(
 		fmt.Sprintf(
 			"RoundQueuePoolQueries: finish distribution item from queue by type: %+v, id: %+v",
 			poolType,
@@ -249,7 +252,7 @@ func (q *RoundQueuePoolQueries) finishDistribution(tx *gorm.DB, poolType string,
 		},
 	)
 	if resetLastDistribution.Error != nil {
-		log.Info().Msg(
+		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"RoundQueuePoolQueries: error on change reset last distribution by type: %+v, id: %+v",
 				poolType,
@@ -267,7 +270,7 @@ func (q *RoundQueuePoolQueries) finishDistribution(tx *gorm.DB, poolType string,
 		},
 	)
 	if setLastDistribution.Error != nil {
-		log.Info().Msg(
+		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"RoundQueuePoolQueries: error on change set last distribution by type: %+v, id: %+v",
 				poolType,

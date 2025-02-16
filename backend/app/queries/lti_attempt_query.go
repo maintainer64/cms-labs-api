@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
@@ -13,7 +15,10 @@ import (
 
 type LTIAttemptQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
+
+const MaxLimitCount = 5000
 
 func (q *LTIAttemptQueries) Get(id uint) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
@@ -35,8 +40,8 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: entity update: %+v", entityDB))
-		log.Info().Msg(fmt.Sprintf("LTIAttemptQueries: entity update user_id=%+v", entityDB.UserID))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: entity update: %+v", entityDB))
+		q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries: entity update user_id=%+v", entityDB.UserID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -45,8 +50,8 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: entity create: %+v", entity))
-		log.Info().Msg(fmt.Sprintf("LTIAttemptQueries: entity create user_id=%+v", entity.UserID))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: entity create: %+v", entity))
+		q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries: entity create user_id=%+v", entity.UserID))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -77,7 +82,7 @@ func (q *LTIAttemptQueries) GetByRoomNumber(roomNumber *int64) ([]models.LTIAtte
 		"UTC_TIMESTAMP() < expired_at",
 	).Limit(MaxLimitCount).Offset(0).Find(&entities)
 	count := result.RowsAffected
-	log.Info().Msg(fmt.Sprintf("LTIAttemptQueries GetByRoomNumber: count %+v", count))
+	q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries GetByRoomNumber: count %+v", count))
 	return entities, result.Error
 }
 
@@ -92,12 +97,12 @@ func (q *LTIAttemptQueries) List(
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
-	log.Debug().Msg(fmt.Sprintf("LTIAttemptQueries list: count %+v", count))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
 		q.Limit(limit).Offset(offset),
 	).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("LTIAttemptQueries list: entities %+v", entities))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
@@ -113,6 +118,6 @@ func (q *LTIAttemptQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 
 func (q *LTIAttemptQueries) Delete(id uint) error {
 	_ = q.Where("id = ?", id).Delete(&models.LTIAttempt{})
-	log.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: delete entity by id: %+v", id))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: delete entity by id: %+v", id))
 	return nil
 }

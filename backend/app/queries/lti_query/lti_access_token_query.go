@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +23,7 @@ func accessTokenIndex(tokenURI, clientID string, scopes []string) string {
 
 type LTIAccessTokenQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 func (q *LTIAccessTokenQueries) GetByIndex(index string) (models.LTIAccessToken, error) {
@@ -42,7 +45,7 @@ func (q *LTIAccessTokenQueries) Upsert(entity *models.LTIAccessToken) error {
 	entityDB, _ := q.GetByIndex(entity.Index)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug().Msg(fmt.Sprintf("LTIAccessTokenQueries: entity update: %+v", entityDB))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTIAccessTokenQueries: entity update: %+v", entityDB))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -50,7 +53,7 @@ func (q *LTIAccessTokenQueries) Upsert(entity *models.LTIAccessToken) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug().Msg(fmt.Sprintf("LTIAccessTokenQueries: entity create: %+v", entity))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTIAccessTokenQueries: entity create: %+v", entity))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -61,7 +64,7 @@ func (q *LTIAccessTokenQueries) Upsert(entity *models.LTIAccessToken) error {
 
 // StoreAccessToken stores bearer tokens for potential reuse.
 func (q *LTIAccessTokenQueries) StoreAccessToken(token AccessToken) error {
-	log.Info().Msg(fmt.Sprintf("LTIAccessTokenQueries: StoreAccessToken on clientID: %+v", token.ClientID))
+	q.Logger.Info().Msg(fmt.Sprintf("LTIAccessTokenQueries: StoreAccessToken on clientID: %+v", token.ClientID))
 	if token.TokenURI == "" {
 		return errors.New("received empty tokenURI")
 	}
@@ -97,7 +100,7 @@ func (q *LTIAccessTokenQueries) StoreAccessToken(token AccessToken) error {
 
 // FindAccessToken retrieves bearer tokens for potential reuse.
 func (q *LTIAccessTokenQueries) FindAccessToken(tokenURI, clientID string, scopes []string) (AccessToken, error) {
-	log.Info().Msg(fmt.Sprintf("LTIAccessTokenQueries: FindAccessToken on clientID: %+v", clientID))
+	q.Logger.Info().Msg(fmt.Sprintf("LTIAccessTokenQueries: FindAccessToken on clientID: %+v", clientID))
 	if tokenURI == "" {
 		return AccessToken{}, errors.New("received empty tokenURI")
 	}

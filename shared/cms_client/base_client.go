@@ -3,15 +3,15 @@ package cms_client
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/go-resty/resty/v2"
 )
 
 type CMSClient struct {
-	debug   bool
-	ClintID string
-	BaseURL string
+	Config  *CMSClientConfig
+	BaseURL *url.URL
 	client  *resty.Client
 }
 
@@ -21,12 +21,11 @@ func NewCMSClient(config *CMSClientConfig) *CMSClient {
 	client.SetTimeout(time.Duration(config.MaxTimeoutSeconds) * time.Second)
 	client.SetBaseURL(config.BaseUrl)
 	client.SetHeader("Accept", "application/json")
-	client.SetBasicAuth(config.ClientID, config.Token)
 	client.SetHeader("X-Client-ID", config.ClientID)
+	uri, _ := url.Parse(config.BaseUrl)
 	return &CMSClient{
-		debug:   config.Debug,
-		ClintID: config.ClientID,
-		BaseURL: config.BaseUrl,
+		Config:  config,
+		BaseURL: uri,
 		client:  client,
 	}
 }

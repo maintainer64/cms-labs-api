@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
@@ -18,12 +19,13 @@ import (
 // @Security ApiKeyAuth
 // @Router /v1/service-card/upsert [post]
 func ServiceCardCreate(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardEditInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -47,12 +49,13 @@ func ServiceCardCreate(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/service-card/list [post]
 func ServiceCardList(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardListInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -76,12 +79,13 @@ func ServiceCardList(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/service-card/delete [post]
 func ServiceCardDelete(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardDeleteInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -105,12 +109,13 @@ func ServiceCardDelete(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/service-card/get [post]
 func ServiceCardGet(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardGetInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}

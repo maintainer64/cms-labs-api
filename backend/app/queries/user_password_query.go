@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ory/go-convenience/stringsx"
 	"gitlab.com/a10869/api-modules/backend/app/models"
@@ -14,6 +16,7 @@ import (
 
 type UserPasswordQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 var IncorrectPassword = errors.New("Incorrect password")
@@ -38,7 +41,7 @@ func (q *UserPasswordQueries) Upsert(entity *models.UserPassword) error {
 	q.Where("`user_id` = ?", entity.UserID).Find(&entityDB)
 	if entityDB.UserID == entity.UserID {
 		// Update
-		log.Info().Msg(fmt.Sprintf("UserPasswordQueries: entity update user_id=%+v", entityDB.UserID))
+		q.Logger.Info().Msg(fmt.Sprintf("UserPasswordQueries: entity update user_id=%+v", entityDB.UserID))
 		entity.HashPassword = stringsx.Coalesce(entity.HashPassword, entityDB.HashPassword)
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -46,7 +49,7 @@ func (q *UserPasswordQueries) Upsert(entity *models.UserPassword) error {
 		return result.Error
 	} else {
 		// Create
-		log.Info().Msg(fmt.Sprintf("UserPasswordQueries: entity create user_id=%+v", entity.UserID))
+		q.Logger.Info().Msg(fmt.Sprintf("UserPasswordQueries: entity create user_id=%+v", entity.UserID))
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
 		result := q.Create(entity)

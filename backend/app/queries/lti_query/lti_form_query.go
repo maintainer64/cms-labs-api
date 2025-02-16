@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
@@ -17,14 +19,15 @@ import (
 
 type LTIFormQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
-func ltiGenerateKeys() (string, string, error) {
-	log.Info().Msg("LTIGenerate RSA keys")
+func ltiGenerateKeys(l *zerolog.Logger) (string, string, error) {
+	l.Info().Msg("LTIGenerate RSA keys")
 	// Generate RSA private key
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
-		log.Warn().Msg(fmt.Sprintf("Error generating private key: %+v", err))
+		l.Warn().Msg(fmt.Sprintf("Error generating private key: %+v", err))
 		return "", "", err
 	}
 
@@ -40,7 +43,7 @@ func ltiGenerateKeys() (string, string, error) {
 	// Encode public key to PEM format
 	publicKeyBytes, err := x509.MarshalPKIXPublicKey(publicKey)
 	if err != nil {
-		log.Warn().Msg(fmt.Sprintf("Error marshaling public key: %+v", err))
+		l.Warn().Msg(fmt.Sprintf("Error marshaling public key: %+v", err))
 		return "", "", err
 	}
 	publicKeyPEM := pem.EncodeToMemory(&pem.Block{
@@ -69,8 +72,8 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug().Msg(fmt.Sprintf("LTIFormQueries: entity update: %+v", entityDB))
-		log.Info().Msg(fmt.Sprintf("LTIFormQueries: entity update id=%+v", entityDB.ID))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: entity update: %+v", entityDB))
+		q.Logger.Info().Msg(fmt.Sprintf("LTIFormQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.PublicKey = entityDB.PublicKey
@@ -80,12 +83,12 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 		return result.Error
 	}
 	// Create
-	log.Debug().Msg(fmt.Sprintf("LTIFormQueries: entity create: %+v", entity))
-	log.Info().Msg(fmt.Sprintf("LTIFormQueries: entity create name=%+v", entity.Name))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: entity create: %+v", entity))
+	q.Logger.Info().Msg(fmt.Sprintf("LTIFormQueries: entity create name=%+v", entity.Name))
 	entity.ID = 0
 	entity.CreatedAt = time.Now().UTC()
 	entity.UpdatedAt = time.Now().UTC()
-	privateKey, publicKey, err := ltiGenerateKeys()
+	privateKey, publicKey, err := ltiGenerateKeys(q.Logger)
 	if err != nil {
 		return err
 	}
@@ -94,6 +97,8 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 	result := q.Create(entity)
 	return result.Error
 }
+
+const MaxLimitCount = 5000
 
 func (q *LTIFormQueries) List(
 	search string,
@@ -106,12 +111,12 @@ func (q *LTIFormQueries) List(
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
-	log.Debug().Msg(fmt.Sprintf("LTIFormQueries list: count %+v", count))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
 		q.Limit(limit).Offset(offset),
 	).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("LTIFormQueries list: entities %+v", entities))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
@@ -128,6 +133,6 @@ func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 
 func (q *LTIFormQueries) Delete(id uint) error {
 	_ = q.Where("id = ?", id).Delete(&models.LTIForm{})
-	log.Debug().Msg(fmt.Sprintf("LTIFormQueries: delete entity by id: %+v", id))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: delete entity by id: %+v", id))
 	return nil
 }

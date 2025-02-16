@@ -3,6 +3,8 @@ package middleware
 import (
 	"fmt"
 
+	"gitlab.com/a10869/api-modules/shared/logs"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"gitlab.com/a10869/api-modules/backend/app/di"
@@ -15,9 +17,12 @@ func NewServiceAuthMiddleware() fiber.Handler {
 	}
 	return basicauth.New(
 		basicauth.Config{
+			ContextUsername: "x-service-id",
 			Authorizer: func(username string, password string) bool {
+				diLoggerConf := &logs.ZeroLoggerConf{Name: "middleware.service_auth"}
+				log := logs.NewZeroLogger(diLoggerConf)
 				log.Info().Msg(fmt.Sprintf("ServiceAuthMiddleware: auth with service: %+v", username))
-				repos, err := di.NewDIContainer()
+				repos, err := di.NewDIContainer(diLoggerConf)
 				if err != nil {
 					return false
 				}

@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ory/go-convenience/mapx"
@@ -22,6 +24,7 @@ var (
 
 type UserQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 func (q *UserQueries) Get(id uint) (models.User, error) {
@@ -50,8 +53,8 @@ func (q *UserQueries) Upsert(entity *models.User) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug().Msg(fmt.Sprintf("UserQueries: entity update: %+v", entityDB))
-		log.Info().Msg(fmt.Sprintf("UserQueries: entity update id=%+v", entityDB.ID))
+		q.Logger.Debug().Msg(fmt.Sprintf("UserQueries: entity update: %+v", entityDB))
+		q.Logger.Info().Msg(fmt.Sprintf("UserQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -59,8 +62,8 @@ func (q *UserQueries) Upsert(entity *models.User) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug().Msg(fmt.Sprintf("UserQueries: entity create: %+v", entity))
-		log.Info().Msg(fmt.Sprintf("UserQueries: entity create email=%+v", entity.Email))
+		q.Logger.Debug().Msg(fmt.Sprintf("UserQueries: entity create: %+v", entity))
+		q.Logger.Info().Msg(fmt.Sprintf("UserQueries: entity create email=%+v", entity.Email))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -75,7 +78,7 @@ func (q *UserQueries) GetByEmail(email string) (models.User, error) {
 		Status:    fiber.StatusNotFound,
 		Exception: UserNotFoundError,
 	}
-	log.Info().Msg(fmt.Sprintf("UserQueries: get user by email=%+v", email))
+	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: get user by email=%+v", email))
 	if email == "" {
 		return entity, err
 	}
@@ -84,7 +87,7 @@ func (q *UserQueries) GetByEmail(email string) (models.User, error) {
 		return entity, err
 	}
 	if !entity.IsActive() {
-		log.Info().Msg(fmt.Sprintf("UserQueries: user is not active by email=%+v", email))
+		q.Logger.Info().Msg(fmt.Sprintf("UserQueries: user is not active by email=%+v", email))
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusForbidden,
 			Exception: UserNotActive,
@@ -99,12 +102,12 @@ func (q *UserQueries) GetByLaunchID(launchID string) (models.User, error) {
 		Status:    fiber.StatusNotFound,
 		Exception: UserNotFoundError,
 	}
-	log.Info().Msg(fmt.Sprintf("UserQueries: get user by last_launch_id=%+v", launchID))
+	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: get user by last_launch_id=%+v", launchID))
 	if launchID == "" {
 		return entity, err
 	}
 	q.Where("last_launch_id = ?", launchID).Limit(1).Find(&entity)
-	log.Info().Msg(fmt.Sprintf(
+	q.Logger.Info().Msg(fmt.Sprintf(
 		"UserQueries: get user by last_launch_id=%+v fetched id=%+v",
 		launchID,
 		entity.ID,
@@ -113,7 +116,7 @@ func (q *UserQueries) GetByLaunchID(launchID string) (models.User, error) {
 		return entity, err
 	}
 	if !entity.IsActive() {
-		log.Info().Msg(fmt.Sprintf("UserQueries: user is not active by launchID=%+v", launchID))
+		q.Logger.Info().Msg(fmt.Sprintf("UserQueries: user is not active by launchID=%+v", launchID))
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusForbidden,
 			Exception: UserNotActive,
@@ -135,13 +138,13 @@ func (q *UserQueries) List(
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
-	log.Debug().Msg(fmt.Sprintf("UserQueries list: count %+v", count))
+	q.Logger.Debug().Msg(fmt.Sprintf("UserQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
 		ids,
 		q.Limit(limit).Offset(offset),
 	).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("UserQueries list: entities %+v", entities))
+	q.Logger.Debug().Msg(fmt.Sprintf("UserQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
@@ -161,7 +164,7 @@ func (q *UserQueries) listFilter(search string, ids []uint, tx *gorm.DB) *gorm.D
 
 func (q *UserQueries) Delete(id uint) error {
 	_ = q.Where("id = ?", id).Update("deleted_at", time.Now().UTC())
-	log.Debug().Msg(fmt.Sprintf("UserQueries: delete entity by id: %+v", id))
+	q.Logger.Debug().Msg(fmt.Sprintf("UserQueries: delete entity by id: %+v", id))
 	return nil
 }
 
@@ -169,7 +172,7 @@ func (q *UserQueries) UpdateByLaunchData(
 	launchID string,
 	launchData json.RawMessage,
 ) error {
-	log.Info().Msg(fmt.Sprintf("UserQueries: update launch data by id: %+v", launchID))
+	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: update launch data by id: %+v", launchID))
 	var jwtTokenPayload map[interface{}]interface{}
 	if err := json.Unmarshal(launchData, &jwtTokenPayload); err != nil {
 		return err

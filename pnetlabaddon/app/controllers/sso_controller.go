@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/usecases"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
@@ -19,9 +20,10 @@ import (
 // @Success 307
 // @Router /v1/sso/login [get]
 func SSOFirstFactor(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	extra := c.Query("extra", "")
 	path := c.Query("path", "/")
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return utils.FiberValidationException{
 			Status:    fiber.StatusInternalServerError,
@@ -34,11 +36,11 @@ func SSOFirstFactor(c *fiber.Ctx) error {
 
 	newURL := client.SSOAuthorizeURI(
 		c.BaseURL()+"/pnet-lab-addon/api/v1/sso/openid",
-		"[default]",
+		"default",
 		path,
 		extra,
 	)
-	return c.Redirect(newURL, fiber.StatusFound)
+	return c.Redirect(newURL, fiber.StatusTemporaryRedirect)
 }
 
 // SSOSecondFactor Получение токена пользователя второй фактор OpenID.
@@ -57,7 +59,8 @@ func SSOFirstFactor(c *fiber.Ctx) error {
 // @Success 307
 // @Router /v1/sso/openid [get]
 func SSOSecondFactor(c *fiber.Ctx) error {
-	container, err := di.NewDIContainer()
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return utils.FiberValidationException{
 			Status:    fiber.StatusInternalServerError,

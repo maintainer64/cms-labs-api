@@ -22,6 +22,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/goccy/go-json"
 
 	"gitlab.com/a10869/api-modules/shared/http_debug"
@@ -57,6 +59,7 @@ type Connector struct {
 	LaunchToken jwt.Token
 	SigningKey  *rsa.PrivateKey
 	AccessToken datastore.AccessToken
+	*zerolog.Logger
 }
 
 // A ServiceRequest structures service (AGS & NRPS) connections between tool and platform.
@@ -70,11 +73,12 @@ type ServiceRequest struct {
 }
 
 // New creates a *Connector. To function as expected, a valid launchID must be supplied.
-func New(cfg *datastore.Config, launchID, keyID string) (*Connector, error) {
+func New(cfg *datastore.Config, launchID, keyID string, logger *zerolog.Logger) (*Connector, error) {
 	connector := Connector{
 		cfg:      cfg,
 		keyID:    keyID,
 		LaunchID: launchID,
+		Logger:   logger,
 	}
 
 	err := connector.setLaunchTokenFromLaunchData(launchID)
@@ -216,7 +220,7 @@ func (c *Connector) createRequest(tokenURI, clientID string, scopes []string) (*
 	requestValues.Add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
 	requestValues.Add("client_assertion", string(signedToken))
 	requestValues.Add("scope", scopeValue)
-	log.Debug().Msg(
+	c.Logger.Debug().Msg(
 		fmt.Sprintf(
 			"lti/createRequest to create access token by requestValues: %+v",
 			requestValues,
@@ -233,10 +237,10 @@ func (c *Connector) createRequest(tokenURI, clientID string, scopes []string) (*
 }
 
 // sendRequest sends the bearer token request to the platform and processes the response.
-func sendRequest(req *http.Request) (datastore.AccessToken, error) {
+func sendRequest(req *http.Request, log *zerolog.Logger) (datastore.AccessToken, error) {
 	client := &http.Client{
 		Timeout:   timeout,
-		Transport: &http_debug.LoggingTransport{},
+		Transport: &http_debug.LoggingTransport{Logger: log},
 	}
 	log.Debug().Msg(
 		fmt.Sprintf(
@@ -303,7 +307,7 @@ func (c *Connector) GetAccessToken(scopes []string) error {
 	if err != nil {
 		return fmt.Errorf("create request for access token: %w", err)
 	}
-	responseToken, err := sendRequest(request)
+	responseToken, err := sendRequest(request, c.Logger)
 	if err != nil {
 		return fmt.Errorf("send request for access token: %w", err)
 	}
@@ -342,7 +346,7 @@ func (c *Connector) makeServiceRequest(s ServiceRequest) (http.Header, io.ReadCl
 	request.Header.Set("Accept", s.Accept)
 	request.Header.Set("Content-Type", s.ContentType)
 
-	client := &http.Client{Timeout: timeout, Transport: &http_debug.LoggingTransport{}}
+	client := &http.Client{Timeout: timeout, Transport: &http_debug.LoggingTransport{Logger: c.Logger}}
 	response, err := client.Do(request)
 	if err != nil {
 		return nil, nil, fmt.Errorf("make service request client error: %w", err)

@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
@@ -18,6 +19,7 @@ import (
 // @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Router /v1/token/renew [post]
 func TokensRenew(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	refreshToken := c.Cookies(cms_client.SSORefreshTokenName, "")
 	if refreshToken == "" {
 		dto := auth.RenewManagerInputDTO{}
@@ -27,7 +29,7 @@ func TokensRenew(c *fiber.Ctx) error {
 		}
 		refreshToken = dto.RefreshToken
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -63,12 +65,13 @@ func TokensRenew(c *fiber.Ctx) error {
 // @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Router /v1/token/login [post]
 func TokensByCredentials(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.RenewManagerCredentialsInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -119,6 +122,7 @@ func TokensRemove(c *fiber.Ctx) error {
 // @Success 200 {object} auth.UserPasswordRecoverResponse
 // @Router /v1/token/password_change [post]
 func TokensPasswordRecover(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
 		return err
@@ -127,7 +131,7 @@ func TokensPasswordRecover(c *fiber.Ctx) error {
 	if err := utils.FiberValidatorBase(c, &dto); err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}

@@ -3,6 +3,8 @@ package database
 import (
 	"os"
 
+	"github.com/rs/zerolog"
+
 	"gorm.io/gorm"
 
 	"gitlab.com/a10869/api-modules/backend/app/queries"
@@ -27,7 +29,7 @@ type Queries struct {
 }
 
 // OpenDBConnection func for opening database connection.
-func OpenDBConnection() (*Queries, error) {
+func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 	// Define Database connection variables.
 	var (
 		db  *gorm.DB
@@ -40,7 +42,7 @@ func OpenDBConnection() (*Queries, error) {
 	// Define a new Database connection with right DB type.
 	switch dbType {
 	case "mysql":
-		db, err = MysqlConnection()
+		db, err = MysqlConnection(l)
 	}
 
 	if err != nil {
@@ -50,18 +52,18 @@ func OpenDBConnection() (*Queries, error) {
 	return &Queries{
 		// Set queries from models:
 		DB:                    db,
-		LTIFormQueries:        &lti_query.LTIFormQueries{DB: db},
-		LTINonceTokenQueries:  &lti_query.LTINonceTokenQueries{DB: db},
-		LTIAccessTokenQueries: &lti_query.LTIAccessTokenQueries{DB: db},
-		LTILaunchDataQueries:  &lti_query.LTILaunchDataQueries{DB: db},
-		UserQueries:           &queries.UserQueries{DB: db},
-		UserPasswordQueries:   &queries.UserPasswordQueries{DB: db},
-		PNETServerQueries:     &queries.PNETServerQueries{DB: db},
-		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db},
-		LTIRoutingQueries:     &queries.LTIRoutingQueries{DB: db},
-		LTIAttemptQueries:     &queries.LTIAttemptQueries{DB: db},
-		ServiceCardQueries:    &queries.ServiceCardQueries{DB: db},
-		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db},
+		LTIFormQueries:        &lti_query.LTIFormQueries{DB: db, Logger: l},
+		LTINonceTokenQueries:  &lti_query.LTINonceTokenQueries{DB: db, Logger: l},
+		LTIAccessTokenQueries: &lti_query.LTIAccessTokenQueries{DB: db, Logger: l},
+		LTILaunchDataQueries:  &lti_query.LTILaunchDataQueries{DB: db, Logger: l},
+		UserQueries:           &queries.UserQueries{DB: db, Logger: l},
+		UserPasswordQueries:   &queries.UserPasswordQueries{DB: db, Logger: l},
+		PNETServerQueries:     &queries.PNETServerQueries{DB: db, Logger: l},
+		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db, Logger: l},
+		LTIRoutingQueries:     &queries.LTIRoutingQueries{DB: db, Logger: l},
+		LTIAttemptQueries:     &queries.LTIAttemptQueries{DB: db, Logger: l},
+		ServiceCardQueries:    &queries.ServiceCardQueries{DB: db, Logger: l},
+		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db, Logger: l},
 	}, nil
 }
 

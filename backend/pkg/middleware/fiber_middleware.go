@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
@@ -16,16 +15,20 @@ func FiberMiddleware(a *fiber.App) {
 	a.Use(
 		// Add CORS to each route.
 		cors.New(),
+		// Options запросы всегда 204
+		logs.NewOptionsFiberNoContent(),
 		// Header X-Request-ID
-		requestid.New(),
-		// Add simple logger.
-		fiberzerolog.New(fiberzerolog.Config{
-			Logger: &logs.ZeroLog,
+		requestid.New(requestid.Config{
+			ContextKey: "x-request-id",
 		}),
 		// Add simple healthcheck.
 		healthcheck.New(),
 		// Service middleware
 		NewServiceAuthMiddleware(),
+		// Service JWT extractor
+		NewJWTMiddleware(),
+		// Add simple logger.
+		logs.NewFiberZerologLogger(),
 		// InternalFormatterException
 		InternalFormatterNew(configs.AppConfig.Debug),
 	)

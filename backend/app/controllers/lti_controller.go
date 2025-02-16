@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
 // LTILaunch функция инициализирует подключение к LTI.
@@ -17,7 +18,8 @@ import (
 // @Router /v2/lti/launch [post]
 // @Router /v2/lti/launch [get]
 func LTILaunch(c *fiber.Ctx) error {
-	container, err := di.NewDIContainer()
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -52,7 +54,8 @@ func LTILaunch(c *fiber.Ctx) error {
 // @Router /v2/lti/login [post]
 // @Router /v2/lti/login [get]
 func LTILogin(c *fiber.Ctx) error {
-	container, err := di.NewDIContainer()
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}

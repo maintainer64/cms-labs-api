@@ -2,19 +2,20 @@ package cms_client
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/google/uuid"
 )
 
 func (c *CMSClient) SSOToken(grantType string, redirectUri string, code string, refreshToken string) (*SSOToken, error) {
-	const url = "/api/v1/sso/token"
+	const path = "/api/v1/sso/token"
 	var ssoToken SSOTokenResponse
-	response, err := c.client.R().SetBody(map[string]string{
+	response, err := c.client.R().SetFormData(map[string]string{
 		"grant_type":    grantType,
 		"redirect_uri":  redirectUri,
 		"code":          code,
 		"refresh_token": refreshToken,
-	}).SetResult(&ssoToken).Post(url)
+	}).SetBasicAuth(c.Config.ClientID, c.Config.Token).SetResult(&ssoToken).Post(path)
 	if response == nil {
 		return nil, NewCMSError("", 0)
 	}
@@ -25,12 +26,12 @@ func (c *CMSClient) SSOToken(grantType string, redirectUri string, code string, 
 }
 
 func (c *CMSClient) SSOUserInfo(accessToken string) (*SSOTokenPublicData, error) {
-	const url = "/v1/sso/userinfo"
+	const path = "/api/v1/sso/userinfo"
 	var ssoToken SSOTokenPublicDataResponse
 	response, err := c.client.R().SetHeader(
 		"Authorization",
 		fmt.Sprintf("Bearer %s", accessToken),
-	).SetResult(&ssoToken).Post(url)
+	).SetResult(&ssoToken).Post(path)
 	if response == nil {
 		return nil, NewCMSError("", 0)
 	}
@@ -46,19 +47,34 @@ func (c *CMSClient) SSOAuthorizeURI(
 	path string,
 	extra string,
 ) string {
-	const url = "/api/v1/sso/authorize"
+	const (
+		cClientId     = "client_id"
+		cRedirectUri  = "redirect_uri"
+		cResponseType = "response_type"
+		cScope        = "scope"
+		cPath         = "path"
+		cState        = "state"
+		cExtra        = "extra"
+	)
+	var query = make(url.Values)
 	state := uuid.New().String()
 	if path == "" {
 		path = "/"
 	}
-	return fmt.Sprintf(
-		"%s%s?redirect_uri=%s&scope=%s&state=%s&path=%s&extra=%s",
-		c.BaseURL,
-		url,
-		redirectUri,
-		scope,
-		state,
-		path,
-		extra,
-	)
+	query.Set(cClientId, c.Config.ClientID)
+	query.Set(cRedirectUri, redirectUri)
+	query.Set(cResponseType, "code")
+	query.Set(cScope, scope)
+	query.Set(cState, state)
+	query.Set(cPath, path)
+	query.Set(cExtra, extra)
+	query.Set(cExtra, extra)
+
+	var uri = url.URL{
+		Scheme:   c.BaseURL.Scheme,
+		Host:     c.BaseURL.Host,
+		Path:     "/api/v1/sso/authorize",
+		RawQuery: query.Encode(),
+	}
+	return uri.String()
 }

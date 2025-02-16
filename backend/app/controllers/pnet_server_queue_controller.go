@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
@@ -18,13 +19,14 @@ import (
 // @Security ApiKeyAuth
 // @Router /v1/pnet-server-queue/upsert [post]
 func PNETServerQueueCreate(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
 	); err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -47,13 +49,14 @@ func PNETServerQueueCreate(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/pnet-server-queue/list [post]
 func PNETServerQueueList(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
 	); err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}

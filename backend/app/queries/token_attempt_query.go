@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/rs/zerolog"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
@@ -12,6 +14,7 @@ import (
 
 type TokenAttemptQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 func (q *TokenAttemptQueries) GetByToken(token string) (models.TokenAttempt, error) {
@@ -46,8 +49,8 @@ func (q *TokenAttemptQueries) Upsert(entity *models.TokenAttempt) error {
 		return nil
 	}
 	result := q.Create(entity)
-	log.Debug().Msg(fmt.Sprintf("TokenAttemptQueries: entity create: %+v", entity))
-	log.Info().Msg(fmt.Sprintf("TokenAttemptQueries: entity create user_id=%+v", entity.UserID))
+	q.Logger.Debug().Msg(fmt.Sprintf("TokenAttemptQueries: entity create: %+v", entity))
+	q.Logger.Info().Msg(fmt.Sprintf("TokenAttemptQueries: entity create user_id=%+v", entity.UserID))
 	return result.Error
 }
 
@@ -72,7 +75,7 @@ func (q *TokenAttemptQueries) DeleteByParams(userID uint, serverID uint) error {
 	if result.Error != nil {
 		return result.Error
 	}
-	log.Info().Msg(
+	q.Logger.Info().Msg(
 		fmt.Sprintf("TokenAttemptQueries: delete token by user_id=%+v server_id=%+v", userID, serverID),
 	)
 	return nil

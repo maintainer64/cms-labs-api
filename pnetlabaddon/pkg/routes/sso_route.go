@@ -9,5 +9,5 @@ import (
 func V1SSORoute(a *fiber.App) {
 	group := a.Group("/pnet-lab-addon/api/v1/sso")
 	group.Get("/login", controllers.SSOFirstFactor)
-	group.Post("/openid", controllers.SSOSecondFactor)
+	group.Get("/openid", controllers.SSOSecondFactor)
 }

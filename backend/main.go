@@ -30,7 +30,7 @@ func main() {
 	config := configs.FiberConfig()
 	logs.ZeroLogInit(configs.AppConfig.Debug)
 
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(&logs.ZeroLoggerConf{Name: "main"})
 	if err != nil {
 		panic(err)
 	}

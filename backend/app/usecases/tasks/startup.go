@@ -1,19 +1,16 @@
 package tasks
 
 import (
+	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/logs"
 	"golang.org/x/crypto/bcrypt"
-)
-
-var (
-	log = logs.NewZeroLogger("tasks")
 )
 
 type StartupFiberUC struct {
 	UserQueries         *queries.UserQueries
 	UserPasswordQueries *queries.UserPasswordQueries
+	*zerolog.Logger
 }
 
 const UserDefaultEmail = "admin@admin.com"
@@ -44,7 +41,7 @@ func (u *StartupFiberUC) userDefaultCreate() error {
 		UserID:       entity.ID,
 		HashPassword: string(hashPassword),
 	})
-	log.Info().Msg("User default create")
+	u.Logger.Info().Msg("User default create")
 	return err
 }
 

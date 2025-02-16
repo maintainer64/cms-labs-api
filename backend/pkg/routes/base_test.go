@@ -6,6 +6,8 @@ import (
 	"net/http/httptest"
 	"strings"
 
+	"gitlab.com/a10869/api-modules/shared/logs"
+
 	"github.com/goccy/go-json"
 
 	"github.com/google/uuid"
@@ -47,7 +49,7 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 		f.DB.Create(&entity)
 		userID = entity.ID
 	}
-	container, _ := di.NewDIContainer()
+	container, _ := di.NewDIContainer(&logs.ZeroLoggerConf{})
 	uc := container.AuthTokenManager()
 	token, _ := uc.NewJWTByUserId(userID, serverID, state)
 	return "Bearer " + token.AccessToken
@@ -66,7 +68,7 @@ func NewFiberTestHTTP() *FiberTestHTTP {
 	app := fiber.New()
 	middleware.FiberMiddleware(app)
 	FiberRoutes(app)
-	db, _ := database.MysqlConnection()
+	db, _ := database.MysqlConnection(logs.NewZeroLogger(&logs.ZeroLoggerConf{}))
 	return &FiberTestHTTP{
 		App: app,
 		DB:  db,

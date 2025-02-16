@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	"gitlab.com/a10869/api-modules/backend/app/queries"
@@ -27,6 +29,7 @@ type SSOTokenUC struct {
 	TokenAttemptQueries *queries.TokenAttemptQueries
 	TokenManager        *TokenManager
 	PNETServerQueries   *queries.PNETServerQueries
+	Logger              *zerolog.Logger
 }
 
 // SwaggerSSOToken copy of cms_client.SSOToken
@@ -96,7 +99,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if err != nil {
 		return nil, err
 	}
-	log.Info().Msg(fmt.Sprintf("Token get by auth code by server_id: %+v", server.ID))
+	u.Logger.Info().Msg(fmt.Sprintf("Token get by auth code by server_id: %+v", server.ID))
 	if !server.IsActive {
 		return nil, errors.New("server is not active")
 	}
@@ -119,7 +122,7 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	if err != nil {
 		return nil, err
 	}
-	log.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
+	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
 	if attempt.ServerID == 0 {
 		return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, "")
 	}

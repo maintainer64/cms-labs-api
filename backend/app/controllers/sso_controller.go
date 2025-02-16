@@ -3,6 +3,8 @@ package controllers
 import (
 	"net/url"
 
+	"gitlab.com/a10869/api-modules/shared/logs"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
@@ -59,6 +61,7 @@ func SSOAuthorize(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/sso/authorize [post]
 func SSOAuthorizePost(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
@@ -69,7 +72,7 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
 	dto.UserID = claims.Id
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -97,12 +100,13 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/sso/token [post]
 func SSOToken(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.SSOTokenInputDTO{}
 	dto.GrantType = c.FormValue("grant_type", "")
 	dto.RedirectUri = c.FormValue("redirect_uri", "")
 	dto.Code = c.FormValue("code", "")
 	dto.RefreshToken = c.FormValue("refresh_token", "")
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -127,9 +131,10 @@ func SSOToken(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/sso/introspect [post]
 func SSOIntrospect(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.SSOIntrospectInputDTO{}
 	dto.Token = c.FormValue("token", "")
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}

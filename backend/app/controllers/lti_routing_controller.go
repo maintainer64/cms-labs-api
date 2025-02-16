@@ -6,6 +6,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
@@ -20,6 +21,7 @@ import (
 // @Security ApiKeyAuth
 // @Router /v1/lti-routing/upsert [post]
 func LTIRoutingCreate(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
@@ -31,7 +33,7 @@ func LTIRoutingCreate(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -55,6 +57,7 @@ func LTIRoutingCreate(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/lti-routing/list [post]
 func LTIRoutingList(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
@@ -66,7 +69,7 @@ func LTIRoutingList(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -90,6 +93,7 @@ func LTIRoutingList(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/lti-routing/delete [post]
 func LTIRoutingDelete(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
@@ -101,7 +105,7 @@ func LTIRoutingDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}
@@ -125,6 +129,7 @@ func LTIRoutingDelete(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/lti-routing/get [post]
 func LTIRoutingGet(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
@@ -136,7 +141,7 @@ func LTIRoutingGet(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	container, err := di.NewDIContainer()
+	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
 	}

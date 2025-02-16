@@ -16,17 +16,13 @@ type UserRoleQueries struct {
 
 func (q *UserRoleQueries) GetOrCreateDefault() (models.UserRole, error) {
 	entityDB := models.UserRole{}
-	q.Where("name = ?", UserRoleStudent).Find(&entityDB)
+	q.Where("user_role_name = ?", UserRoleStudent).Find(&entityDB)
 	if entityDB.UserRoleID != 0 {
 		return entityDB, nil
 	}
-	entityDB.UserRoleID = 0
 	entityDB.UserRoleName = UserRoleStudent
 	entityDB.UserRoleWorkspace = "/"
 	entityDB.UserRoleNote = UserRoleStudentDescription
-	entityDB.UserRoleRAM = 0
-	entityDB.UserRoleCPU = 0
-	entityDB.UserRoleHDD = 0
-	result := q.Create(entityDB)
+	result := q.Create(&entityDB)
 	return entityDB, result.Error
 }

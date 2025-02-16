@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
@@ -13,6 +15,7 @@ import (
 
 type LTIRoutingQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 func (q *LTIRoutingQueries) Get(id uint) (models.LTIRouting, error) {
@@ -35,8 +38,8 @@ func (q *LTIRoutingQueries) Upsert(entity *models.LTIRouting) error {
 	q.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		log.Debug().Msg(fmt.Sprintf("LTIRoutingQueries: entity update: %+v", entityDB))
-		log.Info().Msg(fmt.Sprintf("LTIRoutingQueries: entity update id=%+v", entityDB.ID))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTIRoutingQueries: entity update: %+v", entityDB))
+		q.Logger.Info().Msg(fmt.Sprintf("LTIRoutingQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
@@ -44,8 +47,8 @@ func (q *LTIRoutingQueries) Upsert(entity *models.LTIRouting) error {
 		return result.Error
 	} else {
 		// Create
-		log.Debug().Msg(fmt.Sprintf("LTIRoutingQueries: entity create: %+v", entity))
-		log.Info().Msg(fmt.Sprintf("LTIRoutingQueries: entity create name=%+v", entity.Name))
+		q.Logger.Debug().Msg(fmt.Sprintf("LTIRoutingQueries: entity create: %+v", entity))
+		q.Logger.Info().Msg(fmt.Sprintf("LTIRoutingQueries: entity create name=%+v", entity.Name))
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
@@ -65,12 +68,12 @@ func (q *LTIRoutingQueries) List(
 		q.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
-	log.Debug().Msg(fmt.Sprintf("LTIRoutingQueries list: count %+v", count))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIRoutingQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
 		q.Limit(limit).Offset(offset),
 	).Find(&entities)
-	log.Debug().Msg(fmt.Sprintf("LTIRoutingQueries list: entities %+v", entities))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTIRoutingQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
@@ -94,7 +97,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 	tx := q.Model(&models.LTIRouting{})
 	tx = tx.Order(`created_at desc`).Limit(1).Offset(0)
 	execute := false
-	log.Debug().Msg(
+	q.Logger.Debug().Msg(
 		fmt.Sprintf(
 			"LTIRoutingQueries: GetRelevantRouting execute by params linkId=%+v title=%+v description=%+v customParams=%+v",
 			linkId,
@@ -120,14 +123,14 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 		execute = true
 	}
 	if !execute {
-		log.Info().Msg("LTIRoutingQueries: GetRelevantRouting not execute null params")
+		q.Logger.Info().Msg("LTIRoutingQueries: GetRelevantRouting not execute null params")
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
 			Exception: errors.New("LTIRouting not found"),
 		}
 	}
 	result := tx.Scan(&entity)
-	log.Info().Msg(
+	q.Logger.Info().Msg(
 		fmt.Sprintf(
 			"LTIRoutingQueries: GetRelevantRouting execute by params linkId=%+v; result: routingId=%+v routingName=%+v",
 			linkId,
@@ -136,9 +139,9 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 		),
 	)
 	if entity.ID == 0 {
-		log.Info().Msg("LTIRoutingQueries: GetRelevantRouting default params")
+		q.Logger.Info().Msg("LTIRoutingQueries: GetRelevantRouting default params")
 		q.Model(&models.LTIRouting{}).Where("is_default = ?", true).Scan(&entity).Order(`created_at desc`).Limit(1).Offset(0)
-		log.Info().Msg(
+		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"LTIRoutingQueries: GetRelevantRouting fetch default result: routingId=%+v routingName=%+v",
 				entity.ID,
@@ -151,6 +154,6 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 
 func (q *LTIRoutingQueries) Delete(id uint) error {
 	_ = q.Where("id = ?", id).Delete(&models.LTIRouting{})
-	log.Info().Msg(fmt.Sprintf("LTIRoutingQueries: delete entity by id: %+v", id))
+	q.Logger.Info().Msg(fmt.Sprintf("LTIRoutingQueries: delete entity by id: %+v", id))
 	return nil
 }

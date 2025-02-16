@@ -16,7 +16,7 @@ import (
 
 // FindRegistrationByIssuerAndClientID retrieves a registration from the SQL database.
 func (q *LTIFormQueries) FindRegistrationByIssuerAndClientID(issuer, clientID string) (Registration, error) {
-	log.Info().Msg(fmt.Sprintf(
+	q.Logger.Info().Msg(fmt.Sprintf(
 		"LTIFormQueries: find registration by issuer: %+v and clientID: %+v",
 		issuer,
 		clientID,
@@ -64,7 +64,7 @@ func (q *LTIFormQueries) FindRegistrationByIssuerAndClientID(issuer, clientID st
 // FindDeployment looks up and returns either a Deployment by the issuer and deployment ID or the datastore error
 // ErrDeploymentNotFound.
 func (q *LTIFormQueries) FindDeployment(issuer, deploymentID string) (Deployment, error) {
-	log.Info().Msg(fmt.Sprintf(
+	q.Logger.Info().Msg(fmt.Sprintf(
 		"LTIFormQueries: find deployment by issuer: %+v and deploymentID: %+v",
 		issuer,
 		deploymentID,

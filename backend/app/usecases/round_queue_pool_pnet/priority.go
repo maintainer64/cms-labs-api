@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/rs/zerolog"
+
 	"github.com/thoas/go-funk"
 )
 
@@ -59,7 +61,7 @@ func (s ByPriority) SumUnitRate() int {
 	return funk.SumInt(funk.Map(s, getUnitRateServerStats).([]int))
 }
 
-func (s ByPriority) GenerateSequencePriorityDistribute() []uint {
+func (s ByPriority) GenerateSequencePriorityDistribute(log *zerolog.Logger) []uint {
 	log.Info().Msg("ServerStats array generating sequence priority distribute")
 	s.NormalizeUnitRate()
 	var serversSequenceIDS []uint

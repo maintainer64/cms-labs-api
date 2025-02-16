@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gorm.io/gorm"
 )
 
 type LTINonceTokenQueries struct {
 	*gorm.DB
+	*zerolog.Logger
 }
 
 func (q *LTINonceTokenQueries) ClearOldValues() error {
@@ -18,7 +21,7 @@ func (q *LTINonceTokenQueries) ClearOldValues() error {
 	if result.Error != nil {
 		return result.Error
 	}
-	log.Info().Msg(fmt.Sprintf("LTINonceTokenQueries: cleared old values %+v", timeThreshold))
+	q.Logger.Info().Msg(fmt.Sprintf("LTINonceTokenQueries: cleared old values %+v", timeThreshold))
 	return nil
 }
 
@@ -32,9 +35,9 @@ func (q *LTINonceTokenQueries) StoreNonce(nonce string, targetLinkURI string) er
 	entity.TargetLinkURI = targetLinkURI
 	entity.CreatedAt = time.Now().UTC()
 	entity.UpdatedAt = time.Now().UTC()
-	log.Debug().Msg(fmt.Sprintf("LTINonceTokenQueries: store nonce %+v", entity))
+	q.Logger.Debug().Msg(fmt.Sprintf("LTINonceTokenQueries: store nonce %+v", entity))
 	result := q.Create(entity)
-	log.Info().Msg(fmt.Sprintf("LTINonceTokenQueries: stored nonce: %+v", entity.Nonce))
+	q.Logger.Info().Msg(fmt.Sprintf("LTINonceTokenQueries: stored nonce: %+v", entity.Nonce))
 	return result.Error
 }
 
@@ -46,13 +49,13 @@ func (q *LTINonceTokenQueries) TestAndClearNonce(
 		return err
 	}
 	entityDB := &models.LTINonceToken{}
-	log.Debug().Msg(fmt.Sprintf(
+	q.Logger.Debug().Msg(fmt.Sprintf(
 		"LTINonceTokenQueries: check nonce: %+v and targetLinkURI: %+v",
 		nonce,
 		targetLinkURI,
 	))
 	result := q.Where("nonce = ?", nonce).Where("target_link_uri = ?", targetLinkURI).Find(&entityDB)
-	log.Info().Msg(fmt.Sprintf(
+	q.Logger.Info().Msg(fmt.Sprintf(
 		"LTINonceTokenQueries: checked nonce token: %+v",
 		nonce,
 	))

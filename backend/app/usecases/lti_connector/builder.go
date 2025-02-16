@@ -1,6 +1,7 @@
 package lti_connector
 
 import (
+	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	datastore "gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector/connector"
@@ -12,6 +13,7 @@ type LTIConnectorAPI struct {
 	LTILaunchDataQueries       *datastore.LTILaunchDataQueries
 	UserQueries                *queries.UserQueries
 	LTIProtocolDatastoreConfig *datastore.Config
+	*zerolog.Logger
 }
 
 func (c *LTIConnectorAPI) ConnectorByUserID(userID uint) (*connector.Connector, error) {
@@ -36,6 +38,7 @@ func (c *LTIConnectorAPI) ConnectorByLaunchID(launchID string) (*connector.Conne
 		c.LTIProtocolDatastoreConfig,
 		launchEntity.ID,
 		form.LTIClientID,
+		c.Logger,
 	)
 	if err != nil {
 		return nil, err
