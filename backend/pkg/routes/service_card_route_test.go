@@ -225,3 +225,62 @@ func TestV1ServiceCardGetNotFound(t *testing.T) {
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Contains(t, body, "not found", description) // Adjust based on your error response format
 }
+
+func TestV1ServiceCardDelete(t *testing.T) {
+	description := "delete service card"
+	f := NewFiberTestHTTP()
+	authHeader := f.AuthorizationUser(0, 0, "")
+
+	// Clear Table
+	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
+
+	// Create a test service card
+
+	entity := models.ServiceCard{}
+	entity.ImageUrl = "https://example.com/image.jpg"
+	entity.Url = "https://example.com"
+	entity.Name = "Test Service"
+	entity.Description = "Test Description"
+	entity.Order = 1
+	entity.IsActive = true
+	f.DB.Create(&entity)
+
+	input := usecases.ServiceCardDeleteInputDTO{
+		ID: entity.ID, // Use the ID of the created entity
+	}
+
+	expectedCode := 200
+	statusCode, body := f.Request(
+		"POST",
+		"/api/v1/service-card/delete",
+		FiberRequestPayload(input),
+		authHeader,
+	)
+	bodyModel := usecases.ServiceCardDeleteResponse{}
+	_ = json.Unmarshal([]byte(body), &bodyModel)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.Equal(t, entity.ID, bodyModel.Result.ID, description)
+
+	var entityDB models.ServiceCard
+	result := f.DB.First(&entityDB, entity.ID)
+	assert.Equal(t, result.Error.Error(), "record not found", description)
+}
+
+func TestV1NotFound(t *testing.T) {
+	description := "not found route"
+	f := NewFiberTestHTTP()
+	expectedCode := 404
+	statusCode, body := f.Request(
+		"POST",
+		"/api/v1/not-found-route",
+		FiberRequestPayload(""),
+		"",
+	)
+	bodyModel := map[string]interface{}{}
+	_ = json.Unmarshal([]byte(body), &bodyModel)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.True(t, bodyModel["error"].(bool), description)
+	assert.Equal(t, "sorry, endpoint is not found", bodyModel["msg"].(string), description)
+}

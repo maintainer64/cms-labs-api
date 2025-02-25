@@ -3,13 +3,15 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
+	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 // ServiceCardCreate func for creates a new ServiceCard.
-// @Description Create service_card.
+// @Description Create service_card. Roles: [admin, instructor]
 // @Summary create service_card
 // @Tags ServiceCard
 // @Accept json
@@ -19,6 +21,12 @@ import (
 // @Security ApiKeyAuth
 // @Router /v1/service-card/upsert [post]
 func ServiceCardCreate(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardEditInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
@@ -39,7 +47,7 @@ func ServiceCardCreate(c *fiber.Ctx) error {
 }
 
 // ServiceCardList func for view of list ServiceCard.
-// @Description List service_card.
+// @Description List service_card. Roles: [admin, instructor]
 // @Summary list service_card
 // @Tags ServiceCard
 // @Accept json
@@ -49,6 +57,12 @@ func ServiceCardCreate(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/service-card/list [post]
 func ServiceCardList(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardListInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
@@ -69,7 +83,7 @@ func ServiceCardList(c *fiber.Ctx) error {
 }
 
 // ServiceCardDelete func for delete ServiceCard.
-// @Description Delete service_card.
+// @Description Delete service_card. Roles: [admin, instructor]
 // @Summary delete service_card
 // @Tags ServiceCard
 // @Accept json
@@ -79,6 +93,12 @@ func ServiceCardList(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/service-card/delete [post]
 func ServiceCardDelete(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardDeleteInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
@@ -99,7 +119,7 @@ func ServiceCardDelete(c *fiber.Ctx) error {
 }
 
 // ServiceCardGet func for full model ServiceCard.
-// @Description get service_card.
+// @Description get service_card. Roles: [admin, instructor]
 // @Summary get service_card
 // @Tags ServiceCard
 // @Accept json
@@ -109,6 +129,12 @@ func ServiceCardDelete(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/service-card/get [post]
 func ServiceCardGet(c *fiber.Ctx) error {
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.ServiceCardGetInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
