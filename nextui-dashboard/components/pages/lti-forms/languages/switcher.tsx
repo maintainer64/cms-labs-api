@@ -32,7 +32,7 @@ const LanguageSwitcher = () => {
       onClick={() => {
         setLang(item.lang);
       }}
-      className='flex flex-col items-center p-4 border rounded-lg shadow bg-gray-100 hover:bg-gray-300 cursor-pointer'
+      className='flex flex-col items-center p-4 border rounded-lg shadow bg-default-50 hover:bg-default-100 cursor-pointer'
     >
       <Image src={item.img} alt={item.lang} width='20' height='20' className='w-16 h-16 mb-2' />
       <span>{item.text}</span>
@@ -40,8 +40,8 @@ const LanguageSwitcher = () => {
   ));
 
   return (
-    <div className='flex items-center justify-center h-screen bg-gray-100'>
-      <div className='relative p-6 bg-gray-100 rounded-lg shadow-lg max-w-md mx-auto'>
+    <div className='flex items-center justify-center h-screen bg-background'>
+      <div className='relative p-6 bg-default-100 rounded-lg shadow-lg max-w-md mx-auto'>
         <button onClick={handleClose} className='absolute top-2 right-2 text-gray-500 hover:text-gray-700'>
           &times;
         </button>

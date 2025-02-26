@@ -235,6 +235,29 @@ export type models_ServiceCardListItem = {
   url: string;
 };
 
+export type models_UNLFile = {
+  /**
+   * Содержимое файла
+   */
+  content?: Array<number>;
+  created_at: string;
+  deleted_at?: string;
+  id?: number;
+  path: string;
+  synced_id?: string;
+  type?: string;
+  updated_at: string;
+};
+
+export type models_UNLFileListItem = {
+  created_at: string;
+  deleted_at?: string;
+  id?: number;
+  path: string;
+  type?: string;
+  updated_at: string;
+};
+
 export type models_User = {
   created_at: string;
   deleted_at?: string;
@@ -625,6 +648,52 @@ export type usecases_ServiceCardListResponse = {
   result?: usecases_ServiceCardListOutputDTO;
 };
 
+export type usecases_UNLFileGetInputDTO = {
+  id?: number;
+};
+
+export type usecases_UNLFileGetOutputDTO = {
+  model?: models_UNLFile;
+};
+
+export type usecases_UNLFileGetResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_UNLFileGetOutputDTO;
+};
+
+export type usecases_UNLFileListInputDTO = {
+  limit?: number;
+  offset?: number;
+  search?: string;
+  type?: Array<string>;
+};
+
+export type usecases_UNLFileListOutputDTO = {
+  model: Array<models_UNLFileListItem>;
+};
+
+export type usecases_UNLFileListResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_UNLFileListOutputDTO;
+};
+
+export type usecases_UNLFileSyncInputDTO = {
+  branch?: string;
+  repository?: string;
+};
+
+export type usecases_UNLFileSyncOutputDTO = {
+  count?: number;
+};
+
+export type usecases_UNLFileSyncResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_UNLFileSyncOutputDTO;
+};
+
 export type usecases_UserEditInputDTO = {
   email: string;
   group_name?: string;
@@ -986,6 +1055,33 @@ export type PostV1TokenRenewData = {
 };
 
 export type PostV1TokenRenewResponse = auth_SwaggerSSOTokenResponse;
+
+export type PostV1UnlFileGetData = {
+  /**
+   * unl_file id
+   */
+  form: usecases_UNLFileGetInputDTO;
+};
+
+export type PostV1UnlFileGetResponse = usecases_UNLFileGetResponse;
+
+export type PostV1UnlFileListData = {
+  /**
+   * unl_file list info
+   */
+  form: usecases_UNLFileListInputDTO;
+};
+
+export type PostV1UnlFileListResponse = usecases_UNLFileListResponse;
+
+export type PostV1UnlFileSyncData = {
+  /**
+   * sync params
+   */
+  form: usecases_UNLFileSyncInputDTO;
+};
+
+export type PostV1UnlFileSyncResponse = usecases_UNLFileSyncResponse;
 
 export type PostV1UserGetData = {
   /**

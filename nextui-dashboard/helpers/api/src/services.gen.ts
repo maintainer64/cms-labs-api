@@ -65,6 +65,12 @@ import type {
   PostV1TokenPasswordChangeResponse,
   PostV1TokenRenewData,
   PostV1TokenRenewResponse,
+  PostV1UnlFileGetData,
+  PostV1UnlFileGetResponse,
+  PostV1UnlFileListData,
+  PostV1UnlFileListResponse,
+  PostV1UnlFileSyncData,
+  PostV1UnlFileSyncResponse,
   PostV1UserGetData,
   PostV1UserGetResponse,
   PostV1UserListData,
@@ -395,7 +401,7 @@ export const postV1PnetServerUpsert = (
 
 /**
  * delete service_card
- * Delete service_card.
+ * Delete service_card. Roles: [admin, instructor]
  * @param data The data for the request.
  * @param data.form service_card id
  * @returns usecases_ServiceCardDeleteResponse OK
@@ -413,7 +419,7 @@ export const postV1ServiceCardDelete = (
 
 /**
  * get service_card
- * get service_card.
+ * get service_card. Roles: [admin, instructor]
  * @param data The data for the request.
  * @param data.form service_card id
  * @returns usecases_ServiceCardGetResponse OK
@@ -431,7 +437,7 @@ export const postV1ServiceCardGet = (
 
 /**
  * list service_card
- * List service_card.
+ * List service_card. Roles: [admin, instructor]
  * @param data The data for the request.
  * @param data.form service_card list info
  * @returns usecases_ServiceCardListResponse OK
@@ -449,7 +455,7 @@ export const postV1ServiceCardList = (
 
 /**
  * create service_card
- * Create service_card.
+ * Create service_card. Roles: [admin, instructor]
  * @param data The data for the request.
  * @param data.form service_card form info
  * @returns usecases_ServiceCardEditResponse OK
@@ -638,6 +644,54 @@ export const postV1TokenRenew = (data: PostV1TokenRenewData): CancelablePromise<
   return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/token/renew',
+    body: data.form
+  });
+};
+
+/**
+ * get unl_file
+ * get unl_file.
+ * @param data The data for the request.
+ * @param data.form unl_file id
+ * @returns usecases_UNLFileGetResponse OK
+ * @throws ApiError
+ */
+export const postV1UnlFileGet = (data: PostV1UnlFileGetData): CancelablePromise<PostV1UnlFileGetResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/unl-file/get',
+    body: data.form
+  });
+};
+
+/**
+ * list unl_file
+ * List unl_file.
+ * @param data The data for the request.
+ * @param data.form unl_file list info
+ * @returns usecases_UNLFileListResponse OK
+ * @throws ApiError
+ */
+export const postV1UnlFileList = (data: PostV1UnlFileListData): CancelablePromise<PostV1UnlFileListResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/unl-file/list',
+    body: data.form
+  });
+};
+
+/**
+ * sync from git unl_file
+ * sync from git unl_file.
+ * @param data The data for the request.
+ * @param data.form sync params
+ * @returns usecases_UNLFileSyncResponse OK
+ * @throws ApiError
+ */
+export const postV1UnlFileSync = (data: PostV1UnlFileSyncData): CancelablePromise<PostV1UnlFileSyncResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/unl-file/sync',
     body: data.form
   });
 };

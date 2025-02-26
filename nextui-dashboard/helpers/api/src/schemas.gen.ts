@@ -638,6 +638,66 @@ export const models_ServiceCardListItemSchema = {
   }
 } as const;
 
+export const models_UNLFileSchema = {
+  type: 'object',
+  required: ['created_at', 'path', 'updated_at'],
+  properties: {
+    content: {
+      description: 'Содержимое файла',
+      type: 'array',
+      items: {
+        type: 'integer'
+      }
+    },
+    created_at: {
+      type: 'string'
+    },
+    deleted_at: {
+      type: 'string'
+    },
+    id: {
+      type: 'integer'
+    },
+    path: {
+      type: 'string'
+    },
+    synced_id: {
+      type: 'string'
+    },
+    type: {
+      type: 'string'
+    },
+    updated_at: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const models_UNLFileListItemSchema = {
+  type: 'object',
+  required: ['created_at', 'path', 'updated_at'],
+  properties: {
+    created_at: {
+      type: 'string'
+    },
+    deleted_at: {
+      type: 'string'
+    },
+    id: {
+      type: 'integer'
+    },
+    path: {
+      type: 'string'
+    },
+    type: {
+      type: 'string'
+    },
+    updated_at: {
+      type: 'string'
+    }
+  }
+} as const;
+
 export const models_UserSchema = {
   type: 'object',
   required: ['created_at', 'group_name', 'updated_at', 'user_role'],
@@ -1656,6 +1716,127 @@ export const usecases_ServiceCardListResponseSchema = {
     },
     result: {
       $ref: '#/definitions/usecases.ServiceCardListOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_UNLFileGetInputDTOSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_UNLFileGetOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    model: {
+      $ref: '#/definitions/models.UNLFile'
+    }
+  }
+} as const;
+
+export const usecases_UNLFileGetResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.UNLFileGetOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_UNLFileListInputDTOSchema = {
+  type: 'object',
+  properties: {
+    limit: {
+      type: 'integer'
+    },
+    offset: {
+      type: 'integer'
+    },
+    search: {
+      type: 'string'
+    },
+    type: {
+      type: 'array',
+      items: {
+        type: 'string'
+      }
+    }
+  }
+} as const;
+
+export const usecases_UNLFileListOutputDTOSchema = {
+  type: 'object',
+  required: ['model'],
+  properties: {
+    model: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/models.UNLFileListItem'
+      }
+    }
+  }
+} as const;
+
+export const usecases_UNLFileListResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.UNLFileListOutputDTO'
+    }
+  }
+} as const;
+
+export const usecases_UNLFileSyncInputDTOSchema = {
+  type: 'object',
+  properties: {
+    branch: {
+      type: 'string'
+    },
+    repository: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const usecases_UNLFileSyncOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    count: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const usecases_UNLFileSyncResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/usecases.UNLFileSyncOutputDTO'
     }
   }
 } as const;

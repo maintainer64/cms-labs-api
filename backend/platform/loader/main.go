@@ -12,18 +12,7 @@ import (
 
 func main() {
 	stmts, err := gormschema.New("mysql").Load(
-		&models.LTIAccessToken{},
-		&models.LTIForm{},
-		&models.LTILaunchData{},
-		&models.LTINonceToken{},
-		&models.PNETServer{},
-		&models.User{},
-		&models.UserPassword{},
-		&models.TokenAttempt{},
-		&models.RoundQueuePool{},
-		&models.LTIRouting{},
-		&models.LTIAttempt{},
-		&models.ServiceCard{},
+		&models.UNLFile{},
 	)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load gorm schema: %v\n", err)

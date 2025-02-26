@@ -453,6 +453,51 @@ definitions:
     - updated_at
     - url
     type: object
+  models.UNLFile:
+    properties:
+      content:
+        description: Содержимое файла
+        items:
+          type: integer
+        type: array
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      path:
+        type: string
+      synced_id:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - path
+    - updated_at
+    type: object
+  models.UNLFileListItem:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      path:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - path
+    - updated_at
+    type: object
   models.User:
     properties:
       created_at:
@@ -1161,6 +1206,86 @@ definitions:
     - error
     - msg
     type: object
+  usecases.UNLFileGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.UNLFileGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.UNLFile'
+    type: object
+  usecases.UNLFileGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UNLFileGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.UNLFileListInputDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+      type:
+        items:
+          type: string
+        type: array
+    type: object
+  usecases.UNLFileListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.UNLFileListItem'
+        type: array
+    required:
+    - model
+    type: object
+  usecases.UNLFileListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UNLFileListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.UNLFileSyncInputDTO:
+    properties:
+      branch:
+        type: string
+      repository:
+        type: string
+    type: object
+  usecases.UNLFileSyncOutputDTO:
+    properties:
+      count:
+        type: integer
+    type: object
+  usecases.UNLFileSyncResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UNLFileSyncOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
   usecases.UserEditInputDTO:
     properties:
       email:
@@ -1711,7 +1836,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Delete service_card.
+      description: 'Delete service_card. Roles: [admin, instructor]'
       parameters:
       - description: service_card id
         in: body
@@ -1735,7 +1860,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: get service_card.
+      description: 'get service_card. Roles: [admin, instructor]'
       parameters:
       - description: service_card id
         in: body
@@ -1759,7 +1884,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: List service_card.
+      description: 'List service_card. Roles: [admin, instructor]'
       parameters:
       - description: service_card list info
         in: body
@@ -1783,7 +1908,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create service_card.
+      description: 'Create service_card. Roles: [admin, instructor]'
       parameters:
       - description: service_card form info
         in: body
@@ -1911,6 +2036,7 @@ paths:
       summary: Проверка состояния токена.
       tags:
       - SSO
+      - EXTERNAL
   /v1/sso/token:
     post:
       consumes:
@@ -1954,6 +2080,7 @@ paths:
       summary: Получение токена доступа и токена обновления.
       tags:
       - SSO
+      - EXTERNAL
   /v1/sso/userinfo:
     post:
       consumes:
@@ -2058,6 +2185,79 @@ paths:
       summary: renew access and refresh tokens
       tags:
       - Token
+  /v1/unl-file/get:
+    post:
+      consumes:
+      - application/json
+      description: get unl_file.
+      parameters:
+      - description: unl_file id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UNLFileGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UNLFileGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get unl_file
+      tags:
+      - UNLFile
+  /v1/unl-file/list:
+    post:
+      consumes:
+      - application/json
+      description: List unl_file.
+      parameters:
+      - description: unl_file list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UNLFileListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UNLFileListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list unl_file
+      tags:
+      - UNLFile
+  /v1/unl-file/sync:
+    post:
+      consumes:
+      - application/json
+      description: sync from git unl_file.
+      parameters:
+      - description: sync params
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UNLFileSyncInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UNLFileSyncResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: sync from git unl_file
+      tags:
+      - UNLFile
+      - EXTERNAL
   /v1/user/get:
     post:
       consumes:

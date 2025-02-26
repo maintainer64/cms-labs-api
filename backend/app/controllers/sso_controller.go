@@ -88,7 +88,7 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 // SSOToken Получить токен доступа и токен обновления.
 // @Description Получение токена доступа и токена обновления.
 // @Summary Получение токена доступа и токена обновления.
-// @Tags SSO
+// @Tags SSO, EXTERNAL
 // @Accept json
 // @Produce json
 // @Param grant_type formData string true "Тип авторизации [authorization_code, refresh_token]" Enums(authorization_code, refresh_token)
@@ -122,7 +122,7 @@ func SSOToken(c *fiber.Ctx) error {
 // SSOIntrospect Проверка состояния токена.
 // @Description Проверка состояния токена.
 // @Summary Проверка состояния токена.
-// @Tags SSO
+// @Tags SSO, EXTERNAL
 // @Accept json
 // @Produce json
 // @Param token formData string true "Токен доступа или токен обновления"

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"strings"
 
 	"gitlab.com/a10869/api-modules/shared/logs"
 
@@ -14,6 +15,7 @@ func NewServiceAuthMiddleware() fiber.Handler {
 	paths := []string{
 		"/api/v1/sso/token",
 		"/api/v1/sso/introspect",
+		"/api/v1/unl-file/sync",
 	}
 	return basicauth.New(
 		basicauth.Config{
@@ -43,7 +45,7 @@ func NewServiceAuthMiddleware() fiber.Handler {
 			},
 			Next: func(c *fiber.Ctx) bool {
 				for _, path := range paths {
-					if c.Path() == path {
+					if strings.HasPrefix(c.Path(), path) {
 						// NEED CHECK
 						return false
 					}

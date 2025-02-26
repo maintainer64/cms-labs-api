@@ -749,7 +749,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Delete service_card.",
+                "description": "Delete service_card. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -788,7 +788,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get service_card.",
+                "description": "get service_card. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -827,7 +827,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "List service_card.",
+                "description": "List service_card. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -866,7 +866,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create service_card.",
+                "description": "Create service_card. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -1033,7 +1033,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SSO"
+                    "SSO",
+                    "EXTERNAL"
                 ],
                 "summary": "Проверка состояния токена.",
                 "parameters": [
@@ -1077,7 +1078,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SSO"
+                    "SSO",
+                    "EXTERNAL"
                 ],
                 "summary": "Получение токена доступа и токена обновления.",
                 "parameters": [
@@ -1285,6 +1287,124 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/unl-file/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get unl_file.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UNLFile"
+                ],
+                "summary": "get unl_file",
+                "parameters": [
+                    {
+                        "description": "unl_file id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UNLFileGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UNLFileGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/unl-file/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List unl_file.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UNLFile"
+                ],
+                "summary": "list unl_file",
+                "parameters": [
+                    {
+                        "description": "unl_file list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UNLFileListInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UNLFileListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/unl-file/sync": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "sync from git unl_file.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UNLFile",
+                    "EXTERNAL"
+                ],
+                "summary": "sync from git unl_file",
+                "parameters": [
+                    {
+                        "description": "sync params",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UNLFileSyncInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UNLFileSyncResponse"
                         }
                     }
                 }
@@ -2149,6 +2269,72 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UNLFile": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "path",
+                "updated_at"
+            ],
+            "properties": {
+                "content": {
+                    "description": "Содержимое файла",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "synced_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UNLFileListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "path",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -3213,6 +3399,129 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.ServiceCardListOutputDTO"
+                }
+            }
+        },
+        "usecases.UNLFileGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.UNLFileGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.UNLFile"
+                }
+            }
+        },
+        "usecases.UNLFileGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UNLFileGetOutputDTO"
+                }
+            }
+        },
+        "usecases.UNLFileListInputDTO": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "usecases.UNLFileListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UNLFileListItem"
+                    }
+                }
+            }
+        },
+        "usecases.UNLFileListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UNLFileListOutputDTO"
+                }
+            }
+        },
+        "usecases.UNLFileSyncInputDTO": {
+            "type": "object",
+            "properties": {
+                "branch": {
+                    "type": "string"
+                },
+                "repository": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.UNLFileSyncOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.UNLFileSyncResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UNLFileSyncOutputDTO"
                 }
             }
         },
