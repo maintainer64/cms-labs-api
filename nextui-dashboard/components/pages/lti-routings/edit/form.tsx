@@ -13,6 +13,7 @@ import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { useLTIRoutingDelete } from '@/helpers/queries/lti-routing/delete';
 import { useLTIRoutingByID } from '@/helpers/queries/lti-routing/get';
 import { useLTIRoutingUpsert } from '@/helpers/queries/lti-routing/upsert';
+import { LabsPathInput, TestsPathInput } from './autoCompletePath';
 
 interface EditFormProps {
   id?: number;
@@ -41,7 +42,11 @@ export const LtiRoutingLabsType = () => {
   } = useLanguageBrowser();
   return [
     { key: 'default', label: LTIRouting.FieldPNETLabsTypeDefault },
-    { key: 'enumeration', label: LTIRouting.FieldPNETLabsTypeEnumeration }
+    { key: 'file', label: LTIRouting.FieldPNETLabsTypeFile },
+    {
+      key: 'enumeration',
+      label: LTIRouting.FieldPNETLabsTypeEnumeration
+    }
   ];
 };
 
@@ -181,21 +186,16 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                       <SelectItem key={type.key}>{type.label}</SelectItem>
                     ))}
                   </Select>
-                  <Input
+                  <LabsPathInput
+                    labsTypeUnl={values.pnet_labs_type ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsPath}
                     type='url'
                     value={values.pnet_labs_path ?? ''}
                     onChange={handleChange('pnet_labs_path')}
                   />
-                  <Input
-                    variant='bordered'
-                    label={LTIRouting.FieldPNETTestPath}
-                    type='url'
-                    value={values.pnet_test_path ?? ''}
-                    onChange={handleChange('pnet_test_path')}
-                  />
-                  <Input
+                  <TestsPathInput
+                    labsTypeUnl={values.pnet_labs_type ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETTestPath}
                     type='url'

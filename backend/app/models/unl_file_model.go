@@ -13,7 +13,7 @@ type UNLFileBase struct {
 
 type UNLFileSecret struct {
 	SyncedId string `gorm:"type:varchar(255)" json:"synced_id"`
-	Content  []byte `gorm:"type:mediumblob"` // Содержимое файла
+	Content  []byte `gorm:"type:mediumblob" json:"content"` // Содержимое файла
 }
 
 type UNLFileListItem struct {

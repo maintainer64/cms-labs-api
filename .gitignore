@@ -23,6 +23,8 @@ processed_migrations/
 
 # Node.js dependencies
 **/node_modules/
+**/.next/
+**/.vite/
 
 # Files
 hosts.ini

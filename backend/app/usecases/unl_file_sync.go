@@ -90,7 +90,7 @@ func (u *UNLFileSyncUC) Execute(dto UNLFileSyncInputDTO) (UNLFileSyncOutputDTO, 
 			return err
 		}
 		// Получение расширения файла
-		ext := filepath.Ext(path)
+		ext := strings.ReplaceAll(filepath.Ext(path), ".", "")
 		// Обновление файла в базе данных
 		var unlFile models.UNLFile
 		unlFile.Path = filePath

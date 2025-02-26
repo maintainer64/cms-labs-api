@@ -20,6 +20,7 @@ export const useLTIRoutingUpsert = (
           lti_title: values.lti_title,
           name: values.name,
           pinned_session_minutes: values.pinned_session_minutes || 0,
+          pnet_labs_type: values.pnet_labs_type,
           pnet_labs_path: values.pnet_labs_path,
           pnet_test_path: values.pnet_test_path,
           is_default: values.is_default

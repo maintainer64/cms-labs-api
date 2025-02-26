@@ -261,6 +261,7 @@ const en = {
     FieldPinnedSessionMinutes: 'Pinned session on minutes',
     FieldPNETLabsType: 'Type connection',
     FieldPNETLabsTypeDefault: 'Default',
+    FieldPNETLabsTypeFile: 'File',
     FieldPNETLabsTypeEnumeration: 'Enumeration',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',

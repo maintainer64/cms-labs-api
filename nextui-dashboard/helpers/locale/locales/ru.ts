@@ -262,6 +262,7 @@ const ru = {
     FieldPinnedSessionMinutes: 'Закрепить сессию в минутах',
     FieldPNETLabsType: 'Тип подключения',
     FieldPNETLabsTypeDefault: 'Прямое',
+    FieldPNETLabsTypeFile: 'Файл',
     FieldPNETLabsTypeEnumeration: 'Перечисление',
     FieldPNETLabsPath: 'Подключение к лабораторной работе',
     FieldPNETTestPath: 'Запуск тестов лабораторной работы',

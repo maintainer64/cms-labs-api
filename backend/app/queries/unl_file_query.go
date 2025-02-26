@@ -74,17 +74,18 @@ func (q *UNLFileQueries) List(
 func (q *UNLFileQueries) listFilter(search string, typeFile []string, tx *gorm.DB) *gorm.DB {
 	tx = unlFileNoBlobSelect(tx)
 	tx = tx.Order(`created_at desc`)
+
+	// Фильтр по deleted_at, чтобы исключить удаленные записи
+	tx = tx.Where(`deleted_at IS NULL`)
+
 	// Фильтр по typeFile, если он не пустой
 	if len(typeFile) > 0 {
 		tx = tx.Where("type IN ?", typeFile)
 	}
 
-	// Фильтр по deleted_at, чтобы исключить удаленные записи
-	tx = tx.Where("deleted_at IS NULL")
-
 	// Если search не пустой, добавляем условия для поиска по id или path
 	if search != "" {
-		tx = tx.Where("id = ? OR path LIKE ?", search, "%"+search+"%")
+		tx = tx.Where("id = ? OR path LIKE ?", search, fmt.Sprintf("%%%s%%", search))
 	}
 
 	return tx
