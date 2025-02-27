@@ -3,7 +3,7 @@ import { EditIcon } from '../../../icons/table/edit-icon';
 import { models_ServiceCardListItem } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
-import { Chip } from '@nextui-org/react';
+import { Chip } from '@heroui/react';
 
 interface Props {
   item: models_ServiceCardListItem;

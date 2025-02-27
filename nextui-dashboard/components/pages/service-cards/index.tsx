@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button } from '@heroui/react';
 import React from 'react';
 import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
 import { RoutesLocation } from '@/components/routes';

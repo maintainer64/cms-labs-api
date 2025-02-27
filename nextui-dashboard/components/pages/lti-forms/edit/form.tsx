@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { Formik } from 'formik';
 import { models_LTIForm } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
@@ -20,7 +20,7 @@ import { useAlert } from '@/components/alerts/hooks';
 import { Loading } from '@/components/scroll/loader';
 import { useLtiFormsByID } from '@/helpers/queries/lti-forms/get';
 import { useLTIFormsUpsert } from '@/helpers/queries/lti-forms/upsert';
-import { Textarea } from '@nextui-org/input';
+import { Textarea } from '@heroui/input';
 import { LtiFormURILTIMoodle } from '@/components/pages/lti-forms/edit/lti-forms-popup';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { useLTIFormsDelete } from '@/helpers/queries/lti-forms/delete';

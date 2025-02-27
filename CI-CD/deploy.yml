@@ -25,18 +25,3 @@ frontend-deploy:
   variables:
     FOLDER: front
     VERSION: ${PIPELINE_VERSION}
-
-docs-deploy:
-  stage: deploy
-  needs:
-    - docs-build
-  extends:
-    - .deploy-base-ssh
-  only:
-    - stage
-  image: ${DOCKER_IMAGE}
-  environment:
-    name: docs-${CI_COMMIT_REF_SLUG}
-  variables:
-    FOLDER: docs
-    VERSION: latest

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, useDisclosure } from '@nextui-org/react';
+import { Button, useDisclosure } from '@heroui/react';
 import useLanguageBrowser from '@/helpers/locale';
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
 
 interface UseConfirmPopupProps {
   title?: string;

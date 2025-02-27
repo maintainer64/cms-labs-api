@@ -1,5 +1,5 @@
 'use client';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Image } from '@nextui-org/react';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Image } from '@heroui/react';
 import React from 'react';
 import { CmsIcon } from '../icons/cms-icon';
 import { BottomIcon } from '../icons/sidebar/bottom-icon';

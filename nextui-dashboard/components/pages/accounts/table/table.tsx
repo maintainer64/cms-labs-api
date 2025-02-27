@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react';
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';

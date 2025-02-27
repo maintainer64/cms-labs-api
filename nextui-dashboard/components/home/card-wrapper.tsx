@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Link as LinkComponent } from '@nextui-org/link';
+import { Link as LinkComponent } from '@heroui/link';
 import { Link } from 'react-router-dom';
 import useLanguageBrowser from '@/helpers/locale';
 

@@ -2,7 +2,7 @@
 
 import { LoginSchema } from '@/helpers/schemas';
 import { LoginFormType } from '@/helpers/types';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import { useCallback } from 'react';
 import useLanguageBrowser from '@/helpers/locale';

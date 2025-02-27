@@ -1,6 +1,6 @@
-import { Input } from '@nextui-org/react';
+import { Input } from '@heroui/react';
 import React, { useState } from 'react';
-import { UseInputProps } from '@nextui-org/input/dist/use-input';
+import { UseInputProps } from '@heroui/input/dist/use-input';
 
 const EyeIconCrossed = () => {
   return (

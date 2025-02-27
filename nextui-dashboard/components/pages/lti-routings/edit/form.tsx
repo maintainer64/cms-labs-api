@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Accordion, AccordionItem, Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react';
+import { Accordion, AccordionItem, Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
 import { Formik } from 'formik';
 import { models_LTIRouting } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';

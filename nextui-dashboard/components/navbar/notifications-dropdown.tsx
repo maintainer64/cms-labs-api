@@ -1,4 +1,4 @@
-import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, NavbarItem } from '@nextui-org/react';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, NavbarItem } from '@heroui/react';
 import React from 'react';
 import { NotificationIcon } from '../icons/navbar/notificationicon';
 

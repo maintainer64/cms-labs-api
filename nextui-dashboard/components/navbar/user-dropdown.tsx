@@ -1,4 +1,4 @@
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@nextui-org/react';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@heroui/react';
 import React, { useCallback } from 'react';
 import { DarkModeSwitch } from './darkmodeswitch';
 import { userClearCookies } from '@/helpers/queries/jwt/userClearCookies';

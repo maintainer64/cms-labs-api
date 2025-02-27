@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import { usecases_UserPasswordChangeInputDTO } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';

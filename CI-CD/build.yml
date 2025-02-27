@@ -64,23 +64,6 @@ frontend-build-docker:
     - docker push $FRONTEND_CI_IMAGE:$PIPELINE_VERSION
     - echo "Deploying application..."
 
-
-docs-build:
-  stage: build
-  extends:
-    - .registry_login
-  only:
-    - stage
-  image: ${DOCKER_IMAGE}
-  needs:
-    - golang-test
-  script:
-    - echo "Building Docker image..."
-    - docker build --no-cache -t $DOCS_CI_IMAGE:latest . -f Dockerfile.docs
-    - echo "Pushing Docker image to GitLab Registry..."
-    - docker push $DOCS_CI_IMAGE:latest
-    - echo "Deploying application..."
-
 pnet-lab-addon-build:
   stage: build
   extends:

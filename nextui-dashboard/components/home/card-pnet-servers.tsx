@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select, SelectItem } from '@nextui-org/react';
+import { Select, SelectItem } from '@heroui/react';
 import { usePnetServerList } from '@/helpers/queries/pnet-server/get';
 import Chart, { Props } from 'react-apexcharts';
 import useLanguageBrowser from '@/helpers/locale';

@@ -5,7 +5,7 @@ import { Loading } from '@/components/scroll/loader';
 import React from 'react';
 import { ErrorModal } from '@/components/pages/auth/error';
 import useLanguageBrowser from '@/helpers/locale';
-import { Link } from '@nextui-org/react';
+import { Link } from '@heroui/react';
 
 export const LTIAttemptCreate = () => {
   const {

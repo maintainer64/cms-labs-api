@@ -1,6 +1,6 @@
 import useLanguageBrowser from '@/helpers/locale';
-import { Button, Input, useDisclosure } from '@nextui-org/react';
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';
+import { Button, Input, useDisclosure } from '@heroui/react';
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
 import React, { useState } from 'react';
 
 export const LtiFormURILTIMoodle = () => {

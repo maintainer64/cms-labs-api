@@ -65,21 +65,21 @@ export const CardPnetServersDistribute = () => {
           show: true
         },
         id: 'basic-bar',
-        foreColor: 'hsl(var(--nextui-default-800))'
+        foreColor: 'hsl(var(--heroui-default-800))'
       },
       xaxis: {
         min: 0,
         labels: {
           // show: false,
           style: {
-            colors: 'hsl(var(--nextui-default-800))'
+            colors: 'hsl(var(--heroui-default-800))'
           }
         },
         axisBorder: {
-          color: 'hsl(var(--nextui-nextui-default-200))'
+          color: 'hsl(var(--heroui-nextui-default-200))'
         },
         axisTicks: {
-          color: 'hsl(var(--nextui-nextui-default-200))'
+          color: 'hsl(var(--heroui-nextui-default-200))'
         }
       },
       yaxis: {
@@ -87,14 +87,14 @@ export const CardPnetServersDistribute = () => {
         min: 0.9,
         labels: {
           style: {
-            // hsl(var(--nextui-content1-foreground))
-            colors: 'hsl(var(--nextui-default-800))'
+            // hsl(var(--heroui-content1-foreground))
+            colors: 'hsl(var(--heroui-default-800))'
           }
         }
       },
       grid: {
         show: true,
-        borderColor: 'hsl(var(--nextui-default-200))',
+        borderColor: 'hsl(var(--heroui-default-200))',
         strokeDashArray: 0,
         position: 'back'
       },

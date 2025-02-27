@@ -13,16 +13,16 @@
 
 ## Монорепозиторий для модулей:
 
-1. [CMS Labs Core](//gitlab.com/a10869/api-modules/backend)
-2. [CMS Labs Front](//gitlab.com/a10869/api-modules/backend/nextui-dashboard)
-3. [PNET Lab Addon](//gitlab.com/a10869/api-modules/pnetlabaddon)
-4. [Go-Lang Shared](//gitlab.com/a10869/api-modules/shared)
-5. [Gen Model](//gitlab.com/a10869/api-modules/gen)
+1. [CMS Labs Core](backend/README.md)
+2. [CMS Labs Front](nextui-dashboard/README.md)
+3. [PNET Lab Addon](pnetlabaddon/README.md)
+4. [Go-Lang Shared](shared)
+5. [Gen Model](gen/README.md)
 
 ## Документация методов Swagger
 
-1. [CMS Labs Core](https://cms-lab.gubanov.site/api/docs)
-2. [PNET Lab Addon](https://editor-next.swagger.io/?url=https://cms-lab-docs.gubanov.site/files/app/gitlab.com/a10869/api-modules/pnetlabaddon/docs/swagger.json)
+1. [CMS Labs Core](backend/docs/swagger.json)
+2. [PNET Lab Addon](pnetlabaddon/docs/swagger.json)
 
 ## ⚡️ Быстрый старт
 

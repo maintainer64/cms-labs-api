@@ -1,8 +1,8 @@
 # CMS Labs FRONTEND
 
-Работает на Next-UI и Vite - сборщик
+Работает на Hero-UI и Vite - сборщик
 
-[NextUI](https://nextui.org/)
+[HeroUI](https://heroui.com/)
 
 ## Быстрый запуск
 

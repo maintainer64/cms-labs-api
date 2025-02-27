@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Button, Checkbox, Input } from '@nextui-org/react';
+import { Button, Checkbox, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import { models_ServiceCard } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';

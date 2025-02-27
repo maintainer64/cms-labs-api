@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@/components/sidebar/search-debounce-input';
-import { Input } from '@nextui-org/react';
+import { Input } from '@heroui/react';
 
 interface SearchInputProps {
   defaultValue?: string;

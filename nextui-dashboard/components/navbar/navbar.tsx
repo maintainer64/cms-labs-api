@@ -1,4 +1,4 @@
-import { Input, Link, Navbar, NavbarContent } from '@nextui-org/react';
+import { Input, Link, Navbar, NavbarContent } from '@heroui/react';
 import React from 'react';
 import { GithubIcon } from '../icons/navbar/github-icon';
 import { SupportIcon } from '../icons/navbar/support-icon';

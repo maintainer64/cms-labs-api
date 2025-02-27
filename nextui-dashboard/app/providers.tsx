@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { NextUIProvider } from '@nextui-org/system';
+import { HeroUIProvider } from '@heroui/system';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { ThemeProviderProps } from 'next-themes/dist/types';
 import { UserProfileProvider } from '@/components/providers/auth-jwt/context';
@@ -21,13 +21,13 @@ export function Providers({ themeProps }: ProvidersProps) {
       <BrowserRouter>
         <AlertProvider>
           <UserProfileProvider>
-            <NextUIProvider>
+            <HeroUIProvider>
               <NextThemesProvider defaultTheme='system' attribute='class' {...themeProps}>
                 <GroupAlerts>
                   <RoutesDynamic />
                 </GroupAlerts>
               </NextThemesProvider>
-            </NextUIProvider>
+            </HeroUIProvider>
           </UserProfileProvider>
         </AlertProvider>
       </BrowserRouter>

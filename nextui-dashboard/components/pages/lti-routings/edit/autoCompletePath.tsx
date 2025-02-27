@@ -1,8 +1,8 @@
-import { Autocomplete, AutocompleteItem, Input } from '@nextui-org/react';
+import { Autocomplete, AutocompleteItem, Input } from '@heroui/react';
 import { useUNLFileData } from '@/helpers/queries/unl-files/get';
 import React, { useState } from 'react';
 import useDebounce from '@/components/sidebar/search-debounce-input';
-import { InputProps } from '@nextui-org/input/dist/input';
+import { InputProps } from '@heroui/input/dist/input';
 
 interface AutoCompletePathProps extends InputProps {
   unlFileSearchTypes?: string[];

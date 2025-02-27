@@ -1,7 +1,7 @@
-import { InputOtp } from '@nextui-org/input-otp';
+import { InputOtp } from '@heroui/input-otp';
 import { useState } from 'react';
-import { Button, Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
-import { Divider } from '@nextui-org/divider';
+import { Button, Card, CardBody, CardFooter, CardHeader } from '@heroui/react';
+import { Divider } from '@heroui/divider';
 
 export type Teammate = {
   avatar: string;

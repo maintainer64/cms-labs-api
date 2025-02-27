@@ -1,8 +1,8 @@
-import { Avatar, Tooltip } from '@nextui-org/react';
-import { Badge } from '@nextui-org/badge';
+import { Avatar, Tooltip } from '@heroui/react';
+import { Badge } from '@heroui/badge';
 import { css, cx } from '@emotion/css';
 import dayjs from 'dayjs';
-import { UseAvatarProps } from '@nextui-org/avatar/dist/use-avatar';
+import { UseAvatarProps } from '@heroui/avatar/dist/use-avatar';
 
 interface CustomAvatarProps extends UseAvatarProps {
   tooltip: boolean;

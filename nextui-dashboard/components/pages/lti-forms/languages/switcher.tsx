@@ -1,6 +1,6 @@
 'use client';
 import { LanguageType } from '@/helpers/locale/locale';
-import { Image } from '@nextui-org/react';
+import { Image } from '@heroui/react';
 import FlagEn from './flagEn.svg';
 import FlagRu from './flagRu.svg';
 import useLanguageBrowser from '@/helpers/locale';

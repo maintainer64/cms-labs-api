@@ -1,4 +1,4 @@
-import { Chip } from '@nextui-org/react';
+import { Chip } from '@heroui/react';
 import React from 'react';
 import { EditIcon } from '../../../icons/table/edit-icon';
 import { models_UserListItem } from '@/helpers/api';
