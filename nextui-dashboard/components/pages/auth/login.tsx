@@ -36,7 +36,7 @@ export const Login = () => {
   if (user && user.id && params.redirect_uri) {
     const authSSO = useSSOAuth(params);
     if (authSSO.data?.result) {
-      // window.location.href = SSOAuthorizationComplete(authSSO.data?.result);
+      window.location.href = SSOAuthorizationComplete(authSSO.data?.result);
     }
     // @ts-ignore
     const text = authSSO.error?.body?.msg || locale.SSO.Wait;

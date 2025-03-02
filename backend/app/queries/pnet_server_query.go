@@ -141,7 +141,7 @@ func (q *PNETServerQueries) listFilter(filter PNETServerQueriesListDTO, tx *gorm
 
 	if filter.Search != "" {
 		searchPattern := "%" + filter.Search + "%"
-		tx = tx.Where("name LIKE ? OR url LIKE ? OR id = ?", searchPattern, searchPattern, filter.Search)
+		tx = tx.Where("name LIKE ? OR url LIKE ? OR id = ? OR client_id = ?", searchPattern, searchPattern, filter.Search, filter.Search)
 	}
 
 	return tx
