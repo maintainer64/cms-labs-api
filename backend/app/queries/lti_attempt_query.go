@@ -20,6 +20,12 @@ type LTIAttemptQueries struct {
 
 const MaxLimitCount = 5000
 
+func (q *LTIAttemptQueries) tableName(object interface{}) string {
+	stmt := &gorm.Statement{DB: q.DB}
+	_ = stmt.Parse(object)
+	return stmt.Schema.Table
+}
+
 func (q *LTIAttemptQueries) Get(id uint) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
 	result := q.First(&entity, id)
@@ -70,8 +76,8 @@ func (q *LTIAttemptQueries) GetActiveByUserId(userId uint) (models.LTIAttempt, e
 	return entity, result.Error
 }
 
-func (q *LTIAttemptQueries) GetByRoomNumber(roomNumber *int64) ([]models.LTIAttemptListItem, error) {
-	var entities []models.LTIAttemptListItem
+func (q *LTIAttemptQueries) GetByRoomNumber(roomNumber *int64) ([]models.LTIAttempt, error) {
+	var entities []models.LTIAttempt
 	if roomNumber == nil {
 		return entities, nil
 	}
@@ -87,32 +93,35 @@ func (q *LTIAttemptQueries) GetByRoomNumber(roomNumber *int64) ([]models.LTIAtte
 }
 
 func (q *LTIAttemptQueries) List(
-	search string,
+	userIds []uint,
 	limit int,
 	offset int,
-) ([]models.LTIAttemptListItem, int64, error) {
+) ([]models.LTIAttemptListItem, error) {
 	var entities []models.LTIAttemptListItem
 	result := q.listFilter(
-		search,
-		q.Limit(MaxLimitCount).Offset(0),
-	).Find(&entities)
-	count := result.RowsAffected
-	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries list: count %+v", count))
-	result = q.listFilter(
-		search,
+		userIds,
 		q.Limit(limit).Offset(offset),
 	).Find(&entities)
-	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries list: entities %+v", entities))
-	return entities, count, result.Error
+	return entities, result.Error
 }
 
-func (q *LTIAttemptQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
-	tx = tx.Model(&models.LTIAttempt{})
-	tx = tx.Order(`created_at desc`)
-	if search == "" {
-		return tx
+func (q *LTIAttemptQueries) listFilter(userIds []uint, tx *gorm.DB) *gorm.DB {
+	tx = tx.Table(
+		q.tableName(&models.LTIAttempt{}) + " AS lti_attempts",
+	).Select(
+		"lti_attempts.id, lti_attempts.user_id, lti_attempts.pnet_server_id, lti_attempts.lti_routing_id, lti_attempts.expired_at, " +
+			"users.email as user_email, users.name as user_name, pnet_servers.name as pnet_server_name, lti_routings.name as lti_routing_name",
+	).Joins(
+		"join " + q.tableName(&models.User{}) + " users on users.id = lti_attempts.user_id",
+	).Joins(
+		"join " + q.tableName(&models.PNETServer{}) + " pnet_servers on pnet_servers.id = lti_attempts.pnet_server_id",
+	).Joins(
+		"join " + q.tableName(&models.LTIRouting{}) + " lti_routings on lti_routings.id = lti_attempts.lti_routing_id",
+	)
+	tx = tx.Order(`lti_attempts.created_at desc`)
+	if len(userIds) > 0 {
+		tx = tx.Where("lti_attempts.user_id IN (?)", userIds)
 	}
-	tx = tx.Or("id = ?", search)
 	return tx
 }
 

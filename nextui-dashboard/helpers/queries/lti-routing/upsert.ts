@@ -17,6 +17,8 @@ export const useLTIRoutingUpsert = (
           lti_description: values.lti_description,
           lti_params_task: values.lti_params_task,
           lti_task_id: values.lti_task_id,
+          lti_course_id: values.lti_course_id,
+          lti_sub_id: values.lti_sub_id,
           lti_title: values.lti_title,
           name: values.name,
           pinned_session_minutes: values.pinned_session_minutes || 0,

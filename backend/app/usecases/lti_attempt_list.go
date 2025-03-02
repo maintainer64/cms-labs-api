@@ -11,22 +11,20 @@ type LTIAttemptListUC struct {
 }
 
 type LTIAttemptListInputDTO struct {
-	Search string `json:"search"`
-	Limit  int    `json:"limit"`
-	Offset int    `json:"offset"`
+	UserIds []uint `json:"user_ids"`
+	Limit   int    `json:"limit"`
+	Offset  int    `json:"offset"`
 }
 
 type LTIAttemptListOutputDTO struct {
-	Model      []models.LTIAttemptListItem `json:"model" validate:"required"`
-	TotalCount int64                       `json:"total_count" validate:"required"`
+	Model []models.LTIAttemptListItem `json:"model" validate:"required"`
 }
 
 type LTIAttemptListResponse = response.Response[LTIAttemptListOutputDTO]
 
 func (u *LTIAttemptListUC) Execute(dto LTIAttemptListInputDTO) (LTIAttemptListOutputDTO, error) {
-	entities, count, err := u.LTIAttemptQueries.List(dto.Search, dto.Limit, dto.Offset)
+	entities, err := u.LTIAttemptQueries.List(dto.UserIds, dto.Limit, dto.Offset)
 	return LTIAttemptListOutputDTO{
-		Model:      entities,
-		TotalCount: count,
+		Model: entities,
 	}, err
 }

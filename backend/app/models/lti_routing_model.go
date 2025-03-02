@@ -9,7 +9,6 @@ type LTIRoutingSecret struct {
 	// LTI Params
 	LTITitle       string `gorm:"type:varchar(255);column:lti_title" json:"lti_title"`
 	LTIDescription string `gorm:"type:varchar(255);column:lti_description" json:"lti_description"`
-	LTITaskID      string `gorm:"type:varchar(255);column:lti_task_id" json:"lti_task_id"`
 	LTIParamsTask  string `gorm:"type:varchar(255);column:lti_params_task" json:"lti_params_task"`
 	// Параметры
 	Collaboration        int `gorm:"type:int;column:collaboration" json:"collaboration"`
@@ -20,6 +19,10 @@ type LTIRoutingSecret struct {
 	PNETLabsPath string `gorm:"type:varchar(255);column:pnet_labs_path" json:"pnet_labs_path"`
 	PNETTestPath string `gorm:"type:varchar(255);column:pnet_test_path" json:"pnet_test_path"`
 	IsDefault    bool   `gorm:"type:bool;column:is_default" json:"is_default"`
+	// Автоматические
+	LTITaskID   string `gorm:"type:varchar(255);column:lti_task_id" json:"lti_task_id"`
+	LTICourseID string `gorm:"type:varchar(255);column:lti_course_id" json:"lti_course_id"`
+	LTISubID    string `gorm:"type:varchar(255);column:lti_sub_id" json:"lti_sub_id"`
 }
 
 const (

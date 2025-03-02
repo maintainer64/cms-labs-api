@@ -68,6 +68,8 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 				u.user.Email,
 			),
 		)
+		attempt.ExtendExpiredAt(2)
+		_ = u.LTIAttemptQueries.Upsert(&attempt)
 		return u.PreparedResponseByAttempt(attempt)
 	}
 	pnetRoutes, err := u.RoundQueuePoolQueries.GetNextByType(models.RoundQueuePoolTypePNET)
@@ -123,7 +125,9 @@ func (u *LTIAttemptCreateUC) SearchRelevantRouting() *models.LTIRouting {
 		return nil
 	}
 	log.Debug().Msg(fmt.Sprintf("LTIAttemptCreateUC: SearchRelevantRouting launchData: %+v", jwtTokenPayload))
-	linkId := ""
+	ltiTaskId := ""
+	ltiCourseId := ""
+	ltiSubId := ""
 	title := ""
 	description := ""
 	customParams := make([]string, 0)
@@ -132,7 +136,7 @@ func (u *LTIAttemptCreateUC) SearchRelevantRouting() *models.LTIRouting {
 		for key, value := range resourceLinkMap {
 			resourceLink[key] = value
 		}
-		linkId = mapx.GetStringDefault(resourceLink, "id", "")
+		ltiTaskId = mapx.GetStringDefault(resourceLink, "id", "")
 		title = mapx.GetStringDefault(resourceLink, "title", "")
 		description = mapx.GetStringDefault(resourceLink, "description", "")
 	}
@@ -141,10 +145,27 @@ func (u *LTIAttemptCreateUC) SearchRelevantRouting() *models.LTIRouting {
 			customParams = append(customParams, fmt.Sprintf("%s=%s", k, v))
 		}
 	}
-	ltiRouting, err := u.LTIRoutingQueries.GetRelevantRouting(linkId, title, description, customParams)
+	if courseLinkMap, ok := jwtTokenPayload["https://purl.imsglobal.org/spec/lti/claim/context"].(map[string]interface{}); ok {
+		courseLink := make(map[interface{}]interface{})
+		for key, value := range courseLinkMap {
+			courseLink[key] = value
+		}
+		ltiCourseId = mapx.GetStringDefault(courseLink, "id", "")
+	}
+	if ltiSub, ok := jwtTokenPayload["sub"].(string); ok {
+		ltiSubId = ltiSub
+	}
+	ltiRouting, err := u.LTIRoutingQueries.GetRelevantRouting(title, description, customParams)
 	if err != nil {
 		log.Warn().Msg(fmt.Sprintf("LTIAttemptCreateUC: SearchRelevantRouting exception %+v", err))
 		return nil
+	}
+	// Обновление route добавление lti параметров курса
+	if ltiRouting.LTITaskID != ltiTaskId || ltiRouting.LTICourseID != ltiCourseId || ltiRouting.LTISubID != ltiSubId {
+		ltiRouting.LTICourseID = ltiCourseId
+		ltiRouting.LTISubID = ltiSubId
+		ltiRouting.LTITaskID = ltiTaskId
+		_ = u.LTIRoutingQueries.Upsert(&ltiRouting)
 	}
 	return &ltiRouting
 }

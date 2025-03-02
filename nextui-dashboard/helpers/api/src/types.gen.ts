@@ -115,9 +115,13 @@ export type models_LTIAttemptListItem = {
   expired_at: string;
   id?: number;
   lti_routing_id?: number;
+  lti_routing_name?: string;
   pnet_server_id?: number;
+  pnet_server_name?: string;
   updated_at: string;
+  user_email?: string;
   user_id?: number;
+  user_name?: string;
 };
 
 export type models_LTIForm = {
@@ -153,8 +157,13 @@ export type models_LTIRouting = {
   created_at: string;
   id?: number;
   is_default?: boolean;
+  lti_course_id?: string;
   lti_description?: string;
   lti_params_task?: string;
+  lti_sub_id?: string;
+  /**
+   * Автоматические
+   */
   lti_task_id?: string;
   /**
    * LTI Params
@@ -336,12 +345,9 @@ export type usecases_LTIAttemptDeleteResponse = {
 };
 
 export type usecases_LTIAttemptEditInputDTO = {
+  expired_at: string;
   id?: number;
-  is_active?: boolean;
-  name: string;
-  token: string;
-  unit_rate?: number;
-  url: string;
+  pnet_server_id?: number;
 };
 
 export type usecases_LTIAttemptEditOutputDTO = {
@@ -371,12 +377,11 @@ export type usecases_LTIAttemptGetResponse = {
 export type usecases_LTIAttemptListInputDTO = {
   limit?: number;
   offset?: number;
-  search?: string;
+  user_ids?: Array<number>;
 };
 
 export type usecases_LTIAttemptListOutputDTO = {
   model: Array<models_LTIAttemptListItem>;
-  total_count: number;
 };
 
 export type usecases_LTIAttemptListResponse = {
@@ -462,8 +467,10 @@ export type usecases_LTIRoutingEditInputDTO = {
   collaboration?: number;
   id?: number;
   is_default?: boolean;
+  lti_course_id?: string;
   lti_description?: string;
   lti_params_task?: string;
+  lti_sub_id?: string;
   lti_task_id?: string;
   lti_title?: string;
   name?: string;

@@ -1,7 +1,8 @@
 package usecases
 
 import (
-	"gitlab.com/a10869/api-modules/backend/app/models"
+	"time"
+
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
@@ -11,12 +12,9 @@ type LTIAttemptEditUC struct {
 }
 
 type LTIAttemptEditInputDTO struct {
-	ID       uint   `json:"id"`
-	Name     string `json:"name" validate:"required"`
-	Url      string `json:"url" validate:"required"`
-	IsActive bool   `json:"is_active"`
-	UnitRate uint   `json:"unit_rate"`
-	Token    string `json:"token" validate:"required"`
+	ID           uint      `json:"id"`
+	PNETServerID uint      `json:"pnet_server_id"`
+	ExpiredAt    time.Time `json:"expired_at" validate:"required"`
 }
 
 type LTIAttemptEditOutputDTO struct {
@@ -26,11 +24,13 @@ type LTIAttemptEditOutputDTO struct {
 type LTIAttemptEditResponse = response.Response[LTIAttemptEditOutputDTO]
 
 func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOutputDTO, error) {
-	entity := &models.LTIAttempt{}
+	entity, err := u.LTIAttemptQueries.Get(dto.ID)
+	if err != nil {
+		return LTIAttemptEditOutputDTO{}, err
+	}
 	entity.ID = dto.ID
-	/*
-	   TODO: Add attributes set to upsert LTIAttempt
-	*/
-	err := u.LTIAttemptQueries.Upsert(entity)
+	entity.PNETServerID = dto.PNETServerID
+	entity.ExpiredAt = dto.ExpiredAt
+	err = u.LTIAttemptQueries.Upsert(&entity)
 	return LTIAttemptEditOutputDTO{ID: entity.ID}, err
 }

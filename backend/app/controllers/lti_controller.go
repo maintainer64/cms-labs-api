@@ -33,15 +33,17 @@ func LTILaunch(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	c.Cookie(&fiber.Cookie{
-		Name:     cms_client.SSORefreshTokenName,
-		Value:    token.RefreshToken,
-		Path:     "/",
-		SameSite: fiber.CookieSameSiteNoneMode,
-		Expires:  auth.ExpiresRefreshCookie(),
-		Secure:   true,
-	})
-	return c.Redirect("/", fiber.StatusFound)
+	c.Cookie(
+		&fiber.Cookie{
+			Name:     cms_client.SSORefreshTokenName,
+			Value:    token.RefreshToken,
+			Path:     "/",
+			SameSite: fiber.CookieSameSiteNoneMode,
+			Expires:  auth.ExpiresRefreshCookie(),
+			Secure:   true,
+		},
+	)
+	return c.Redirect("/lti-redirect", fiber.StatusFound)
 }
 
 // LTILogin функция аутентификация пользователя по LTI.

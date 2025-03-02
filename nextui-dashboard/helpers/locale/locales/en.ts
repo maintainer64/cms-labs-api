@@ -30,6 +30,7 @@ const en = {
     ServiceCards: 'Services',
     LTIIntegrations: 'LTIs',
     LTIRouting: 'LTI Routes',
+    LTIAttempts: 'LTI Attempts',
     AnyList: 'List',
     Profile: 'Profile',
     Edit: 'Edit',
@@ -69,6 +70,18 @@ const en = {
       ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
+        { name: 'NAME', uid: 'name' },
+        { name: 'ACTIONS', uid: 'actions' }
+      ]
+    },
+    LTIAttemptsTable: {
+      Title: 'LTI Attempts',
+      TitleWidgetHome: 'Latest attempts',
+      ButtonEdit: 'Edit',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'USER', uid: 'user' },
+        { name: 'SERVER', uid: 'server' },
         { name: 'NAME', uid: 'name' },
         { name: 'ACTIONS', uid: 'actions' }
       ]
@@ -138,7 +151,8 @@ const en = {
     FieldExternalLTIID: 'LTI ID',
     FieldIsDeactivated: 'Is deactivated',
     FieldCreatedAt: 'Created at',
-    FieldUpdatedAt: 'Updated at'
+    FieldUpdatedAt: 'Updated at',
+    FieldRelationAttempts: 'Relation attempts'
   },
   LTIForm: {
     FieldID: 'ID',
@@ -188,6 +202,23 @@ const en = {
     DeletePopup: {
       Title: 'Deleting an LTI-Forms entity',
       Description: 'Upon removal, integration between the LMS system will be terminated'
+    }
+  },
+  LTIFormAttempt: {
+    FieldID: 'ID',
+    FieldUserId: 'User id',
+    FieldUserEmail: 'User email',
+    FieldUserName: 'User name',
+    FieldLTIRoutingID: 'Routing id',
+    FieldLTIRoutingName: 'Routing name',
+    FieldPNETServer: 'Pnet server',
+    FieldExpiredAt: 'Expired at',
+    FieldCreatedAt: 'Created at',
+    FieldUpdatedAt: 'Updated at',
+    DeletePopup: {
+      Title: 'Deleting an LTI-Attempt entity',
+      Description:
+        'When you delete it, the other systems will not be able to interact with the user. It is safe if the user has completed the work'
     }
   },
   PnetServers: {

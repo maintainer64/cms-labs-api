@@ -206,12 +206,20 @@ definitions:
         type: integer
       lti_routing_id:
         type: integer
+      lti_routing_name:
+        type: string
       pnet_server_id:
         type: integer
+      pnet_server_name:
+        type: string
       updated_at:
+        type: string
+      user_email:
         type: string
       user_id:
         type: integer
+      user_name:
+        type: string
     required:
     - created_at
     - expired_at
@@ -291,11 +299,16 @@ definitions:
         type: integer
       is_default:
         type: boolean
+      lti_course_id:
+        type: string
       lti_description:
         type: string
       lti_params_task:
         type: string
+      lti_sub_id:
+        type: string
       lti_task_id:
+        description: Автоматические
         type: string
       lti_title:
         description: LTI Params
@@ -652,22 +665,14 @@ definitions:
     type: object
   usecases.LTIAttemptEditInputDTO:
     properties:
+      expired_at:
+        type: string
       id:
         type: integer
-      is_active:
-        type: boolean
-      name:
-        type: string
-      token:
-        type: string
-      unit_rate:
+      pnet_server_id:
         type: integer
-      url:
-        type: string
     required:
-    - name
-    - token
-    - url
+    - expired_at
     type: object
   usecases.LTIAttemptEditOutputDTO:
     properties:
@@ -714,8 +719,10 @@ definitions:
         type: integer
       offset:
         type: integer
-      search:
-        type: string
+      user_ids:
+        items:
+          type: integer
+        type: array
     type: object
   usecases.LTIAttemptListOutputDTO:
     properties:
@@ -723,11 +730,8 @@ definitions:
         items:
           $ref: '#/definitions/models.LTIAttemptListItem'
         type: array
-      total_count:
-        type: integer
     required:
     - model
-    - total_count
     type: object
   usecases.LTIAttemptListResponse:
     properties:
@@ -885,9 +889,13 @@ definitions:
         type: integer
       is_default:
         type: boolean
+      lti_course_id:
+        type: string
       lti_description:
         type: string
       lti_params_task:
+        type: string
+      lti_sub_id:
         type: string
       lti_task_id:
         type: string
@@ -1442,7 +1450,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Edit lti_attempt.
+      description: 'Edit lti_attempt. Roles: [admin, instructor]'
       parameters:
       - description: lti_attempt form info
         in: body
@@ -1490,7 +1498,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: List lti_attempt.
+      description: 'List lti_attempt. Roles: [admin, instructor]'
       parameters:
       - description: lti_attempt list info
         in: body

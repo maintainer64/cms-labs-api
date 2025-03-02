@@ -30,6 +30,7 @@ const ru = {
     ServiceCards: 'Сервисы',
     LTIIntegrations: 'LTIs',
     LTIRouting: 'Маршруты LTI',
+    LTIAttempts: 'Попытки LTI',
     AnyList: 'Список',
     Profile: 'Профиль',
     Edit: 'Редактирование',
@@ -69,6 +70,18 @@ const ru = {
       ButtonEdit: 'Редактировать',
       Columns: [
         { name: 'ID', uid: 'id' },
+        { name: 'НАЗВАНИЕ', uid: 'name' },
+        { name: 'ДЕЙСТВИЕ', uid: 'actions' }
+      ]
+    },
+    LTIAttemptsTable: {
+      Title: 'Попытки LTI',
+      TitleWidgetHome: 'Последние попытки',
+      ButtonEdit: 'Редактировать',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'ПОЛЬЗОВАТЕЛЬ', uid: 'user' },
+        { name: 'СЕРВЕР', uid: 'server' },
         { name: 'НАЗВАНИЕ', uid: 'name' },
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ]
@@ -138,7 +151,8 @@ const ru = {
     FieldExternalLTIID: 'LTI ID',
     FieldIsDeactivated: 'Деактивирован',
     FieldCreatedAt: 'Создан в',
-    FieldUpdatedAt: 'Обновлен в'
+    FieldUpdatedAt: 'Обновлен в',
+    FieldRelationAttempts: 'Связные попытки'
   },
   LTIForm: {
     FieldID: 'ID',
@@ -189,6 +203,23 @@ const ru = {
     DeletePopup: {
       Title: 'Удаление сущности LTI-Forms',
       Description: 'При удалении интеграция между LMS системой будет прекращена'
+    }
+  },
+  LTIFormAttempt: {
+    FieldID: 'ID',
+    FieldUserId: 'ID пользователя',
+    FieldUserEmail: 'Почта пользователя',
+    FieldUserName: 'ФИО пользователя',
+    FieldLTIRoutingID: 'ID маршрута',
+    FieldLTIRoutingName: 'Название маршрута',
+    FieldPNETServer: 'Сервер',
+    FieldExpiredAt: 'Закреплен до',
+    FieldCreatedAt: 'Создан в',
+    FieldUpdatedAt: 'Обновлен в',
+    DeletePopup: {
+      Title: 'Удаление сущности LTI-Attempt',
+      Description:
+        'При удалении остальные системы не смогут взаимодействовать с пользователем. Безопасно, если пользователь завершил работу'
     }
   },
   PnetServers: {

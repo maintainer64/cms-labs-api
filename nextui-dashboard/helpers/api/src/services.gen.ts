@@ -119,7 +119,7 @@ export const postV1LtiAttemptDelete = (
 
 /**
  * edit lti_attempt
- * Edit lti_attempt.
+ * Edit lti_attempt. Roles: [admin, instructor]
  * @param data The data for the request.
  * @param data.form lti_attempt form info
  * @returns usecases_LTIAttemptEditResponse OK
@@ -153,7 +153,7 @@ export const postV1LtiAttemptGet = (data: PostV1LtiAttemptGetData): CancelablePr
 
 /**
  * list lti_attempt
- * List lti_attempt.
+ * List lti_attempt. Roles: [admin, instructor]
  * @param data The data for the request.
  * @param data.form lti_attempt list info
  * @returns usecases_LTIAttemptListResponse OK

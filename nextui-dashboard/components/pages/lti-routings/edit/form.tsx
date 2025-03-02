@@ -25,7 +25,6 @@ const defaultValues: models_LTIRouting = {
   id: undefined,
   lti_description: '',
   lti_params_task: '',
-  lti_task_id: '',
   lti_title: '',
   name: '',
   pinned_session_minutes: 0,
@@ -33,7 +32,10 @@ const defaultValues: models_LTIRouting = {
   pnet_labs_path: '',
   pnet_test_path: '',
   is_default: false,
-  updated_at: ''
+  updated_at: '',
+  lti_task_id: '',
+  lti_course_id: '',
+  lti_sub_id: ''
 };
 
 export const LtiRoutingLabsType = () => {
@@ -143,13 +145,6 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     type='text'
                     value={values.lti_description ?? ''}
                     onChange={handleChange('lti_description')}
-                  />
-                  <Input
-                    variant='bordered'
-                    label={LTIRouting.FieldLTITaskID}
-                    type='text'
-                    value={values.lti_task_id ?? ''}
-                    onChange={handleChange('lti_task_id')}
                   />
                   <Input
                     variant='bordered'

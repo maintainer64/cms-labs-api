@@ -108,7 +108,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Edit lti_attempt.",
+                "description": "Edit lti_attempt. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -186,7 +186,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "List lti_attempt.",
+                "description": "List lti_attempt. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -1923,14 +1923,26 @@ const docTemplate = `{
                 "lti_routing_id": {
                     "type": "integer"
                 },
+                "lti_routing_name": {
+                    "type": "string"
+                },
                 "pnet_server_id": {
                     "type": "integer"
+                },
+                "pnet_server_name": {
+                    "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
                 },
+                "user_email": {
+                    "type": "string"
+                },
                 "user_id": {
                     "type": "integer"
+                },
+                "user_name": {
+                    "type": "string"
                 }
             }
         },
@@ -2042,13 +2054,20 @@ const docTemplate = `{
                 "is_default": {
                     "type": "boolean"
                 },
+                "lti_course_id": {
+                    "type": "string"
+                },
                 "lti_description": {
                     "type": "string"
                 },
                 "lti_params_task": {
                     "type": "string"
                 },
+                "lti_sub_id": {
+                    "type": "string"
+                },
                 "lti_task_id": {
+                    "description": "Автоматические",
                     "type": "string"
                 },
                 "lti_title": {
@@ -2569,28 +2588,17 @@ const docTemplate = `{
         "usecases.LTIAttemptEditInputDTO": {
             "type": "object",
             "required": [
-                "name",
-                "token",
-                "url"
+                "expired_at"
             ],
             "properties": {
+                "expired_at": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                },
-                "unit_rate": {
+                "pnet_server_id": {
                     "type": "integer"
-                },
-                "url": {
-                    "type": "string"
                 }
             }
         },
@@ -2663,16 +2671,18 @@ const docTemplate = `{
                 "offset": {
                     "type": "integer"
                 },
-                "search": {
-                    "type": "string"
+                "user_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
         "usecases.LTIAttemptListOutputDTO": {
             "type": "object",
             "required": [
-                "model",
-                "total_count"
+                "model"
             ],
             "properties": {
                 "model": {
@@ -2680,9 +2690,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.LTIAttemptListItem"
                     }
-                },
-                "total_count": {
-                    "type": "integer"
                 }
             }
         },
@@ -2920,10 +2927,16 @@ const docTemplate = `{
                 "is_default": {
                     "type": "boolean"
                 },
+                "lti_course_id": {
+                    "type": "string"
+                },
                 "lti_description": {
                     "type": "string"
                 },
                 "lti_params_task": {
+                    "type": "string"
+                },
+                "lti_sub_id": {
                     "type": "string"
                 },
                 "lti_task_id": {

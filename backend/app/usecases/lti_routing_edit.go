@@ -16,6 +16,8 @@ type LTIRoutingEditInputDTO struct {
 	LTITitle             string `json:"lti_title"`
 	LTIDescription       string `json:"lti_description"`
 	LTITaskID            string `json:"lti_task_id"`
+	LTICourseID          string `json:"lti_course_id"`
+	LTISubID             string `json:"lti_sub_id"`
 	LTIParamsTask        string `json:"lti_params_task"`
 	Collaboration        int    `json:"collaboration"`
 	PinnedSessionMinutes int    `json:"pinned_session_minutes"`
@@ -38,6 +40,8 @@ func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOu
 	entity.LTITitle = dto.LTITitle
 	entity.LTIDescription = dto.LTIDescription
 	entity.LTITaskID = dto.LTITaskID
+	entity.LTICourseID = dto.LTICourseID
+	entity.LTISubID = dto.LTISubID
 	entity.LTIParamsTask = dto.LTIParamsTask
 	entity.Collaboration = dto.Collaboration
 	entity.PinnedSessionMinutes = dto.PinnedSessionMinutes

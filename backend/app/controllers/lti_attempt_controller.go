@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
+	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/logs"
@@ -44,7 +45,7 @@ func LTIAttemptCreate(c *fiber.Ctx) error {
 }
 
 // LTIAttemptEdit func for edit LTIAttempt.
-// @Description Edit lti_attempt.
+// @Description Edit lti_attempt. Roles: [admin, instructor]
 // @Summary edit lti_attempt
 // @Tags LTIAttempt
 // @Accept json
@@ -55,6 +56,12 @@ func LTIAttemptCreate(c *fiber.Ctx) error {
 // @Router /v1/lti-attempt/edit [post]
 func LTIAttemptEdit(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	dto := usecases.LTIAttemptEditInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
@@ -74,7 +81,7 @@ func LTIAttemptEdit(c *fiber.Ctx) error {
 }
 
 // LTIAttemptList func for view of list LTIAttempt.
-// @Description List lti_attempt.
+// @Description List lti_attempt. Roles: [admin, instructor]
 // @Summary list lti_attempt
 // @Tags LTIAttempt
 // @Accept json
@@ -85,6 +92,12 @@ func LTIAttemptEdit(c *fiber.Ctx) error {
 // @Router /v1/lti-attempt/list [post]
 func LTIAttemptList(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	dto := usecases.LTIAttemptListInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
@@ -115,6 +128,12 @@ func LTIAttemptList(c *fiber.Ctx) error {
 // @Router /v1/lti-attempt/delete [post]
 func LTIAttemptDelete(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
+	if _, err := auth.ExtractTokenMetadata(
+		c,
+		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+	); err != nil {
+		return err
+	}
 	dto := usecases.LTIAttemptDeleteInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {

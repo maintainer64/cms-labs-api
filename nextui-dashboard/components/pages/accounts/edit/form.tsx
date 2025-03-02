@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { models_User } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useUserUpsert } from '@/helpers/queries/users/upsert';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { useAlert } from '@/components/alerts/hooks';
@@ -122,7 +122,11 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
               value={values.lti_user_id ?? ''}
               onChange={handleChange('lti_user_id')}
             />
-            <Checkbox type='checkbox' defaultSelected={!values.deleted_at} onChange={handleChange('deleted_at')}>
+            <Checkbox
+              type='checkbox'
+              defaultSelected={Boolean(values.deleted_at)}
+              onChange={handleChange('deleted_at')}
+            >
               {UserForm.FieldIsDeactivated}
             </Checkbox>
             <Input
@@ -141,6 +145,14 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>
               {Sidebar.Save}
+            </Button>
+            <Button
+              as={Link}
+              variant='flat'
+              color='secondary'
+              to={RoutesLocation.ltiAttemptUser(values.id?.toString())}
+            >
+              {UserForm.FieldRelationAttempts}
             </Button>
           </div>
         </>

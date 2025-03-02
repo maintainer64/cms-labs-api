@@ -11,7 +11,7 @@ const RoutesStudent = () => {
       <Route path={RoutesLocation.language()} element={<LanguagePage />} />
       <Route path={RoutesLocation.login()} element={<LoginPage />} />
       <Route path={RoutesLocation.home()} element={<LoginError />} />
-      <Route path={RoutesLocation.ltiAttemptCreate()} element={<LTIAttemptsPageCreate />} />
+      <Route path={RoutesLocation.ltiRedirect()} element={<LTIAttemptsPageCreate />} />
     </Routes>
   );
 };

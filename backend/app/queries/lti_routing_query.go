@@ -88,7 +88,6 @@ func (q *LTIRoutingQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 }
 
 func (q *LTIRoutingQueries) GetRelevantRouting(
-	linkId string,
 	title string,
 	description string,
 	customParams []string,
@@ -99,8 +98,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 	execute := false
 	q.Logger.Debug().Msg(
 		fmt.Sprintf(
-			"LTIRoutingQueries: GetRelevantRouting execute by params linkId=%+v title=%+v description=%+v customParams=%+v",
-			linkId,
+			"LTIRoutingQueries: GetRelevantRouting execute by params title=%+v description=%+v customParams=%+v",
 			title,
 			description,
 			customParams,
@@ -112,10 +110,6 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 	}
 	if description != "" {
 		tx = tx.Or("lti_description = ?", title)
-		execute = true
-	}
-	if linkId != "" {
-		tx = tx.Or("lti_task_id = ?", linkId)
 		execute = true
 	}
 	if len(customParams) > 0 {
@@ -132,8 +126,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 	result := tx.Scan(&entity)
 	q.Logger.Info().Msg(
 		fmt.Sprintf(
-			"LTIRoutingQueries: GetRelevantRouting execute by params linkId=%+v; result: routingId=%+v routingName=%+v",
-			linkId,
+			"LTIRoutingQueries: GetRelevantRouting execute by params result: routingId=%+v routingName=%+v",
 			entity.ID,
 			entity.Name,
 		),
