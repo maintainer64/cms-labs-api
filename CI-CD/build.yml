@@ -70,17 +70,26 @@ pnet-lab-addon-build:
     - .dependencies
     - .releases-branch
   image: $GO_BASE_CI_IMAGE:latest
+  variables:
+    PACKAGE_NAME: pnetlab-inject  # Наименование пакета
+    PACKAGE_VERSION: ${CI_COMMIT_REF_SLUG}  # Версия пакета
+    PROJECT_ID: 50982127  # Идентификатор проекта
   needs:
     - golang-test
   script:
+    # Скачать файл
+    - |
+      curl --fail --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+           --location \
+           --output $PACKAGE_NAME.zip \
+           "${CI_API_V4_URL}/projects/$PROJECT_ID/packages/generic/$PACKAGE_NAME/$PACKAGE_VERSION/$PACKAGE_NAME.zip"
+    - echo "Пакет успешно скачан pnetlab-inject.zip"
+    - ls -ll
     - cd pnetlabaddon
+    # Собираем пакет
     - echo "Building pnet lab addon bin..."
     - make build
     - chmod -R 0755 pnetlabaddon
     - dpkg-deb --build pnetlabaddon
-    - mv pnetlabaddon.deb pnetlabaddon_$PIPELINE_VERSION_amd64.deb
-    - lintian pnetlabaddon_$PIPELINE_VERSION_amd64.deb
-    - |
-      PACKAGE_NAME="pnetlabaddon_$PIPELINE_VERSION_amd64.deb"
-      REGISTRY_URL="https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${DOCKER_PATH_BRANCH}/${PIPELINE_VERSION}"
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${PACKAGE_NAME} ${REGISTRY_URL}/${PACKAGE_NAME}
+    - echo "Publishing pnetlabaddon.deb to package registry"
+    - 'curl --fail --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file pnetlabaddon.deb "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/pnetlabaddon/${CI_COMMIT_REF_NAME}/pnetlabaddon.deb"'
