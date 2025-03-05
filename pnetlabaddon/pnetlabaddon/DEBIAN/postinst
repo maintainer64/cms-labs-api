@@ -5,7 +5,25 @@ if [ ! -f /etc/pnetlabaddon/.env ]; then
     cp /etc/pnetlabaddon/.env.test /etc/pnetlabaddon/.env
 fi
 
+# Миграция базы данных
 /etc/pnetlabaddon/migrate.sh up
+
+# Инъецирование front-end и распаковка views
+BASEDIR=/etc/pnetlabaddon
+PNETDIR=/opt/unetlab
+VIEWS=$PNETDIR/html/store/resources/views/pnetapiviews
+rm -rf $BASEDIR/pnetlab-inject
+mkdir -p $BASEDIR/resources/views
+unzip $BASEDIR/pnetlab-inject.zip -d $BASEDIR/resources/views
+sudo cp -Rf $BASEDIR/resources/views/pnetlab-inject/main.blade.php $VIEWS
+sudo cp -Rf $BASEDIR/resources/views/pnetlab-inject/pnetlabapijs $PNETDIR/html/store/public/main/js
+EXTENSION_JS=$(cat $BASEDIR/resources/views/pnetlab-inject/pnetlabapijs.html)
+MAIN_PAGE_FILE=$PNETDIR/html/store/resources/views/main/main.blade.php
+LAB_PAGE_FILE=$PNETDIR/html/themes/default/index.html
+if ! grep -q "$EXTENSION_JS" $LAB_PAGE_FILE; then
+  echo $EXTENSION_JS >>$LAB_PAGE_FILE
+fi
+sudo chown -R www-data:www-data $VIEWS/*
 
 # Перезагрузка systemd и запуск сервиса
 systemctl daemon-reload
