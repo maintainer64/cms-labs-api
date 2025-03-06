@@ -1,8 +1,57 @@
-# Fiber backend template for [Create Go App CLI](https://github.com/create-go-app/cli)
+# Аддон для PNETLab реализующий OpenID аутентификацию
 
-<img src="https://img.shields.io/badge/Go-1.19+-00ADD8?style=for-the-badge&logo=go" alt="go version" />&nbsp;<a href="https://goreportcard.com/report/gitlab.com/a10869/api-modules/pnetlabaddon" target="_blank"><img src="https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none" alt="go report" /></a>&nbsp;<img src="https://img.shields.io/badge/license-Apache_2.0-red?style=for-the-badge&logo=none" alt="license" />
+## 1. Первичная установка
 
-[Fiber](https://gofiber.io/) is an Express.js inspired web framework build on top of Fasthttp, the fastest HTTP engine for Go. Designed to ease things up for **fast** development with **zero memory allocation** and **performance** in mind.
+1. Подключитесь к консоли по SSH до PNETLab и скопируйте содержимое файла [updater.sh](updater.sh)
+
+2. Выдайте разрешение на запуск командой:
+
+```shell
+chmod +x updater.sh
+```
+
+3. Установите пакет jq и unzip. Следующим образом
+
+```shell
+sudo apt install jq unzip -y
+```
+
+Или
+
+```shell
+snap install jq unzip
+```
+
+4. Выполните команду
+
+Скачивание и обновление пакета для канала stage:
+
+```shell
+./updater.sh --package-version stage
+```
+
+Скачивание и обновление пакета для канала pre:
+
+```shell
+./updater.sh --package-version pre
+```
+
+Скачивание и обновление пакета для канала master:
+
+```shell
+./updater.sh --package-version master
+```
+
+3.
+
+Примечания
+
+<img src="https://img.shields.io/badge/Go-1.19+-00ADD8?style=for-the-badge&logo=go" alt="go version" />
+&nbsp;<a href="https://goreportcard.com/report/gitlab.com/a10869/api-modules/pnetlabaddon" target="_blank"><img src="https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none" alt="go report" /></a>
+&nbsp;<img src="https://img.shields.io/badge/license-Apache_2.0-red?style=for-the-badge&logo=none" alt="license" />
+
+[Fiber](https://gofiber.io/) is an Express.js inspired web framework build on top of Fasthttp, the fastest HTTP engine
+for Go. Designed to ease things up for **fast** development with **zero memory allocation** and **performance** in mind.
 
 ## ⚡️ Quick start
 
@@ -20,11 +69,11 @@ cgapp create
 2. Rename `.env.example` to `.env` and fill it with your environment values.
 3. Install [Docker](https://www.docker.com/get-started) and the following useful Go tools to your system:
 
-   - [golang-migrate/migrate](https://github.com/golang-migrate/migrate#cli-usage) for apply migrations
-   - [github.com/swaggo/swag](https://github.com/swaggo/swag) for auto-generating Swagger API docs
-   - [github.com/securego/gosec](https://github.com/securego/gosec) for checking Go security issues
-   - [github.com/go-critic/go-critic](https://github.com/go-critic/go-critic) for checking Go the best practice issues
-   - [github.com/golangci/golangci-lint](https://github.com/golangci/golangci-lint) for checking Go linter issues
+- [golang-migrate/migrate](https://github.com/golang-migrate/migrate#cli-usage) for apply migrations
+- [github.com/swaggo/swag](https://github.com/swaggo/swag) for auto-generating Swagger API docs
+- [github.com/securego/gosec](https://github.com/securego/gosec) for checking Go security issues
+- [github.com/go-critic/go-critic](https://github.com/go-critic/go-critic) for checking Go the best practice issues
+- [github.com/golangci/golangci-lint](https://github.com/golangci/golangci-lint) for checking Go linter issues
 
 4. Run project by this command:
 
@@ -40,7 +89,8 @@ make docker.run
 
 ### ./app
 
-**Folder with business logic only**. This directory doesn't care about _what database driver you're using_ or _which caching solution your choose_ or any third-party things.
+**Folder with business logic only**. This directory doesn't care about _what database driver you're using_ or _which
+caching solution your choose_ or any third-party things.
 
 - `./app/controllers` folder for functional controllers (used in routes)
 - `./app/models` folder for describe business models and methods of your project
@@ -52,7 +102,8 @@ make docker.run
 
 ### ./pkg
 
-**Folder with project-specific functionality**. This directory contains all the project-specific code tailored only for your business use case, like _configs_, _middleware_, _routes_ or _utils_.
+**Folder with project-specific functionality**. This directory contains all the project-specific code tailored only for
+your business use case, like _configs_, _middleware_, _routes_ or _utils_.
 
 - `./pkg/configs` folder for configuration functions
 - `./pkg/middleware` folder for add middleware (Fiber built-in and yours)
@@ -62,11 +113,13 @@ make docker.run
 
 ### ./platform
 
-**Folder with platform-level logic**. This directory contains all the platform-level logic that will build up the actual project, like _setting up the database_ or _cache server instance_ and _storing migrations_.
+**Folder with platform-level logic**. This directory contains all the platform-level logic that will build up the actual
+project, like _setting up the database_ or _cache server instance_ and _storing migrations_.
 
 - `./platform/cache` folder with in-memory cache setup functions (by default, Redis)
 - `./platform/database` folder with database setup functions (by default, PostgreSQL)
-- `./platform/migrations` folder with migration files (used with [golang-migrate/migrate](https://github.com/golang-migrate/migrate) tool)
+- `./platform/migrations` folder with migration files (used
+  with [golang-migrate/migrate](https://github.com/golang-migrate/migrate) tool)
 
 ## ⚙️ Configuration
 
