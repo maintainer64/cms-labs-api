@@ -11,7 +11,7 @@ cd /etc/pnetlabaddon && /etc/pnetlabaddon/migrate.sh up && cd -
 # Инъецирование front-end и распаковка views
 PNETDIR=/opt/unetlab
 VIEWS=$PNETDIR/html/store/resources/views/pnetapiviews
-rm -rf resources
+rm -rf /etc/pnetlabaddon/resources
 mkdir -p /etc/pnetlabaddon/resources/view $VIEWS
 unzip /etc/pnetlabaddon/pnetlab-inject.zip -d /etc/pnetlabaddon/resources/views
 sudo cp -Rf /etc/pnetlabaddon/resources/views/pnetlab-inject/main.blade.php $VIEWS
