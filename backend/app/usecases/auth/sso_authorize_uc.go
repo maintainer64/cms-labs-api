@@ -3,7 +3,6 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/rs/zerolog"
 
@@ -45,9 +44,6 @@ type SSOAuthorizeUC struct {
 	*zerolog.Logger
 }
 
-func ()  {
-
-}
 func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOutputDTO, error) {
 	if err := u.validate(inputDTO); err != nil {
 		return nil, err
