@@ -84,7 +84,7 @@ pnet-lab-addon-build:
            --output $PACKAGE_NAME.zip \
            "${CI_API_V4_URL}/projects/$PROJECT_ID/packages/generic/$PACKAGE_NAME/$PACKAGE_VERSION/$PACKAGE_NAME.zip"
     - echo "Пакет успешно скачан pnetlab-inject.zip"
-    - mv pnetlab-inject.zip pnetlabaddon/pnetlabaddon/etc
+    - mv pnetlab-inject.zip pnetlabaddon/pnetlabaddon/etc/pnetlabaddon/
     - cd pnetlabaddon
     # Собираем пакет
     - echo "Building pnet lab addon bin..."
