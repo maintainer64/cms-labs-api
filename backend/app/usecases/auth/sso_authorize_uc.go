@@ -3,7 +3,6 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/rs/zerolog"
 
@@ -58,7 +57,7 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 		u.Logger.Info().Msg(fmt.Sprintf("server is not active sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 		return nil, errors.New("server is not active")
 	}
-	if !strings.HasPrefix(inputDTO.RedirectUri, server.Url) {
+	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		u.Logger.Info().Msg(fmt.Sprintf("invalid redirect_uri sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 		return nil, errors.New("invalid redirect_uri")
 	}

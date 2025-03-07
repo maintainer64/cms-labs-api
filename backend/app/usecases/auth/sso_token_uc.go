@@ -3,7 +3,6 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -103,7 +102,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if !server.IsActive {
 		return nil, errors.New("server is not active")
 	}
-	if !strings.HasPrefix(inputDTO.RedirectUri, server.Url) {
+	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		return nil, errors.New("invalid redirect_uri")
 	}
 	return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, attempt.State)
