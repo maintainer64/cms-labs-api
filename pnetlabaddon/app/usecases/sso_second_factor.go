@@ -30,10 +30,12 @@ type SSOSecondFactorUC struct {
 }
 
 type SSOSecondFactorOutputDTO struct {
-	CookieToken     string    `json:"cookie_token"`
-	CookieAge       time.Time `json:"cookie_age"`
-	RefreshToken    string    `json:"refresh_token"`
-	RefreshTokenAge time.Time `json:"refresh_token_age"`
+	CookieToken        string    `json:"cookie_token"`
+	CookieAge          time.Time `json:"cookie_age"`
+	CookieMaxAge       int       `json:"cookie_max_age"`
+	RefreshToken       string    `json:"refresh_token"`
+	RefreshTokenAge    time.Time `json:"refresh_token_age"`
+	RefreshTokenMaxAge int       `json:"refresh_max_age"`
 }
 
 func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFactorOutputDTO, error) {
@@ -117,9 +119,11 @@ func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFact
 		),
 	)
 	return &SSOSecondFactorOutputDTO{
-		CookieToken:     userDB.Cookie,
-		CookieAge:       time.Now().Add(time.Hour),
-		RefreshToken:    token.RefreshToken,
-		RefreshTokenAge: time.Now().Add(12 * time.Hour),
+		CookieToken:        userDB.Cookie,
+		CookieAge:          time.Now().Add(2 * time.Hour),
+		CookieMaxAge:       7200,
+		RefreshToken:       token.RefreshToken,
+		RefreshTokenAge:    time.Now().Add(12 * time.Hour),
+		RefreshTokenMaxAge: 43200,
 	}, nil
 }
