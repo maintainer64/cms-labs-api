@@ -91,6 +91,12 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		HTTPOnly: true,
 	})
 	c.Cookie(&fiber.Cookie{
+		Name:     "_session",
+		Value:    "",
+		Path:     "/",
+		HTTPOnly: true,
+	})
+	c.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
 		Value:    output.RefreshToken,
 		MaxAge:   output.RefreshTokenMaxAge,
