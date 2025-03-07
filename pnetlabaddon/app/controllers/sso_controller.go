@@ -86,17 +86,17 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		Name:     "token",
 		Value:    output.CookieToken,
 		Path:     "/",
-		SameSite: fiber.CookieSameSiteNoneMode,
+		MaxAge:   output.CookieMaxAge,
 		Expires:  output.CookieAge,
-		Secure:   true,
+		HTTPOnly: true,
 	})
 	c.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
 		Value:    output.RefreshToken,
+		MaxAge:   output.RefreshTokenMaxAge,
 		Path:     "/",
-		SameSite: fiber.CookieSameSiteNoneMode,
 		Expires:  output.RefreshTokenAge,
-		Secure:   true,
+		HTTPOnly: true,
 	})
 	return c.Redirect("/", fiber.StatusTemporaryRedirect)
 }
