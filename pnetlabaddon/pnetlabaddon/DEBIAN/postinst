@@ -6,19 +6,17 @@ if [ ! -f /etc/pnetlabaddon/.env ]; then
 fi
 
 # Миграция базы данных
-/etc/pnetlabaddon/migrate.sh up
+cd /etc/pnetlabaddon && /etc/pnetlabaddon/migrate.sh up && cd -
 
 # Инъецирование front-end и распаковка views
-BASEDIR=/etc/pnetlabaddon
 PNETDIR=/opt/unetlab
 VIEWS=$PNETDIR/html/store/resources/views/pnetapiviews
-rm -rf $BASEDIR/pnetlab-inject
-mkdir -p $BASEDIR/resources/views
-unzip $BASEDIR/pnetlab-inject.zip -d $BASEDIR/resources/views
-sudo cp -Rf $BASEDIR/resources/views/pnetlab-inject/main.blade.php $VIEWS
-sudo cp -Rf $BASEDIR/resources/views/pnetlab-inject/pnetlabapijs $PNETDIR/html/store/public/main/js
-EXTENSION_JS=$(cat $BASEDIR/resources/views/pnetlab-inject/pnetlabapijs.html)
-MAIN_PAGE_FILE=$PNETDIR/html/store/resources/views/main/main.blade.php
+rm -rf resources
+mkdir -p /etc/pnetlabaddon/resources/view $VIEWS
+unzip /etc/pnetlabaddon/pnetlab-inject.zip -d /etc/pnetlabaddon/resources/views
+sudo cp -Rf /etc/pnetlabaddon/resources/views/pnetlab-inject/main.blade.php $VIEWS
+sudo cp -Rf /etc/pnetlabaddon/resources/views/pnetlab-inject/pnetlabapijs $PNETDIR/html/store/public/main/js
+EXTENSION_JS=$(cat /etc/pnetlabaddon/resources/views/pnetlab-inject/pnetlabapijs.html)
 LAB_PAGE_FILE=$PNETDIR/html/themes/default/index.html
 if ! grep -q "$EXTENSION_JS" $LAB_PAGE_FILE; then
   echo $EXTENSION_JS >>$LAB_PAGE_FILE
