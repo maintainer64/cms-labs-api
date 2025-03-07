@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -22,6 +23,14 @@ type PNETServerBase struct {
 	LastOnlineStatus     *time.Time `gorm:"type:datetime(3)" json:"last_online_status"`
 	LastCountUsers       int        `gorm:"type:int" json:"last_count_users"`
 	UnitRate             int        `gorm:"type:int" json:"unit_rate"`
+}
+
+func (t *PNETServerBase) HasPrefixUrl(redirectUri string) bool {
+	redirectUri = strings.TrimPrefix(redirectUri, "http://")
+	redirectUri = strings.TrimPrefix(redirectUri, "https://")
+	url := strings.TrimPrefix(t.Url, "http://")
+	url = strings.TrimPrefix(url, "https://")
+	return strings.HasPrefix(redirectUri, url)
 }
 
 func PNETServeIsRealActive(db *gorm.DB) *gorm.DB {
