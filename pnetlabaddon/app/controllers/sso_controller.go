@@ -40,6 +40,28 @@ func SSOFirstFactor(c *fiber.Ctx) error {
 		path,
 		extra,
 	)
+	// Выполняем редирект
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   720,
+		HTTPOnly: true,
+	})
+	c.Cookie(&fiber.Cookie{
+		Name:     "_session",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   720,
+		HTTPOnly: true,
+	})
+	c.Cookie(&fiber.Cookie{
+		Name:     cms_client.SSORefreshTokenName,
+		Value:    "",
+		Path:     "/",
+		MaxAge:   720,
+		HTTPOnly: true,
+	})
 	return c.Redirect(newURL, fiber.StatusTemporaryRedirect)
 }
 
