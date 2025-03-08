@@ -91,6 +91,7 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		MaxAge:   output.CookieMaxAge,
 		Expires:  output.CookieAge,
 		HTTPOnly: true,
+		Domain:   c.Hostname(),
 	})
 	c.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
