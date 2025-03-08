@@ -29,14 +29,14 @@ type User struct {
 	Expiration    int     `gorm:"column:expiration;default:-1"`
 	Name          string  `gorm:"column:name;type:text"`
 	Password      string  `gorm:"column:password;type:text"`
-	Session       *int    `gorm:"column:session"`
+	Session       *int64  `gorm:"column:session"`
 	IP            *string `gorm:"column:ip;type:text"`
 	Role          string  `gorm:"column:role;type:text"`
 	Folder        *string `gorm:"column:folder;type:text"`
 	LabSession    *int    `gorm:"column:lab_session"`
 	HTML5         bool    `gorm:"column:html5"`
 	License       *string `gorm:"column:license;type:text"`
-	OnlineTime    int     `gorm:"column:online_time"`
+	OnlineTime    int64   `gorm:"column:online_time"`
 	Note          string  `gorm:"column:note;type:text"`
 	Offline       *int    `gorm:"column:offline"`
 	ActiveTime    *int    `gorm:"column:active_time"`
