@@ -1,6 +1,8 @@
 package usecases
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"time"
@@ -36,6 +38,12 @@ type SSOSecondFactorOutputDTO struct {
 	RefreshToken       string    `json:"refresh_token"`
 	RefreshTokenAge    time.Time `json:"refresh_token_age"`
 	RefreshTokenMaxAge int       `json:"refresh_max_age"`
+}
+
+func (u *SSOSecondFactorUC) passwordToSHA256(password string) string {
+	h := sha1.New()
+	h.Write([]byte(password))
+	return hex.EncodeToString(h.Sum(nil))
 }
 
 func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFactorOutputDTO, error) {
@@ -108,7 +116,13 @@ func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFact
 		),
 	)
 	userDB.Name = fmt.Sprintf("%d", user.Id)
+	session := time.Now().Add(2 * time.Hour).Unix()
+	userDB.Session = &session
 	userDB.Cookie = uuid.New().String()
+	userDB.Password = u.passwordToSHA256(userDB.Cookie)
+	userDB.OnlineTime = time.Now().Unix()
+	offline := 1
+	userDB.Offline = &offline
 	result := u.UserQueries.Save(&userDB)
 	if result.Error != nil {
 		return nil, result.Error
