@@ -1,7 +1,7 @@
 package usecases
 
 import (
-	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -41,9 +41,10 @@ type SSOSecondFactorOutputDTO struct {
 }
 
 func (u *SSOSecondFactorUC) passwordToSHA256(password string) string {
-	h := sha1.New()
+	h := sha256.New()
 	h.Write([]byte(password))
-	return hex.EncodeToString(h.Sum(nil))
+	bs := h.Sum(nil)
+	return hex.EncodeToString(bs)
 }
 
 func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFactorOutputDTO, error) {
