@@ -140,11 +140,14 @@ func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFact
 	//
 	// Создание пользователя Guacamole
 	//
-	u.GuacamoleQueries.UserReplace(
+	err = u.GuacamoleQueries.UserReplace(
 		userDB.Pod,
 		userDB.Email,
 		userDB.Password,
 	)
+	if err != nil {
+		return nil, err
+	}
 	guacamoleToken, err := u.GuacamoleClient.GetToken(
 		userDB.Email,
 		userDB.Password,
@@ -152,11 +155,14 @@ func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFact
 	if err != nil {
 		return nil, err
 	}
-	u.GuacamoleQueries.TokenReplace(
+	err = u.GuacamoleQueries.TokenReplace(
 		userDB.Pod,
 		userDB.Email,
 		guacamoleToken.AuthToken,
 	)
+	if err != nil {
+		return nil, err
+	}
 	return &SSOSecondFactorOutputDTO{
 		CookieToken:        userDB.Cookie,
 		CookieAge:          time.Now().Add(2 * time.Hour),

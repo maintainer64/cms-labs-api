@@ -44,7 +44,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		DB:               db,
 		UserQueries:      &queries.UserQueries{DB: db},
 		UserRoleQueries:  &queries.UserRoleQueries{DB: db},
-		GuacamoleQueries: &queries.GuacamoleQueries{DB: db},
+		GuacamoleQueries: &queries.GuacamoleQueries{DB: db, Logger: l},
 	}, nil
 }
 
