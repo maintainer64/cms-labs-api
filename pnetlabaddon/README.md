@@ -1,5 +1,10 @@
 # Аддон для PNETLab реализующий OpenID аутентификацию
 
+## 0. Переменные внутри deb пакета
+
+1. Env находятся [здесь](pnetlabaddon/etc/pnetlabaddon/.env.test)
+2. Описание .service находятся [здесь](pnetlabaddon/lib/systemd/system/pnetlabaddon.service)
+
 ## 1. Первичная установка
 
 1. Подключитесь к консоли по SSH до PNETLab и скопируйте содержимое файла [updater.sh](updater.sh)
