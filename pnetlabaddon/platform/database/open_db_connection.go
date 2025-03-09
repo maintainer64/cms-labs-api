@@ -15,6 +15,7 @@ type Queries struct {
 	*gorm.DB
 	*queries.UserQueries
 	*queries.UserRoleQueries
+	*queries.GuacamoleQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -40,9 +41,10 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 
 	return &Queries{
 		// Set queries from models:
-		DB:              db,
-		UserQueries:     &queries.UserQueries{DB: db},
-		UserRoleQueries: &queries.UserRoleQueries{DB: db},
+		DB:               db,
+		UserQueries:      &queries.UserQueries{DB: db},
+		UserRoleQueries:  &queries.UserRoleQueries{DB: db},
+		GuacamoleQueries: &queries.GuacamoleQueries{DB: db},
 	}, nil
 }
 

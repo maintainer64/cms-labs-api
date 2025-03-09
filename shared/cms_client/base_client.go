@@ -15,8 +15,7 @@ type CMSClient struct {
 	client  *resty.Client
 }
 
-func NewCMSClient(config *CMSClientConfig) *CMSClient {
-	client := resty.New()
+func NewCMSClient(config *CMSClientConfig, client *resty.Client) *CMSClient {
 	client.SetDebug(config.Debug)
 	client.SetTimeout(time.Duration(config.MaxTimeoutSeconds) * time.Second)
 	client.SetBaseURL(config.BaseUrl)

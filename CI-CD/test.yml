@@ -23,7 +23,8 @@ golang-test:
         MYSQL_DATABASE: 'db'
         MYSQL_USER: 'user'
         MYSQL_PASSWORD: 'pnetlab'
-        MYSQL_ROOT_PASSWORD: 'password'
+        MYSQL_ROOT_PASSWORD: 'pnetlab'
+        MYSQL_ROOT_HOST: '%'
   after_script:
     - go tool cover -func coverage.out
     # Generate Cobertura coverage report for GitLab
