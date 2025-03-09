@@ -173,15 +173,6 @@ CMS_BASE_URL=https://cms-lab.gubanov.site
 service pnetlabaddon restart
 ```
 
-Примечания
-
-<img src="https://img.shields.io/badge/Go-1.19+-00ADD8?style=for-the-badge&logo=go" alt="go version" />
-&nbsp;<a href="https://goreportcard.com/report/gitlab.com/a10869/api-modules/pnetlabaddon" target="_blank"><img src="https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none" alt="go report" /></a>
-&nbsp;<img src="https://img.shields.io/badge/license-Apache_2.0-red?style=for-the-badge&logo=none" alt="license" />
-
-[Fiber](https://gofiber.io/) is an Express.js inspired web framework build on top of Fasthttp, the fastest HTTP engine
-for Go. Designed to ease things up for **fast** development with **zero memory allocation** and **performance** in mind.
-
 ## 2. Обновления
 
 Для обновления пакета достаточно запускать
