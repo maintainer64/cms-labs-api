@@ -7,6 +7,8 @@ import (
 	"net/http/httptest"
 	"strings"
 
+	"gitlab.com/a10869/api-modules/shared/connection"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/h2non/gock"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
@@ -20,7 +22,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/middleware"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/platform/database"
 	"gorm.io/gorm"
 )
 
@@ -63,7 +64,7 @@ func NewFiberTestHTTP() *FiberTestHTTP {
 	app := fiber.New()
 	middleware.FiberMiddleware(app)
 	FiberRoutes(app)
-	db, _ := database.MysqlConnection(logs.NewZeroLogger(&logs.ZeroLoggerConf{}))
+	db, _ := connection.MysqlConnection(configs.AppConfig.DB, logs.NewZeroLogger(&logs.ZeroLoggerConf{}))
 	return &FiberTestHTTP{
 		App: app,
 		DB:  db,

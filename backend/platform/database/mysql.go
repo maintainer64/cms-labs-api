@@ -32,10 +32,7 @@ func (l *DBLogger) Printf(format string, ctx ...interface{}) {
 func MysqlConnection(l *zerolog.Logger) (*gorm.DB, error) {
 
 	// Build Mysql connection URL.
-	mysqlConnURL, err := connection.ConnectionURLBuilder("mysql", configs.AppConfig.DB, configs.AppConfig.Server)
-	if err != nil {
-		return nil, err
-	}
+	mysqlConnURL := connection.UrlBuilderMySql(configs.AppConfig.DB)
 
 	l.Debug().Msg(fmt.Sprintf("Table prefix MysqlConnection %+v", configs.AppConfig.DB.TablePrefix))
 	l.Debug().Msg(fmt.Sprintf("Mysql DSN %+v", mysqlConnURL))

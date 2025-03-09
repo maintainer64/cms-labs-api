@@ -31,7 +31,7 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 	}()
 
 	// Build Fiber connection URL.
-	fiberConnURL, _ := connection.ConnectionURLBuilder("fiber", configs.AppConfig.DB, configs.AppConfig.Server)
+	fiberConnURL := connection.UrlBuilderFiber(configs.AppConfig.Server)
 
 	// Run server.
 	if err := a.Listen(fiberConnURL); err != nil {
@@ -44,7 +44,7 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 // StartServer func for starting a simple server.
 func StartServer(a *fiber.App) {
 	// Build Fiber connection URL.
-	fiberConnURL, _ := connection.ConnectionURLBuilder("fiber", configs.AppConfig.DB, configs.AppConfig.Server)
+	fiberConnURL := connection.UrlBuilderFiber(configs.AppConfig.Server)
 
 	// Run server.
 	if err := a.Listen(fiberConnURL); err != nil {

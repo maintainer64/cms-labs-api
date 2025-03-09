@@ -1,4 +1,4 @@
-package database
+package connection
 
 import (
 	"errors"
@@ -6,16 +6,10 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/shared/connection"
-
-	"gorm.io/gorm/schema"
-
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/gorm/schema"
 )
 
 type DBLogger struct {
@@ -27,15 +21,11 @@ func (l *DBLogger) Printf(format string, ctx ...interface{}) {
 }
 
 // MysqlConnection func for connection to Mysql database.
-func MysqlConnection(l *zerolog.Logger) (*gorm.DB, error) {
+func MysqlConnection(c *DBConfig, l *zerolog.Logger) (*gorm.DB, error) {
 
 	// Build Mysql connection URL.
-	mysqlConnURL, err := connection.ConnectionURLBuilder("mysql", configs.AppConfig.DB, configs.AppConfig.Server)
-	if err != nil {
-		return nil, err
-	}
-
-	l.Debug().Msg(fmt.Sprintf("Table prefix MysqlConnection %+v", configs.AppConfig.DB.TablePrefix))
+	mysqlConnURL := UrlBuilderMySql(c)
+	l.Debug().Msg(fmt.Sprintf("Table prefix MysqlConnection %+v", c.TablePrefix))
 	l.Debug().Msg(fmt.Sprintf("Mysql DSN %+v", mysqlConnURL))
 
 	// Define database connection for Mysql.
@@ -52,7 +42,7 @@ func MysqlConnection(l *zerolog.Logger) (*gorm.DB, error) {
 					Colorful:                  false,
 				}),
 			NamingStrategy: schema.NamingStrategy{
-				TablePrefix: configs.AppConfig.DB.TablePrefix,
+				TablePrefix: c.TablePrefix,
 			},
 		},
 	)
@@ -69,8 +59,8 @@ func MysqlConnection(l *zerolog.Logger) (*gorm.DB, error) {
 		return nil, errors.New(errText)
 	}
 
-	sqlDB.SetMaxIdleConns(configs.AppConfig.DB.MaxIdleConnections)
-	sqlDB.SetMaxOpenConns(configs.AppConfig.DB.MaxConnections)
-	sqlDB.SetConnMaxLifetime(time.Duration(configs.AppConfig.DB.MaxLifetimeConnections) * time.Minute)
+	sqlDB.SetMaxIdleConns(c.MaxIdleConnections)
+	sqlDB.SetMaxOpenConns(c.MaxConnections)
+	sqlDB.SetConnMaxLifetime(time.Duration(c.MaxLifetimeConnections) * time.Minute)
 	return db, nil
 }

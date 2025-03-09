@@ -1,9 +1,9 @@
 package database
 
 import (
-	"os"
-
 	"github.com/rs/zerolog"
+	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
+	"gitlab.com/a10869/api-modules/shared/connection"
 
 	"gorm.io/gorm"
 
@@ -26,14 +26,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		err error
 	)
 
-	// Get DB_TYPE value from .env file.
-	dbType := os.Getenv("DB_TYPE")
-
-	// Define a new Database connection with right DB type.
-	switch dbType {
-	case "mysql":
-		db, err = MysqlConnection(l)
-	}
+	db, err = connection.MysqlConnection(configs.AppConfig.DB, l)
 
 	if err != nil {
 		return nil, err
@@ -44,7 +37,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		DB:               db,
 		UserQueries:      &queries.UserQueries{DB: db},
 		UserRoleQueries:  &queries.UserRoleQueries{DB: db},
-		GuacamoleQueries: &queries.GuacamoleQueries{DB: db},
+		GuacamoleQueries: &queries.GuacamoleQueries{DB: db, Logger: l},
 	}, nil
 }
 
