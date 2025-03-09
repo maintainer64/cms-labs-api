@@ -7,9 +7,11 @@ import (
 
 func (di *DIContainer) SSOSecondFactorUC() *usecases.SSOSecondFactorUC {
 	return &usecases.SSOSecondFactorUC{
-		CMSClient:       di.CMSClient(),
-		UserQueries:     di.Queries.UserQueries,
-		UserRoleQueries: di.Queries.UserRoleQueries,
-		Logger:          logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.SSOSecondFactorUC")),
+		CMSClient:        di.CMSClient(),
+		UserQueries:      di.Queries.UserQueries,
+		UserRoleQueries:  di.Queries.UserRoleQueries,
+		GuacamoleQueries: di.Queries.GuacamoleQueries,
+		GuacamoleClient:  di.GuacamoleClient(),
+		Logger:           logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.SSOSecondFactorUC")),
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"gitlab.com/a10869/api-modules/shared/connection"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/guacamole_client"
 )
 
 type ServerConfig struct {
@@ -31,10 +32,11 @@ type DBConfig struct {
 }
 
 type AppConfigModel struct {
-	Debug     bool
-	Server    *connection.ServerConfig
-	DB        *connection.DBConfig
-	CMSClient *cms_client.CMSClientConfig
+	Debug           bool
+	Server          *connection.ServerConfig
+	DB              *connection.DBConfig
+	CMSClient       *cms_client.CMSClientConfig
+	GuacamoleClient *guacamole_client.GuacamoleClientConfig
 }
 
 func (c *AppConfigModel) Reload() {
@@ -64,6 +66,11 @@ func (c *AppConfigModel) Reload() {
 		ClientID:          os.Getenv("CMS_CLIENT_ID"),
 		Token:             os.Getenv("CMS_TOKEN"),
 		BaseUrl:           os.Getenv("CMS_BASE_URL"),
+	}
+	c.GuacamoleClient = &guacamole_client.GuacamoleClientConfig{
+		Debug:             c.Debug,
+		MaxTimeoutSeconds: int64(getEnvInt("GUACAMOLE_MAX_TIMEOUT")),
+		BaseUrl:           os.Getenv("GUACAMOLE_BASE_URL"),
 	}
 }
 

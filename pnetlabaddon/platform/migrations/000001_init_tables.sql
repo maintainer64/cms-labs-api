@@ -1,4 +1,143 @@
 -- +migrate Up
+CREATE SCHEMA IF NOT EXISTS `guacdb` COLLATE latin1_swedish_ci;
+CREATE TABLE IF NOT EXISTS `guacdb`.`guacamole_entity`
+(
+  entity_id
+  int
+  auto_increment
+  primary
+  key,
+  name
+  varchar
+(
+  128
+) not null,
+  type enum
+(
+  'USER',
+  'USER_GROUP'
+) not null,
+  constraint guacamole_entity_name_scope
+  unique
+(
+  type,
+  name
+)
+  ) charset = utf8;
+CREATE TABLE IF NOT EXISTS `guacdb`.`guacamole_user`
+(
+  user_id
+  int
+  auto_increment
+  primary
+  key,
+  entity_id
+  int
+  not
+  null,
+  password_hash
+  binary
+(
+  32
+) not null,
+  password_salt binary
+(
+  32
+) null,
+  password_date datetime not null,
+  disabled tinyint
+(
+  1
+) default 0 not null,
+  expired tinyint
+(
+  1
+) default 0 not null,
+  access_window_start time null,
+  access_window_end time null,
+  valid_from date null,
+  valid_until date null,
+  timezone varchar
+(
+  64
+) null,
+  full_name varchar
+(
+  256
+) null,
+  email_address varchar
+(
+  256
+) null,
+  organization varchar
+(
+  256
+) null,
+  organizational_role varchar
+(
+  256
+) null,
+  constraint guacamole_user_single_entity
+  unique
+(
+  entity_id
+),
+  constraint guacamole_user_entity
+  foreign key
+(
+  entity_id
+) references guacamole_entity
+(
+  entity_id
+)
+  on delete cascade
+  )
+  charset = utf8;
+
+CREATE TABLE IF NOT EXISTS `guacdb`.`guacamole_user_permission`
+(
+  entity_id
+  int
+  not
+  null,
+  affected_user_id
+  int
+  not
+  null,
+  permission
+  enum
+(
+  'READ',
+  'UPDATE',
+  'DELETE',
+  'ADMINISTER'
+) not null,
+  primary key
+(
+  entity_id,
+  affected_user_id,
+  permission
+),
+  constraint guacamole_user_permission_entity
+  foreign key
+(
+  entity_id
+) references guacamole_entity
+(
+  entity_id
+)
+  on delete cascade,
+  constraint guacamole_user_permission_ibfk_1
+  foreign key
+(
+  affected_user_id
+) references guacamole_user
+(
+  user_id
+)
+  on delete cascade
+  ) charset = utf8;
+
 CREATE TABLE IF NOT EXISTS `wiresharks`
 (
   `ws_id`
