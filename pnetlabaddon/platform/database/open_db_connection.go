@@ -2,7 +2,7 @@ package database
 
 import (
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
 	"gitlab.com/a10869/api-modules/shared/connection"
 
 	"gorm.io/gorm"
