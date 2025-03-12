@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/ory/go-convenience/stringsx"
+
 	"github.com/rs/zerolog"
 
 	"github.com/gofiber/fiber/v2"
@@ -50,6 +53,10 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 		q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries: entity update user_id=%+v", entityDB.UserID))
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
+		entity.AttemptID = stringsx.Coalesce(
+			entityDB.AttemptID,
+			uuid.New().String(),
+		)
 		entity.UpdatedAt = time.Now().UTC()
 		entity.UserID = entityDB.UserID
 		result := q.Save(&entity)
@@ -59,6 +66,10 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 		q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: entity create: %+v", entity))
 		q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries: entity create user_id=%+v", entity.UserID))
 		entity.ID = 0
+		entity.AttemptID = stringsx.Coalesce(
+			entity.AttemptID,
+			uuid.New().String(),
+		)
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
 		result := q.Create(entity)
@@ -66,10 +77,12 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 	}
 }
 
-func (q *LTIAttemptQueries) GetActiveByUserId(userId uint) (models.LTIAttempt, error) {
+func (q *LTIAttemptQueries) GetActiveByUserId(userId uint, routeId uint) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
 	result := q.Model(&entity).Where(
-		"user_id = ?", userId,
+		"user_id = ? AND lti_routing_id = ?",
+		userId,
+		routeId,
 	).Where("UTC_TIMESTAMP() < expired_at").Limit(
 		1,
 	).Offset(0).Order(`created_at desc`).Find(&entity)
@@ -126,7 +139,7 @@ func (q *LTIAttemptQueries) listFilter(userIds []uint, tx *gorm.DB) *gorm.DB {
 }
 
 func (q *LTIAttemptQueries) Delete(id uint) error {
-	_ = q.Where("id = ?", id).Delete(&models.LTIAttempt{})
+	err := q.Where("id = ?", id).Delete(&models.LTIAttempt{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: delete entity by id: %+v", id))
-	return nil
+	return err
 }

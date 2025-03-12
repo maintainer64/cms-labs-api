@@ -265,8 +265,11 @@ export const auth_UserPasswordRecoverResponseSchema = {
 
 export const models_LTIAttemptSchema = {
   type: 'object',
-  required: ['created_at', 'expired_at', 'updated_at'],
+  required: ['attempt_id', 'created_at', 'expired_at', 'updated_at'],
   properties: {
+    attempt_id: {
+      type: 'string'
+    },
     created_at: {
       type: 'string'
     },
@@ -296,8 +299,11 @@ export const models_LTIAttemptSchema = {
 
 export const models_LTIAttemptListItemSchema = {
   type: 'object',
-  required: ['created_at', 'expired_at', 'updated_at'],
+  required: ['attempt_id', 'created_at', 'expired_at', 'updated_at'],
   properties: {
+    attempt_id: {
+      type: 'string'
+    },
     created_at: {
       type: 'string'
     },
@@ -465,7 +471,7 @@ export const models_LTIRoutingSchema = {
       type: 'string'
     },
     pnet_labs_type: {
-      description: `The type of PNETLabsType
+      description: `The type of PNETLabsType, cms_client.PNETLabsTypeDefault
 enum: default,enumeration`,
       type: 'string'
     },
@@ -1955,6 +1961,12 @@ export const usecases_UserListInputDTOSchema = {
     },
     search: {
       type: 'string'
+    },
+    user_ids: {
+      type: 'array',
+      items: {
+        type: 'integer'
+      }
     }
   }
 } as const;

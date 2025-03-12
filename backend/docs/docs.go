@@ -1872,11 +1872,15 @@ const docTemplate = `{
         "models.LTIAttempt": {
             "type": "object",
             "required": [
+                "attempt_id",
                 "created_at",
                 "expired_at",
                 "updated_at"
             ],
             "properties": {
+                "attempt_id": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -1906,11 +1910,15 @@ const docTemplate = `{
         "models.LTIAttemptListItem": {
             "type": "object",
             "required": [
+                "attempt_id",
                 "created_at",
                 "expired_at",
                 "updated_at"
             ],
             "properties": {
+                "attempt_id": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -2084,7 +2092,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "pnet_labs_type": {
-                    "description": "The type of PNETLabsType\nenum: default,enumeration",
+                    "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,enumeration",
                     "type": "string"
                 },
                 "pnet_test_path": {
@@ -3639,6 +3647,12 @@ const docTemplate = `{
                 },
                 "search": {
                     "type": "string"
+                },
+                "user_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

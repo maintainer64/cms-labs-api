@@ -24,11 +24,11 @@ export const useServiceCardUpsert = (
     },
     ...options,
     async onSuccess(...args) {
-      await queryClient.invalidateQueries({ queryKey: ['postV1ServiceCardList'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1ServiceCardGet'] });
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
+      await queryClient.invalidateQueries({ queryKey: ['postV1ServiceCardList'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1ServiceCardGet'] });
     }
   });
 };

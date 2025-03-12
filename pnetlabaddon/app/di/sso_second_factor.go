@@ -15,3 +15,11 @@ func (di *DIContainer) SSOSecondFactorUC() *usecases.SSOSecondFactorUC {
 		Logger:           logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.SSOSecondFactorUC")),
 	}
 }
+
+func (di *DIContainer) LabCreateUC() *usecases.LabCreateUC {
+	return &usecases.LabCreateUC{
+		UserQueries:     di.Queries.UserQueries,
+		LabSessionQuery: di.Queries.LabSessionQuery,
+		Logger:          logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.LabCreateUC")),
+	}
+}

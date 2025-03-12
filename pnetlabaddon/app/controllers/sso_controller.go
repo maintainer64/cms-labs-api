@@ -70,16 +70,25 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		}
 	}
 	defer container.Close()
+	// Второй фактор аутентификации
 	uc := container.SSOSecondFactorUC()
 	dto := usecases.SSOSecondFactorInputDTO{
 		Code:        c.Query("code", ""),
 		Application: c.Query("application", ""),
 		Path:        c.Query("path", ""),
 		State:       c.Query("state", ""),
-		Extra:       c.Query("extra", ""),
 		RedirectURI: c.BaseURL() + "/pnet-lab-addon/api/v1/sso/openid",
 	}
 	output, err := uc.Execute(dto)
+	if err != nil {
+		return err
+	}
+	// Создание лабораторной работы по extraArgs
+	uc2 := container.LabCreateUC()
+	err = uc2.Execute(usecases.LabCreateInputDTO{
+		Extra:   c.Query("extra", ""),
+		UserPod: output.UserPod,
+	})
 	if err != nil {
 		return err
 	}

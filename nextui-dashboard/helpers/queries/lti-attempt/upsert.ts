@@ -14,18 +14,18 @@ export const useLTIAttemptUpsert = (
         form: {
           expired_at: values.expired_at,
           id: values.id,
-          pnet_server_id: values.pnet_server_id
+          pnet_server_id: parseInt(values.pnet_server_id?.toString() || '')
         }
       });
     },
     ...options,
     async onSuccess(...args) {
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptGet'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingGet'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptList'] });
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptGet'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingGet'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptList'] });
     }
   });
 };

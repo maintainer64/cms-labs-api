@@ -175,6 +175,8 @@ definitions:
     type: object
   models.LTIAttempt:
     properties:
+      attempt_id:
+        type: string
       created_at:
         type: string
       expired_at:
@@ -192,12 +194,15 @@ definitions:
       user_id:
         type: integer
     required:
+    - attempt_id
     - created_at
     - expired_at
     - updated_at
     type: object
   models.LTIAttemptListItem:
     properties:
+      attempt_id:
+        type: string
       created_at:
         type: string
       expired_at:
@@ -221,6 +226,7 @@ definitions:
       user_name:
         type: string
     required:
+    - attempt_id
     - created_at
     - expired_at
     - updated_at
@@ -321,7 +327,7 @@ definitions:
         type: string
       pnet_labs_type:
         description: |-
-          The type of PNETLabsType
+          The type of PNETLabsType, cms_client.PNETLabsTypeDefault
           enum: default,enumeration
         type: string
       pnet_test_path:
@@ -1361,6 +1367,10 @@ definitions:
         type: integer
       search:
         type: string
+      user_ids:
+        items:
+          type: integer
+        type: array
     type: object
   usecases.UserListOutputDTO:
     properties:

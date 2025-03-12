@@ -15,7 +15,7 @@ func TestV1ServiceCardCreate(t *testing.T) {
 	f := NewFiberTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0, "")
 	// Clear Table
-	f.DB.Where("id != ", "").Delete(&models.ServiceCard{})
+	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
 	input := usecases.ServiceCardEditInputDTO{
 		ImageUrl:    "https://example.com/image.jpg",
 		Url:         "https://example.com",

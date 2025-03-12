@@ -88,7 +88,7 @@ func (q *ServiceCardQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 }
 
 func (q *ServiceCardQueries) Delete(id uint) error {
-	_ = q.Where("id = ?", id).Delete(&models.ServiceCard{})
+	err := q.Where("id = ?", id).Delete(&models.ServiceCard{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("ServiceCardQueries: delete entity by id: %+v", id))
-	return nil
+	return err
 }

@@ -22,12 +22,12 @@ export const useLTIAttemptDelete = (
     },
     ...options,
     async onSuccess(...args) {
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptGet'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingGet'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptList'] });
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptGet'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingGet'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiAttemptList'] });
     }
   });
 };

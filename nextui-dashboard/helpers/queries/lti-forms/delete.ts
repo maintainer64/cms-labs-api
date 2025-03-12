@@ -18,11 +18,11 @@ export const useLTIFormsDelete = (
     },
     ...options,
     async onSuccess(...args) {
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiFormGet'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiFormList'] });
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiFormGet'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiFormList'] });
     }
   });
 };

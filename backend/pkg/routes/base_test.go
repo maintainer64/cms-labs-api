@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io"
 	"net/http/httptest"
@@ -55,6 +56,20 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 	return "Bearer " + token.AccessToken
 }
 
+func (f *FiberTestHTTP) AuthorizationServiceBasic() string {
+	entity := models.PNETServer{}
+	entity.Type = models.ServerTypeOpenID
+	entity.Name = uuid.New().String() + "_server"
+	entity.Url = "https://localhost"
+	entity.IsActive = true
+	entity.Token = uuid.New().String()
+	entity.ClientID = uuid.New().String()
+	f.DB.Create(&entity)
+	return "Basic " + base64.StdEncoding.EncodeToString(
+		[]byte(fmt.Sprintf("%s:%s", entity.ClientID, entity.Token)),
+	)
+}
+
 func NewFiberTestHTTP() *FiberTestHTTP {
 	// Load .env.test file from the root folder.
 	_ = godotenv.Load("../../.env")
@@ -79,6 +94,7 @@ func FiberJSON(data any) string {
 	jsonByte, _ := json.Marshal(data)
 	return string(jsonByte)
 }
+
 func FiberRequestPayload(data any) io.Reader {
 	return strings.NewReader(fmt.Sprint(FiberJSON(data)))
 }

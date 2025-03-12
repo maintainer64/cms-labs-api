@@ -1,6 +1,9 @@
 package cms_client
 
 import (
+	"encoding/base64"
+
+	"github.com/goccy/go-json"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -50,5 +53,34 @@ func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 	}
 }
 
+const (
+	PNETLabsTypeDefault     = "default"
+	PNETLabsTypeEnumeration = "enumeration"
+	PNETLabsTypeFile        = "file"
+)
+
 type SSOTokenPublicExtraParams struct {
+	AttemptID string `json:"attempt_id"`
+	// enumeration PNETLabsTypeDefault...
+	PNETLabsType string `json:"pnet_labs_type"`
+	PNETLabsPath string `json:"pnet_labs_path"`
+	PNETTestPath string `json:"pnet_test_path"`
+}
+
+func (t *SSOTokenPublicExtraParams) Marshal() string {
+	b, err := json.Marshal(t)
+	if err != nil {
+		return ""
+	}
+	return base64.StdEncoding.EncodeToString(b)
+}
+
+func UnmarshalSSOTokenPublicExtraParams(base64String string) *SSOTokenPublicExtraParams {
+	var decode SSOTokenPublicExtraParams
+	data, err := base64.StdEncoding.DecodeString(base64String)
+	if err != nil {
+		return &decode
+	}
+	_ = json.Unmarshal(data, &decode)
+	return &decode
 }

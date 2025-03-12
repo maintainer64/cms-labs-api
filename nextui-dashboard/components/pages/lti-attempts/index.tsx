@@ -9,7 +9,7 @@ import { LTIAttemptTableWrapper } from '@/components/pages/lti-attempts/table/ta
 import { useParams } from 'react-router-dom';
 import { LtiAttemptIcon } from '@/components/icons/breadcrumb/lti-attempt';
 
-export const LTIAttemptList = () => {
+export const LTIAttemptListByUser = () => {
   const { id } = useParams();
   const { locale } = useLanguageBrowser();
   const {
