@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/a10869/api-modules/backend/app/models"
@@ -15,7 +17,7 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 	f := NewFiberTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0, "")
 	// Clear Table
-	f.DB.Where("id != ", "").Delete(&models.LTIRouting{})
+	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
 
 	input := usecases.LTIRoutingEditInputDTO{
 		Name:                 "Test LTIRouting",
@@ -25,7 +27,7 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 		LTIParamsTask:        "param1,param2",
 		Collaboration:        1,
 		PinnedSessionMinutes: 30,
-		PNETLabsType:         models.PNETLabsTypeDefault,
+		PNETLabsType:         cms_client.PNETLabsTypeDefault,
 		PNETLabsPath:         "/path/to/labs",
 		PNETTestPath:         "/path/to/test",
 		IsDefault:            false,

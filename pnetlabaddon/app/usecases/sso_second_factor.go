@@ -22,7 +22,6 @@ type SSOSecondFactorInputDTO struct {
 	Application string `json:"application"`
 	Path        string `json:"path"`
 	State       string `json:"state"`
-	Extra       string `json:"extra"`
 	RedirectURI string `json:"redirect_uri"`
 }
 
@@ -36,6 +35,7 @@ type SSOSecondFactorUC struct {
 }
 
 type SSOSecondFactorOutputDTO struct {
+	UserPod            int       `json:"user_pod"`
 	CookieToken        string    `json:"cookie_token"`
 	CookieAge          time.Time `json:"cookie_age"`
 	CookieMaxAge       int       `json:"cookie_max_age"`
@@ -164,6 +164,7 @@ func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFact
 		return nil, err
 	}
 	return &SSOSecondFactorOutputDTO{
+		UserPod:            userDB.Pod,
 		CookieToken:        userDB.Cookie,
 		CookieAge:          time.Now().Add(2 * time.Hour),
 		CookieMaxAge:       7200,

@@ -22,11 +22,11 @@ export const useLTIRoutingDelete = (
     },
     ...options,
     async onSuccess(...args) {
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingList'] });
-      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingGet'] });
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingList'] });
+      await queryClient.invalidateQueries({ queryKey: ['postV1LtiRoutingGet'] });
     }
   });
 };

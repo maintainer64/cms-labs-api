@@ -8,18 +8,19 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+	"gitlab.com/a10869/api-modules/shared/utils"
+
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	"github.com/goccy/go-json"
-	"github.com/gofiber/fiber/v2"
 	"github.com/ory/go-convenience/mapx"
 	"github.com/rs/zerolog/log"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 type LTIAttemptCreateUC struct {
@@ -60,7 +61,14 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 			u.user.Email,
 		),
 	)
-	attempt, _ := u.LTIAttemptQueries.GetActiveByUserId(u.user.Id)
+	route := u.SearchRelevantRouting()
+	if route == nil || route.ID == 0 {
+		return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
+			Status:    fiber.StatusNotFound,
+			Exception: errors.New("no route found for this user"),
+		}
+	}
+	attempt, _ := u.LTIAttemptQueries.GetActiveByUserId(u.user.Id, route.ID)
 	if attempt.ID != 0 {
 		log.Info().Msg(
 			fmt.Sprintf(
@@ -80,13 +88,6 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 	attempt.UserID = u.user.Id
 	// Set PNETServerID
 	attempt.PNETServerID = pnetRoutes.PNETServerID
-	route := u.SearchRelevantRouting()
-	if route == nil || route.ID == 0 {
-		return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("no route found for this user"),
-		}
-	}
 	// Set LTIRoutingSecretID
 	attempt.LTIRoutingID = route.ID
 	// Set RoomNumber
@@ -191,9 +192,14 @@ func (u *LTIAttemptCreateUC) PreparedResponseByAttempt(attempt models.LTIAttempt
 	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
 	}
-	nextUrl, err := url.JoinPath(
+	nextUrl, err := u.SSOUrlGenerator(
 		pnetServer.Url,
-		"/pnet-lab-addon/api/v1/sso/login",
+		cms_client.SSOTokenPublicExtraParams{
+			AttemptID:    attempt.AttemptID,
+			PNETLabsType: ltiRoute.PNETLabsType,
+			PNETLabsPath: ltiRoute.PNETLabsPath,
+			PNETTestPath: ltiRoute.PNETTestPath,
+		},
 	)
 	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
@@ -205,4 +211,15 @@ func (u *LTIAttemptCreateUC) PreparedResponseByAttempt(attempt models.LTIAttempt
 		AutoRedirect:  ltiRoute.Collaboration <= 1 || ltiRoute.Collaboration > 1 && ltiRoute.Collaboration == len(users),
 		Members:       users,
 	}, nil
+}
+
+func (u *LTIAttemptCreateUC) SSOUrlGenerator(
+	baseUrl string,
+	extra cms_client.SSOTokenPublicExtraParams,
+) (string, error) {
+	nextUrl, err := url.JoinPath(
+		baseUrl,
+		"/pnet-lab-addon/api/v1/sso/login?extra="+extra.Marshal(),
+	)
+	return nextUrl, err
 }

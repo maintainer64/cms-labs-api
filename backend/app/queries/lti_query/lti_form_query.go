@@ -132,7 +132,7 @@ func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 }
 
 func (q *LTIFormQueries) Delete(id uint) error {
-	_ = q.Where("id = ?", id).Delete(&models.LTIForm{})
+	err := q.Where("id = ?", id).Delete(&models.LTIForm{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: delete entity by id: %+v", id))
-	return nil
+	return err
 }

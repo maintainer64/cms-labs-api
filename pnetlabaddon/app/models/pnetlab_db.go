@@ -1,5 +1,11 @@
 package models
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 // Wireshark модель для таблицы wiresharks
 type Wireshark struct {
 	WsID       int64  `gorm:"primary_key;column:ws_id;AUTO_INCREMENT"`
@@ -139,6 +145,27 @@ type LabSession struct {
 	LabSessionJoined  string `gorm:"column:lab_session_joined;type:text"`
 	LabSessionPath    string `gorm:"column:lab_session_path;type:text"`
 	LabSessionRunning int    `gorm:"column:lab_session_running"`
+}
+
+func (l *LabSession) AddJoinedUser(userPod int) {
+	strNumbers := strings.Split(l.LabSessionJoined, ",")
+	// Create a set of integers
+	set := make(map[int]bool)
+	for _, strNum := range strNumbers {
+		num, err := strconv.Atoi(strNum)
+		if err != nil {
+			continue
+		}
+		set[num] = true
+	}
+	set[userPod] = true
+
+	// Convert the set back to a comma-separated string
+	var result []string
+	for num := range set {
+		result = append(result, fmt.Sprintf("%d", num))
+	}
+	l.LabSessionJoined = strings.Join(result, ",")
 }
 
 // TableName возвращает имя таблицы для модели LabSession

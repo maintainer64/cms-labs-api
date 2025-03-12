@@ -11,9 +11,10 @@ type UserListUC struct {
 }
 
 type UserListInputDTO struct {
-	Search string `json:"search"`
-	Limit  int    `json:"limit"`
-	Offset int    `json:"offset"`
+	Search  string `json:"search"`
+	UserIds []uint `json:"user_ids"`
+	Limit   int    `json:"limit"`
+	Offset  int    `json:"offset"`
 }
 
 type UserListOutputDTO struct {
@@ -24,7 +25,7 @@ type UserListOutputDTO struct {
 type UserListResponse = response.Response[UserListOutputDTO]
 
 func (u *UserListUC) Execute(dto UserListInputDTO) (UserListOutputDTO, error) {
-	entities, count, err := u.UserQueries.List(dto.Search, []uint{}, dto.Limit, dto.Offset)
+	entities, count, err := u.UserQueries.List(dto.Search, dto.UserIds, dto.Limit, dto.Offset)
 	return UserListOutputDTO{
 		Model:      entities,
 		TotalCount: count,

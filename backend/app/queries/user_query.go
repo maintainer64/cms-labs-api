@@ -162,12 +162,6 @@ func (q *UserQueries) listFilter(search string, ids []uint, tx *gorm.DB) *gorm.D
 	return tx
 }
 
-func (q *UserQueries) Delete(id uint) error {
-	_ = q.Where("id = ?", id).Update("deleted_at", time.Now().UTC())
-	q.Logger.Debug().Msg(fmt.Sprintf("UserQueries: delete entity by id: %+v", id))
-	return nil
-}
-
 func (q *UserQueries) UpdateByLaunchData(
 	launchID string,
 	launchData json.RawMessage,

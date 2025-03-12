@@ -59,7 +59,7 @@ type SwaggerSSOTokenPublicData struct {
 	Expires      int64  `json:"exp"`
 }
 
-// SwaggerSSOTokenPublicDataResponse copy of  cms_client.SSOTokenPublicDataResponse
+// SwaggerSSOTokenPublicDataResponse copy of cms_client.SSOTokenPublicDataResponse
 type SwaggerSSOTokenPublicDataResponse struct {
 	Error  bool                      `json:"error" validate:"required"`
 	Msg    string                    `json:"msg" validate:"required"`

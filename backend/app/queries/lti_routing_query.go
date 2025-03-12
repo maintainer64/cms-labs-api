@@ -146,7 +146,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 }
 
 func (q *LTIRoutingQueries) Delete(id uint) error {
-	_ = q.Where("id = ?", id).Delete(&models.LTIRouting{})
+	err := q.Where("id = ?", id).Delete(&models.LTIRouting{}).Error
 	q.Logger.Info().Msg(fmt.Sprintf("LTIRoutingQueries: delete entity by id: %+v", id))
-	return nil
+	return err
 }

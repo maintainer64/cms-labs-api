@@ -16,6 +16,7 @@ type Queries struct {
 	*queries.UserQueries
 	*queries.UserRoleQueries
 	*queries.GuacamoleQueries
+	*queries.LabSessionQuery
 }
 
 // OpenDBConnection func for opening database connection.
@@ -38,6 +39,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		UserQueries:      &queries.UserQueries{DB: db},
 		UserRoleQueries:  &queries.UserRoleQueries{DB: db},
 		GuacamoleQueries: &queries.GuacamoleQueries{DB: db, Logger: l},
+		LabSessionQuery:  &queries.LabSessionQuery{DB: db},
 	}, nil
 }
 

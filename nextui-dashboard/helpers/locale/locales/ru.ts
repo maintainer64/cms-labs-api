@@ -206,7 +206,7 @@ const ru = {
     }
   },
   LTIFormAttempt: {
-    FieldID: 'ID',
+    FieldID: 'ID попытки',
     FieldUserId: 'ID пользователя',
     FieldUserEmail: 'Почта пользователя',
     FieldUserName: 'ФИО пользователя',

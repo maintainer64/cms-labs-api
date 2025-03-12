@@ -1,5 +1,6 @@
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { postV1PnetServerList, postV1PnetServerGet, usecases_PNETServerListInputDTO } from '@/helpers/api';
+import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
+import { postV1PnetServerGet, postV1PnetServerList, usecases_PNETServerListInputDTO } from '@/helpers/api';
+import { InputProps } from '@heroui/input/dist/input';
 
 export const usePnetServerList = (params?: usecases_PNETServerListInputDTO) => {
   return useInfiniteQuery({
@@ -34,4 +35,44 @@ export const usePnetServerByID = (id?: number) => {
     },
     retry: 3
   });
+};
+
+export const usePnetServerAutocompleteData = (search: string, props: InputProps) => {
+  const _id = parseInt(props.value?.toString() || '');
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ['postV1PnetServerList', search],
+        queryFn: () =>
+          postV1PnetServerList({
+            form: {
+              limit: 20,
+              offset: 0,
+              search: search
+            }
+          }),
+        retry: 3
+      },
+      {
+        queryKey: ['postV1PnetServerGet', _id],
+        queryFn: () => (_id ? postV1PnetServerGet({ form: { id: _id } }) : undefined),
+        retry: 3
+      }
+    ]
+  });
+
+  const entitiesSearch = results?.[0]?.data?.result?.model || [];
+  const entityCurrent = results?.[1]?.data?.result?.model;
+  const entities =
+    entityCurrent && !entitiesSearch.find((entity) => entity.id === entityCurrent.id)
+      ? [...entitiesSearch, entityCurrent]
+      : entitiesSearch;
+
+  // Объединяем данные и статусы загрузки
+  const isLoading = results.some((result) => result.isLoading);
+  const items = entities.map((entity) => {
+    return { key: entity.id || 0, value: entity.name || '' };
+  });
+
+  return { isLoading, items };
 };

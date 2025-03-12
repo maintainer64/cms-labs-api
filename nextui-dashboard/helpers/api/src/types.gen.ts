@@ -100,6 +100,7 @@ export type auth_UserPasswordRecoverResponse = {
 };
 
 export type models_LTIAttempt = {
+  attempt_id: string;
   created_at: string;
   expired_at: string;
   id?: number;
@@ -111,6 +112,7 @@ export type models_LTIAttempt = {
 };
 
 export type models_LTIAttemptListItem = {
+  attempt_id: string;
   created_at: string;
   expired_at: string;
   id?: number;
@@ -173,7 +175,7 @@ export type models_LTIRouting = {
   pinned_session_minutes?: number;
   pnet_labs_path?: string;
   /**
-   * The type of PNETLabsType
+   * The type of PNETLabsType, cms_client.PNETLabsTypeDefault
    * enum: default,enumeration
    */
   pnet_labs_type?: string;
@@ -377,6 +379,7 @@ export type usecases_LTIAttemptGetResponse = {
 export type usecases_LTIAttemptListInputDTO = {
   limit?: number;
   offset?: number;
+  search?: string;
   user_ids?: Array<number>;
 };
 
@@ -739,6 +742,7 @@ export type usecases_UserListInputDTO = {
   limit?: number;
   offset?: number;
   search?: string;
+  user_ids?: Array<number>;
 };
 
 export type usecases_UserListOutputDTO = {

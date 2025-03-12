@@ -15,12 +15,14 @@ import { useLTIAttemptDelete } from '@/helpers/queries/lti-attempt/delete';
 import { useLTIAttemptUpsert } from '@/helpers/queries/lti-attempt/upsert';
 import { useUserByID } from '@/helpers/queries/users/get';
 import { useLTIRoutingByID } from '@/helpers/queries/lti-routing/get';
+import { ServerInput } from '@/components/pages/lti-attempts/edit/autoCompleteServer';
 
 interface EditFormProps {
   id?: number;
 }
 
 const defaultValues: models_LTIAttempt = {
+  attempt_id: '',
   created_at: '',
   expired_at: '',
   lti_routing_id: 0,
@@ -45,7 +47,7 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
   const isLoading = response.isLoading || responseUser.isLoading || responseRoute.isLoading;
   const { mutate } = useLTIAttemptUpsert({
     onSuccess: (data, { formikHelpers }) => {
-      navigate(RoutesLocation.ltiFormsEdit(data.result?.id?.toString() || ''), { replace: true });
+      navigate(RoutesLocation.ltiAttemptEdit(data.result?.id?.toString() || ''), { replace: true });
       showAlert({
         type: 'success',
         message: Forms.SaveSuccess
@@ -96,9 +98,21 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
             <Input
               variant='bordered'
               label={LTIFormAttempt.FieldID}
-              type='number'
-              value={(initialValues.id ?? 0).toString()}
+              value={(initialValues.attempt_id ?? '').toString()}
               isReadOnly
+            />
+            <ServerInput
+              variant='bordered'
+              label={LTIFormAttempt.FieldPNETServer}
+              value={(values.pnet_server_id ?? '').toString()}
+              onChange={handleChange('pnet_server_id')}
+            />
+            <Input
+              variant='bordered'
+              label={LTIFormAttempt.FieldExpiredAt}
+              type='datetime-local'
+              value={dayjs(values.expired_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              onChange={handleChange('expired_at')}
             />
             <Input
               variant='bordered'
@@ -134,13 +148,6 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
               type='text'
               value={route?.name ?? ''}
               isReadOnly
-            />
-            <Input
-              variant='bordered'
-              label={LTIFormAttempt.FieldExpiredAt}
-              type='datetime-local'
-              value={dayjs(values.expired_at ?? '').format('YYYY-MM-DDTHH:mm')}
-              onChange={handleChange('expired_at')}
             />
             <Input
               variant='bordered'
