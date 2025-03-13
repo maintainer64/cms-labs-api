@@ -15,7 +15,7 @@ const ru = {
     ErrorPageTitle: 'Ошибка авторизации',
     ErrorPageDescription: 'Попробуйте перейти на страницу входа в систему или авторизоваться через курс',
     MainTitle: 'СУиМ Лаб',
-    MainDescription: 'Система Управления и Мониторинга лаболаторных работ. Сделано на Next UI',
+    MainDescription: 'Система Управления и Мониторинга лаболаторных работ. Сделано на Hero UI',
     MainChangeLanguage: 'Сменить язык'
   },
   CompaniesDropdown: {

@@ -33,6 +33,7 @@ func (u *RoundQueuePoolPnetUpsert) Execute() error {
 	u.Logger.Info().Msg("RoundQueuePoolPnetUpsert start to generate new distribution pnet servers")
 	entities, _, err := u.PNETServerQueries.List(queries.PNETServerQueriesListDTO{
 		Limit:  queries.MaxLimitCount,
+		Types:  []string{models.ServerTypePnet},
 		Offset: 0,
 	})
 	if err != nil {

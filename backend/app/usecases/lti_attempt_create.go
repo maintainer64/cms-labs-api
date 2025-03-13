@@ -217,9 +217,10 @@ func (u *LTIAttemptCreateUC) SSOUrlGenerator(
 	baseUrl string,
 	extra cms_client.SSOTokenPublicExtraParams,
 ) (string, error) {
-	nextUrl, err := url.JoinPath(
+	pathUrl, err := url.JoinPath(
 		baseUrl,
-		"/pnet-lab-addon/api/v1/sso/login?extra="+extra.Marshal(),
+		"/pnet-lab-addon/api/v1/sso/login",
 	)
+	nextUrl := pathUrl + "?extra=" + extra.Marshal()
 	return nextUrl, err
 }

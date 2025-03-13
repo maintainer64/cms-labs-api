@@ -25,9 +25,10 @@ type PNETServerQueries struct {
 }
 
 type PNETServerQueriesListDTO struct {
-	Search string `json:"search"`
-	Limit  int    `json:"limit"`
-	Offset int    `json:"offset"`
+	Search string   `json:"search"`
+	Limit  int      `json:"limit"`
+	Offset int      `json:"offset"`
+	Types  []string `json:"types"`
 	// The type of status
 	// enum: all,active
 	Status string `json:"status"`
@@ -137,6 +138,10 @@ func (q *PNETServerQueries) listFilter(filter PNETServerQueriesListDTO, tx *gorm
 
 	if filter.Status == PNETServerListInputDTOStatusActive {
 		tx = models.PNETServeIsRealActive(tx)
+	}
+
+	if len(filter.Types) > 0 {
+		tx = tx.Where("type IN (?)", filter.Types)
 	}
 
 	if filter.Search != "" {
