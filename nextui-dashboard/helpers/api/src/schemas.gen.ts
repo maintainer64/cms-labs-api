@@ -538,6 +538,7 @@ export const models_PNETServerSchema = {
       type: 'string'
     },
     type: {
+      description: 'enumeration: ServerTypePnet, ServerTypeOpenID',
       type: 'string'
     },
     unit_rate: {
@@ -581,6 +582,7 @@ export const models_PNETServerListItemSchema = {
       type: 'string'
     },
     type: {
+      description: 'enumeration: ServerTypePnet, ServerTypeOpenID',
       type: 'string'
     },
     unit_rate: {
@@ -1548,6 +1550,12 @@ enum: createdAt,unitRate,lastCountUsers`,
       description: `The type of status
 enum: all,active`,
       type: 'string'
+    },
+    types: {
+      type: 'array',
+      items: {
+        type: 'string'
+      }
     }
   }
 } as const;

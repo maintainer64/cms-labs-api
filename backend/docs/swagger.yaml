@@ -375,6 +375,7 @@ definitions:
       token:
         type: string
       type:
+        description: 'enumeration: ServerTypePnet, ServerTypeOpenID'
         type: string
       unit_rate:
         type: integer
@@ -405,6 +406,7 @@ definitions:
       name:
         type: string
       type:
+        description: 'enumeration: ServerTypePnet, ServerTypeOpenID'
         type: string
       unit_rate:
         type: integer
@@ -1089,6 +1091,10 @@ definitions:
           The type of status
           enum: all,active
         type: string
+      types:
+        items:
+          type: string
+        type: array
     type: object
   usecases.PNETServerListOutputDTO:
     properties:

@@ -157,7 +157,7 @@ func (u *LTIAttemptCreateUC) SearchRelevantRouting() *models.LTIRouting {
 		ltiSubId = ltiSub
 	}
 	ltiRouting, err := u.LTIRoutingQueries.GetRelevantRouting(title, description, customParams)
-	if err != nil {
+	if err != nil || ltiRouting.ID == 0 {
 		log.Warn().Msg(fmt.Sprintf("LTIAttemptCreateUC: SearchRelevantRouting exception %+v", err))
 		return nil
 	}

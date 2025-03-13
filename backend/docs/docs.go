@@ -2162,6 +2162,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
+                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID",
                     "type": "string"
                 },
                 "unit_rate": {
@@ -2207,6 +2208,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
+                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID",
                     "type": "string"
                 },
                 "unit_rate": {
@@ -3222,6 +3224,12 @@ const docTemplate = `{
                 "status": {
                     "description": "The type of status\nenum: all,active",
                     "type": "string"
+                },
+                "types": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
