@@ -14,8 +14,9 @@ const (
 
 // PNETServerBase struct to describe PNETServer object.
 type PNETServerBase struct {
-	Name                 string     `gorm:"type:varchar(255)" json:"name"`
-	Url                  string     `gorm:"type:varchar(255)" json:"url"`
+	Name string `gorm:"type:varchar(255)" json:"name"`
+	Url  string `gorm:"type:varchar(255)" json:"url"`
+	// enumeration: ServerTypePnet, ServerTypeOpenID
 	Type                 string     `gorm:"type:varchar(255)" json:"type"`
 	IsActive             bool       `gorm:"type:bool" json:"is_active"`
 	MinutesForDisconnect int        `gorm:"type:int" json:"minutes_for_disconnect"`

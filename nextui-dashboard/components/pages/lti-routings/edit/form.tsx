@@ -185,7 +185,6 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     labsTypeUnl={values.pnet_labs_type ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsPath}
-                    type='url'
                     value={values.pnet_labs_path ?? ''}
                     onChange={handleChange('pnet_labs_path')}
                   />
@@ -193,7 +192,6 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     labsTypeUnl={values.pnet_labs_type ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETTestPath}
-                    type='url'
                     value={values.pnet_test_path ?? ''}
                     onChange={handleChange('pnet_test_path')}
                   />

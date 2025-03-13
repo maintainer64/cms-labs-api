@@ -15,7 +15,7 @@ const en = {
     ErrorPageTitle: 'Authorization Error',
     ErrorPageDescription: 'Try to go to the login page or log in through the course',
     MainTitle: 'CMS LABS',
-    MainDescription: '[Admin] Control Management System labs by Next UI',
+    MainDescription: '[Admin] Control Management System labs by Hero UI',
     MainChangeLanguage: 'Change language'
   },
   CompaniesDropdown: {
