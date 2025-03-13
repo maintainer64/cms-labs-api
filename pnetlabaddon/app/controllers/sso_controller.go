@@ -85,10 +85,12 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 	}
 	// Создание лабораторной работы по extraArgs
 	uc2 := container.LabCreateUC()
-	err = uc2.Execute(usecases.LabCreateInputDTO{
-		Extra:   c.Query("extra", ""),
-		UserPod: output.UserPod,
-	})
+	err = uc2.Execute(
+		usecases.LabCreateInputDTO{
+			Extra:   c.Query("extra", ""),
+			UserPod: output.UserPod,
+		},
+	)
 	if err != nil {
 		return err
 	}

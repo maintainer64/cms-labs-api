@@ -2,12 +2,12 @@
 import React from 'react';
 import { Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
-import { usecases_UserPasswordChangeInputDTO } from '@/helpers/api';
+import { auth_UserPasswordChangeInputDTO } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useAlert } from '@/components/alerts/hooks';
 import { useUserPasswordChange } from '@/helpers/queries/users/passwordChange';
 
-const defaultValues: usecases_UserPasswordChangeInputDTO = {
+const defaultValues: auth_UserPasswordChangeInputDTO = {
   old_password: '',
   new_password: '',
   again_password: ''
