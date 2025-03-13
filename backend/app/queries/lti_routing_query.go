@@ -109,7 +109,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 		execute = true
 	}
 	if description != "" {
-		tx = tx.Or("lti_description = ?", title)
+		tx = tx.Or("lti_description = ?", description)
 		execute = true
 	}
 	if len(customParams) > 0 {
