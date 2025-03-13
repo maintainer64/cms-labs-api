@@ -201,6 +201,9 @@ export type models_PNETServer = {
   minutes_for_disconnect?: number;
   name?: string;
   token?: string;
+  /**
+   * enumeration: ServerTypePnet, ServerTypeOpenID
+   */
   type?: string;
   unit_rate?: number;
   updated_at: string;
@@ -216,6 +219,9 @@ export type models_PNETServerListItem = {
   max_count_users_limit?: number;
   minutes_for_disconnect?: number;
   name?: string;
+  /**
+   * enumeration: ServerTypePnet, ServerTypeOpenID
+   */
   type?: string;
   unit_rate?: number;
   updated_at: string;
@@ -379,7 +385,6 @@ export type usecases_LTIAttemptGetResponse = {
 export type usecases_LTIAttemptListInputDTO = {
   limit?: number;
   offset?: number;
-  search?: string;
   user_ids?: Array<number>;
 };
 
@@ -584,6 +589,7 @@ export type usecases_PNETServerListInputDTO = {
    * enum: all,active
    */
   status?: string;
+  types?: Array<string>;
 };
 
 export type usecases_PNETServerListOutputDTO = {
