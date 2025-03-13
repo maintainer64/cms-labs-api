@@ -65,7 +65,6 @@ func (u *LabCreateUC) CreateOrUpdateLab(
 		),
 	)
 	return nil
-
 }
 
 func (u *LabCreateUC) Execute(dto LabCreateInputDTO) error {
@@ -74,7 +73,8 @@ func (u *LabCreateUC) Execute(dto LabCreateInputDTO) error {
 		u.Logger.Info().Msg("LabCreate attemptID is null")
 		return nil
 	}
-	if extra.PNETLabsType == cms_client.PNETLabsTypeDefault {
+	if extra.PNETLabsType == cms_client.PNETLabsTypeDefault && extra.PNETLabsPath != "" {
+		u.Logger.Info().Msg(fmt.Sprintf("LabCreate by default path: %s", extra.PNETLabsPath))
 		return u.CreateOrUpdateLab(dto.UserPod, extra.PNETLabsPath, extra.AttemptID)
 	}
 	return nil
