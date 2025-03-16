@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
+
 	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/a10869/api-modules/backend/app/models"
@@ -156,9 +158,9 @@ func TestV1UNLFileSyncSuccess(t *testing.T) {
 	description := "sync UNL files successfully"
 	f := NewFiberTestHTTP()
 
-	authHeader := f.AuthorizationServiceBasic()
+	authHeader, _ := f.AuthorizationServiceBasic()
 
-	input := usecases.UNLFileSyncInputDTO{
+	input := external.UNLFileSyncInputDTO{
 		Branch:     "main",
 		Repository: "https://github.com/maintainer64/yandex-music-to-discord-macos-native.git",
 	}
@@ -170,7 +172,7 @@ func TestV1UNLFileSyncSuccess(t *testing.T) {
 		FiberRequestPayload(input),
 		authHeader,
 	)
-	bodyModel := usecases.UNLFileSyncResponse{}
+	bodyModel := external.UNLFileSyncResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, expectedCode, statusCode, description)
@@ -230,9 +232,9 @@ func TestV1UNLFileSyncInvalidRepository(t *testing.T) {
 	description := "sync UNL files with invalid repository"
 	f := NewFiberTestHTTP()
 
-	authHeader := f.AuthorizationServiceBasic()
+	authHeader, _ := f.AuthorizationServiceBasic()
 
-	input := usecases.UNLFileSyncInputDTO{
+	input := external.UNLFileSyncInputDTO{
 		Branch:     "main",
 		Repository: "invalid-repo",
 	}

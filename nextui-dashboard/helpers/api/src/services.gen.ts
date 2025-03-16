@@ -38,6 +38,8 @@ import type {
   PostV1PnetServerGetResponse,
   PostV1PnetServerListData,
   PostV1PnetServerListResponse,
+  PostV1PnetServerPingData,
+  PostV1PnetServerPingResponse,
   PostV1PnetServerUpsertData,
   PostV1PnetServerUpsertResponse,
   PostV1ServiceCardDeleteData,
@@ -382,6 +384,28 @@ export const postV1PnetServerList = (
 };
 
 /**
+ * ping from pnet_server
+ * ing from external servers.
+ * @param data The data for the request.
+ * @param data.form pnet_server id
+ * @param data.authorization Basic-токен, созданный клиентом
+ * @returns external_PNETServerPingResponse OK
+ * @throws ApiError
+ */
+export const postV1PnetServerPing = (
+  data: PostV1PnetServerPingData
+): CancelablePromise<PostV1PnetServerPingResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/pnet-server/ping',
+    headers: {
+      Authorization: data.authorization
+    },
+    body: data.form
+  });
+};
+
+/**
  * create pnet_server
  * Create pnet_server. Roles [admin]
  * @param data The data for the request.
@@ -685,13 +709,17 @@ export const postV1UnlFileList = (data: PostV1UnlFileListData): CancelablePromis
  * sync from git unl_file.
  * @param data The data for the request.
  * @param data.form sync params
- * @returns usecases_UNLFileSyncResponse OK
+ * @param data.authorization Basic-токен, созданный клиентом
+ * @returns external_UNLFileSyncResponse OK
  * @throws ApiError
  */
 export const postV1UnlFileSync = (data: PostV1UnlFileSyncData): CancelablePromise<PostV1UnlFileSyncResponse> => {
   return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/unl-file/sync',
+    headers: {
+      Authorization: data.authorization
+    },
     body: data.form
   });
 };

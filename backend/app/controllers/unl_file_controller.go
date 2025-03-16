@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
 	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
@@ -74,12 +75,12 @@ func UNLFileGet(c *fiber.Ctx) error {
 // @Tags UNLFile, EXTERNAL
 // @Accept json
 // @Produce json
-// @Param form body usecases.UNLFileSyncInputDTO true "sync params"
-// @Success 200 {object} usecases.UNLFileSyncResponse
-// @Security ApiKeyAuth
+// @Param form body external.UNLFileSyncInputDTO true "sync params"
+// @Success 200 {object} external.UNLFileSyncResponse
+// @Param Authorization header string true "Basic-токен, созданный клиентом"
 // @Router /v1/unl-file/sync [post]
 func UNLFileSync(c *fiber.Ctx) error {
-	dto := usecases.UNLFileSyncInputDTO{}
+	dto := external.UNLFileSyncInputDTO{}
 	err := utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return err

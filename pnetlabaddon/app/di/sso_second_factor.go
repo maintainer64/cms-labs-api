@@ -23,3 +23,11 @@ func (di *DIContainer) LabCreateUC() *usecases.LabCreateUC {
 		Logger:          logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.LabCreateUC")),
 	}
 }
+
+func (di *DIContainer) PnetServerPingUC() *usecases.PnetServerPingUC {
+	return &usecases.PnetServerPingUC{
+		LabSessionQuery: di.Queries.LabSessionQuery,
+		CMSClient:       di.CMSClient(),
+		Logger:          logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.PnetServerPingUC")),
+	}
+}

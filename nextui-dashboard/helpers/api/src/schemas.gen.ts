@@ -263,6 +263,96 @@ export const auth_UserPasswordRecoverResponseSchema = {
   }
 } as const;
 
+export const external_AttemptDTOSchema = {
+  type: 'object',
+  required: ['attempt_id'],
+  properties: {
+    attempt_id: {
+      type: 'string'
+    },
+    user_email: {
+      type: 'string'
+    },
+    user_id: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const external_PNETServerPingInputDTOSchema = {
+  type: 'object',
+  properties: {
+    attempts: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/external.AttemptDTO'
+      }
+    }
+  }
+} as const;
+
+export const external_PNETServerPingOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    count: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const external_PNETServerPingResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/external.PNETServerPingOutputDTO'
+    }
+  }
+} as const;
+
+export const external_UNLFileSyncInputDTOSchema = {
+  type: 'object',
+  properties: {
+    branch: {
+      type: 'string'
+    },
+    repository: {
+      type: 'string'
+    }
+  }
+} as const;
+
+export const external_UNLFileSyncOutputDTOSchema = {
+  type: 'object',
+  properties: {
+    count: {
+      type: 'integer'
+    }
+  }
+} as const;
+
+export const external_UNLFileSyncResponseSchema = {
+  type: 'object',
+  required: ['error', 'msg'],
+  properties: {
+    error: {
+      type: 'boolean'
+    },
+    msg: {
+      type: 'string'
+    },
+    result: {
+      $ref: '#/definitions/external.UNLFileSyncOutputDTO'
+    }
+  }
+} as const;
+
 export const models_LTIAttemptSchema = {
   type: 'object',
   required: ['attempt_id', 'created_at', 'expired_at', 'updated_at'],
@@ -1830,43 +1920,6 @@ export const usecases_UNLFileListResponseSchema = {
     },
     result: {
       $ref: '#/definitions/usecases.UNLFileListOutputDTO'
-    }
-  }
-} as const;
-
-export const usecases_UNLFileSyncInputDTOSchema = {
-  type: 'object',
-  properties: {
-    branch: {
-      type: 'string'
-    },
-    repository: {
-      type: 'string'
-    }
-  }
-} as const;
-
-export const usecases_UNLFileSyncOutputDTOSchema = {
-  type: 'object',
-  properties: {
-    count: {
-      type: 'integer'
-    }
-  }
-} as const;
-
-export const usecases_UNLFileSyncResponseSchema = {
-  type: 'object',
-  required: ['error', 'msg'],
-  properties: {
-    error: {
-      type: 'boolean'
-    },
-    msg: {
-      type: 'string'
-    },
-    result: {
-      $ref: '#/definitions/usecases.UNLFileSyncOutputDTO'
     }
   }
 } as const;

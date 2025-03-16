@@ -99,6 +99,41 @@ export type auth_UserPasswordRecoverResponse = {
   result?: auth_UserPasswordChangeOutputDTO;
 };
 
+export type external_AttemptDTO = {
+  attempt_id: string;
+  user_email?: string;
+  user_id?: number;
+};
+
+export type external_PNETServerPingInputDTO = {
+  attempts?: Array<external_AttemptDTO>;
+};
+
+export type external_PNETServerPingOutputDTO = {
+  count?: number;
+};
+
+export type external_PNETServerPingResponse = {
+  error: boolean;
+  msg: string;
+  result?: external_PNETServerPingOutputDTO;
+};
+
+export type external_UNLFileSyncInputDTO = {
+  branch?: string;
+  repository?: string;
+};
+
+export type external_UNLFileSyncOutputDTO = {
+  count?: number;
+};
+
+export type external_UNLFileSyncResponse = {
+  error: boolean;
+  msg: string;
+  result?: external_UNLFileSyncOutputDTO;
+};
+
 export type models_LTIAttempt = {
   attempt_id: string;
   created_at: string;
@@ -695,21 +730,6 @@ export type usecases_UNLFileListResponse = {
   result?: usecases_UNLFileListOutputDTO;
 };
 
-export type usecases_UNLFileSyncInputDTO = {
-  branch?: string;
-  repository?: string;
-};
-
-export type usecases_UNLFileSyncOutputDTO = {
-  count?: number;
-};
-
-export type usecases_UNLFileSyncResponse = {
-  error: boolean;
-  msg: string;
-  result?: usecases_UNLFileSyncOutputDTO;
-};
-
 export type usecases_UserEditInputDTO = {
   email: string;
   group_name?: string;
@@ -910,6 +930,19 @@ export type PostV1PnetServerListData = {
 
 export type PostV1PnetServerListResponse = usecases_PNETServerListResponse;
 
+export type PostV1PnetServerPingData = {
+  /**
+   * Basic-токен, созданный клиентом
+   */
+  authorization: string;
+  /**
+   * pnet_server id
+   */
+  form: external_PNETServerPingInputDTO;
+};
+
+export type PostV1PnetServerPingResponse = external_PNETServerPingResponse;
+
 export type PostV1PnetServerUpsertData = {
   /**
    * pnet_server form info
@@ -1093,12 +1126,16 @@ export type PostV1UnlFileListResponse = usecases_UNLFileListResponse;
 
 export type PostV1UnlFileSyncData = {
   /**
+   * Basic-токен, созданный клиентом
+   */
+  authorization: string;
+  /**
    * sync params
    */
-  form: usecases_UNLFileSyncInputDTO;
+  form: external_UNLFileSyncInputDTO;
 };
 
-export type PostV1UnlFileSyncResponse = usecases_UNLFileSyncResponse;
+export type PostV1UnlFileSyncResponse = external_UNLFileSyncResponse;
 
 export type PostV1UserGetData = {
   /**

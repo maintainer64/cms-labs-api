@@ -703,6 +703,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/pnet-server/ping": {
+            "post": {
+                "description": "ing from external servers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PNETServer",
+                    "EXTERNAL"
+                ],
+                "summary": "ping from pnet_server",
+                "parameters": [
+                    {
+                        "description": "pnet_server id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/external.PNETServerPingInputDTO"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/external.PNETServerPingResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/pnet-server/upsert": {
             "post": {
                 "security": [
@@ -1372,11 +1414,6 @@ const docTemplate = `{
         },
         "/v1/unl-file/sync": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "sync from git unl_file.",
                 "consumes": [
                     "application/json"
@@ -1396,15 +1433,22 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.UNLFileSyncInputDTO"
+                            "$ref": "#/definitions/external.UNLFileSyncInputDTO"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.UNLFileSyncResponse"
+                            "$ref": "#/definitions/external.UNLFileSyncResponse"
                         }
                     }
                 }
@@ -1866,6 +1910,97 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/auth.UserPasswordChangeOutputDTO"
+                }
+            }
+        },
+        "external.AttemptDTO": {
+            "type": "object",
+            "required": [
+                "attempt_id"
+            ],
+            "properties": {
+                "attempt_id": {
+                    "type": "string"
+                },
+                "user_email": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "external.PNETServerPingInputDTO": {
+            "type": "object",
+            "properties": {
+                "attempts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/external.AttemptDTO"
+                    }
+                }
+            }
+        },
+        "external.PNETServerPingOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "external.PNETServerPingResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/external.PNETServerPingOutputDTO"
+                }
+            }
+        },
+        "external.UNLFileSyncInputDTO": {
+            "type": "object",
+            "properties": {
+                "branch": {
+                    "type": "string"
+                },
+                "repository": {
+                    "type": "string"
+                }
+            }
+        },
+        "external.UNLFileSyncOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "external.UNLFileSyncResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/external.UNLFileSyncOutputDTO"
                 }
             }
         },
@@ -3514,43 +3649,6 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.UNLFileListOutputDTO"
-                }
-            }
-        },
-        "usecases.UNLFileSyncInputDTO": {
-            "type": "object",
-            "properties": {
-                "branch": {
-                    "type": "string"
-                },
-                "repository": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.UNLFileSyncOutputDTO": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.UNLFileSyncResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.UNLFileSyncOutputDTO"
                 }
             }
         },

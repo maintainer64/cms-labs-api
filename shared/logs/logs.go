@@ -29,6 +29,9 @@ func (z *ZeroLoggerConf) SetName(name string) *ZeroLoggerConf {
 
 // FiberLocalsParseDefault парсит из fiber.Ctx переменные с приведением типов
 func FiberLocalsParseDefault(c *fiber.Ctx, key string) string {
+	if c == nil {
+		return ""
+	}
 	if value, ok := c.Locals(key).(string); ok {
 		return value
 	}
