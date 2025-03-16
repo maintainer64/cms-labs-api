@@ -23,7 +23,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
   const {
     locale: {
       Tables: {
-        PnetServersTable: { ColumnStatus }
+        PnetServersTable: { ColumnStatus, ColumnIndicator }
       }
     }
   } = locale;
@@ -47,39 +47,50 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
           </div>
         </div>
       );
-    case 'unitRate':
+    case 'indicator':
       return (
         <div>
           <div>
-            <span>{item.unit_rate}</span>
+            <span>
+              {ColumnIndicator.UnitRate}: {item.unit_rate}%
+            </span>
+          </div>
+          <div>
+            <span>
+              {ColumnIndicator.LastCountUsers}: {item.last_count_users}
+            </span>
           </div>
         </div>
       );
     case 'status':
       return (
         <div className='flex flex-col gap-2'>
-          <div>
-            {item.is_active ? (
-              <Chip size='sm' color='success'>
-                {ColumnStatus.Activated}
-              </Chip>
-            ) : (
-              <Chip size='sm' color='danger'>
-                {ColumnStatus.Deactivated}
-              </Chip>
-            )}
-          </div>
-          <div>
-            {isConnectDistribution(item.last_online_status, item.minutes_for_disconnect) ? (
-              <Chip size='sm' color='success'>
-                {ColumnStatus.ConnectDistribution}
-              </Chip>
-            ) : (
-              <Chip size='sm' color='danger'>
-                {ColumnStatus.DisconnectDistribution}
-              </Chip>
-            )}
-          </div>
+          {item.type === 'pnet' && (
+            <>
+              <div>
+                {item.is_active ? (
+                  <Chip size='sm' color='success'>
+                    {ColumnStatus.Activated}
+                  </Chip>
+                ) : (
+                  <Chip size='sm' color='danger'>
+                    {ColumnStatus.Deactivated}
+                  </Chip>
+                )}
+              </div>
+              <div>
+                {isConnectDistribution(item.last_online_status, item.minutes_for_disconnect) ? (
+                  <Chip size='sm' color='success'>
+                    {ColumnStatus.ConnectDistribution}
+                  </Chip>
+                ) : (
+                  <Chip size='sm' color='danger'>
+                    {ColumnStatus.DisconnectDistribution}
+                  </Chip>
+                )}
+              </div>
+            </>
+          )}
         </div>
       );
     case 'actions':

@@ -105,10 +105,14 @@ const ru = {
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'НАЗВАНИЕ', uid: 'name' },
-        { name: '%', uid: 'unitRate' },
+        { name: 'ПОКАЗАТЕЛИ', uid: 'indicator' },
         { name: 'СТАТУС', uid: 'status' },
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ],
+      ColumnIndicator: {
+        UnitRate: 'Распределение',
+        LastCountUsers: 'Пользователей'
+      },
       ColumnStatus: {
         DisconnectDistribution: 'Отключен от трафика',
         ConnectDistribution: 'Принимает трафик',

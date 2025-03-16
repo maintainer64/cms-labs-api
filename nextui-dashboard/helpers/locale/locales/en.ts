@@ -105,10 +105,14 @@ const en = {
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'NAME', uid: 'name' },
-        { name: '%', uid: 'unitRate' },
+        { name: 'INDICATORS', uid: 'indicator' },
         { name: 'STATUS', uid: 'status' },
         { name: 'ACTIONS', uid: 'actions' }
       ],
+      ColumnIndicator: {
+        UnitRate: 'Distribution',
+        LastCountUsers: 'Users'
+      },
       ColumnStatus: {
         DisconnectDistribution: 'Disconnected from traffic',
         ConnectDistribution: 'Accepts traffic',
