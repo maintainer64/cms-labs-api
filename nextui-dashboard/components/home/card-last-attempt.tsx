@@ -4,7 +4,7 @@ import { LTIAttemptTableWrapper } from '@/components/pages/lti-attempts/table/ta
 import useLanguageBrowser from '@/helpers/locale';
 import { ContentCardWrapperMain } from '@/components/home/card-wrapper';
 
-export const CardTransactions = () => {
+export const CardLastAttempt = () => {
   const {
     locale: {
       Tables: { LTIAttemptsTable }

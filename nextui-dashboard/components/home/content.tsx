@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { CardTransactions } from './card-transactions';
+import { CardLastAttempt } from './card-last-attempt';
 import HomeUsersWidget from '@/app/(app)/home/users-table';
 import { CardPnetServers } from '@/components/home/card-pnet-servers';
 import { ContentCardWrapperMain } from '@/components/home/card-wrapper';
@@ -32,7 +32,7 @@ export const Content = () => {
         {/* Left Section */}
         <div className='mt-4 gap-2 flex flex-col xl:max-w-md w-full'>
           <div>
-            <CardTransactions />
+            <CardLastAttempt />
           </div>
         </div>
       </div>
