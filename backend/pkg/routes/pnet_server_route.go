@@ -11,4 +11,5 @@ func V1PNETServerRoutes(a *fiber.App) {
 	group.Post("/list", controllers.PNETServerList)
 	group.Post("/delete", controllers.PNETServerDelete)
 	group.Post("/get", controllers.PNETServerGet)
+	group.Post("/ping", controllers.PNETServerPing)
 }

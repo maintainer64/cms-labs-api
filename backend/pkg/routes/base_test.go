@@ -56,7 +56,7 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 	return "Bearer " + token.AccessToken
 }
 
-func (f *FiberTestHTTP) AuthorizationServiceBasic() string {
+func (f *FiberTestHTTP) AuthorizationServiceBasic() (string, string) {
 	entity := models.PNETServer{}
 	entity.Type = models.ServerTypeOpenID
 	entity.Name = uuid.New().String() + "_server"
@@ -67,7 +67,7 @@ func (f *FiberTestHTTP) AuthorizationServiceBasic() string {
 	f.DB.Create(&entity)
 	return "Basic " + base64.StdEncoding.EncodeToString(
 		[]byte(fmt.Sprintf("%s:%s", entity.ClientID, entity.Token)),
-	)
+	), entity.ClientID
 }
 
 func NewFiberTestHTTP() *FiberTestHTTP {

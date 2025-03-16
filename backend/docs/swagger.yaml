@@ -173,6 +173,65 @@ definitions:
     - error
     - msg
     type: object
+  external.AttemptDTO:
+    properties:
+      attempt_id:
+        type: string
+      user_email:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - attempt_id
+    type: object
+  external.PNETServerPingInputDTO:
+    properties:
+      attempts:
+        items:
+          $ref: '#/definitions/external.AttemptDTO'
+        type: array
+    type: object
+  external.PNETServerPingOutputDTO:
+    properties:
+      count:
+        type: integer
+    type: object
+  external.PNETServerPingResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/external.PNETServerPingOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  external.UNLFileSyncInputDTO:
+    properties:
+      branch:
+        type: string
+      repository:
+        type: string
+    type: object
+  external.UNLFileSyncOutputDTO:
+    properties:
+      count:
+        type: integer
+    type: object
+  external.UNLFileSyncResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/external.UNLFileSyncOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
   models.LTIAttempt:
     properties:
       attempt_id:
@@ -1282,30 +1341,6 @@ definitions:
     - error
     - msg
     type: object
-  usecases.UNLFileSyncInputDTO:
-    properties:
-      branch:
-        type: string
-      repository:
-        type: string
-    type: object
-  usecases.UNLFileSyncOutputDTO:
-    properties:
-      count:
-        type: integer
-    type: object
-  usecases.UNLFileSyncResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.UNLFileSyncOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
   usecases.UserEditInputDTO:
     properties:
       email:
@@ -1832,6 +1867,34 @@ paths:
       summary: list pnet_server
       tags:
       - PNETServer
+  /v1/pnet-server/ping:
+    post:
+      consumes:
+      - application/json
+      description: ing from external servers.
+      parameters:
+      - description: pnet_server id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/external.PNETServerPingInputDTO'
+      - description: Basic-токен, созданный клиентом
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/external.PNETServerPingResponse'
+      summary: ping from pnet_server
+      tags:
+      - PNETServer
+      - EXTERNAL
   /v1/pnet-server/upsert:
     post:
       consumes:
@@ -2268,16 +2331,19 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.UNLFileSyncInputDTO'
+          $ref: '#/definitions/external.UNLFileSyncInputDTO'
+      - description: Basic-токен, созданный клиентом
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.UNLFileSyncResponse'
-      security:
-      - ApiKeyAuth: []
+            $ref: '#/definitions/external.UNLFileSyncResponse'
       summary: sync from git unl_file
       tags:
       - UNLFile

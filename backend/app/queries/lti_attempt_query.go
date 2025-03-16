@@ -41,6 +41,18 @@ func (q *LTIAttemptQueries) Get(id uint) (models.LTIAttempt, error) {
 	return entity, result.Error
 }
 
+func (q *LTIAttemptQueries) GetByAttemptID(attemptID string) (models.LTIAttempt, error) {
+	var entity models.LTIAttempt
+	result := q.Where("attempt_id = ?", attemptID).Find(&entity)
+	if entity.ID == 0 {
+		return entity, utils.FiberValidationException{
+			Status:    fiber.StatusNotFound,
+			Exception: errors.New("LTIAttempt not found"),
+		}
+	}
+	return entity, result.Error
+}
+
 func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 	if entity == nil {
 		return nil

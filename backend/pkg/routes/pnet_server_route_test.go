@@ -4,6 +4,9 @@ import (
 	"testing"
 	"time"
 
+	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
+
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
@@ -279,4 +282,123 @@ func TestV1PNETServerRouteCreate(t *testing.T) {
 	assert.Equal(t, entity.MinutesForDisconnect, createdEntity.MinutesForDisconnect, description)
 	assert.Equal(t, entity.MaxCountUsersLimit, createdEntity.MaxCountUsersLimit, description)
 	assert.Equal(t, entity.UnitRate, createdEntity.UnitRate, description)
+}
+
+func TestV1PNETServerPingSuccess(t *testing.T) {
+	description := "ping PNET server successfully"
+	f := NewFiberTestHTTP()
+
+	// Create a test PNET server
+	authHeader, clientID := f.AuthorizationServiceBasic()
+	var serverEntity models.PNETServer
+
+	f.DB.Where("client_id = ?", clientID).Find(&serverEntity)
+
+	userEntity := models.User{}
+	userEntity.Email = uuid.New().String() + "@example.com"
+	userEntity.UserRole = models.UsersRoleStudent
+	f.DB.Create(&userEntity)
+
+	ltiRoutingEntity := models.LTIRouting{}
+	ltiRoutingEntity.LTITitle = uuid.New().String() + "@example.com"
+	f.DB.Create(&ltiRoutingEntity)
+
+	// Create a test LTI attempt
+	attemptEntity := models.LTIAttempt{}
+	attemptEntity.AttemptID = uuid.New().String()
+	attemptEntity.UserID = userEntity.ID
+	attemptEntity.LTIRoutingID = ltiRoutingEntity.ID
+	attemptEntity.PNETServerID = serverEntity.ID
+	attemptEntity.ExpiredAt = time.Now().UTC().Add(30 * time.Minute)
+	f.DB.Create(&attemptEntity)
+
+	input := external.PNETServerPingInputDTO{
+		Attempts: []external.AttemptDTO{
+			{
+				AttemptID: attemptEntity.AttemptID,
+			},
+		},
+	}
+
+	expectedCode := 200
+	statusCode, body := f.Request(
+		"POST",
+		"/api/v1/pnet-server/ping",
+		FiberRequestPayload(input),
+		authHeader,
+	)
+	bodyModel := response.Response[external.PNETServerPingOutputDTO]{}
+	_ = json.Unmarshal([]byte(body), &bodyModel)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.Equal(t, len(input.Attempts), bodyModel.Result.Count, description)
+
+	// Verify that the server's last online status and count were updated
+	var updatedServer models.PNETServer
+	err := f.DB.First(&updatedServer, serverEntity.ID).Error
+	assert.NoError(t, err, description)
+	assert.NotNil(t, updatedServer.LastOnlineStatus, description)
+	assert.Equal(t, len(input.Attempts), updatedServer.LastCountUsers, description)
+
+	// Verify that the attempt's expired_at was extended
+	var updatedAttempt models.LTIAttempt
+	err = f.DB.First(&updatedAttempt, attemptEntity.ID).Error
+	assert.NoError(t, err, description)
+	assert.True(t, updatedAttempt.ExpiredAt.After(attemptEntity.ExpiredAt), description)
+}
+
+func TestV1PNETServerPingUnauthorized(t *testing.T) {
+	description := "ping PNET server unauthorized"
+	f := NewFiberTestHTTP()
+
+	input := external.PNETServerPingInputDTO{
+		Attempts: []external.AttemptDTO{
+			{
+				AttemptID: "test-attempt-id",
+				UserEmail: "user@example.com",
+				UserID:    1,
+			},
+		},
+	}
+
+	expectedCode := 401 // Assuming 401 is returned for unauthorized access
+	statusCode, body := f.Request(
+		"POST",
+		"/api/v1/pnet-server/ping",
+		FiberRequestPayload(input),
+		"",
+	)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.Contains(t, body, "Unauthorized", description)
+}
+
+func TestV1PNETServerPingInvalidAttempt(t *testing.T) {
+	description := "ping PNET server with invalid attempt"
+	f := NewFiberTestHTTP()
+
+	authHeader, _ := f.AuthorizationServiceBasic()
+
+	input := external.PNETServerPingInputDTO{
+		Attempts: []external.AttemptDTO{
+			{
+				AttemptID: "invalid-attempt-id",
+				UserEmail: "user@example.com",
+				UserID:    1,
+			},
+		},
+	}
+
+	expectedCode := 200 // Assuming 200 is returned even if some attempts are invalid
+	statusCode, body := f.Request(
+		"POST",
+		"/api/v1/pnet-server/ping",
+		FiberRequestPayload(input),
+		authHeader,
+	)
+	bodyModel := response.Response[external.PNETServerPingOutputDTO]{}
+	_ = json.Unmarshal([]byte(body), &bodyModel)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.Equal(t, 0, bodyModel.Result.Count, description)
 }

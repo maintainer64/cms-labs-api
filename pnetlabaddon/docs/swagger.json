@@ -101,6 +101,26 @@
                     }
                 }
             }
+        },
+        "/v1/task/pnet-server-ping": {
+            "post": {
+                "description": "Пинг в core-backend для синхронизации попыток.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Пинг в core-backend для синхронизации попыток.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         }
     },
     "securityDefinitions": {

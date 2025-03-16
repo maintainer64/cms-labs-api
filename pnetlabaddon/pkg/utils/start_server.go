@@ -5,6 +5,8 @@ import (
 	"os"
 	"os/signal"
 
+	"gitlab.com/a10869/api-modules/shared/scheduler"
+
 	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
 	"gitlab.com/a10869/api-modules/shared/connection"
 
@@ -12,7 +14,7 @@ import (
 )
 
 // StartServerWithGracefulShutdown function for starting server with a graceful shutdown.
-func StartServerWithGracefulShutdown(a *fiber.App) {
+func StartServerWithGracefulShutdown(a *fiber.App, s *scheduler.Scheduler) {
 	// Create channel for idle connections.
 	idleConnsClosed := make(chan struct{})
 
@@ -21,6 +23,7 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 		signal.Notify(sigint, os.Interrupt) // Catch OS signals.
 		<-sigint
 
+		s.Stop()
 		// Received an interrupt signal, shutdown.
 		if err := a.Shutdown(); err != nil {
 			// Error from closing listeners, or context timeout:
@@ -30,6 +33,7 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 		close(idleConnsClosed)
 	}()
 
+	s.Start()
 	// Build Fiber connection URL.
 	fiberConnURL := connection.UrlBuilderFiber(configs.AppConfig.Server)
 
@@ -42,7 +46,8 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 }
 
 // StartServer func for starting a simple server.
-func StartServer(a *fiber.App) {
+func StartServer(a *fiber.App, s *scheduler.Scheduler) {
+	s.Start()
 	// Build Fiber connection URL.
 	fiberConnURL := connection.UrlBuilderFiber(configs.AppConfig.Server)
 

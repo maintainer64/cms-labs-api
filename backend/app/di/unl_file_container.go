@@ -2,11 +2,12 @@ package di
 
 import (
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
 	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
-func (di *DIContainer) UNLFileSyncUC() *usecases.UNLFileSyncUC {
-	return &usecases.UNLFileSyncUC{
+func (di *DIContainer) UNLFileSyncUC() *external.UNLFileSyncUC {
+	return &external.UNLFileSyncUC{
 		UNLFileQueries: di.Queries.UNLFileQueries,
 		Logger:         logs.NewZeroLogger(di.ZeroLogConf.SetName("UNLFileSyncUC")),
 	}

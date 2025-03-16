@@ -67,6 +67,19 @@ paths:
       summary: Второй фактор openid.
       tags:
       - SSO
+  /v1/task/pnet-server-ping:
+    post:
+      consumes:
+      - application/json
+      description: Пинг в core-backend для синхронизации попыток.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Пинг в core-backend для синхронизации попыток.
+      tags:
+      - Task
 securityDefinitions:
   ApiKeyAuth:
     in: header

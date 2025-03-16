@@ -76,7 +76,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 				u.user.Email,
 			),
 		)
-		attempt.ExtendExpiredAt(2)
+		attempt.ExtendExpiredAt(1)
 		_ = u.LTIAttemptQueries.Upsert(&attempt)
 		return u.PreparedResponseByAttempt(attempt)
 	}
@@ -102,7 +102,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 	if route.PinnedSessionMinutes > 1 {
 		attempt.ExpiredAt = time.Now().UTC().Add(time.Duration(route.PinnedSessionMinutes) * time.Minute)
 	} else {
-		attempt.ExpiredAt = time.Now().UTC().Add(time.Duration(2*60) * time.Minute)
+		attempt.ExpiredAt = time.Now().UTC().Add(time.Duration(1) * time.Hour)
 	}
 	if err = u.LTIAttemptQueries.Upsert(&attempt); err != nil {
 		return LTIAttemptCreateOutputDTO{}, err

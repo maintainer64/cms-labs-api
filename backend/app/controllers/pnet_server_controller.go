@@ -6,6 +6,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
 	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
@@ -158,6 +159,36 @@ func PNETServerGet(c *fiber.Ctx) error {
 	defer container.Close()
 	uc := container.PNETServerGetUC()
 	output, err := uc.Execute(dto)
+	if err != nil {
+		return err
+	}
+	return utils.FiberSuccessResponse{Result: output}
+}
+
+// PNETServerPing ping from external servers.
+// @Description ing from external servers.
+// @Summary ping from pnet_server
+// @Tags PNETServer, EXTERNAL
+// @Accept json
+// @Produce json
+// @Param form body external.PNETServerPingInputDTO true "pnet_server id"
+// @Success 200 {object} external.PNETServerPingResponse
+// @Param Authorization header string true "Basic-токен, созданный клиентом"
+// @Router /v1/pnet-server/ping [post]
+func PNETServerPing(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	dto := external.PNETServerPingInputDTO{}
+	err := utils.FiberValidatorBase(c, &dto)
+	if err != nil {
+		return err
+	}
+	container, err := di.NewDIContainer(diLoggerConf)
+	if err != nil {
+		return err
+	}
+	defer container.Close()
+	uc := container.PNETServerPingUC()
+	output, err := uc.SetContext(c.Locals("x-service-id").(string)).Execute(dto)
 	if err != nil {
 		return err
 	}

@@ -3,6 +3,7 @@ package configs
 import (
 	"os"
 	"strconv"
+	"time"
 
 	"gitlab.com/a10869/api-modules/shared/connection"
 
@@ -32,11 +33,12 @@ type DBConfig struct {
 }
 
 type AppConfigModel struct {
-	Debug           bool
-	Server          *connection.ServerConfig
-	DB              *connection.DBConfig
-	CMSClient       *cms_client.CMSClientConfig
-	GuacamoleClient *guacamole_client.GuacamoleClientConfig
+	Debug             bool
+	Server            *connection.ServerConfig
+	DB                *connection.DBConfig
+	CMSClient         *cms_client.CMSClientConfig
+	GuacamoleClient   *guacamole_client.GuacamoleClientConfig
+	SchedulerInterval time.Duration
 }
 
 func (c *AppConfigModel) Reload() {
@@ -67,6 +69,7 @@ func (c *AppConfigModel) Reload() {
 		Token:             os.Getenv("CMS_TOKEN"),
 		BaseUrl:           os.Getenv("CMS_BASE_URL"),
 	}
+	c.SchedulerInterval = time.Duration(int64(getEnvInt("CMS_PING_MINUTES"))) * time.Minute
 	c.GuacamoleClient = &guacamole_client.GuacamoleClientConfig{
 		Debug:             c.Debug,
 		MaxTimeoutSeconds: int64(getEnvInt("GUACAMOLE_MAX_TIMEOUT")),
