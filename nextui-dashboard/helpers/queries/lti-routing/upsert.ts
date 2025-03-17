@@ -25,6 +25,7 @@ export const useLTIRoutingUpsert = (
           pnet_labs_type: values.pnet_labs_type,
           pnet_labs_path: values.pnet_labs_path,
           pnet_test_path: values.pnet_test_path,
+          pnet_server_id: parseInt(values.pnet_server_id?.toString() || '0'),
           is_default: values.is_default
         }
       });

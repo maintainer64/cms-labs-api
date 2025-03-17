@@ -14,6 +14,7 @@ import { useLTIRoutingDelete } from '@/helpers/queries/lti-routing/delete';
 import { useLTIRoutingByID } from '@/helpers/queries/lti-routing/get';
 import { useLTIRoutingUpsert } from '@/helpers/queries/lti-routing/upsert';
 import { LabsPathInput, TestsPathInput } from './autoCompletePath';
+import { ServerInput } from '@/components/pages/lti-attempts/edit/autoCompleteServer';
 
 interface EditFormProps {
   id?: number;
@@ -31,6 +32,7 @@ const defaultValues: models_LTIRouting = {
   pnet_labs_type: 'default',
   pnet_labs_path: '',
   pnet_test_path: '',
+  pnet_server_id: 0,
   is_default: false,
   updated_at: '',
   lti_task_id: '',
@@ -194,6 +196,13 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     label={LTIRouting.FieldPNETTestPath}
                     value={values.pnet_test_path ?? ''}
                     onChange={handleChange('pnet_test_path')}
+                  />
+                  <ServerInput
+                    variant='bordered'
+                    defaultItems={[{ key: 0, value: LTIRouting.FieldPNETServerDefault }]}
+                    label={LTIRouting.FieldPNETServer}
+                    value={values.pnet_server_id?.toString() ?? ''}
+                    onChange={handleChange('pnet_server_id')}
                   />
                 </div>
               </AccordionItem>

@@ -300,6 +300,8 @@ const en = {
     FieldPNETLabsTypeEnumeration: 'Enumeration',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',
+    FieldPNETServer: 'Auto connect to server',
+    FieldPNETServerDefault: 'Auto',
     FieldIsDefault: 'Route is default',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',

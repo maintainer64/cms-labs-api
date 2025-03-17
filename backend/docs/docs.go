@@ -2230,6 +2230,9 @@ const docTemplate = `{
                     "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,enumeration",
                     "type": "string"
                 },
+                "pnet_server_id": {
+                    "type": "integer"
+                },
                 "pnet_test_path": {
                     "type": "string"
                 },
@@ -3101,6 +3104,9 @@ const docTemplate = `{
                 },
                 "pnet_labs_type": {
                     "type": "string"
+                },
+                "pnet_server_id": {
+                    "type": "integer"
                 },
                 "pnet_test_path": {
                     "type": "string"

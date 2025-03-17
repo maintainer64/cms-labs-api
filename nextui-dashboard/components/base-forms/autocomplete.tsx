@@ -8,20 +8,22 @@ interface CallbackProps {
   items: { key: string | number; value: string }[];
 }
 
-interface Props extends InputProps {
-  fetchData: (search: string, props: InputProps) => CallbackProps;
+export interface AutoCompleteFullProps extends InputProps {
+  fetchData?: (search: string, props: InputProps) => CallbackProps;
+  defaultItems?: { key: string | number; value: string }[];
 }
 
-export const AutoCompleteFull = (props: Props) => {
+export const AutoCompleteFull = (props: AutoCompleteFullProps) => {
   const [inputChangeValue, onInputChange] = useState('');
   const debounceChangeValue = useDebounce(inputChangeValue, 300);
-  const responseSearch = props.fetchData(debounceChangeValue, props);
+  const responseSearch = props?.fetchData?.(debounceChangeValue, props as InputProps);
+  const items = [...(props.defaultItems ?? []), ...(responseSearch?.items ?? [])];
 
   return (
     <Autocomplete
       variant={props.variant}
       className={props.className}
-      items={responseSearch?.items}
+      items={items}
       selectedKey={props.value}
       label={props.label}
       labelPlacement='inside'
@@ -38,7 +40,7 @@ export const AutoCompleteFull = (props: Props) => {
         key && props.onChange?.(event);
         console.log(key);
       }}
-      isLoading={responseSearch.isLoading}
+      isLoading={responseSearch?.isLoading}
       aria-label={props.label?.toString()}
     >
       {(item) => <AutocompleteItem key={item.key}>{item.value}</AutocompleteItem>}
