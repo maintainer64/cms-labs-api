@@ -565,6 +565,9 @@ export const models_LTIRoutingSchema = {
 enum: default,enumeration`,
       type: 'string'
     },
+    pnet_server_id: {
+      type: 'integer'
+    },
     pnet_test_path: {
       type: 'string'
     },
@@ -1388,6 +1391,9 @@ export const usecases_LTIRoutingEditInputDTOSchema = {
     },
     pnet_labs_type: {
       type: 'string'
+    },
+    pnet_server_id: {
+      type: 'integer'
     },
     pnet_test_path: {
       type: 'string'

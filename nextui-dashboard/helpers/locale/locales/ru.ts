@@ -301,6 +301,8 @@ const ru = {
     FieldPNETLabsTypeEnumeration: 'Перечисление',
     FieldPNETLabsPath: 'Подключение к лабораторной работе',
     FieldPNETTestPath: 'Запуск тестов лабораторной работы',
+    FieldPNETServer: 'Автоматическое подключение к серверу',
+    FieldPNETServerDefault: 'Автоматически',
     FieldIsDefault: 'Маршрут по умолчанию',
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в',

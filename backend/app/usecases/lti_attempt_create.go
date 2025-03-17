@@ -80,14 +80,14 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		_ = u.LTIAttemptQueries.Upsert(&attempt)
 		return u.PreparedResponseByAttempt(attempt)
 	}
-	pnetRoutes, err := u.RoundQueuePoolQueries.GetNextByType(models.RoundQueuePoolTypePNET)
+	serverID, err := u.GetRedirectServerID(route.PNETServerID)
 	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
 	}
 	attempt = models.LTIAttempt{}
 	attempt.UserID = u.user.Id
 	// Set PNETServerID
-	attempt.PNETServerID = pnetRoutes.PNETServerID
+	attempt.PNETServerID = serverID
 	// Set LTIRoutingSecretID
 	attempt.LTIRoutingID = route.ID
 	// Set RoomNumber
@@ -108,6 +108,22 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		return LTIAttemptCreateOutputDTO{}, err
 	}
 	return u.PreparedResponseByAttempt(attempt)
+}
+
+func (u *LTIAttemptCreateUC) GetRedirectServerID(routeServerId uint) (uint, error) {
+	var server models.PNETServer
+	if routeServerId != 0 {
+		server, _ = u.PNETServerQueries.Get(routeServerId)
+	}
+	if server.ID != 0 {
+		return server.ID, nil
+	}
+	pnetRoutes, err := u.RoundQueuePoolQueries.GetNextByType(models.RoundQueuePoolTypePNET)
+	if err != nil {
+		return 0, err
+	}
+	server, _ = u.PNETServerQueries.Get(pnetRoutes.PNETServerID)
+	return server.ID, nil
 }
 
 func (u *LTIAttemptCreateUC) SearchRelevantRouting() *models.LTIRouting {

@@ -1,8 +1,7 @@
 import React from 'react';
-import { InputProps } from '@heroui/input/dist/input';
-import { AutoCompleteFull } from '@/components/base-forms/autocomplete';
+import { AutoCompleteFull, AutoCompleteFullProps } from '@/components/base-forms/autocomplete';
 import { usePnetServerAutocompleteData } from '@/helpers/queries/pnet-server/get';
 
-export const ServerInput = (props: InputProps) => {
+export const ServerInput = (props: AutoCompleteFullProps) => {
   return <AutoCompleteFull {...props} fetchData={usePnetServerAutocompleteData} />;
 };

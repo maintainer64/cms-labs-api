@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { models_LTIAttempt, postV1LtiAttemptEdit, type PostV1LtiAttemptEditResponse } from '@/helpers/api';
 import { TFormikData, TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '../base';
+import dayjs from 'dayjs';
 
 export const useLTIAttemptUpsert = (
   options: TMutationCustomOptions<PostV1LtiAttemptEditResponse, unknown, TFormikData<models_LTIAttempt>> = {}
@@ -12,7 +13,7 @@ export const useLTIAttemptUpsert = (
       if (values === null) return null;
       return postV1LtiAttemptEdit({
         form: {
-          expired_at: values.expired_at,
+          expired_at: dayjs(values.expired_at).format(),
           id: values.id,
           pnet_server_id: parseInt(values.pnet_server_id?.toString() || '')
         }

@@ -214,6 +214,7 @@ export type models_LTIRouting = {
    * enum: default,enumeration
    */
   pnet_labs_type?: string;
+  pnet_server_id?: number;
   pnet_test_path?: string;
   updated_at: string;
 };
@@ -520,6 +521,7 @@ export type usecases_LTIRoutingEditInputDTO = {
   pinned_session_minutes?: number;
   pnet_labs_path?: string;
   pnet_labs_type?: string;
+  pnet_server_id?: number;
   pnet_test_path?: string;
 };
 
