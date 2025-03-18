@@ -15,7 +15,7 @@ export const useLTIFormsList = (params?: usecases_LTIFormListInputDTO) => {
     },
     refetchOnWindowFocus: false,
     refetchInterval: false,
-    refetchOnMount: false,
+    gcTime: 0,
     getNextPageParam: (response, pages) => {
       const totalCount = response.result?.total_count || 0;
       const count = pages.flatMap((p) => p.result?.model).length;
@@ -28,7 +28,7 @@ export const useLTIFormsList = (params?: usecases_LTIFormListInputDTO) => {
 
 export const useLtiFormsByID = (id?: number) => {
   return useQuery({
-    queryKey: ['postV1LtiFormGet', id],
+    queryKey: ['postV1LtiFormGet', id ?? 0],
     queryFn: () => {
       return id ? postV1LtiFormGet({ form: { id: id } }) : undefined;
     },

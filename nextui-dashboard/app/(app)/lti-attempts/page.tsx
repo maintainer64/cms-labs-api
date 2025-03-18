@@ -3,12 +3,23 @@ import { LTIAttemptCreate } from '@/components/pages/lti-attempts/create/lti-att
 import { Layout } from '@/components/layout/layout';
 import { LtiAttemptEdit } from '@/components/pages/lti-attempts/edit/lti-attempt-edit';
 import { LTIAttemptListByUser } from '@/components/pages/lti-attempts';
+import { LTIAttemptConfirm } from '@/components/pages/lti-attempts/create/lti-attempt-confirm';
 
 export const LTIAttemptsPageCreate = () => {
   return (
-    <div className='flex items-center justify-center h-screen bg-gray-100'>
+    <div className='flex items-center justify-center h-screen bg-background'>
       <div className='relative p-6 max-w-md mx-auto'>
         <LTIAttemptCreate />
+      </div>
+    </div>
+  );
+};
+
+export const LTIAttemptPageConfirm = () => {
+  return (
+    <div className='flex items-center justify-center h-screen bg-background'>
+      <div className='relative p-6 max-w-md mx-auto'>
+        <LTIAttemptConfirm />
       </div>
     </div>
   );

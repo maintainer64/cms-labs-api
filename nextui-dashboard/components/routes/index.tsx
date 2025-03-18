@@ -18,8 +18,8 @@ export const RoutesLocation = {
   serviceCardsCreate: () => `/service-cards/create`,
   profileChangePassword: () => `/profile/password`,
   ltiRedirect: () => '/lti-redirect',
+  ltiRedirectCreate: () => '/lti-redirect/create',
   ltiAttemptUser: (id = ':id') => `/lti-attempt/user/${id}`,
   ltiAttemptEdit: (id = ':id') => `/lti-attempt/edit/${id}`,
-  tasks: () => '/tasks',
   home: () => '/'
 };

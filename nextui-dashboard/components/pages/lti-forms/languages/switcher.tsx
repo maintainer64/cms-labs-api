@@ -5,6 +5,8 @@ import FlagEn from './flagEn.svg';
 import FlagRu from './flagRu.svg';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@heroui/modal';
+import React from 'react';
 
 const languages = [
   {
@@ -27,7 +29,7 @@ const LanguageSwitcher = () => {
   };
 
   const langBlock = languages.map((item, index) => (
-    <div
+    <button
       key={`lang-${index}`}
       onClick={() => {
         setLang(item.lang);
@@ -36,19 +38,16 @@ const LanguageSwitcher = () => {
     >
       <Image src={item.img} alt={item.lang} width='20' height='20' className='w-16 h-16 mb-2' />
       <span>{item.text}</span>
-    </div>
+    </button>
   ));
 
   return (
-    <div className='flex items-center justify-center h-screen bg-background'>
-      <div className='relative p-6 bg-default-100 rounded-lg shadow-lg max-w-md mx-auto'>
-        <button onClick={handleClose} className='absolute top-2 right-2 text-gray-500 hover:text-gray-700'>
-          &times;
-        </button>
-        <h2 className='text-xl font-semibold mb-4 text-center'>{locale.LanguageSwitcher.LanguageSwitch}</h2>
-        <div className='grid grid-cols-2 gap-4'>{langBlock}</div>
-      </div>
-    </div>
+    <Modal isOpen={true} onClose={handleClose}>
+      <ModalContent>
+        <ModalHeader className='flex flex-col gap-1'>{locale.LanguageSwitcher.LanguageSwitch}</ModalHeader>
+        <ModalBody>{langBlock}</ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };
 

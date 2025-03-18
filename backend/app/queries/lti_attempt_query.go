@@ -101,14 +101,14 @@ func (q *LTIAttemptQueries) GetActiveByUserId(userId uint, routeId uint) (models
 	return entity, result.Error
 }
 
-func (q *LTIAttemptQueries) GetByRoomNumber(roomNumber *int64) ([]models.LTIAttempt, error) {
+func (q *LTIAttemptQueries) GetByRoomID(roomID uint) ([]models.LTIAttempt, error) {
 	var entities []models.LTIAttempt
-	if roomNumber == nil {
+	if roomID == 0 {
 		return entities, nil
 	}
 	result := q.Model(&entities).Where(
-		"room_number = ?",
-		*roomNumber,
+		"room_id = ?",
+		roomID,
 	).Where(
 		"UTC_TIMESTAMP() < expired_at",
 	).Limit(MaxLimitCount).Offset(0).Find(&entities)

@@ -45,11 +45,10 @@ function InfiniteScroll(props: Props) {
   return (
     <>
       <>{children}</>
-
       <div ref={observerElement}>
         {isLoading && (
           <div className='wrapper flex justify-center items-center h-20'>
-            <Loading size={12} />
+            <Loading size='lg' />
           </div>
         )}
       </div>

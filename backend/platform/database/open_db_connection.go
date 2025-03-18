@@ -24,6 +24,7 @@ type Queries struct {
 	*queries.RoundQueuePoolQueries
 	*queries.LTIRoutingQueries
 	*queries.LTIAttemptQueries
+	*queries.LTIRoomQueries
 	*queries.ServiceCardQueries
 	*queries.TokenAttemptQueries
 	*queries.UNLFileQueries
@@ -50,6 +51,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db, Logger: l},
 		LTIRoutingQueries:     &queries.LTIRoutingQueries{DB: db, Logger: l},
 		LTIAttemptQueries:     &queries.LTIAttemptQueries{DB: db, Logger: l},
+		LTIRoomQueries:        &queries.LTIRoomQueries{DB: db, Logger: l},
 		ServiceCardQueries:    &queries.ServiceCardQueries{DB: db, Logger: l},
 		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db, Logger: l},
 		UNLFileQueries:        &queries.UNLFileQueries{DB: db, Logger: l},

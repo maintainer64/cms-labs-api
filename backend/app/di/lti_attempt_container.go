@@ -7,6 +7,7 @@ import (
 func (di *DIContainer) LTIAttemptCreateUC() *usecases.LTIAttemptCreateUC {
 	return &usecases.LTIAttemptCreateUC{
 		LTIAttemptQueries:     di.Queries.LTIAttemptQueries,
+		LTIRoomQueries:        di.Queries.LTIRoomQueries,
 		LaunchData:            di.Queries.LTILaunchDataQueries,
 		RoundQueuePoolQueries: di.Queries.RoundQueuePoolQueries,
 		LTIRoutingQueries:     di.Queries.LTIRoutingQueries,

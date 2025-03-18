@@ -11,6 +11,7 @@ const RoutesUnknown = () => {
       <Route path={RoutesLocation.language()} element={<LanguagePage />}></Route>
       <Route path={RoutesLocation.home()} element={<LoginError />}></Route>
       <Route path={RoutesLocation.ltiRedirect()} element={<LoginError />}></Route>
+      <Route path={RoutesLocation.ltiRedirectCreate()} element={<LoginError />}></Route>
     </Routes>
   );
 };

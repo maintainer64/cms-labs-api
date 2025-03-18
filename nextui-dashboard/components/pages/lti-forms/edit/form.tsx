@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Accordion,
   AccordionItem,
+  addToast,
   Button,
   Dropdown,
   DropdownItem,
@@ -16,7 +17,6 @@ import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
-import { useAlert } from '@/components/alerts/hooks';
 import { Loading } from '@/components/scroll/loader';
 import { useLtiFormsByID } from '@/helpers/queries/lti-forms/get';
 import { useLTIFormsUpsert } from '@/helpers/queries/lti-forms/upsert';
@@ -56,39 +56,38 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
   const {
     locale: { LTIForm, Forms, Sidebar }
   } = useLanguageBrowser();
-  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const response = useLtiFormsByID(id);
   const initialValues = response.data?.result?.model ?? defaultValues;
   const { mutate } = useLTIFormsUpsert({
     onSuccess: (data, { formikHelpers }) => {
       navigate(RoutesLocation.ltiFormsEdit(data.result?.id?.toString() || ''), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.SaveSuccess
+      addToast({
+        title: Forms.SaveSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.SaveError,
-        description: error.body.msg
+      addToast({
+        title: Forms.SaveError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
   const onDeleteMutation = useLTIFormsDelete({
     onSuccess: () => {
       navigate(RoutesLocation.ltiForms(), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.DeleteSuccess
+      addToast({
+        title: Forms.DeleteSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.DeleteError,
-        description: error.body.msg
+      addToast({
+        title: Forms.DeleteError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
@@ -98,7 +97,7 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
     description: LTIForm.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
-  if (response.isLoading) return <Loading size={8} />;
+  if (response.isLoading) return <Loading size='md' />;
   return (
     <Formik
       initialValues={initialValues}

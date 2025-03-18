@@ -141,7 +141,7 @@ export type models_LTIAttempt = {
   id?: number;
   lti_routing_id?: number;
   pnet_server_id?: number;
-  room_number?: number;
+  room_id?: number;
   updated_at: string;
   user_id?: number;
 };
@@ -362,7 +362,9 @@ export type round_queue_pool_pnet_RoundQueuePoolPnetUpsertResponse = {
   result?: round_queue_pool_pnet_RoundQueuePoolPnetUpsertOutputDTO;
 };
 
-export type usecases_LTIAttemptCreateInputDTO = unknown;
+export type usecases_LTIAttemptCreateInputDTO = {
+  room_number?: number;
+};
 
 export type usecases_LTIAttemptCreateOutputDTO = {
   auto_redirect?: boolean;

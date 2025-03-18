@@ -8,8 +8,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from '@/helpers/queries/base';
 import { BrowserRouter } from 'react-router-dom';
 import RoutesDynamic from '@/app/routes';
-import GroupAlerts from '@/components/alerts/groupAlerts';
-import { AlertProvider } from '@/components/alerts/context';
+import { ToastProvider } from '@heroui/toast';
 
 export interface ProvidersProps {
   themeProps?: ThemeProviderProps;
@@ -19,17 +18,14 @@ export function Providers({ themeProps }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AlertProvider>
-          <UserProfileProvider>
-            <HeroUIProvider>
-              <NextThemesProvider defaultTheme='system' attribute='class' {...themeProps}>
-                <GroupAlerts>
-                  <RoutesDynamic />
-                </GroupAlerts>
-              </NextThemesProvider>
-            </HeroUIProvider>
-          </UserProfileProvider>
-        </AlertProvider>
+        <UserProfileProvider>
+          <HeroUIProvider>
+            <NextThemesProvider defaultTheme='system' attribute='class' {...themeProps}>
+              <ToastProvider />
+              <RoutesDynamic />
+            </NextThemesProvider>
+          </HeroUIProvider>
+        </UserProfileProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

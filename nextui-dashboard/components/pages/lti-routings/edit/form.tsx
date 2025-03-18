@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
-import { Accordion, AccordionItem, Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
+import { Accordion, AccordionItem, addToast, Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
 import { Formik } from 'formik';
 import { models_LTIRouting } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
-import { useAlert } from '@/components/alerts/hooks';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { useLTIRoutingDelete } from '@/helpers/queries/lti-routing/delete';
@@ -58,7 +57,6 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
   const {
     locale: { LTIRouting, Forms, Sidebar }
   } = useLanguageBrowser();
-  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const response = useLTIRoutingByID(id);
   const routingTypes = LtiRoutingLabsType();
@@ -66,32 +64,32 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
   const { mutate } = useLTIRoutingUpsert({
     onSuccess: (data, { formikHelpers }) => {
       navigate(RoutesLocation.ltiRoutingEdit(data.result?.id?.toString() || ''), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.SaveSuccess
+      addToast({
+        title: Forms.SaveSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.SaveError,
-        description: error.body.msg
+      addToast({
+        title: Forms.SaveError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
   const onDeleteMutation = useLTIRoutingDelete({
     onSuccess: () => {
       navigate(RoutesLocation.ltiRouting(), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.DeleteSuccess
+      addToast({
+        title: Forms.DeleteSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.DeleteError,
-        description: error.body.msg
+      addToast({
+        title: Forms.DeleteError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
@@ -100,7 +98,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
     description: LTIRouting.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
-  if (response.isLoading) return <Loading size={8} />;
+  if (response.isLoading) return <Loading size='md' />;
   return (
     <Formik
       initialValues={initialValues}

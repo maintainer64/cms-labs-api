@@ -1,10 +1,8 @@
 package usecases
 
 import (
-	"crypto/rand"
 	"errors"
 	"fmt"
-	"math/big"
 	"net/url"
 	"time"
 
@@ -25,6 +23,7 @@ import (
 
 type LTIAttemptCreateUC struct {
 	LTIAttemptQueries     *queries.LTIAttemptQueries
+	LTIRoomQueries        *queries.LTIRoomQueries
 	LaunchData            lti_query.LaunchDataStorer
 	RoundQueuePoolQueries *queries.RoundQueuePoolQueries
 	LTIRoutingQueries     *queries.LTIRoutingQueries
@@ -34,10 +33,11 @@ type LTIAttemptCreateUC struct {
 }
 
 type LTIAttemptCreateInputDTO struct {
+	RoomNumber int64 `json:"room_number"`
 }
 
 type LTIAttemptCreateOutputDTO struct {
-	RoomNumber    *int64                `json:"room_number"`
+	RoomNumber    int64                 `json:"room_number"`
 	Collaboration int                   `json:"collaboration"`
 	NextUrl       string                `json:"next_url"`
 	AutoRedirect  bool                  `json:"auto_redirect"`
@@ -69,6 +69,38 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		}
 	}
 	attempt, _ := u.LTIAttemptQueries.GetActiveByUserId(u.user.Id, route.ID)
+
+	if attempt.ID != 0 && attempt.RoomID != nil && dto.RoomNumber != 0 {
+		log.Info().Msg(
+			fmt.Sprintf(
+				"LTIAttemptCreateUC: Change room from %d to %d by id %s",
+				attempt.RoomID,
+				dto.RoomNumber,
+				attempt.AttemptID,
+			),
+		)
+		roomEntity, err := u.LTIRoomQueries.GetByRoomNumber(dto.RoomNumber)
+		if err != nil {
+			return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
+				Status:    fiber.StatusNotFound,
+				Exception: errors.New("Not found other room"),
+			}
+		}
+		otherAttempts, _ := u.LTIAttemptQueries.GetByRoomID(roomEntity.ID)
+		if len(otherAttempts) == 0 {
+			return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
+				Status:    fiber.StatusNotFound,
+				Exception: errors.New("Not change room"),
+			}
+		}
+		otherAttempt := otherAttempts[0]
+		attempt.PNETServerID = otherAttempt.PNETServerID
+		attempt.RoomID = otherAttempt.RoomID
+		attempt.LTIRoutingID = otherAttempt.LTIRoutingID
+		attempt.ExtendExpiredAt(1)
+		_ = u.LTIAttemptQueries.Upsert(&attempt)
+		return u.PreparedResponseByAttempt(attempt)
+	}
 	if attempt.ID != 0 {
 		log.Info().Msg(
 			fmt.Sprintf(
@@ -90,13 +122,22 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 	attempt.PNETServerID = serverID
 	// Set LTIRoutingSecretID
 	attempt.LTIRoutingID = route.ID
-	// Set RoomNumber
+	// Set RoomID
 	if route.Collaboration > 1 {
-		var minRand int64 = 100000
-		var maxRand int64 = 999999
-		roomNumberFrom, _ := rand.Int(rand.Reader, big.NewInt(maxRand-minRand+1))
-		roomNumber := roomNumberFrom.Int64() + minRand
-		attempt.RoomNumber = &roomNumber
+		roomEntity, err := u.LTIRoomQueries.Create()
+		if err != nil || roomEntity == nil {
+			log.Warn().Msg(
+				fmt.Sprintf(
+					"LTIAttemptCreateUC: Not created room. Error: %+v",
+					err,
+				),
+			)
+			return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
+				Status:    fiber.StatusNotFound,
+				Exception: errors.New("Not created room"),
+			}
+		}
+		attempt.RoomID = &roomEntity.ID
 	}
 	// Set ExpiredAt
 	if route.PinnedSessionMinutes > 1 {
@@ -188,16 +229,18 @@ func (u *LTIAttemptCreateUC) SearchRelevantRouting() *models.LTIRouting {
 }
 
 func (u *LTIAttemptCreateUC) PreparedResponseByAttempt(attempt models.LTIAttempt) (LTIAttemptCreateOutputDTO, error) {
-	attempts, err := u.LTIAttemptQueries.GetByRoomNumber(attempt.RoomNumber)
-	if err != nil {
-		return LTIAttemptCreateOutputDTO{}, err
+	var attempts []models.LTIAttempt
+	var roomEntity models.LTIRoom
+	if attempt.RoomID != nil && *attempt.RoomID > 0 {
+		attempts, _ = u.LTIAttemptQueries.GetByRoomID(*attempt.RoomID)
+		roomEntity, _ = u.LTIRoomQueries.Get(*attempt.RoomID)
 	}
 	userIds := make([]uint, 0)
 	for _, item := range attempts {
 		userIds = append(userIds, item.UserID)
 	}
 	users := make([]models.UserListItem, 0)
-	if len(userIds) == 0 {
+	if len(userIds) != 0 {
 		users, _, _ = u.UserQueries.List("", userIds, len(userIds), 0)
 	}
 	pnetServer, err := u.PNETServerQueries.Get(attempt.PNETServerID)
@@ -221,7 +264,7 @@ func (u *LTIAttemptCreateUC) PreparedResponseByAttempt(attempt models.LTIAttempt
 		return LTIAttemptCreateOutputDTO{}, err
 	}
 	return LTIAttemptCreateOutputDTO{
-		RoomNumber:    attempt.RoomNumber,
+		RoomNumber:    roomEntity.RoomNumber,
 		Collaboration: ltiRoute.Collaboration,
 		NextUrl:       nextUrl,
 		AutoRedirect:  ltiRoute.Collaboration <= 1 || ltiRoute.Collaboration > 1 && ltiRoute.Collaboration == len(users),

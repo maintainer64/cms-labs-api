@@ -8,7 +8,7 @@ import {
 
 export const useLTIAttemptCreate = () => {
   return useQuery({
-    queryKey: ['postV1LtiRoutingGet'],
+    queryKey: ['postV1LtiAttemptCreate'],
     queryFn: () => {
       return postV1LtiAttemptCreate({ form: {} });
     },
@@ -19,7 +19,7 @@ export const useLTIAttemptCreate = () => {
 
 export const useLTIAttemptById = (id?: number) => {
   return useQuery({
-    queryKey: ['postV1LtiAttemptGet', id],
+    queryKey: ['postV1LtiAttemptGet', id ?? 0],
     queryFn: () => {
       return id ? postV1LtiAttemptGet({ form: { id: id } }) : undefined;
     },

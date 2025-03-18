@@ -246,7 +246,7 @@ definitions:
         type: integer
       pnet_server_id:
         type: integer
-      room_number:
+      room_id:
         type: integer
       updated_at:
         type: string
@@ -687,6 +687,9 @@ definitions:
     - msg
     type: object
   usecases.LTIAttemptCreateInputDTO:
+    properties:
+      room_number:
+        type: integer
     type: object
   usecases.LTIAttemptCreateOutputDTO:
     properties:
