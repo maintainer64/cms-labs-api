@@ -12,7 +12,7 @@ type LTIAttemptBase struct {
 }
 
 type LTIAttemptSecret struct {
-	RoomNumber *int64 `gorm:"type:int" json:"room_number"`
+	RoomID *uint `gorm:"type:int" json:"room_id"`
 }
 
 type LTIAttemptListItem struct {

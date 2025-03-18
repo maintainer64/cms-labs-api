@@ -16,7 +16,9 @@ export const usePnetServerList = (params?: usecases_PNETServerListInputDTO) => {
         }
       });
     },
+    refetchOnWindowFocus: false,
     refetchInterval: false,
+    gcTime: 0,
     getNextPageParam: (response, pages) => {
       const totalCount = response.result?.total_count || 0;
       const count = pages.flatMap((p) => p.result?.model).length;
@@ -29,7 +31,7 @@ export const usePnetServerList = (params?: usecases_PNETServerListInputDTO) => {
 
 export const usePnetServerByID = (id?: number) => {
   return useQuery({
-    queryKey: ['postV1PnetServerGet', id],
+    queryKey: ['postV1PnetServerGet', id ?? 0],
     queryFn: () => {
       return id ? postV1PnetServerGet({ form: { id: id } }) : undefined;
     },

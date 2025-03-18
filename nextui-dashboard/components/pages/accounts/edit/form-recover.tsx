@@ -1,10 +1,9 @@
 'use client';
 import React from 'react';
-import { Button, Input } from '@heroui/react';
+import { addToast, Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import { auth_UserPasswordChangeInputDTO } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
-import { useAlert } from '@/components/alerts/hooks';
 import { useUserPasswordChange } from '@/helpers/queries/users/passwordChange';
 
 const defaultValues: auth_UserPasswordChangeInputDTO = {
@@ -17,20 +16,20 @@ export const ProfilePasswordChangeForm = () => {
   const {
     locale: { UserFormPasswordChange, Forms, Sidebar }
   } = useLanguageBrowser();
-  const { showAlert } = useAlert();
   const { mutate } = useUserPasswordChange({
     onSuccess: (data, { formikHelpers }) => {
       formikHelpers.resetForm();
-      showAlert({
-        type: 'success',
-        message: Forms.SaveSuccess
+      addToast({
+        title: Forms.SaveSuccess,
+        description: '',
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.SaveError,
-        description: error.body.msg
+      addToast({
+        title: Forms.SaveError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });

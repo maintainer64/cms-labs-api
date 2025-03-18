@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
-import { Button, Input } from '@heroui/react';
+import { addToast, Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import { models_LTIAttempt } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
-import { useAlert } from '@/components/alerts/hooks';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { useLTIAttemptById } from '@/helpers/queries/lti-attempt/get';
@@ -27,7 +26,7 @@ const defaultValues: models_LTIAttempt = {
   expired_at: '',
   lti_routing_id: 0,
   pnet_server_id: 0,
-  room_number: 0,
+  room_id: 0,
   user_id: 0,
   updated_at: ''
 };
@@ -36,7 +35,6 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
   const {
     locale: { LTIFormAttempt, Forms, Sidebar }
   } = useLanguageBrowser();
-  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const response = useLTIAttemptById(id);
   const initialValues = response.data?.result?.model ?? defaultValues;
@@ -48,32 +46,32 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
   const { mutate } = useLTIAttemptUpsert({
     onSuccess: (data, { formikHelpers }) => {
       navigate(RoutesLocation.ltiAttemptEdit(data.result?.id?.toString() || ''), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.SaveSuccess
+      addToast({
+        title: Forms.SaveSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.SaveError,
-        description: error.body.msg
+      addToast({
+        title: Forms.SaveError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
   const onDeleteMutation = useLTIAttemptDelete({
     onSuccess: () => {
       navigate(RoutesLocation.ltiAttemptUser(initialValues.user_id?.toString()), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.DeleteSuccess
+      addToast({
+        title: Forms.DeleteSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.DeleteError,
-        description: error.body.msg
+      addToast({
+        title: Forms.DeleteError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
@@ -82,7 +80,7 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
     description: LTIFormAttempt.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
-  if (isLoading) return <Loading size={8} />;
+  if (isLoading) return <Loading size='md' />;
   return (
     <Formik
       initialValues={initialValues}
@@ -114,6 +112,15 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
               value={dayjs(values.expired_at ?? '').format('YYYY-MM-DDTHH:mm')}
               onChange={handleChange('expired_at')}
             />
+            {initialValues.room_id && (
+              <Input
+                variant='bordered'
+                label={LTIFormAttempt.FieldRoomNumber}
+                type='number'
+                value={(initialValues.room_id ?? 0).toString()}
+                isReadOnly
+              />
+            )}
             <Input
               variant='bordered'
               label={LTIFormAttempt.FieldUserId}

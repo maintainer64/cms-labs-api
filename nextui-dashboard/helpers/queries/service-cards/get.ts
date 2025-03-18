@@ -18,7 +18,7 @@ export const useServiceCardList = () => {
 
 export const useServiceCardById = (id?: number) => {
   return useQuery({
-    queryKey: ['postV1ServiceCardGet', id],
+    queryKey: ['postV1ServiceCardGet', id ?? 0],
     queryFn: () => {
       return id ? postV1ServiceCardGet({ form: { id: id } }) : undefined;
     },

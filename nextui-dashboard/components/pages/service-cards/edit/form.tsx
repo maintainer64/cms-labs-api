@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
-import { Button, Checkbox, Input } from '@heroui/react';
+import { addToast, Button, Checkbox, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import { models_ServiceCard } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
-import { useAlert } from '@/components/alerts/hooks';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { useServiceCardDelete } from '@/helpers/queries/service-cards/delete';
@@ -33,39 +32,38 @@ export const ServiceCardEditForm = ({ id }: EditFormProps) => {
   const {
     locale: { ServiceCards, Forms, Sidebar }
   } = useLanguageBrowser();
-  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const response = useServiceCardById(id);
   const initialValues = response.data?.result?.model ?? defaultValues;
   const { mutate } = useServiceCardUpsert({
     onSuccess: (data) => {
       navigate(RoutesLocation.serviceCardsEdit(data.result?.id?.toString() || ''), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.SaveSuccess
+      addToast({
+        title: Forms.SaveSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.SaveError,
-        description: error.body.msg
+      addToast({
+        title: Forms.SaveError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
   const onDeleteMutation = useServiceCardDelete({
     onSuccess: () => {
       navigate(RoutesLocation.serviceCards(), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.DeleteSuccess
+      addToast({
+        title: Forms.DeleteSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.DeleteError,
-        description: error.body.msg
+      addToast({
+        title: Forms.DeleteError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
@@ -74,7 +72,7 @@ export const ServiceCardEditForm = ({ id }: EditFormProps) => {
     description: ServiceCards.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
-  if (response.isLoading) return <Loading size={8} />;
+  if (response.isLoading) return <Loading size='md' />;
   return (
     <Formik
       initialValues={initialValues}

@@ -1,5 +1,4 @@
 import { Avatar, Tooltip } from '@heroui/react';
-import { Badge } from '@heroui/badge';
 import { css, cx } from '@emotion/css';
 import dayjs from 'dayjs';
 import { UseAvatarProps } from '@heroui/avatar/dist/use-avatar';
@@ -209,7 +208,7 @@ function avatarParseColor(
   colorIndex: number | undefined = undefined
 ): string {
   if (!username) return 'default';
-  const colorNumber = colorIndex ?? getHash(username);
+  const colorNumber = Math.abs(colorIndex ?? getHash(username));
   const color = avatarColors[colorNumber % avatarColors.length];
   return css({
     backgroundImage: `linear-gradient(to bottom right, ${color.from}, ${color.to})`,
@@ -231,7 +230,6 @@ function avatarIsOnline(onlineTime?: number): boolean | undefined {
 
 function CustomAvatar(props: CustomAvatarProps) {
   if (!props.username) return <></>;
-  const isOnline = avatarIsOnline(props.onlineTime);
   const username = props.email || props.username;
   const fullName = props.name || props.username || props.email;
   const avatar = (
@@ -248,16 +246,7 @@ function CustomAvatar(props: CustomAvatarProps) {
   return (
     <span className='relative'>
       <Tooltip showArrow={true} content={fullName}>
-        <Badge
-          isInvisible={isOnline === undefined}
-          size={props.size}
-          isDot={true}
-          color={isOnline ? 'success' : 'danger'}
-          content=''
-          shape='circle'
-        >
-          {avatar}
-        </Badge>
+        {avatar}
       </Tooltip>
     </span>
   );

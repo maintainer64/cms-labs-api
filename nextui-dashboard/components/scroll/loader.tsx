@@ -1,10 +1,10 @@
 import React from 'react';
+import { CircularProgress } from '@heroui/react';
 
 interface LoadingProps {
-  size?: number;
+  size?: 'md' | 'sm' | 'lg' | undefined;
 }
 
-export function Loading(props: LoadingProps) {
-  const size = props.size ?? 24;
-  return <div className={`animate-spin rounded-full h-${size} w-${size} border-t-4 border-black border-opacity-50`} />;
+export function Loading({ size }: LoadingProps) {
+  return <CircularProgress aria-label='Loading...' color='primary' size={size} />;
 }

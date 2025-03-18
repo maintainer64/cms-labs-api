@@ -15,7 +15,7 @@ export const useLTIRoutingList = (params?: usecases_LTIRoutingListInputDTO) => {
     },
     refetchOnWindowFocus: false,
     refetchInterval: false,
-    refetchOnMount: false,
+    gcTime: 0,
     getNextPageParam: (response, pages) => {
       const totalCount = response.result?.total_count || 0;
       const count = pages.flatMap((p) => p.result?.model).length;
@@ -28,7 +28,7 @@ export const useLTIRoutingList = (params?: usecases_LTIRoutingListInputDTO) => {
 
 export const useLTIRoutingByID = (id?: number) => {
   return useQuery({
-    queryKey: ['postV1LtiRoutingGet', id],
+    queryKey: ['postV1LtiRoutingGet', id ?? ''],
     queryFn: () => {
       return id ? postV1LtiRoutingGet({ form: { id: id } }) : undefined;
     },

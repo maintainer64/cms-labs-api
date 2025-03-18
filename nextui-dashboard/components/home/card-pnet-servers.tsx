@@ -19,7 +19,7 @@ export const CardPnetServers = () => {
     status: status
   });
 
-  if (response.isLoading) return <Loading size={8} />;
+  if (response.isLoading) return <Loading size='md' />;
 
   const rows = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
 

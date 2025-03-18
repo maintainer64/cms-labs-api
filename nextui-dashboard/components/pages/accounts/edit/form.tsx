@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
+import { addToast, Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
 import { Formik } from 'formik';
 import { models_User } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
@@ -44,7 +44,6 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
   const {
     locale: { UserForm, Forms, Sidebar }
   } = useLanguageBrowser();
-  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const response = useUserByID(id);
   const roles = UserRoles();
@@ -52,20 +51,20 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
   const { mutate } = useUserUpsert({
     onSuccess: (data, { formikHelpers }) => {
       navigate(RoutesLocation.accountsEdit(data.result?.id?.toString() || ''), { replace: true });
-      showAlert({
-        type: 'success',
-        message: Forms.SaveSuccess
+      addToast({
+        title: Forms.SaveSuccess,
+        color: 'success'
       });
     },
     onError: (error: any) => {
-      showAlert({
-        type: 'danger',
-        message: Forms.SaveError,
-        description: error.body.msg
+      addToast({
+        title: Forms.SaveError,
+        description: error.body.msg,
+        color: 'danger'
       });
     }
   });
-  if (response.isLoading) return <Loading size={8} />;
+  if (response.isLoading) return <Loading size='md' />;
   return (
     <Formik
       initialValues={initialValues}

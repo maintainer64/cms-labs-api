@@ -15,7 +15,7 @@ export const useUsersList = (params?: usecases_UserListInputDTO) => {
     },
     refetchOnWindowFocus: false,
     refetchInterval: false,
-    refetchOnMount: false,
+    gcTime: 0,
     getNextPageParam: (response, pages) => {
       const totalCount = response.result?.total_count || 0;
       const count = pages.flatMap((p) => p.result?.model).length;
@@ -28,7 +28,7 @@ export const useUsersList = (params?: usecases_UserListInputDTO) => {
 
 export const useUserByID = (id?: number) => {
   return useQuery({
-    queryKey: ['postV1UserGet', id],
+    queryKey: ['postV1UserGet', id ?? 0],
     queryFn: () => {
       return id ? postV1UserGet({ form: { id: id } }) : undefined;
     },

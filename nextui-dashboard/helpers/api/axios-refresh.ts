@@ -1,7 +1,7 @@
-import { auth_SSOToken, postV1TokenRenew } from '@/helpers/api/src';
+import { auth_SwaggerSSOToken, postV1TokenRenew } from '@/helpers/api/src';
 import { ApiRequestOptions } from '@/helpers/api/src/core/ApiRequestOptions'; // Импортируем библиотеку для работы с JWT
 const TokenManager = {
-  cachedTokens: null as auth_SSOToken | null,
+  cachedTokens: null as auth_SwaggerSSOToken | null,
   tokenExpiration: null as number | null,
 
   // Функция для получения токена

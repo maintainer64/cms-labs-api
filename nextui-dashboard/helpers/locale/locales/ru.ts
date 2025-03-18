@@ -16,7 +16,7 @@ const ru = {
     ErrorPageDescription: 'Попробуйте перейти на страницу входа в систему или авторизоваться через курс',
     MainTitle: 'СУиМ Лаб',
     MainDescription: 'Система Управления и Мониторинга лаболаторных работ. Сделано на Hero UI',
-    MainChangeLanguage: 'Сменить язык'
+    MainChangeLanguage: 'Change language'
   },
   CompaniesDropdown: {
     Title: 'СУиМ Лаб',
@@ -211,6 +211,7 @@ const ru = {
   },
   LTIFormAttempt: {
     FieldID: 'ID попытки',
+    FieldRoomNumber: 'Номер комнаты',
     FieldUserId: 'ID пользователя',
     FieldUserEmail: 'Почта пользователя',
     FieldUserName: 'ФИО пользователя',
@@ -280,7 +281,20 @@ const ru = {
     },
     LTIAttemptRoom: {
       ErrorPageTitle: 'Ошибка при распределении',
-      ErrorPageRefresh: 'Попробовать снова'
+      ErrorPageRefresh: 'Попробовать снова',
+      ModalTitle: 'Подключение к лабораторной работе',
+      ModalDescription: 'Сообщите этот номер комнаты другому человеку или напишите его сами.',
+      ModalDescriptionChange: 'Нажмите кнопку "изменить" для перехода.',
+      ButtonCopy: 'Скопировать',
+      ButtonRollback: 'Вернуть',
+      ButtonChange: 'Изменить',
+      RoomChangeSuccess: 'Комната изменена',
+      RoomChangeError: 'Комната не изменена'
+    },
+    LTIAttemptConfirm: {
+      ModalDescription: 'Вы хотите подключиться к лабораторной работе?',
+      ButtonAdminPanel: 'Нет',
+      ButtonLab: 'Подключиться'
     }
   },
   LTIRouting: {

@@ -2031,7 +2031,7 @@ const docTemplate = `{
                 "pnet_server_id": {
                     "type": "integer"
                 },
-                "room_number": {
+                "room_id": {
                     "type": "integer"
                 },
                 "updated_at": {
@@ -2664,7 +2664,12 @@ const docTemplate = `{
             }
         },
         "usecases.LTIAttemptCreateInputDTO": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "room_number": {
+                    "type": "integer"
+                }
+            }
         },
         "usecases.LTIAttemptCreateOutputDTO": {
             "type": "object",

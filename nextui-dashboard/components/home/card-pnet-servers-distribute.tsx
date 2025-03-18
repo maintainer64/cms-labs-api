@@ -36,7 +36,7 @@ const serversName = (model: Array<queries_RoundQueuePoolPnetListItem>): [servers
 };
 export const CardPnetServersDistribute = () => {
   const response = usePnetServerQueueList();
-  if (response.isLoading) return <Loading size={8} />;
+  if (response.isLoading) return <Loading size='md' />;
   const servers = response.data?.result?.model || [];
   const [series, seriesSize] = serversName(servers);
   const shapes = Array(seriesSize + 1)

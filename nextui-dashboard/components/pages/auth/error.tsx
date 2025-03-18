@@ -1,4 +1,7 @@
 import useLanguageBrowser from '@/helpers/locale';
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@heroui/modal';
+import { ModalFooter } from '@heroui/react';
+import React from 'react';
 
 type ErrorModalProps = {
   title: string;
@@ -7,14 +10,15 @@ type ErrorModalProps = {
 };
 export const ErrorModal = ({ title, description, children }: ErrorModalProps) => {
   return (
-    <div className='flex items-center justify-center h-screen'>
-      <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-md mx-auto'>
-        <strong className='font-bold'>{title}</strong>
-        <br />
-        <span className='block sm:inline'>{description}</span>
-        {children && <div>{children}</div>}
-      </div>
-    </div>
+    <Modal isOpen={true} hideCloseButton={true}>
+      <ModalContent>
+        <ModalHeader className='flex flex-col gap-1'>{title}</ModalHeader>
+        <ModalBody>
+          <p>{description}</p>
+        </ModalBody>
+        <ModalFooter>{children}</ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 export default function AuthError() {

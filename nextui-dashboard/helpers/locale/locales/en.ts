@@ -16,7 +16,7 @@ const en = {
     ErrorPageDescription: 'Try to go to the login page or log in through the course',
     MainTitle: 'CMS LABS',
     MainDescription: '[Admin] Control Management System labs by Hero UI',
-    MainChangeLanguage: 'Change language'
+    MainChangeLanguage: 'Сменить язык'
   },
   CompaniesDropdown: {
     Title: 'CMS LABS',
@@ -210,6 +210,7 @@ const en = {
   },
   LTIFormAttempt: {
     FieldID: 'ID attempt',
+    FieldRoomNumber: 'Room number',
     FieldUserId: 'User id',
     FieldUserEmail: 'User email',
     FieldUserName: 'User name',
@@ -279,7 +280,20 @@ const en = {
     },
     LTIAttemptRoom: {
       ErrorPageTitle: 'Distribution error',
-      ErrorPageRefresh: 'Try again'
+      ErrorPageRefresh: 'Try again',
+      ModalTitle: 'Connecting to laboratory',
+      ModalDescription: 'Tell this room number to another person or write it yourself.',
+      ModalDescriptionChange: 'Click the "edit" button to change room.',
+      ButtonCopy: 'Copy',
+      ButtonRollback: 'Rollback',
+      ButtonChange: 'Change',
+      RoomChangeSuccess: 'The room has been changed',
+      RoomChangeError: 'The room has not been changed'
+    },
+    LTIAttemptConfirm: {
+      ModalDescription: 'Do you want to connect to the lab?',
+      ButtonAdminPanel: 'No',
+      ButtonLab: 'Connect'
     }
   },
   LTIRouting: {

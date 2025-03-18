@@ -31,14 +31,12 @@ export const AutoCompleteFull = (props: AutoCompleteFullProps) => {
       placeholder={props.placeholder}
       onInputChange={onInputChange}
       onSelectionChange={(key) => {
-        console.log('Key');
         const event = {
           target: {
             value: key
           }
         } as ChangeEvent<HTMLInputElement>;
         key && props.onChange?.(event);
-        console.log(key);
       }}
       isLoading={responseSearch?.isLoading}
       aria-label={props.label?.toString()}

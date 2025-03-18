@@ -12,6 +12,7 @@ const RoutesStudent = () => {
       <Route path={RoutesLocation.login()} element={<LoginPage />} />
       <Route path={RoutesLocation.home()} element={<LoginError />} />
       <Route path={RoutesLocation.ltiRedirect()} element={<LTIAttemptsPageCreate />} />
+      <Route path={RoutesLocation.ltiRedirectCreate()} element={<LTIAttemptsPageCreate />} />
     </Routes>
   );
 };
