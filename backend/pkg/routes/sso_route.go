@@ -13,4 +13,5 @@ func V1SSORoute(a *fiber.App) {
 	group.Post("/token", controllers.SSOToken)
 	group.Post("/introspect", controllers.SSOIntrospect)
 	group.Post("/userinfo", controllers.SSOUserInfo)
+	group.Post("/.well-known/openid-configuration", controllers.SSOOpenIdConfiguration)
 }

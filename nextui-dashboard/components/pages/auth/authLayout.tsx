@@ -14,7 +14,7 @@ export const AuthLayoutWrapper = ({ children }: Props) => {
     <div className='flex h-screen'>
       <div className='flex-1 flex-col flex items-center justify-center p-6'>
         <div className='md:hidden absolute left-0 right-0 bottom-0 top-0 z-0'>
-          <Image className='w-full h-full' src='https://nextui.org/gradients/docs-right.png' alt='gradient' />
+          <Image className='w-full h-full' src='https://www.heroui.com/gradients/docs-right.png' alt='gradient' />
         </div>
         {children}
       </div>
@@ -25,7 +25,7 @@ export const AuthLayoutWrapper = ({ children }: Props) => {
 
       <div className='hidden md:flex flex-1 relative flex items-center justify-center p-6'>
         <div className='absolute left-0 right-0 bottom-0 top-0 z-0'>
-          <Image className='w-full h-full' src='https://nextui.org/gradients/docs-right.png' alt='gradient' />
+          <Image className='w-full h-full' src='https://www.heroui.com/gradients/docs-right.png' alt='gradient' />
         </div>
 
         <div className='z-10'>

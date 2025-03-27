@@ -164,3 +164,29 @@ func SSOUserInfo(c *fiber.Ctx) error {
 	}
 	return utils.FiberSuccessResponse{Result: claims}
 }
+
+// SSOOpenIdConfiguration Получить информацию о спецификации.
+// @Description Получить информацию о спецификации.
+// @Summary Получить информацию о спецификации.
+// @Tags SSO
+// @Accept json
+// @Produce json
+// @Success 200 {object} auth.SSOAuthorizeResponse
+// @Router /v1/sso/.well-known/openid-configuration [get]
+func SSOOpenIdConfiguration(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	dto := auth.SSOOpenidConfigurationInputDTO{
+		BaseURL: c.BaseURL(),
+	}
+	container, err := di.NewDIContainer(diLoggerConf)
+	if err != nil {
+		return err
+	}
+	defer container.Close()
+	uc := container.SSOOpenidConfigurationUC()
+	output, err := uc.Execute(dto)
+	if err != nil {
+		return err
+	}
+	return c.JSON(output)
+}

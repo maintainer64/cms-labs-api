@@ -41,3 +41,7 @@ func (di *DIContainer) SSOAuthorizeUC() *auth.SSOAuthorizeUC {
 		Logger:              logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.SSOAuthorizeUC")),
 	}
 }
+
+func (di *DIContainer) SSOOpenidConfigurationUC() *auth.SSOOpenidConfiguration {
+	return &auth.SSOOpenidConfiguration{}
+}
