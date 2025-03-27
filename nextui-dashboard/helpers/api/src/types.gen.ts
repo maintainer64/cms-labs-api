@@ -35,6 +35,11 @@ export type auth_SSOAuthorizeResponse = {
   result?: auth_SSOAuthorizeOutputDTO;
 };
 
+export type auth_SSOError = {
+  error?: string;
+  error_description?: string;
+};
+
 export type auth_SSOTokenIntrospect = {
   active?: boolean;
   client_id?: string;
@@ -44,12 +49,6 @@ export type auth_SSOTokenIntrospect = {
   sub?: string;
   token_type?: string;
   username?: string;
-};
-
-export type auth_SSOTokenIntrospectResponse = {
-  error: boolean;
-  msg: string;
-  result?: auth_SSOTokenIntrospect;
 };
 
 export type auth_SwaggerSSOToken = {
@@ -69,12 +68,6 @@ export type auth_SwaggerSSOTokenPublicData = {
   name?: string;
   role?: string;
   server_id?: number;
-};
-
-export type auth_SwaggerSSOTokenPublicDataResponse = {
-  error: boolean;
-  msg: string;
-  result?: auth_SwaggerSSOTokenPublicData;
 };
 
 export type auth_SwaggerSSOTokenResponse = {
@@ -1047,7 +1040,7 @@ export type PostV1SsoIntrospectData = {
   token: string;
 };
 
-export type PostV1SsoIntrospectResponse = auth_SSOTokenIntrospectResponse;
+export type PostV1SsoIntrospectResponse = auth_SSOTokenIntrospect;
 
 export type PostV1SsoTokenData = {
   /**
@@ -1072,7 +1065,7 @@ export type PostV1SsoTokenData = {
   refreshToken?: string;
 };
 
-export type PostV1SsoTokenResponse = auth_SwaggerSSOTokenResponse;
+export type PostV1SsoTokenResponse = auth_SwaggerSSOToken;
 
 export type GetV1SsoUserinfoData = {
   /**
@@ -1081,16 +1074,7 @@ export type GetV1SsoUserinfoData = {
   authorization: string;
 };
 
-export type GetV1SsoUserinfoResponse = auth_SwaggerSSOTokenPublicDataResponse;
-
-export type PostV1SsoUserinfoData = {
-  /**
-   * Bearer токен
-   */
-  authorization: string;
-};
-
-export type PostV1SsoUserinfoResponse = auth_SwaggerSSOTokenPublicDataResponse;
+export type GetV1SsoUserinfoResponse = auth_SwaggerSSOTokenPublicData;
 
 export type PostV1TokenLoginData = {
   /**

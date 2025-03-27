@@ -959,6 +959,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/auth.SSOAuthorizeResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
+                        }
                     }
                 }
             }
@@ -1042,6 +1048,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/auth.SSOAuthorizeResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
+                        }
                     }
                 }
             },
@@ -1122,7 +1134,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SSOTokenIntrospectResponse"
+                            "$ref": "#/definitions/auth.SSOTokenIntrospect"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
                         }
                     }
                 }
@@ -1189,7 +1207,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
                         }
                     }
                 }
@@ -1226,42 +1250,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenPublicDataResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenPublicData"
                         }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Получить информацию о пользователе.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "SSO"
-                ],
-                "summary": "Получить информацию о пользователе.",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer токен",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenPublicDataResponse"
+                            "$ref": "#/definitions/auth.SSOError"
                         }
                     }
                 }
@@ -1796,6 +1791,17 @@ const docTemplate = `{
                 }
             }
         },
+        "auth.SSOError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "error_description": {
+                    "type": "string"
+                }
+            }
+        },
         "auth.SSOTokenIntrospect": {
             "type": "object",
             "properties": {
@@ -1825,24 +1831,6 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
-                }
-            }
-        },
-        "auth.SSOTokenIntrospectResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/auth.SSOTokenIntrospect"
                 }
             }
         },
@@ -1892,24 +1880,6 @@ const docTemplate = `{
                 },
                 "server_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "auth.SwaggerSSOTokenPublicDataResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/auth.SwaggerSSOTokenPublicData"
                 }
             }
         },

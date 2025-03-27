@@ -18,12 +18,6 @@ type SSOToken struct {
 	UserId       uint   `json:"user_id"`
 }
 
-type SSOTokenResponse struct {
-	Error  bool     `json:"error" validate:"required"`
-	Msg    string   `json:"msg" validate:"required"`
-	Result SSOToken `json:"result"`
-}
-
 // SSOTokenPublicData struct to describe public payload object.
 type SSOTokenPublicData struct {
 	Id           uint   `json:"id"`
@@ -33,12 +27,6 @@ type SSOTokenPublicData struct {
 	Role         string `json:"role"`
 	LastLaunchId string `json:"last_launch_id"`
 	Expires      int64  `json:"exp"`
-}
-
-type SSOTokenPublicDataResponse struct {
-	Error  bool               `json:"error" validate:"required"`
-	Msg    string             `json:"msg" validate:"required"`
-	Result SSOTokenPublicData `json:"result"`
 }
 
 func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {

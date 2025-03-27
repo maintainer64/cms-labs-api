@@ -58,6 +58,13 @@ definitions:
     - error
     - msg
     type: object
+  auth.SSOError:
+    properties:
+      error:
+        type: string
+      error_description:
+        type: string
+    type: object
   auth.SSOTokenIntrospect:
     properties:
       active:
@@ -78,18 +85,6 @@ definitions:
         type: string
       username:
         type: string
-    type: object
-  auth.SSOTokenIntrospectResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/auth.SSOTokenIntrospect'
-    required:
-    - error
-    - msg
     type: object
   auth.SwaggerSSOToken:
     properties:
@@ -122,18 +117,6 @@ definitions:
         type: string
       server_id:
         type: integer
-    type: object
-  auth.SwaggerSSOTokenPublicDataResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/auth.SwaggerSSOTokenPublicData'
-    required:
-    - error
-    - msg
     type: object
   auth.SwaggerSSOTokenResponse:
     properties:
@@ -2034,6 +2017,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/auth.SSOAuthorizeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       summary: Получить информацию о спецификации.
       tags:
       - SSO
@@ -2089,6 +2076,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/auth.SSOAuthorizeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Получение кода авторизации по OpenID.
@@ -2139,7 +2130,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SSOTokenIntrospectResponse'
+            $ref: '#/definitions/auth.SSOTokenIntrospect'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Проверка состояния токена.
@@ -2183,7 +2178,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
+            $ref: '#/definitions/auth.SwaggerSSOToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Получение токена доступа и токена обновления.
@@ -2207,29 +2206,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenPublicDataResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Получить информацию о пользователе.
-      tags:
-      - SSO
-    post:
-      consumes:
-      - application/json
-      description: Получить информацию о пользователе.
-      parameters:
-      - description: Bearer токен
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
+            $ref: '#/definitions/auth.SwaggerSSOTokenPublicData'
+        "400":
+          description: Bad Request
           schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenPublicDataResponse'
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Получить информацию о пользователе.
