@@ -992,6 +992,8 @@ export type PostV1ServiceCardUpsertData = {
 
 export type PostV1ServiceCardUpsertResponse = usecases_ServiceCardEditResponse;
 
+export type GetV1SsoWellKnownOpenidConfigurationResponse = auth_SSOAuthorizeResponse;
+
 export type GetV1SsoAuthorizeData = {
   /**
    * Код приложения клиента

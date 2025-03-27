@@ -940,6 +940,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/sso/.well-known/openid-configuration": {
+            "get": {
+                "description": "Получить информацию о спецификации.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Получить информацию о спецификации.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOAuthorizeResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/sso/authorize": {
             "get": {
                 "security": [

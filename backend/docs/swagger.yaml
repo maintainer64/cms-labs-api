@@ -2022,6 +2022,21 @@ paths:
       summary: create service_card
       tags:
       - ServiceCard
+  /v1/sso/.well-known/openid-configuration:
+    get:
+      consumes:
+      - application/json
+      description: Получить информацию о спецификации.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SSOAuthorizeResponse'
+      summary: Получить информацию о спецификации.
+      tags:
+      - SSO
   /v1/sso/authorize:
     get:
       consumes:
