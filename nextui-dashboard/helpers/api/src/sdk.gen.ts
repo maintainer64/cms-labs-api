@@ -50,6 +50,7 @@ import type {
   PostV1ServiceCardListResponse,
   PostV1ServiceCardUpsertData,
   PostV1ServiceCardUpsertResponse,
+  GetV1SsoWellKnownOpenidConfigurationResponse,
   GetV1SsoAuthorizeData,
   GetV1SsoAuthorizeResponse,
   PostV1SsoAuthorizeData,
@@ -494,6 +495,20 @@ export const postV1ServiceCardUpsert = (
     body: data.form
   });
 };
+
+/**
+ * Получить информацию о спецификации.
+ * Получить информацию о спецификации.
+ * @returns auth_SSOAuthorizeResponse OK
+ * @throws ApiError
+ */
+export const getV1SsoWellKnownOpenidConfiguration =
+  (): CancelablePromise<GetV1SsoWellKnownOpenidConfigurationResponse> => {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/v1/sso/.well-known/openid-configuration'
+    });
+  };
 
 /**
  * Получение кода авторизации по OpenID.
