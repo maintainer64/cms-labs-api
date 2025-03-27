@@ -2191,6 +2191,28 @@ paths:
       - SSO
       - EXTERNAL
   /v1/sso/userinfo:
+    get:
+      consumes:
+      - application/json
+      description: Получить информацию о пользователе.
+      parameters:
+      - description: Bearer токен
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SwaggerSSOTokenPublicDataResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получить информацию о пользователе.
+      tags:
+      - SSO
     post:
       consumes:
       - application/json

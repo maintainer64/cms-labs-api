@@ -157,6 +157,7 @@ func SSOIntrospect(c *fiber.Ctx) error {
 // @Success 200 {object} auth.SwaggerSSOTokenPublicDataResponse
 // @Security ApiKeyAuth
 // @Router /v1/sso/userinfo [post]
+// @Router /v1/sso/userinfo [get]
 func SSOUserInfo(c *fiber.Ctx) error {
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {

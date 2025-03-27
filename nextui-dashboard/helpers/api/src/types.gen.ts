@@ -1074,6 +1074,15 @@ export type PostV1SsoTokenData = {
 
 export type PostV1SsoTokenResponse = auth_SwaggerSSOTokenResponse;
 
+export type GetV1SsoUserinfoData = {
+  /**
+   * Bearer токен
+   */
+  authorization: string;
+};
+
+export type GetV1SsoUserinfoResponse = auth_SwaggerSSOTokenPublicDataResponse;
+
 export type PostV1SsoUserinfoData = {
   /**
    * Bearer токен

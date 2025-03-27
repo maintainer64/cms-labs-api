@@ -59,6 +59,8 @@ import type {
   PostV1SsoIntrospectResponse,
   PostV1SsoTokenData,
   PostV1SsoTokenResponse,
+  GetV1SsoUserinfoData,
+  GetV1SsoUserinfoResponse,
   PostV1SsoUserinfoData,
   PostV1SsoUserinfoResponse,
   PostV1TokenLoginData,
@@ -602,6 +604,24 @@ export const postV1SsoToken = (data: PostV1SsoTokenData): CancelablePromise<Post
       redirect_uri: data.redirectUri,
       code: data.code,
       refresh_token: data.refreshToken
+    }
+  });
+};
+
+/**
+ * Получить информацию о пользователе.
+ * Получить информацию о пользователе.
+ * @param data The data for the request.
+ * @param data.authorization Bearer токен
+ * @returns auth_SwaggerSSOTokenPublicDataResponse OK
+ * @throws ApiError
+ */
+export const getV1SsoUserinfo = (data: GetV1SsoUserinfoData): CancelablePromise<GetV1SsoUserinfoResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/sso/userinfo',
+    headers: {
+      Authorization: data.authorization
     }
   });
 };
