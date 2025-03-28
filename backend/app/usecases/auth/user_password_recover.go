@@ -36,12 +36,12 @@ func (u *UserPasswordRecoverUC) SetContext(user *cms_client.SSOTokenPublicData) 
 func (u *UserPasswordRecoverUC) Execute(dto UserPasswordChangeInputDTO) (UserPasswordChangeOutputDTO, error) {
 	wrongPassword := errors.New("wrong password")
 	response := UserPasswordChangeOutputDTO{
-		Id: u.User.Id,
+		Id: u.User.Sub,
 	}
 	if dto.NewPassword != dto.AgainPassword {
 		return response, wrongPassword
 	}
-	creds, err := u.UserPasswordQueries.Get(u.User.Id)
+	creds, err := u.UserPasswordQueries.Get(u.User.Sub)
 	if err != nil {
 		return response, wrongPassword
 	}
@@ -58,6 +58,6 @@ func (u *UserPasswordRecoverUC) Execute(dto UserPasswordChangeInputDTO) (UserPas
 	}
 	creds.HashPassword = string(newHashPassword)
 	_ = u.UserPasswordQueries.Upsert(&creds)
-	response.Id = u.User.Id
+	response.Id = u.User.Sub
 	return response, err
 }

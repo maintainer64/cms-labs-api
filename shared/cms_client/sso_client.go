@@ -35,7 +35,7 @@ func (c *CMSClient) SSOUserInfo(accessToken string) (*SSOTokenPublicData, error)
 	if response == nil {
 		return nil, NewCMSError("", 0)
 	}
-	if response.IsError() || ssoToken.Id <= 0 {
+	if response.IsError() || ssoToken.Sub <= 0 {
 		return nil, NewCMSError("invalid_user", response.StatusCode())
 	}
 	return &ssoToken, err

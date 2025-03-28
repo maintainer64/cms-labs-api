@@ -43,7 +43,7 @@ func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cm
 		TokenType:    "bearer",
 		ExpiresIn:    accessToken.Exp,
 		State:        state,
-		UserId:       entity.Id,
+		UserId:       entity.Sub,
 	}, nil
 }
 
@@ -55,7 +55,8 @@ func generateNewAccessToken(entity *cms_client.SSOTokenPublicData) (*TokenDataWi
 	minutesCount := configs.AppConfig.JWT.SecretKeyExpireMinutes
 
 	// Set public claims:
-	entity.Expires = time.Now().Add(time.Minute * time.Duration(minutesCount)).Unix()
+	entity.Iat = time.Now().Unix()
+	entity.Exp = time.Now().Add(time.Minute * time.Duration(minutesCount)).Unix()
 
 	// Create a new claims.
 	claims := entity.JWTClaims()
@@ -72,7 +73,7 @@ func generateNewAccessToken(entity *cms_client.SSOTokenPublicData) (*TokenDataWi
 
 	return &TokenDataWithExp{
 		Token: t,
-		Exp:   entity.Expires,
+		Exp:   entity.Exp,
 	}, nil
 }
 

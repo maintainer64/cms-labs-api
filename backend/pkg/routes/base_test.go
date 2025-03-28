@@ -52,7 +52,7 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 	}
 	container, _ := di.NewDIContainer(&logs.ZeroLoggerConf{})
 	uc := container.AuthTokenManager()
-	token, _ := uc.NewJWTByUserId(userID, serverID, state)
+	token, _ := uc.NewJWTByUserId("", userID, serverID, state)
 	return "Bearer " + token.AccessToken
 }
 

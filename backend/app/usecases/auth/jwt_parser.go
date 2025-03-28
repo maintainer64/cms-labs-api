@@ -30,12 +30,16 @@ func ExtractTokenMetadata(
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
 	tokenData := cms_client.SSOTokenPublicData{
-		Id:           uint(claims["id"].(float64)),
-		ServerID:     uint(claims["server_id"].(float64)),
+		Iss:          claims["iss"].(string),
+		Sub:          uint(claims["sub"].(float64)),
+		Aud:          claims["aud"].(string),
+		Exp:          int64(claims["sub"].(float64)),
+		Iat:          int64(claims["iat"].(float64)),
+		Nonce:        claims["nonce"].(string),
 		Email:        claims["email"].(string),
 		Name:         claims["name"].(string),
+		ServerID:     uint(claims["server_id"].(float64)),
 		Role:         claims["role"].(string),
-		Expires:      int64(claims["expires"].(float64)),
 		LastLaunchId: claims["last_launch_id"].(string),
 	}
 	if len(roles) != 0 && !slices.Contains(roles, tokenData.Role) {

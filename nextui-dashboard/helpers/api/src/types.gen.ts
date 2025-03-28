@@ -61,13 +61,50 @@ export type auth_SwaggerSSOToken = {
 };
 
 export type auth_SwaggerSSOTokenPublicData = {
+  /**
+   * Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)
+   */
+  aud?: string;
+  /**
+   * Email. Почта уникальная пользователя
+   */
   email?: string;
+  /**
+   * Exp. Время истечения срока действия токена (в Unix timestamp)
+   */
   exp?: number;
-  id?: number;
+  /**
+   * Iat. Время выдачи токена (в Unix timestamp)
+   */
+  iat?: number;
+  /**
+   * Iss. Идентификатор эмитента токена
+   */
+  iss?: string;
+  /**
+   * LastLaunchId. ID пользователя SSO через LMS систему
+   */
   last_launch_id?: string;
+  /**
+   * Name. Полное ФИО пользователя
+   */
   name?: string;
+  /**
+   * Nonce.(Если запрос авторизации включал nonce) Случайное значение для предотвращения атак подмены
+   */
+  nonce?: string;
+  /**
+   * Role. Роль пользователя
+   */
   role?: string;
+  /**
+   * ServerID ID сервера аутентификации (как с Iss)
+   */
   server_id?: number;
+  /**
+   * Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)
+   */
+  sub?: number;
 };
 
 export type auth_SwaggerSSOTokenResponse = {

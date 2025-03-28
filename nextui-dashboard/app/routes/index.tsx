@@ -6,7 +6,7 @@ import RoutesAdmin from '@/app/routes/admin';
 
 const RoutesDynamic = () => {
   const user = useUserProfile();
-  if (!user || !user.id) return <RoutesUnknown />;
+  if (!user || !user.sub) return <RoutesUnknown />;
   if (user.role === 'admin' || user.role == 'instructor') return <RoutesAdmin />;
   return <RoutesStudent />;
 };

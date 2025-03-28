@@ -29,7 +29,7 @@ func LTILaunch(c *fiber.Ctx) error {
 		return err
 	}
 	authManager := container.AuthTokenManager()
-	token, err := authManager.NewJWTByLaunchID(c.Locals("LTILaunchID").(string))
+	token, err := authManager.NewJWTByLaunchID(c.BaseURL(), c.Locals("LTILaunchID").(string))
 	if err != nil {
 		return err
 	}

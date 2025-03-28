@@ -14,6 +14,7 @@ import (
 
 type TokenManager struct {
 	UserQueries         *queries.UserQueries
+	PNETServerQueries   *queries.PNETServerQueries
 	UserPasswordQueries *queries.UserPasswordQueries
 	TokenAttemptQueries *queries.TokenAttemptQueries
 }
@@ -28,7 +29,7 @@ type RenewManagerCredentialsInputDTO struct {
 }
 
 // NewJWTByCredentials генерирует новый JWT по логину/паролю
-func (m *TokenManager) NewJWTByCredentials(email string, password string) (*cms_client.SSOToken, error) {
+func (m *TokenManager) NewJWTByCredentials(issID string, email string, password string) (*cms_client.SSOToken, error) {
 	invalidCreds := errors.New("username or password is incorrect")
 	if email == "" {
 		return nil, invalidCreds
@@ -49,10 +50,10 @@ func (m *TokenManager) NewJWTByCredentials(email string, password string) (*cms_
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.NewJWTByUserId(entity.ID, 0, "")
+	return m.NewJWTByUserId(issID, entity.ID, 0, "")
 }
 
-func (m *TokenManager) NewJWTByLaunchID(launchID string) (*cms_client.SSOToken, error) {
+func (m *TokenManager) NewJWTByLaunchID(issID string, launchID string) (*cms_client.SSOToken, error) {
 	invalidCreds := errors.New("LTI process is incorrect")
 	if launchID == "" {
 		return nil, invalidCreds
@@ -61,22 +62,35 @@ func (m *TokenManager) NewJWTByLaunchID(launchID string) (*cms_client.SSOToken, 
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.NewJWTByUserId(entity.ID, 0, "")
+	return m.NewJWTByUserId(issID, entity.ID, 0, "")
 }
 
-func (m *TokenManager) NewJWTByUserId(userId uint, serverID uint, state string) (*cms_client.SSOToken, error) {
+func (m *TokenManager) NewJWTByUserId(
+	issID string,
+	userId uint,
+	serverID uint,
+	state string,
+) (*cms_client.SSOToken, error) {
 	userModel, err := m.UserQueries.Get(userId)
 	if err != nil {
 		return nil, err
 	}
-	tokens, err := GenerateNewTokens(&cms_client.SSOTokenPublicData{
-		Id:           userModel.ID,
-		Email:        userModel.Email,
-		ServerID:     serverID,
-		Name:         userModel.Name,
-		LastLaunchId: userModel.LastLaunchID,
-		Role:         userModel.UserRole,
-	}, state)
+	var serverModel models.PNETServer
+	if serverID != 0 {
+		serverModel, _ = m.PNETServerQueries.Get(serverID)
+	}
+	tokens, err := GenerateNewTokens(
+		&cms_client.SSOTokenPublicData{
+			Iss:          issID,
+			Sub:          userModel.ID,
+			Aud:          serverModel.ClientID,
+			Nonce:        state,
+			Email:        userModel.Email,
+			Name:         userModel.Name,
+			ServerID:     serverID,
+			Role:         userModel.UserRole,
+			LastLaunchId: userModel.LastLaunchID,
+		}, state)
 	if err != nil {
 		return nil, err
 	}

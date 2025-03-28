@@ -1853,25 +1853,48 @@
         "auth.SwaggerSSOTokenPublicData": {
             "type": "object",
             "properties": {
+                "aud": {
+                    "description": "Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)",
+                    "type": "string"
+                },
                 "email": {
+                    "description": "Email. Почта уникальная пользователя",
                     "type": "string"
                 },
                 "exp": {
+                    "description": "Exp. Время истечения срока действия токена (в Unix timestamp)",
                     "type": "integer"
                 },
-                "id": {
+                "iat": {
+                    "description": "Iat. Время выдачи токена (в Unix timestamp)",
                     "type": "integer"
+                },
+                "iss": {
+                    "description": "Iss. Идентификатор эмитента токена",
+                    "type": "string"
                 },
                 "last_launch_id": {
+                    "description": "LastLaunchId. ID пользователя SSO через LMS систему",
                     "type": "string"
                 },
                 "name": {
+                    "description": "Name. Полное ФИО пользователя",
+                    "type": "string"
+                },
+                "nonce": {
+                    "description": "Nonce.(Если запрос авторизации включал nonce) Случайное значение для предотвращения атак подмены",
                     "type": "string"
                 },
                 "role": {
+                    "description": "Role. Роль пользователя",
                     "type": "string"
                 },
                 "server_id": {
+                    "description": "ServerID ID сервера аутентификации (как с Iss)",
+                    "type": "integer"
+                },
+                "sub": {
+                    "description": "Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)",
                     "type": "integer"
                 }
             }

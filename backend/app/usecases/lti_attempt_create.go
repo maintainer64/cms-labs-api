@@ -68,7 +68,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 			Exception: errors.New("no route found for this user"),
 		}
 	}
-	attempt, _ := u.LTIAttemptQueries.GetActiveByUserId(u.user.Id, route.ID)
+	attempt, _ := u.LTIAttemptQueries.GetActiveByUserId(u.user.Sub, route.ID)
 
 	if attempt.ID != 0 && attempt.RoomID != nil && dto.RoomNumber != 0 {
 		log.Info().Msg(
@@ -117,7 +117,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		return LTIAttemptCreateOutputDTO{}, err
 	}
 	attempt = models.LTIAttempt{}
-	attempt.UserID = u.user.Id
+	attempt.UserID = u.user.Sub
 	// Set PNETServerID
 	attempt.PNETServerID = serverID
 	// Set LTIRoutingSecretID

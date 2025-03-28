@@ -72,7 +72,7 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	dto.UserID = claims.Id
+	dto.UserID = claims.Sub
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
