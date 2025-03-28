@@ -19,28 +19,16 @@ func ExtractTokenMetadata(
 	c *fiber.Ctx,
 	roles []string,
 ) (*cms_client.SSOTokenPublicData, error) {
-	token, err := verifyToken(c)
+	token, err := verifyToken(extractToken(c))
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
-
-	// Setting and checking token and credentials.
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
-		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
-	}
-	tokenData := cms_client.SSOTokenPublicData{
-		Iss:          claims["iss"].(string),
-		Sub:          uint(claims["sub"].(float64)),
-		Aud:          claims["aud"].(string),
-		Exp:          int64(claims["sub"].(float64)),
-		Iat:          int64(claims["iat"].(float64)),
-		Nonce:        claims["nonce"].(string),
-		Email:        claims["email"].(string),
-		Name:         claims["name"].(string),
-		ServerID:     uint(claims["server_id"].(float64)),
-		Role:         claims["role"].(string),
-		LastLaunchId: claims["last_launch_id"].(string),
+	tokenData, err := decodeToken(token)
+	if err != nil {
+		return nil, utils.FiberValidationException{
+			Status:    fiber.StatusUnauthorized,
+			Exception: err,
+		}
 	}
 	if len(roles) != 0 && !slices.Contains(roles, tokenData.Role) {
 		return nil, utils.FiberValidationException{
@@ -48,7 +36,7 @@ func ExtractTokenMetadata(
 			Exception: errors.New("User with current role is not allow action"),
 		}
 	}
-	return &tokenData, nil
+	return tokenData, nil
 }
 
 func extractToken(c *fiber.Ctx) string {
@@ -63,17 +51,51 @@ func extractToken(c *fiber.Ctx) string {
 	return ""
 }
 
-func verifyToken(c *fiber.Ctx) (*jwt.Token, error) {
-	tokenString := extractToken(c)
+func verifyToken(tokenString string) (*jwt.Token, error) {
+	publicKey := configs.AppConfig.JWT.AccessKey.PublicKey
+	if publicKey == nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "JWT public key not configured")
+	}
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Проверяем алгоритм подписи
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			return nil, fiber.NewError(fiber.StatusUnauthorized, "Unexpected signing method")
+		}
+		return publicKey, nil
+	})
 
-	token, err := jwt.Parse(tokenString, jwtKeyFunc)
 	if err != nil {
-		return nil, err
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid token: "+err.Error())
+	}
+
+	if !token.Valid {
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid token")
 	}
 
 	return token, nil
 }
 
-func jwtKeyFunc(token *jwt.Token) (interface{}, error) {
-	return []byte(configs.AppConfig.JWT.SecretKey), nil
+func decodeToken(jwtToken *jwt.Token) (*cms_client.SSOTokenPublicData, error) {
+	// Setting and checking token and credentials.
+	claims, ok := jwtToken.Claims.(jwt.MapClaims)
+	if !ok || !jwtToken.Valid {
+		return nil, utils.FiberValidationException{
+			Status:    fiber.StatusUnauthorized,
+			Exception: errors.New("token invalid"),
+		}
+	}
+	tokenData := cms_client.SSOTokenPublicData{
+		Iss:          claims["iss"].(string),
+		Sub:          claims["sub"].(string),
+		Aud:          claims["aud"].(string),
+		Exp:          int64(claims["exp"].(float64)),
+		Iat:          int64(claims["iat"].(float64)),
+		Nonce:        claims["nonce"].(string),
+		Email:        claims["email"].(string),
+		Name:         claims["name"].(string),
+		ServerID:     uint(claims["server_id"].(float64)),
+		Role:         claims["role"].(string),
+		LastLaunchId: claims["last_launch_id"].(string),
+	}
+	return &tokenData, nil
 }

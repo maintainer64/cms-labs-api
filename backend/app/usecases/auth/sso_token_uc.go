@@ -39,7 +39,7 @@ type SwaggerSSOToken struct {
 	TokenType    string `json:"token_type" required:"true"`
 	ExpiresIn    int64  `json:"expires_in" required:"true"`
 	State        string `json:"state"`
-	UserId       uint   `json:"user_id"`
+	UserId       string `json:"user_id"`
 }
 
 // SwaggerSSOTokenResponse copy of cms_client.SSOTokenResponse
@@ -54,7 +54,7 @@ type SwaggerSSOTokenPublicData struct {
 	// Iss. Идентификатор эмитента токена
 	Iss string `json:"iss"`
 	// Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)
-	Sub uint `json:"sub"`
+	Sub string `json:"sub"`
 	// Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)
 	Aud string `json:"aud"`
 	// Exp. Время истечения срока действия токена (в Unix timestamp)
@@ -123,7 +123,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 }
 
 func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
-	expiresRefreshToken, err := ParseRefreshToken(inputDTO.RefreshToken)
+	expiresRefreshToken, jti, err := ParseRefreshToken(inputDTO.RefreshToken)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	if now >= expiresRefreshToken {
 		return nil, errors.New("refresh token is expired")
 	}
-	attempt, err := u.TokenAttemptQueries.GetByToken(inputDTO.RefreshToken)
+	attempt, err := u.TokenAttemptQueries.GetByTokenId(jti)
 	if err != nil {
 		return nil, err
 	}

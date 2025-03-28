@@ -1146,6 +1146,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/sso/jwks": {
+            "get": {
+                "description": "Получить информацию о публичных ключах для подписи JWT токенов.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Получить информацию о публичных ключах для подписи JWT токенов.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOJWKSOutputDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/sso/token": {
             "post": {
                 "security": [
@@ -1702,6 +1731,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "auth.JWK": {
+            "type": "object",
+            "properties": {
+                "alg": {
+                    "type": "string"
+                },
+                "e": {
+                    "type": "string"
+                },
+                "kid": {
+                    "type": "string"
+                },
+                "kty": {
+                    "type": "string"
+                },
+                "n": {
+                    "type": "string"
+                },
+                "use": {
+                    "type": "string"
+                }
+            }
+        },
         "auth.RenewManagerCredentialsInputDTO": {
             "type": "object",
             "properties": {
@@ -1799,6 +1851,17 @@ const docTemplate = `{
                 },
                 "error_description": {
                     "type": "string"
+                }
+            }
+        },
+        "auth.SSOJWKSOutputDTO": {
+            "type": "object",
+            "properties": {
+                "keys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/auth.JWK"
+                    }
                 }
             }
         },

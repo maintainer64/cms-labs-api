@@ -3,16 +3,12 @@ package configs
 import (
 	"os"
 	"strconv"
+	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"gitlab.com/a10869/api-modules/shared/connection"
 )
-
-type JWTConfig struct {
-	SecretKey                string
-	SecretKeyExpireMinutes   int
-	SecretRefresh            string
-	SecretRefreshExpireHours int
-}
 
 type AppConfigModel struct {
 	Debug  bool
@@ -42,11 +38,25 @@ func (c *AppConfigModel) Reload() {
 		MaxLifetimeConnections: getEnvInt("DB_MAX_LIFETIME_CONNECTIONS"),
 		TablePrefix:            os.Getenv("DB_TABLE_PREFIX"),
 	}
+	jwtAccess, err := NewJWTKeyConfig(
+		os.Getenv("JWT_SECRET_KEY_PRIVATE"),
+		os.Getenv("JWT_SECRET_KEY_PUBLIC"),
+		time.Duration(getEnvInt("JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT"))*time.Minute,
+	)
+	if err != nil {
+		log.Warn().Err(err).Msg("JWT Access Key")
+	}
+	jwtRefresh, err := NewJWTKeyConfig(
+		os.Getenv("JWT_REFRESH_KEY_PRIVATE"),
+		os.Getenv("JWT_REFRESH_KEY_PUBLIC"),
+		time.Duration(getEnvInt("JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT"))*time.Hour,
+	)
+	if err != nil {
+		log.Warn().Err(err).Msg("JWT Refresh Key")
+	}
 	c.JWT = &JWTConfig{
-		SecretKey:                os.Getenv("JWT_SECRET_KEY"),
-		SecretKeyExpireMinutes:   getEnvInt("JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT"),
-		SecretRefresh:            os.Getenv("JWT_REFRESH_KEY"),
-		SecretRefreshExpireHours: getEnvInt("JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT"),
+		AccessKey:  jwtAccess,
+		RefreshKey: jwtRefresh,
 	}
 }
 

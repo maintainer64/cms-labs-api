@@ -2,6 +2,7 @@ package cms_client
 
 import (
 	"encoding/base64"
+	"strconv"
 
 	"github.com/goccy/go-json"
 	"github.com/golang-jwt/jwt/v5"
@@ -15,7 +16,7 @@ type SSOToken struct {
 	TokenType    string `json:"token_type" required:"true"`
 	ExpiresIn    int64  `json:"expires_in" required:"true"`
 	State        string `json:"state"`
-	UserId       uint   `json:"user_id"`
+	UserId       string `json:"user_id"`
 }
 
 // SSOTokenPublicData struct to describe public payload object.
@@ -23,7 +24,7 @@ type SSOTokenPublicData struct {
 	// Iss. Идентификатор эмитента токена
 	Iss string `json:"iss"`
 	// Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)
-	Sub uint `json:"sub"`
+	Sub string `json:"sub"`
 	// Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)
 	Aud string `json:"aud"`
 	// Exp. Время истечения срока действия токена (в Unix timestamp)
@@ -42,6 +43,11 @@ type SSOTokenPublicData struct {
 	Role string `json:"role"`
 	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
+}
+
+func (t *SSOTokenPublicData) UserID() uint {
+	userID, _ := strconv.ParseUint(t.Sub, 10, 64)
+	return uint(userID)
 }
 
 func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {

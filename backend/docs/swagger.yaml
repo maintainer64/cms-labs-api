@@ -1,5 +1,20 @@
 basePath: /api
 definitions:
+  auth.JWK:
+    properties:
+      alg:
+        type: string
+      e:
+        type: string
+      kid:
+        type: string
+      kty:
+        type: string
+      "n":
+        type: string
+      use:
+        type: string
+    type: object
   auth.RenewManagerCredentialsInputDTO:
     properties:
       email:
@@ -64,6 +79,13 @@ definitions:
         type: string
       error_description:
         type: string
+    type: object
+  auth.SSOJWKSOutputDTO:
+    properties:
+      keys:
+        items:
+          $ref: '#/definitions/auth.JWK'
+        type: array
     type: object
   auth.SSOTokenIntrospect:
     properties:
@@ -2163,6 +2185,25 @@ paths:
       tags:
       - SSO
       - EXTERNAL
+  /v1/sso/jwks:
+    get:
+      consumes:
+      - application/json
+      description: Получить информацию о публичных ключах для подписи JWT токенов.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SSOJWKSOutputDTO'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.SSOError'
+      summary: Получить информацию о публичных ключах для подписи JWT токенов.
+      tags:
+      - SSO
   /v1/sso/token:
     post:
       consumes:

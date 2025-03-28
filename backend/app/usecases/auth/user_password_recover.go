@@ -35,29 +35,29 @@ func (u *UserPasswordRecoverUC) SetContext(user *cms_client.SSOTokenPublicData) 
 
 func (u *UserPasswordRecoverUC) Execute(dto UserPasswordChangeInputDTO) (UserPasswordChangeOutputDTO, error) {
 	wrongPassword := errors.New("wrong password")
-	response := UserPasswordChangeOutputDTO{
-		Id: u.User.Sub,
+	outputDTO := UserPasswordChangeOutputDTO{
+		Id: u.User.UserID(),
 	}
 	if dto.NewPassword != dto.AgainPassword {
-		return response, wrongPassword
+		return outputDTO, wrongPassword
 	}
-	creds, err := u.UserPasswordQueries.Get(u.User.Sub)
+	creds, err := u.UserPasswordQueries.Get(u.User.UserID())
 	if err != nil {
-		return response, wrongPassword
+		return outputDTO, wrongPassword
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(creds.HashPassword), []byte(dto.OldPassword))
 	if err != nil {
-		return response, wrongPassword
+		return outputDTO, wrongPassword
 	}
 	newHashPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(dto.NewPassword),
 		14,
 	)
 	if err != nil {
-		return response, wrongPassword
+		return outputDTO, wrongPassword
 	}
 	creds.HashPassword = string(newHashPassword)
 	_ = u.UserPasswordQueries.Upsert(&creds)
-	response.Id = u.User.Sub
-	return response, err
+	outputDTO.Id = u.User.UserID()
+	return outputDTO, err
 }

@@ -19,7 +19,7 @@ func (c *CMSClient) SSOToken(grantType string, redirectUri string, code string, 
 	if response == nil {
 		return nil, NewCMSError("", 0)
 	}
-	if response.IsError() || ssoToken.UserId <= 0 {
+	if response.IsError() || ssoToken.UserId == "" {
 		return nil, NewCMSError("invalid_granted", response.StatusCode())
 	}
 	return &ssoToken, err
@@ -35,7 +35,7 @@ func (c *CMSClient) SSOUserInfo(accessToken string) (*SSOTokenPublicData, error)
 	if response == nil {
 		return nil, NewCMSError("", 0)
 	}
-	if response.IsError() || ssoToken.Sub <= 0 {
+	if response.IsError() || ssoToken.Sub == "" {
 		return nil, NewCMSError("invalid_user", response.StatusCode())
 	}
 	return &ssoToken, err

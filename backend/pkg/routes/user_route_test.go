@@ -5,8 +5,9 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 )
@@ -33,12 +34,12 @@ func TestV1UserCreate(t *testing.T) {
 	authHeader := f.AuthorizationUser(entityDB.ID, 0, "")
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/upsert",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/upsert",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserEditResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -72,12 +73,11 @@ func TestV1UserCreateUnauthorized(t *testing.T) {
 	}
 
 	expectedCode := 401 // Assuming 401 is returned for unauthorized access
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/upsert",
-		FiberRequestPayload(input),
-		"",
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method: "POST",
+		Route:  "/api/v1/user/upsert",
+		Body:   FiberRequestPayload(input),
+	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Contains(t, body, "token is malformed: token contains an invalid number of segments", description)
@@ -106,12 +106,12 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/upsert",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/upsert",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserEditResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -146,12 +146,12 @@ func TestV1UserGetSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserGetResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -176,12 +176,12 @@ func TestV1UserGetNotFound(t *testing.T) {
 	}
 
 	expectedCode := 404 // Assuming 404 is returned for not found
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Contains(t, body, "not found", description) // Adjust based on your error response format
@@ -209,12 +209,12 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 	}
 
 	expectedCode := 200 // Assuming 200 is returned even for inactive users
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserGetResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -256,12 +256,12 @@ func TestV1UserListSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -302,12 +302,12 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -350,12 +350,12 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -397,12 +397,12 @@ func TestV1UserListPagination(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/user/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UserListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -423,12 +423,11 @@ func TestV1UserListUnauthorized(t *testing.T) {
 	}
 
 	expectedCode := 401 // Assuming 401 is returned for unauthorized access
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/user/list",
-		FiberRequestPayload(input),
-		"",
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method: "POST",
+		Route:  "/api/v1/user/list",
+		Body:   FiberRequestPayload(input),
+	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Contains(t, body, "token is malformed: token contains an invalid number of segments", description)

@@ -3,8 +3,9 @@ package routes
 import (
 	"testing"
 
-	"github.com/h2non/gock"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/h2non/gock"
 )
 
 func externalAttemptsMock() {
@@ -30,11 +31,10 @@ func TestPNETServerPingSuccess(t *testing.T) {
 	f := NewFiberTestHTTP()
 
 	expectedCode := 204
-	statusCode, _ := f.Request(
-		"POST",
-		"/pnet-lab-addon/api/v1/task/pnet-server-ping",
-		FiberRequestPayload(nil),
-		"",
-	)
+	statusCode, _ := f.Request(&FiberTestHttpRequest{
+		Method: "POST",
+		Route:  "/pnet-lab-addon/api/v1/task/pnet-server-ping",
+		Body:   FiberRequestPayload(nil),
+	})
 	assert.Equal(t, expectedCode, statusCode, description+"Status code")
 }

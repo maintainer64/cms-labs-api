@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	"gitlab.com/a10869/api-modules/shared/cms_client"
-
 	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
+
+	"gitlab.com/a10869/api-modules/shared/cms_client"
+
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 )
@@ -34,12 +35,12 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/lti-routing/upsert",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/lti-routing/upsert",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.LTIRoutingEditResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -78,12 +79,12 @@ func TestV1LTIRoutingList(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/lti-routing/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/lti-routing/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.LTIRoutingListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -118,12 +119,12 @@ func TestV1LTIRoutingDelete(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/lti-routing/delete",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/lti-routing/delete",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.LTIRoutingDeleteResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -155,12 +156,12 @@ func TestV1LTIRoutingGet(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/lti-routing/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/lti-routing/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.LTIRoutingGetResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 

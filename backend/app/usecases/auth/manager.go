@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
@@ -79,10 +80,10 @@ func (m *TokenManager) NewJWTByUserId(
 	if serverID != 0 {
 		serverModel, _ = m.PNETServerQueries.Get(serverID)
 	}
-	tokens, err := GenerateNewTokens(
+	tokens, jti, err := GenerateNewTokens(
 		&cms_client.SSOTokenPublicData{
 			Iss:          issID,
-			Sub:          userModel.ID,
+			Sub:          fmt.Sprintf("%d", userModel.ID),
 			Aud:          serverModel.ClientID,
 			Nonce:        state,
 			Email:        userModel.Email,
@@ -97,7 +98,7 @@ func (m *TokenManager) NewJWTByUserId(
 	refreshModel := &models.TokenAttempt{}
 	refreshModel.UserID = userId
 	refreshModel.ServerID = serverID
-	refreshModel.Token = tokens.RefreshToken
+	refreshModel.Token = jti
 	if err = m.TokenAttemptQueries.Upsert(refreshModel); err != nil {
 		return nil, err
 	}
@@ -105,5 +106,5 @@ func (m *TokenManager) NewJWTByUserId(
 }
 
 func ExpiresRefreshCookie() time.Time {
-	return time.Now().Add(time.Hour * time.Duration(configs.AppConfig.JWT.SecretRefreshExpireHours))
+	return time.Now().Add(configs.AppConfig.JWT.RefreshKey.Expire)
 }

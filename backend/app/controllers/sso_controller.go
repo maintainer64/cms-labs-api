@@ -72,7 +72,7 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	dto.UserID = claims.Sub
+	dto.UserID = claims.UserID()
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
@@ -114,7 +114,7 @@ func SSOToken(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.SSOTokenUC()
-	output, err := uc.Execute(dto)
+	output, err := uc.SetContext(c.BaseURL()).Execute(dto)
 	if err != nil {
 		return c.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
 	}
@@ -164,7 +164,7 @@ func SSOIntrospect(c *fiber.Ctx) error {
 func SSOUserInfo(c *fiber.Ctx) error {
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
+		return c.JSON(auth.SSOError{Error: `invalid_grant`, ErrorDescription: err.Error()})
 	}
 	return c.JSON(claims)
 }
@@ -191,7 +191,31 @@ func SSOOpenIdConfiguration(c *fiber.Ctx) error {
 	uc := container.SSOOpenidConfigurationUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
+		return c.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
+	}
+	return c.JSON(output)
+}
+
+// SSOJwks Получить информацию о публичных ключах для подписи JWT токенов.
+// @Description Получить информацию о публичных ключах для подписи JWT токенов.
+// @Summary Получить информацию о публичных ключах для подписи JWT токенов.
+// @Tags SSO
+// @Accept json
+// @Produce json
+// @Success 200 {object} auth.SSOJWKSOutputDTO
+// @Success 500 {object} auth.SSOError
+// @Router /v1/sso/jwks [get]
+func SSOJwks(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	container, err := di.NewDIContainer(diLoggerConf)
+	if err != nil {
 		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
+	}
+	defer container.Close()
+	uc := container.SSOJwksUC()
+	output, err := uc.Execute()
+	if err != nil {
+		return c.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
 	}
 	return c.JSON(output)
 }

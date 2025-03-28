@@ -26,12 +26,12 @@ func TestV1ServiceCardCreate(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/service-card/upsert",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/service-card/upsert",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.ServiceCardEditResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -73,12 +73,12 @@ func TestV1ServiceCardList(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/service-card/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/service-card/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.ServiceCardListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -117,12 +117,12 @@ func TestV1ServiceCardListPagination(t *testing.T) {
 		Offset: 1,
 	}
 
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/service-card/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/service-card/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.ServiceCardListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -145,12 +145,12 @@ func TestV1ServiceCardListEmpty(t *testing.T) {
 		Limit:  10,
 	}
 
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/service-card/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/service-card/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.ServiceCardListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -183,12 +183,12 @@ func TestV1ServiceCardGet(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/service-card/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/service-card/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.ServiceCardGetResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -215,12 +215,12 @@ func TestV1ServiceCardGetNotFound(t *testing.T) {
 	}
 
 	expectedCode := 404 // Assuming 404 is returned for not found
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/service-card/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/service-card/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Contains(t, body, "not found", description) // Adjust based on your error response format
@@ -250,12 +250,12 @@ func TestV1ServiceCardDelete(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/service-card/delete",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/service-card/delete",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.ServiceCardDeleteResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -271,12 +271,11 @@ func TestV1NotFound(t *testing.T) {
 	description := "not found route"
 	f := NewFiberTestHTTP()
 	expectedCode := 404
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/not-found-route",
-		FiberRequestPayload(""),
-		"",
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method: "POST",
+		Route:  "/api/v1/not-found-route",
+		Body:   FiberRequestPayload(""),
+	})
 	bodyModel := map[string]interface{}{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 

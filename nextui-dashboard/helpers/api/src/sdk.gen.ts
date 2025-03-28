@@ -57,6 +57,7 @@ import type {
   PostV1SsoAuthorizeResponse,
   PostV1SsoIntrospectData,
   PostV1SsoIntrospectResponse,
+  GetV1SsoJwksResponse,
   PostV1SsoTokenData,
   PostV1SsoTokenResponse,
   GetV1SsoUserinfoData,
@@ -583,6 +584,22 @@ export const postV1SsoIntrospect = (data: PostV1SsoIntrospectData): CancelablePr
     },
     errors: {
       400: 'Bad Request'
+    }
+  });
+};
+
+/**
+ * Получить информацию о публичных ключах для подписи JWT токенов.
+ * Получить информацию о публичных ключах для подписи JWT токенов.
+ * @returns auth_SSOJWKSOutputDTO OK
+ * @throws ApiError
+ */
+export const getV1SsoJwks = (): CancelablePromise<GetV1SsoJwksResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/sso/jwks',
+    errors: {
+      500: 'Internal Server Error'
     }
   });
 };
