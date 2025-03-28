@@ -959,6 +959,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/auth.SSOAuthorizeResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
+                        }
                     }
                 }
             }
@@ -1042,6 +1048,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/auth.SSOAuthorizeResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
+                        }
                     }
                 }
             },
@@ -1122,7 +1134,42 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SSOTokenIntrospectResponse"
+                            "$ref": "#/definitions/auth.SSOTokenIntrospect"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/sso/jwks": {
+            "get": {
+                "description": "Получить информацию о публичных ключах для подписи JWT токенов.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Получить информацию о публичных ключах для подписи JWT токенов.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOJWKSOutputDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
                         }
                     }
                 }
@@ -1189,14 +1236,20 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
                         }
                     }
                 }
             }
         },
         "/v1/sso/userinfo": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -1226,7 +1279,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenPublicDataResponse"
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenPublicData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOError"
                         }
                     }
                 }
@@ -1672,6 +1731,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "auth.JWK": {
+            "type": "object",
+            "properties": {
+                "alg": {
+                    "type": "string"
+                },
+                "e": {
+                    "type": "string"
+                },
+                "kid": {
+                    "type": "string"
+                },
+                "kty": {
+                    "type": "string"
+                },
+                "n": {
+                    "type": "string"
+                },
+                "use": {
+                    "type": "string"
+                }
+            }
+        },
         "auth.RenewManagerCredentialsInputDTO": {
             "type": "object",
             "properties": {
@@ -1761,6 +1843,28 @@ const docTemplate = `{
                 }
             }
         },
+        "auth.SSOError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "error_description": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.SSOJWKSOutputDTO": {
+            "type": "object",
+            "properties": {
+                "keys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/auth.JWK"
+                    }
+                }
+            }
+        },
         "auth.SSOTokenIntrospect": {
             "type": "object",
             "properties": {
@@ -1793,24 +1897,6 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.SSOTokenIntrospectResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/auth.SSOTokenIntrospect"
-                }
-            }
-        },
         "auth.SwaggerSSOToken": {
             "type": "object",
             "properties": {
@@ -1837,44 +1923,49 @@ const docTemplate = `{
         "auth.SwaggerSSOTokenPublicData": {
             "type": "object",
             "properties": {
+                "aud": {
+                    "description": "Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)",
+                    "type": "string"
+                },
                 "email": {
+                    "description": "Email. Почта уникальная пользователя",
                     "type": "string"
                 },
                 "exp": {
+                    "description": "Exp. Время истечения срока действия токена (в Unix timestamp)",
                     "type": "integer"
                 },
-                "id": {
+                "iat": {
+                    "description": "Iat. Время выдачи токена (в Unix timestamp)",
                     "type": "integer"
+                },
+                "iss": {
+                    "description": "Iss. Идентификатор эмитента токена",
+                    "type": "string"
                 },
                 "last_launch_id": {
+                    "description": "LastLaunchId. ID пользователя SSO через LMS систему",
                     "type": "string"
                 },
                 "name": {
+                    "description": "Name. Полное ФИО пользователя",
+                    "type": "string"
+                },
+                "nonce": {
+                    "description": "Nonce.(Если запрос авторизации включал nonce) Случайное значение для предотвращения атак подмены",
                     "type": "string"
                 },
                 "role": {
+                    "description": "Role. Роль пользователя",
                     "type": "string"
                 },
                 "server_id": {
+                    "description": "ServerID ID сервера аутентификации (как с Iss)",
                     "type": "integer"
-                }
-            }
-        },
-        "auth.SwaggerSSOTokenPublicDataResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
                 },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/auth.SwaggerSSOTokenPublicData"
+                "sub": {
+                    "description": "Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)",
+                    "type": "integer"
                 }
             }
         },

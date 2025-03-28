@@ -1,5 +1,20 @@
 basePath: /api
 definitions:
+  auth.JWK:
+    properties:
+      alg:
+        type: string
+      e:
+        type: string
+      kid:
+        type: string
+      kty:
+        type: string
+      "n":
+        type: string
+      use:
+        type: string
+    type: object
   auth.RenewManagerCredentialsInputDTO:
     properties:
       email:
@@ -58,6 +73,20 @@ definitions:
     - error
     - msg
     type: object
+  auth.SSOError:
+    properties:
+      error:
+        type: string
+      error_description:
+        type: string
+    type: object
+  auth.SSOJWKSOutputDTO:
+    properties:
+      keys:
+        items:
+          $ref: '#/definitions/auth.JWK'
+        type: array
+    type: object
   auth.SSOTokenIntrospect:
     properties:
       active:
@@ -79,18 +108,6 @@ definitions:
       username:
         type: string
     type: object
-  auth.SSOTokenIntrospectResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/auth.SSOTokenIntrospect'
-    required:
-    - error
-    - msg
-    type: object
   auth.SwaggerSSOToken:
     properties:
       access_token:
@@ -108,32 +125,42 @@ definitions:
     type: object
   auth.SwaggerSSOTokenPublicData:
     properties:
+      aud:
+        description: Aud. Получатель токена (обычно client_id приложения, запрашивающего
+          токен)
+        type: string
       email:
+        description: Email. Почта уникальная пользователя
         type: string
       exp:
+        description: Exp. Время истечения срока действия токена (в Unix timestamp)
         type: integer
-      id:
+      iat:
+        description: Iat. Время выдачи токена (в Unix timestamp)
         type: integer
+      iss:
+        description: Iss. Идентификатор эмитента токена
+        type: string
       last_launch_id:
+        description: LastLaunchId. ID пользователя SSO через LMS систему
         type: string
       name:
+        description: Name. Полное ФИО пользователя
+        type: string
+      nonce:
+        description: Nonce.(Если запрос авторизации включал nonce) Случайное значение
+          для предотвращения атак подмены
         type: string
       role:
+        description: Role. Роль пользователя
         type: string
       server_id:
+        description: ServerID ID сервера аутентификации (как с Iss)
         type: integer
-    type: object
-  auth.SwaggerSSOTokenPublicDataResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/auth.SwaggerSSOTokenPublicData'
-    required:
-    - error
-    - msg
+      sub:
+        description: Sub. Уникальный идентификатор пользователя в системе OpenID Provider
+          (OP)
+        type: integer
     type: object
   auth.SwaggerSSOTokenResponse:
     properties:
@@ -2034,6 +2061,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/auth.SSOAuthorizeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       summary: Получить информацию о спецификации.
       tags:
       - SSO
@@ -2089,6 +2120,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/auth.SSOAuthorizeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Получение кода авторизации по OpenID.
@@ -2139,13 +2174,36 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SSOTokenIntrospectResponse'
+            $ref: '#/definitions/auth.SSOTokenIntrospect'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Проверка состояния токена.
       tags:
       - SSO
       - EXTERNAL
+  /v1/sso/jwks:
+    get:
+      consumes:
+      - application/json
+      description: Получить информацию о публичных ключах для подписи JWT токенов.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SSOJWKSOutputDTO'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.SSOError'
+      summary: Получить информацию о публичных ключах для подписи JWT токенов.
+      tags:
+      - SSO
   /v1/sso/token:
     post:
       consumes:
@@ -2183,7 +2241,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
+            $ref: '#/definitions/auth.SwaggerSSOToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Получение токена доступа и токена обновления.
@@ -2191,7 +2253,7 @@ paths:
       - SSO
       - EXTERNAL
   /v1/sso/userinfo:
-    post:
+    get:
       consumes:
       - application/json
       description: Получить информацию о пользователе.
@@ -2207,7 +2269,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenPublicDataResponse'
+            $ref: '#/definitions/auth.SwaggerSSOTokenPublicData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SSOError'
       security:
       - ApiKeyAuth: []
       summary: Получить информацию о пользователе.

@@ -17,9 +17,9 @@ type TokenAttemptQueries struct {
 	*zerolog.Logger
 }
 
-func (q *TokenAttemptQueries) GetByToken(token string) (models.TokenAttempt, error) {
+func (q *TokenAttemptQueries) GetByTokenId(tokenId string) (models.TokenAttempt, error) {
 	entity := models.TokenAttempt{}
-	q.Where("token = ?", token).Limit(1).Find(&entity)
+	q.Where("token = ?", tokenId).Limit(1).Find(&entity)
 	exception := utils.FiberValidationException{
 		Status:    fiber.StatusNotFound,
 		Exception: errors.New("TokenAttempt has not found"),

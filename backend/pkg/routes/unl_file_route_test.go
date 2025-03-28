@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
-
 	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
+
+	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
+
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 )
@@ -40,12 +41,12 @@ func TestV1UNLFileListSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/unl-file/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/unl-file/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UNLFileListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -85,12 +86,12 @@ func TestV1UNLFileListFilterByType(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/unl-file/list",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/unl-file/list",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UNLFileListResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -117,12 +118,12 @@ func TestV1UNLFileGetSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/unl-file/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/unl-file/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := usecases.UNLFileGetResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -143,12 +144,12 @@ func TestV1UNLFileGetNotFound(t *testing.T) {
 	}
 
 	expectedCode := 404 // Assuming 404 is returned for not found
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/unl-file/get",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/unl-file/get",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Contains(t, body, "not found", description)
@@ -166,12 +167,12 @@ func TestV1UNLFileSyncSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/unl-file/sync",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/unl-file/sync",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 	bodyModel := external.UNLFileSyncResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
@@ -240,12 +241,12 @@ func TestV1UNLFileSyncInvalidRepository(t *testing.T) {
 	}
 
 	expectedCode := 500 // Assuming 500 is returned for internal server error
-	statusCode, body := f.Request(
-		"POST",
-		"/api/v1/unl-file/sync",
-		FiberRequestPayload(input),
-		authHeader,
-	)
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/unl-file/sync",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Contains(t, body, "not clone repository", description)

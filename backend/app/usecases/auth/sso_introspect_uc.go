@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
@@ -33,7 +32,7 @@ func (u *SSOIntrospectUC) ByRefresh(inputDTO SSOIntrospectInputDTO) (*SSOTokenIn
 	introspect.Active = true
 	introspect.Scope = []string{"default"}
 	introspect.TokenType = "refresh"
-	expiresRefreshToken, err := ParseRefreshToken(inputDTO.Token)
+	expiresRefreshToken, jti, err := ParseRefreshToken(inputDTO.Token)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +41,7 @@ func (u *SSOIntrospectUC) ByRefresh(inputDTO SSOIntrospectInputDTO) (*SSOTokenIn
 	if now >= expiresRefreshToken {
 		introspect.Active = false
 	}
-	attempt, err := u.TokenAttemptQueries.GetByToken(inputDTO.Token)
+	attempt, err := u.TokenAttemptQueries.GetByTokenId(jti)
 	if err != nil {
 		return introspect, err
 	}
@@ -68,29 +67,24 @@ func (u *SSOIntrospectUC) ByAccess(inputDTO SSOIntrospectInputDTO) (*SSOTokenInt
 	introspect.TokenType = "access"
 	introspect.Active = true
 	introspect.Scope = []string{"default"}
-	token, err := jwt.Parse(inputDTO.Token, jwtKeyFunc)
+	token, err := verifyToken(inputDTO.Token)
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
-	// Setting and checking token and credentials.
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
+	tokenData, err := decodeToken(token)
+	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
-	userID := uint(claims["id"].(float64))
-	var serverID uint = 0
-	if claims["serverID"] != nil {
-		serverID = uint(claims["serverID"].(float64))
-	}
-	introspect.ClientID = fmt.Sprintf("%v", serverID)
-	introspect.Sub = fmt.Sprintf("%v", userID)
-	introspect.Exp = int64(claims["expires"].(float64))
-	attempt, err := u.TokenAttemptQueries.GetByParams(userID, serverID)
+	userID := tokenData.UserID()
+	introspect.ClientID = tokenData.Aud
+	introspect.Sub = tokenData.Sub
+	introspect.Exp = tokenData.Exp
+	attempt, err := u.TokenAttemptQueries.GetByParams(userID, tokenData.ServerID)
 	if err != nil {
 		introspect.Active = false
 		return introspect, nil
 	}
-	introspect.Iat = attempt.CreatedAt.Unix()
+	introspect.Iat = tokenData.Iat
 	if attempt.ServerID == 0 {
 		return introspect, nil
 	}

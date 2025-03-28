@@ -29,6 +29,7 @@ type SSOTokenUC struct {
 	TokenManager        *TokenManager
 	PNETServerQueries   *queries.PNETServerQueries
 	Logger              *zerolog.Logger
+	IssId               string
 }
 
 // SwaggerSSOToken copy of cms_client.SSOToken
@@ -38,7 +39,7 @@ type SwaggerSSOToken struct {
 	TokenType    string `json:"token_type" required:"true"`
 	ExpiresIn    int64  `json:"expires_in" required:"true"`
 	State        string `json:"state"`
-	UserId       uint   `json:"user_id"`
+	UserId       string `json:"user_id"`
 }
 
 // SwaggerSSOTokenResponse copy of cms_client.SSOTokenResponse
@@ -50,20 +51,33 @@ type SwaggerSSOTokenResponse struct {
 
 // SwaggerSSOTokenPublicData copy of cms_client.SSOTokenPublicData
 type SwaggerSSOTokenPublicData struct {
-	Id           uint   `json:"id"`
-	ServerID     uint   `json:"server_id"`
-	Email        string `json:"email"`
-	Name         string `json:"name"`
-	Role         string `json:"role"`
+	// Iss. Идентификатор эмитента токена
+	Iss string `json:"iss"`
+	// Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)
+	Sub string `json:"sub"`
+	// Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)
+	Aud string `json:"aud"`
+	// Exp. Время истечения срока действия токена (в Unix timestamp)
+	Exp int64 `json:"exp"`
+	// Iat. Время выдачи токена (в Unix timestamp)
+	Iat int64 `json:"iat"`
+	// Nonce.(Если запрос авторизации включал nonce) Случайное значение для предотвращения атак подмены
+	Nonce string `json:"nonce"`
+	// Email. Почта уникальная пользователя
+	Email string `json:"email"`
+	// Name. Полное ФИО пользователя
+	Name string `json:"name"`
+	// ServerID ID сервера аутентификации (как с Iss)
+	ServerID uint `json:"server_id"`
+	// Role. Роль пользователя
+	Role string `json:"role"`
+	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
-	Expires      int64  `json:"exp"`
 }
 
-// SwaggerSSOTokenPublicDataResponse copy of cms_client.SSOTokenPublicDataResponse
-type SwaggerSSOTokenPublicDataResponse struct {
-	Error  bool                      `json:"error" validate:"required"`
-	Msg    string                    `json:"msg" validate:"required"`
-	Result SwaggerSSOTokenPublicData `json:"result"`
+func (u *SSOTokenUC) SetContext(issId string) *SSOTokenUC {
+	u.IssId = issId
+	return u
 }
 
 func (u *SSOTokenUC) Execute(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
@@ -105,11 +119,11 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		return nil, errors.New("invalid redirect_uri")
 	}
-	return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, attempt.State)
+	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, attempt.State)
 }
 
 func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
-	expiresRefreshToken, err := ParseRefreshToken(inputDTO.RefreshToken)
+	expiresRefreshToken, jti, err := ParseRefreshToken(inputDTO.RefreshToken)
 	if err != nil {
 		return nil, err
 	}
@@ -117,13 +131,13 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	if now >= expiresRefreshToken {
 		return nil, errors.New("refresh token is expired")
 	}
-	attempt, err := u.TokenAttemptQueries.GetByToken(inputDTO.RefreshToken)
+	attempt, err := u.TokenAttemptQueries.GetByTokenId(jti)
 	if err != nil {
 		return nil, err
 	}
 	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
 	if attempt.ServerID == 0 {
-		return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, "")
+		return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, "")
 	}
 	server, err := u.PNETServerQueries.Get(attempt.ServerID)
 	if err != nil {
@@ -132,5 +146,5 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	if !server.IsActive {
 		return nil, errors.New("server is not active")
 	}
-	return u.TokenManager.NewJWTByUserId(attempt.UserID, attempt.ServerID, "")
+	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, "")
 }

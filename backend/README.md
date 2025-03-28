@@ -78,6 +78,60 @@ API с помощью Swagger.
 
 Смотри пример в файле [.env.test](.env.test)
 
+## ⚙️ JWT токены
+
+Для корректной работы JWT токенов нужно прописать обязательно сгенерированные сертификаты:
+
+```shell
+#!/bin/bash
+
+# Генерация JWT ключей и конфига
+echo "Generating JWT keys and config..."
+
+# Создаем директорию для сертификатов
+mkdir -p ./certs
+
+# Генерируем ключи для access токена
+openssl genrsa -out ./certs/access_private.pem 4096
+openssl rsa -in ./certs/access_private.pem -pubout -out ./certs/access_public.pem
+
+# Генерируем ключи для refresh токена
+openssl genrsa -out ./certs/refresh_private.pem 4096
+openssl rsa -in ./certs/refresh_private.pem -pubout -out ./certs/refresh_public.pem
+
+# Читаем ключи и преобразуем в одну строку с \n
+access_private=$(awk 'NF {sub(/\r/, ""); printf "%s\\n", $0}' ./certs/access_private.pem)
+access_public=$(awk 'NF {sub(/\r/, ""); printf "%s\\n", $0}' ./certs/access_public.pem)
+refresh_private=$(awk 'NF {sub(/\r/, ""); printf "%s\\n", $0}' ./certs/refresh_private.pem)
+refresh_public=$(awk 'NF {sub(/\r/, ""); printf "%s\\n", $0}' ./certs/refresh_public.pem)
+
+# Создаем конфигурационный файл
+cat > ./certs/jwt_config.env <<EOF
+# JWT settings:
+JWT_SECRET_KEY_PRIVATE="$access_private"
+JWT_SECRET_KEY_PUBLIC="$access_public"
+JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT=15
+JWT_REFRESH_KEY_PRIVATE="$refresh_private"
+JWT_REFRESH_KEY_PUBLIC="$refresh_public"
+JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT=12
+EOF
+
+# Устанавливаем права
+chmod -R 755 ./certs
+
+echo "JWT keys and config generated successfully in ./certs/jwt_config.env"
+```
+
+Далее, перенести в env переменные сгенерированный файл [./certs/jwt_config.env](./certs/jwt_config.env) и изменить
+настройки если необходимо:
+
+```
+JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT
+JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT
+```
+
+Смотри пример в файле [.env.test](.env.test)
+
 ## ⚙️ Тесты & Линтер
 
 ```bash

@@ -9,6 +9,7 @@ import (
 func (di *DIContainer) authTokenManager(db *database.Queries) *auth.TokenManager {
 	return &auth.TokenManager{
 		UserQueries:         db.UserQueries,
+		PNETServerQueries:   db.PNETServerQueries,
 		UserPasswordQueries: db.UserPasswordQueries,
 		TokenAttemptQueries: db.TokenAttemptQueries,
 	}
@@ -44,4 +45,8 @@ func (di *DIContainer) SSOAuthorizeUC() *auth.SSOAuthorizeUC {
 
 func (di *DIContainer) SSOOpenidConfigurationUC() *auth.SSOOpenidConfiguration {
 	return &auth.SSOOpenidConfiguration{}
+}
+
+func (di *DIContainer) SSOJwksUC() *auth.SSOJwksUC {
+	return &auth.SSOJwksUC{}
 }

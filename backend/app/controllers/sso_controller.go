@@ -25,6 +25,7 @@ import (
 // @Param state query string false "Состояние, возвращается в параметрах редиректа, участвует в генерации кода авторизации"
 // @Param extra query string false "Дополнительные параметры вида base64"
 // @Success 200 {object} auth.SSOAuthorizeResponse
+// @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
 // @Router /v1/sso/authorize [get]
 func SSOAuthorize(c *fiber.Ctx) error {
@@ -71,10 +72,10 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
-	dto.UserID = claims.Id
+	dto.UserID = claims.UserID()
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOAuthorizeUC()
@@ -96,7 +97,8 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 // @Param code formData string false "Код авторизации"
 // @Param refresh_token formData string false "Токен обновления"
 // @Param Authorization header string true "Basic-токен, созданный клиентом"
-// @Success 200 {object} auth.SwaggerSSOTokenResponse
+// @Success 200 {object} auth.SwaggerSSOToken
+// @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
 // @Router /v1/sso/token [post]
 func SSOToken(c *fiber.Ctx) error {
@@ -108,15 +110,15 @@ func SSOToken(c *fiber.Ctx) error {
 	dto.RefreshToken = c.FormValue("refresh_token", "")
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: "invalid_request", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOTokenUC()
-	output, err := uc.Execute(dto)
+	output, err := uc.SetContext(c.BaseURL()).Execute(dto)
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return c.JSON(output)
 }
 
 // SSOIntrospect Проверка состояния токена.
@@ -127,7 +129,8 @@ func SSOToken(c *fiber.Ctx) error {
 // @Produce json
 // @Param token formData string true "Токен доступа или токен обновления"
 // @Param Authorization header string true "Basic-токен, созданный клиентом"
-// @Success 200 {object} auth.SSOTokenIntrospectResponse
+// @Success 200 {object} auth.SSOTokenIntrospect
+// @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
 // @Router /v1/sso/introspect [post]
 func SSOIntrospect(c *fiber.Ctx) error {
@@ -136,15 +139,15 @@ func SSOIntrospect(c *fiber.Ctx) error {
 	dto.Token = c.FormValue("token", "")
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: "internal_error", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOIntrospectUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
 	}
-	return utils.FiberSuccessResponse{Result: output}
+	return c.JSON(output)
 }
 
 // SSOUserInfo Получить информацию о пользователе.
@@ -154,15 +157,16 @@ func SSOIntrospect(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer токен"
-// @Success 200 {object} auth.SwaggerSSOTokenPublicDataResponse
+// @Success 200 {object} auth.SwaggerSSOTokenPublicData
+// @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
-// @Router /v1/sso/userinfo [post]
+// @Router /v1/sso/userinfo [get]
 func SSOUserInfo(c *fiber.Ctx) error {
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: `invalid_grant`, ErrorDescription: err.Error()})
 	}
-	return utils.FiberSuccessResponse{Result: claims}
+	return c.JSON(claims)
 }
 
 // SSOOpenIdConfiguration Получить информацию о спецификации.
@@ -172,6 +176,7 @@ func SSOUserInfo(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Success 200 {object} auth.SSOAuthorizeResponse
+// @Success 400 {object} auth.SSOError
 // @Router /v1/sso/.well-known/openid-configuration [get]
 func SSOOpenIdConfiguration(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
@@ -180,13 +185,37 @@ func SSOOpenIdConfiguration(c *fiber.Ctx) error {
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOOpenidConfigurationUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
-		return err
+		return c.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
+	}
+	return c.JSON(output)
+}
+
+// SSOJwks Получить информацию о публичных ключах для подписи JWT токенов.
+// @Description Получить информацию о публичных ключах для подписи JWT токенов.
+// @Summary Получить информацию о публичных ключах для подписи JWT токенов.
+// @Tags SSO
+// @Accept json
+// @Produce json
+// @Success 200 {object} auth.SSOJWKSOutputDTO
+// @Success 500 {object} auth.SSOError
+// @Router /v1/sso/jwks [get]
+func SSOJwks(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	container, err := di.NewDIContainer(diLoggerConf)
+	if err != nil {
+		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
+	}
+	defer container.Close()
+	uc := container.SSOJwksUC()
+	output, err := uc.Execute()
+	if err != nil {
+		return c.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
 	}
 	return c.JSON(output)
 }

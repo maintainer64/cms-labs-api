@@ -1,13 +1,11 @@
 package auth
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"fmt"
-	"strconv"
-	"strings"
 	"time"
+
+	"github.com/google/uuid"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
@@ -21,20 +19,20 @@ type TokenDataWithExp struct {
 	Exp   int64  `json:"exp"`
 }
 
-// GenerateNewTokens func for generate a new Access & Refresh tokens.
-func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cms_client.SSOToken, error) {
+// GenerateNewTokens func for generate a new Access & Refresh tokens. Return jti (unique id on refresh token)
+func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cms_client.SSOToken, string, error) {
 	// Generate JWT Access token.
 	accessToken, err := generateNewAccessToken(entity)
 	if err != nil {
 		// Return token generation error.
-		return nil, err
+		return nil, "", err
 	}
 
 	// Generate JWT Refresh token.
-	refreshToken, err := generateNewRefreshToken()
+	refreshToken, jti, err := generateNewRefreshToken()
 	if err != nil {
 		// Return token generation error.
-		return nil, err
+		return nil, "", err
 	}
 
 	return &cms_client.SSOToken{
@@ -43,73 +41,126 @@ func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cm
 		TokenType:    "bearer",
 		ExpiresIn:    accessToken.Exp,
 		State:        state,
-		UserId:       entity.Id,
-	}, nil
+		UserId:       entity.Sub,
+	}, jti, nil
 }
 
 func generateNewAccessToken(entity *cms_client.SSOTokenPublicData) (*TokenDataWithExp, error) {
-	// Set secret key from .env file.
-	secret := configs.AppConfig.JWT.SecretKey
+	// Получаем конфигурацию JWT
+	jwtConfig := configs.AppConfig.JWT.AccessKey
 
-	// Set expires minutes count for secret key from .env file.
-	minutesCount := configs.AppConfig.JWT.SecretKeyExpireMinutes
+	// Проверяем наличие приватного ключа
+	if jwtConfig.PrivateKey == nil {
+		return nil, errors.New("access token private key not configured")
+	}
 
-	// Set public claims:
-	entity.Expires = time.Now().Add(time.Minute * time.Duration(minutesCount)).Unix()
+	// Устанавливаем срок действия токена
+	entity.Iat = time.Now().Unix()
+	entity.Exp = time.Now().Add(jwtConfig.Expire).Unix()
 
-	// Create a new claims.
+	// Создаем claims
 	claims := entity.JWTClaims()
 
-	// Create a new JWT access token with claims.
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Создаем токен с RSA алгоритмом
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 
-	// Generate token.
-	t, err := token.SignedString([]byte(secret))
+	// Подписываем токен с использованием приватного ключа
+	t, err := token.SignedString(jwtConfig.PrivateKey)
 	if err != nil {
-		// Return error, it JWT token generation failed.
-		return nil, err
+		return nil, fmt.Errorf("failed to sign access token: %w", err)
 	}
 
 	return &TokenDataWithExp{
 		Token: t,
-		Exp:   entity.Expires,
+		Exp:   entity.Exp,
 	}, nil
 }
 
-func generateNewRefreshToken() (*TokenDataWithExp, error) {
-	// Create a new SHA256 hash.
-	hash := sha256.New()
+func generateNewRefreshToken() (*TokenDataWithExp, string, error) {
+	// Получаем конфигурацию JWT
+	jwtConfig := configs.AppConfig.JWT.RefreshKey
 
-	// Create a new now date and time string with salt.
-	refresh := configs.AppConfig.JWT.SecretRefresh + time.Now().String()
-
-	// See: https://pkg.go.dev/io#Writer.Write
-	_, err := hash.Write([]byte(refresh))
-	if err != nil {
-		// Return error, it refresh token generation failed.
-		return nil, err
+	// Проверяем наличие приватного ключа
+	if jwtConfig.PrivateKey == nil {
+		return nil, "", errors.New("refresh token private key not configured")
 	}
 
-	// Set expires hours count for refresh key from .env file.
-	hoursCount := configs.AppConfig.JWT.SecretRefreshExpireHours
+	// Устанавливаем срок действия токена
+	expireTime := time.Now().Add(jwtConfig.Expire)
+	expireUnix := expireTime.Unix()
 
-	// Set expiration time.
-	expireTime := time.Now().Add(time.Hour * time.Duration(hoursCount)).Unix()
+	// Генерируем уникальный идентификатор для refresh токена
+	uniquePart := uuid.New().String()
 
-	// Create a new refresh token (sha256 string with salt + expire time).
-	t := hex.EncodeToString(hash.Sum(nil)) + "." + fmt.Sprint(expireTime)
+	// Создаем claims с минимальным набором данных
+	claims := jwt.MapClaims{
+		"jti": uniquePart,        // Уникальный идентификатор токена
+		"exp": expireUnix,        // Время истечения
+		"iat": time.Now().Unix(), // Время выпуска
+	}
+
+	// Создаем токен с RSA алгоритмом
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+
+	// Подписываем токен с использованием приватного ключа
+	t, err := token.SignedString(jwtConfig.PrivateKey)
+	if err != nil {
+		return nil, "", fmt.Errorf("failed to sign refresh token: %w", err)
+	}
 
 	return &TokenDataWithExp{
 		Token: t,
-		Exp:   expireTime,
-	}, nil
+		Exp:   expireUnix,
+	}, uniquePart, nil
 }
 
 // ParseRefreshToken func for parse second argument from refresh token.
-func ParseRefreshToken(refreshToken string) (int64, error) {
-	splitToken := strings.Split(refreshToken, ".")
-	if len(splitToken) < 2 {
-		return 0, errors.New("invalid refresh token")
+// ParseRefreshToken проверяет валидность refresh токена и возвращает время его истечения
+func ParseRefreshToken(refreshToken string) (int64, string, error) {
+	// Проверяем, что токен не пустой
+	if refreshToken == "" {
+		return 0, "", errors.New("empty refresh token")
 	}
-	return strconv.ParseInt(splitToken[1], 0, 64)
+
+	// Получаем публичный ключ для проверки подписи
+	publicKey := configs.AppConfig.JWT.RefreshKey.PublicKey
+	if publicKey == nil {
+		return 0, "", errors.New("refresh token public key not configured")
+	}
+
+	// Парсим токен с проверкой подписи
+	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+		// Проверяем, что используется ожидаемый алгоритм подписи
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return publicKey, nil
+	})
+
+	if err != nil {
+		return 0, "", fmt.Errorf("invalid refresh token: %w", err)
+	}
+
+	// Проверяем, что токен валиден
+	if !token.Valid {
+		return 0, "", errors.New("invalid refresh token")
+	}
+
+	// Извлекаем claims и проверяем наличие времени истечения
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0, "", errors.New("invalid token claims")
+	}
+
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return 0, "", errors.New("token expiration time (exp) not found")
+	}
+
+	jti, ok := claims["jti"].(string)
+	if !ok {
+		return 0, "", errors.New("token identifier not found")
+	}
+
+	return int64(exp), jti, nil
 }

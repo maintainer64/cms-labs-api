@@ -30,10 +30,23 @@ type FiberTestHTTP struct {
 	DB  *gorm.DB
 }
 
-func (f *FiberTestHTTP) Request(method string, route string, body io.Reader, authorization string) (int, string) {
-	req := httptest.NewRequest(method, route, body)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", authorization)
+type FiberTestHttpRequest struct {
+	Method        string
+	Route         string
+	Body          io.Reader
+	Authorization string
+	ContentType   string
+}
+
+func (f *FiberTestHTTP) Request(
+	r *FiberTestHttpRequest,
+) (int, string) {
+	req := httptest.NewRequest(r.Method, r.Route, r.Body)
+	if r.ContentType == "" {
+		r.ContentType = "application/json"
+	}
+	req.Header.Set("Content-Type", r.ContentType)
+	req.Header.Set("Authorization", r.Authorization)
 
 	// Perform the request plain with the app.
 	resp, _ := f.App.Test(req, -1)

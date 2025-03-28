@@ -57,10 +57,11 @@ import type {
   PostV1SsoAuthorizeResponse,
   PostV1SsoIntrospectData,
   PostV1SsoIntrospectResponse,
+  GetV1SsoJwksResponse,
   PostV1SsoTokenData,
   PostV1SsoTokenResponse,
-  PostV1SsoUserinfoData,
-  PostV1SsoUserinfoResponse,
+  GetV1SsoUserinfoData,
+  GetV1SsoUserinfoResponse,
   PostV1TokenLoginData,
   PostV1TokenLoginResponse,
   PostV1TokenLogoutResponse,
@@ -506,7 +507,10 @@ export const getV1SsoWellKnownOpenidConfiguration =
   (): CancelablePromise<GetV1SsoWellKnownOpenidConfigurationResponse> => {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/v1/sso/.well-known/openid-configuration'
+      url: '/v1/sso/.well-known/openid-configuration',
+      errors: {
+        400: 'Bad Request'
+      }
     });
   };
 
@@ -536,6 +540,9 @@ export const getV1SsoAuthorize = (data: GetV1SsoAuthorizeData): CancelablePromis
       path: data.path,
       state: data.state,
       extra: data.extra
+    },
+    errors: {
+      400: 'Bad Request'
     }
   });
 };
@@ -562,7 +569,7 @@ export const postV1SsoAuthorize = (data: PostV1SsoAuthorizeData): CancelableProm
  * @param data The data for the request.
  * @param data.token Токен доступа или токен обновления
  * @param data.authorization Basic-токен, созданный клиентом
- * @returns auth_SSOTokenIntrospectResponse OK
+ * @returns auth_SSOTokenIntrospect OK
  * @throws ApiError
  */
 export const postV1SsoIntrospect = (data: PostV1SsoIntrospectData): CancelablePromise<PostV1SsoIntrospectResponse> => {
@@ -574,6 +581,25 @@ export const postV1SsoIntrospect = (data: PostV1SsoIntrospectData): CancelablePr
     },
     formData: {
       token: data.token
+    },
+    errors: {
+      400: 'Bad Request'
+    }
+  });
+};
+
+/**
+ * Получить информацию о публичных ключах для подписи JWT токенов.
+ * Получить информацию о публичных ключах для подписи JWT токенов.
+ * @returns auth_SSOJWKSOutputDTO OK
+ * @throws ApiError
+ */
+export const getV1SsoJwks = (): CancelablePromise<GetV1SsoJwksResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/sso/jwks',
+    errors: {
+      500: 'Internal Server Error'
     }
   });
 };
@@ -587,7 +613,7 @@ export const postV1SsoIntrospect = (data: PostV1SsoIntrospectData): CancelablePr
  * @param data.redirectUri Адрес переадресации клиента
  * @param data.code Код авторизации
  * @param data.refreshToken Токен обновления
- * @returns auth_SwaggerSSOTokenResponse OK
+ * @returns auth_SwaggerSSOToken OK
  * @throws ApiError
  */
 export const postV1SsoToken = (data: PostV1SsoTokenData): CancelablePromise<PostV1SsoTokenResponse> => {
@@ -602,6 +628,9 @@ export const postV1SsoToken = (data: PostV1SsoTokenData): CancelablePromise<Post
       redirect_uri: data.redirectUri,
       code: data.code,
       refresh_token: data.refreshToken
+    },
+    errors: {
+      400: 'Bad Request'
     }
   });
 };
@@ -611,15 +640,18 @@ export const postV1SsoToken = (data: PostV1SsoTokenData): CancelablePromise<Post
  * Получить информацию о пользователе.
  * @param data The data for the request.
  * @param data.authorization Bearer токен
- * @returns auth_SwaggerSSOTokenPublicDataResponse OK
+ * @returns auth_SwaggerSSOTokenPublicData OK
  * @throws ApiError
  */
-export const postV1SsoUserinfo = (data: PostV1SsoUserinfoData): CancelablePromise<PostV1SsoUserinfoResponse> => {
+export const getV1SsoUserinfo = (data: GetV1SsoUserinfoData): CancelablePromise<GetV1SsoUserinfoResponse> => {
   return __request(OpenAPI, {
-    method: 'POST',
+    method: 'GET',
     url: '/v1/sso/userinfo',
     headers: {
       Authorization: data.authorization
+    },
+    errors: {
+      400: 'Bad Request'
     }
   });
 };

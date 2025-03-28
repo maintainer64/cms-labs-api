@@ -33,7 +33,7 @@ export const Login = () => {
     }
   }, []);
 
-  if (user && user.id && params.redirect_uri) {
+  if (user && user.sub && params.redirect_uri) {
     const authSSO = useSSOAuth(params);
     if (authSSO.data?.result) {
       window.location.href = SSOAuthorizationComplete(authSSO.data?.result);

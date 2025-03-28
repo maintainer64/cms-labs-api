@@ -11,8 +11,7 @@ type SSOTokenIntrospect struct {
 	Sub       string   `json:"sub"`
 }
 
-type SSOTokenIntrospectResponse struct {
-	Error  bool               `json:"error" validate:"required"`
-	Msg    string             `json:"msg" validate:"required"`
-	Result SSOTokenIntrospect `json:"result"`
+type SSOError struct {
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
 }

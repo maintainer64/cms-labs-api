@@ -35,7 +35,7 @@ func TokensRenew(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.SSOTokenUC()
-	token, err := uc.Execute(
+	token, err := uc.SetContext(c.BaseURL()).Execute(
 		auth.SSOTokenInputDTO{
 			GrantType:    auth.TokenGrantTypeRefreshToken,
 			RefreshToken: refreshToken,
@@ -77,7 +77,7 @@ func TokensByCredentials(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.AuthTokenManager()
-	token, err := uc.NewJWTByCredentials(dto.Email, dto.Password)
+	token, err := uc.NewJWTByCredentials(c.BaseURL(), dto.Email, dto.Password)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}

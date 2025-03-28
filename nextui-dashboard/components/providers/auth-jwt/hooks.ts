@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { UserProfileContext } from './context';
-import { auth_SSOTokenPublicData } from '@/helpers/api';
+import { auth_SwaggerSSOTokenPublicData } from '@/helpers/api';
 
-export const useUserProfile = (): auth_SSOTokenPublicData => {
+export const useUserProfile = (): auth_SwaggerSSOTokenPublicData => {
   const context = useContext(UserProfileContext);
   if (!context || !context.profile) {
     console.error('useUserProfile must be used within a UserProfileProvider');

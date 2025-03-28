@@ -9,7 +9,7 @@ import (
 
 func (c *CMSClient) SSOToken(grantType string, redirectUri string, code string, refreshToken string) (*SSOToken, error) {
 	const path = "/api/v1/sso/token"
-	var ssoToken SSOTokenResponse
+	var ssoToken SSOToken
 	response, err := c.client.R().SetFormData(map[string]string{
 		"grant_type":    grantType,
 		"redirect_uri":  redirectUri,
@@ -19,26 +19,26 @@ func (c *CMSClient) SSOToken(grantType string, redirectUri string, code string, 
 	if response == nil {
 		return nil, NewCMSError("", 0)
 	}
-	if response.IsError() || ssoToken.Error {
-		return nil, NewCMSError(ssoToken.Msg, response.StatusCode())
+	if response.IsError() || ssoToken.UserId == "" {
+		return nil, NewCMSError("invalid_granted", response.StatusCode())
 	}
-	return &ssoToken.Result, err
+	return &ssoToken, err
 }
 
 func (c *CMSClient) SSOUserInfo(accessToken string) (*SSOTokenPublicData, error) {
 	const path = "/api/v1/sso/userinfo"
-	var ssoToken SSOTokenPublicDataResponse
+	var ssoToken SSOTokenPublicData
 	response, err := c.client.R().SetHeader(
 		"Authorization",
 		fmt.Sprintf("Bearer %s", accessToken),
-	).SetResult(&ssoToken).Post(path)
+	).SetResult(&ssoToken).Get(path)
 	if response == nil {
 		return nil, NewCMSError("", 0)
 	}
-	if response.IsError() || ssoToken.Error {
-		return nil, NewCMSError(ssoToken.Msg, response.StatusCode())
+	if response.IsError() || ssoToken.Sub == "" {
+		return nil, NewCMSError("invalid_user", response.StatusCode())
 	}
-	return &ssoToken.Result, err
+	return &ssoToken, err
 }
 
 func (c *CMSClient) SSOAuthorizeURI(

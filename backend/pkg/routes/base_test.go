@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 
 	"gitlab.com/a10869/api-modules/shared/logs"
@@ -28,10 +29,23 @@ type FiberTestHTTP struct {
 	DB  *gorm.DB
 }
 
-func (f *FiberTestHTTP) Request(method string, route string, body io.Reader, authorization string) (int, string) {
-	req := httptest.NewRequest(method, route, body)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", authorization)
+type FiberTestHttpRequest struct {
+	Method        string
+	Route         string
+	Body          io.Reader
+	Authorization string
+	ContentType   string
+}
+
+func (f *FiberTestHTTP) Request(
+	r *FiberTestHttpRequest,
+) (int, string) {
+	req := httptest.NewRequest(r.Method, r.Route, r.Body)
+	if r.ContentType == "" {
+		r.ContentType = "application/json"
+	}
+	req.Header.Set("Content-Type", r.ContentType)
+	req.Header.Set("Authorization", r.Authorization)
 
 	// Perform the request plain with the app.
 	resp, _ := f.App.Test(req, -1)
@@ -52,7 +66,7 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 	}
 	container, _ := di.NewDIContainer(&logs.ZeroLoggerConf{})
 	uc := container.AuthTokenManager()
-	token, _ := uc.NewJWTByUserId(userID, serverID, state)
+	token, _ := uc.NewJWTByUserId("", userID, serverID, state)
 	return "Bearer " + token.AccessToken
 }
 
@@ -97,4 +111,13 @@ func FiberJSON(data any) string {
 
 func FiberRequestPayload(data any) io.Reader {
 	return strings.NewReader(fmt.Sprint(FiberJSON(data)))
+}
+
+func FiberRequestFormPayload(data map[string]string) io.Reader {
+	// Создаем form-data запрос
+	form := url.Values{}
+	for key, value := range data {
+		form.Add(key, value)
+	}
+	return strings.NewReader(form.Encode())
 }

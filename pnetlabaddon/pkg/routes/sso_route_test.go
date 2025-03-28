@@ -5,11 +5,12 @@ import (
 	"math/rand/v2"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"gitlab.com/a10869/api-modules/pnetlabaddon/app/queries"
+
 	"github.com/google/uuid"
 	"github.com/h2non/gock"
-	"github.com/stretchr/testify/assert"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/models"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/queries"
 )
 
 func externalSSOMock() (int, string, string) {
@@ -18,15 +19,12 @@ func externalSSOMock() (int, string, string) {
 	externalUserEmail := externalUserName + "@admin.com"
 
 	cmsCoreTokenResponse := map[string]interface{}{
-		"error": false,
-		"result": map[string]interface{}{
-			"access_token":  "access_token",
-			"refresh_token": "refresh_token",
-			"token_type":    "bearer",
-			"expires_in":    -1,
-			"state":         "77c02576-43b0-4aeb-a69c-d8baa61e0e3b",
-			"user_id":       externalUserId,
-		},
+		"access_token":  "access_token",
+		"refresh_token": "refresh_token",
+		"token_type":    "bearer",
+		"expires_in":    -1,
+		"state":         "77c02576-43b0-4aeb-a69c-d8baa61e0e3b",
+		"user_id":       fmt.Sprintf("%d", externalUserId),
 	}
 
 	gock.New("https://cms-core.local").
@@ -37,21 +35,23 @@ func externalSSOMock() (int, string, string) {
 		JSON(cmsCoreTokenResponse)
 
 	cmsCoreUserResponse := map[string]interface{}{
-		"error": false,
-		"result": map[string]interface{}{
-			"id":             externalUserId,
-			"server_id":      2,
-			"email":          externalUserEmail,
-			"name":           externalUserName,
-			"role":           "student",
-			"last_launch_id": "1",
-			"exp":            -1,
-		},
+		"iss":            "",
+		"sub":            fmt.Sprintf("%d", externalUserId),
+		"aud":            "d777dba8-e5f1-4967-883f-8c7465940e07",
+		"exp":            -1,
+		"iat":            -1,
+		"nonce":          "24d9b73d-f0b9-4435-92e2-6c6ee7b7c9b5",
+		"email":          externalUserEmail,
+		"name":           externalUserName,
+		"server_id":      2,
+		"role":           "student",
+		"last_launch_id": "1",
 	}
+
 	gock.New("https://cms-core.local").
 		MatchHeader("Authorization", "Bearer access_token").
 		MatchHeader("X-Client-ID", "client-id").
-		Post("/api/v1/sso/userinfo").
+		Get("/api/v1/sso/userinfo").
 		Reply(200).
 		JSON(cmsCoreUserResponse)
 
@@ -69,12 +69,11 @@ func TestSSOSecondFactorSuccess(t *testing.T) {
 	f := NewFiberTestHTTP()
 
 	expectedCode := 307
-	statusCode, _ := f.Request(
-		"GET",
-		"/pnet-lab-addon/api/v1/sso/openid?code=b4f0cf67-e403-41d0-8afc-4dd252b43e38&application=client-id&path=/&state=77c02576-43b0-4aeb-a69c-d8baa61e0e3b&extra=",
-		FiberRequestPayload(nil),
-		"",
-	)
+	statusCode, _ := f.Request(&FiberTestHttpRequest{
+		Method: "GET",
+		Route:  "/pnet-lab-addon/api/v1/sso/openid?code=b4f0cf67-e403-41d0-8afc-4dd252b43e38&application=client-id&path=/&state=77c02576-43b0-4aeb-a69c-d8baa61e0e3b&extra=",
+		Body:   FiberRequestPayload(nil),
+	})
 	assert.Equal(t, expectedCode, statusCode, description+"Status code")
 
 	var entityUser models.User
@@ -138,12 +137,11 @@ func TestSSOSecondFactorNotDefaultRole(t *testing.T) {
 	f.DB.Create(&createEntityUser)
 
 	expectedCode := 307
-	statusCode, _ := f.Request(
-		"GET",
-		"/pnet-lab-addon/api/v1/sso/openid?code=b4f0cf67-e403-41d0-8afc-4dd252b43e38&application=client-id&path=/&state=77c02576-43b0-4aeb-a69c-d8baa61e0e3b&extra=",
-		FiberRequestPayload(nil),
-		"",
-	)
+	statusCode, _ := f.Request(&FiberTestHttpRequest{
+		Method: "GET",
+		Route:  "/pnet-lab-addon/api/v1/sso/openid?code=b4f0cf67-e403-41d0-8afc-4dd252b43e38&application=client-id&path=/&state=77c02576-43b0-4aeb-a69c-d8baa61e0e3b&extra=",
+		Body:   FiberRequestPayload(nil),
+	})
 	assert.Equal(t, expectedCode, statusCode, description)
 
 	var entityUser models.User
