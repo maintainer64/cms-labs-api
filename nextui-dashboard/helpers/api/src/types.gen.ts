@@ -70,7 +70,7 @@ export type auth_SwaggerSSOToken = {
   refresh_token?: string;
   state?: string;
   token_type?: string;
-  user_id?: number;
+  user_id?: string;
 };
 
 export type auth_SwaggerSSOTokenPublicData = {
@@ -107,9 +107,9 @@ export type auth_SwaggerSSOTokenPublicData = {
    */
   nonce?: string;
   /**
-   * Role. Роль пользователя
+   * Roles. Роли пользователя
    */
-  role?: string;
+  roles?: Array<string>;
   /**
    * ServerID ID сервера аутентификации (как с Iss)
    */
@@ -117,7 +117,7 @@ export type auth_SwaggerSSOTokenPublicData = {
   /**
    * Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)
    */
-  sub?: number;
+  sub?: string;
 };
 
 export type auth_SwaggerSSOTokenResponse = {

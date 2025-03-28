@@ -5,6 +5,7 @@ import "time"
 var (
 	UsersRoleAdmin      string = "admin"
 	UsersRoleInstructor string = "instructor"
+	UsersRoleAssistant  string = "assistant"
 	UsersRoleStudent    string = "student"
 )
 
@@ -14,8 +15,8 @@ func UsersRoleValidate(role string) string {
 		return UsersRoleAdmin
 	case UsersRoleInstructor:
 		return UsersRoleInstructor
-	case UsersRoleStudent:
-		return UsersRoleStudent
+	case UsersRoleAssistant:
+		return UsersRoleAssistant
 	default:
 		return UsersRoleStudent
 	}

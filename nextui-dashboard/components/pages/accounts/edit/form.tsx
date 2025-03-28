@@ -8,7 +8,6 @@ import { useUserUpsert } from '@/helpers/queries/users/upsert';
 import { Link, useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
-import { useAlert } from '@/components/alerts/hooks';
 import { useUserByID } from '@/helpers/queries/users/get';
 import { Loading } from '@/components/scroll/loader';
 
@@ -36,6 +35,7 @@ export const UserRoles = () => {
   return [
     { key: 'student', label: UserForm.FieldUserRoleStudent },
     { key: 'instructor', label: UserForm.FieldUserRoleInstructor },
+    { key: 'assistant', label: UserForm.FieldUserRoleAssistant },
     { key: 'admin', label: UserForm.FieldUserRoleAdmin }
   ];
 };

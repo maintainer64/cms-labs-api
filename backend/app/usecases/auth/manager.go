@@ -89,7 +89,7 @@ func (m *TokenManager) NewJWTByUserId(
 			Email:        userModel.Email,
 			Name:         userModel.Name,
 			ServerID:     serverID,
-			Role:         userModel.UserRole,
+			Roles:        []string{userModel.UserRole},
 			LastLaunchId: userModel.LastLaunchID,
 		}, state)
 	if err != nil {

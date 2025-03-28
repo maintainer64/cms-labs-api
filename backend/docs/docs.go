@@ -1916,7 +1916,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_id": {
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
@@ -1955,9 +1955,12 @@ const docTemplate = `{
                     "description": "Nonce.(Если запрос авторизации включал nonce) Случайное значение для предотвращения атак подмены",
                     "type": "string"
                 },
-                "role": {
-                    "description": "Role. Роль пользователя",
-                    "type": "string"
+                "roles": {
+                    "description": "Roles. Роли пользователя",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "server_id": {
                     "description": "ServerID ID сервера аутентификации (как с Iss)",
@@ -1965,7 +1968,7 @@ const docTemplate = `{
                 },
                 "sub": {
                     "description": "Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)",
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
