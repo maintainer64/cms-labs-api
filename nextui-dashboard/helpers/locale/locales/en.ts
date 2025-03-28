@@ -150,6 +150,7 @@ const en = {
     FieldUserRole: 'Role',
     FieldUserRoleStudent: 'Student',
     FieldUserRoleInstructor: 'Instructor',
+    FieldUserRoleAssistant: 'Assistant',
     FieldUserRoleAdmin: 'Admin',
     FieldGroupName: 'Group',
     FieldExternalLTIID: 'LTI ID',

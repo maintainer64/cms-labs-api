@@ -14,7 +14,7 @@ func NewJWTMiddleware() fiber.Handler {
 		if tokenData != nil {
 			c.Locals("jwtUser", tokenData)
 			c.Locals("x-user-email", tokenData.Email)
-			c.Locals("x-user-role", tokenData.Role)
+			c.Locals("x-user-role", tokenData.UserRoleMain())
 		}
 		// Переходим к следующему middleware или обработчику
 		return c.Next()

@@ -40,7 +40,7 @@ type SSOTokenPublicData struct {
 	// ServerID ID сервера аутентификации (как с Iss)
 	ServerID uint `json:"server_id"`
 	// Role. Роль пользователя
-	Role string `json:"role"`
+	Roles []string `json:"roles"`
 	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
 }
@@ -48,6 +48,13 @@ type SSOTokenPublicData struct {
 func (t *SSOTokenPublicData) UserID() uint {
 	userID, _ := strconv.ParseUint(t.Sub, 10, 64)
 	return uint(userID)
+}
+
+func (t *SSOTokenPublicData) UserRoleMain() string {
+	if len(t.Roles) > 0 {
+		return t.Roles[0]
+	}
+	return ""
 }
 
 func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
@@ -61,7 +68,7 @@ func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 		"email":          t.Email,
 		"name":           t.Name,
 		"server_id":      t.ServerID,
-		"role":           t.Role,
+		"roles":          t.Roles,
 		"last_launch_id": t.LastLaunchId,
 	}
 }

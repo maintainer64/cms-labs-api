@@ -69,8 +69,8 @@ type SwaggerSSOTokenPublicData struct {
 	Name string `json:"name"`
 	// ServerID ID сервера аутентификации (как с Iss)
 	ServerID uint `json:"server_id"`
-	// Role. Роль пользователя
-	Role string `json:"role"`
+	// Roles. Роли пользователя
+	Roles []string `json:"roles"`
 	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
 }

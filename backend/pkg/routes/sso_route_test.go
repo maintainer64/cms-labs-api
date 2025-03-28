@@ -196,7 +196,7 @@ func TestSSOUserInfo(t *testing.T) {
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, user.Email, response.Email, description)
 	assert.Equal(t, user.Name, response.Name, description)
-	assert.Equal(t, user.UserRole, response.Role, description)
+	assert.Equal(t, user.UserRole, response.UserRoleMain(), description)
 	assert.Equal(t, fmt.Sprintf("%d", user.ID), response.Sub, description)
 	assert.Equal(t, server.ClientID, response.Aud, description)
 	assert.Equal(t, server.ID, response.ServerID, description)

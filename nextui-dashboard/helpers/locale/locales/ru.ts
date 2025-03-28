@@ -150,6 +150,7 @@ const ru = {
     FieldUserRole: 'Роль',
     FieldUserRoleStudent: 'Студент',
     FieldUserRoleInstructor: 'Преподаватель',
+    FieldUserRoleAssistant: 'Ассистент',
     FieldUserRoleAdmin: 'Администратор',
     FieldGroupName: 'Группа',
     FieldExternalLTIID: 'LTI ID',
