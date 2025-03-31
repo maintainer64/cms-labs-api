@@ -9,9 +9,9 @@ import useLanguageBrowser from '@/helpers/locale';
 import { postV1TokenLogin } from '@/helpers/api';
 import { FormikHelpers } from 'formik/dist/types';
 import { RoutesLocation } from '@/components/routes';
-import { SSOAuthorizationComplete, SSOAuthorizationParams } from '@/components/pages/auth/sso';
-import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
-import { useSSOAuth } from '@/helpers/queries/sso/auth';
+import queryClient from '@/helpers/queries/base';
+import { useLTIFormsSSOList } from '@/helpers/queries/lti-forms/sso';
+import { SSOAuthorizationGet } from '@/components/pages/auth/ssoSave';
 
 export const Login = () => {
   const { locale } = useLanguageBrowser();
@@ -20,32 +20,37 @@ export const Login = () => {
     email: '',
     password: ''
   };
-  const params = SSOAuthorizationParams();
-  const user = useUserProfile();
+  const ssoLinks = useLTIFormsSSOList();
 
+  const ssoButtons = ssoLinks.data?.result?.model.map((service, key) => (
+    <Button
+      className='mt-2'
+      key={key}
+      onPress={() => {
+        window.location.href = service.sso_url || '';
+      }}
+      variant='flat'
+      color='secondary'
+    >
+      {service.name}
+    </Button>
+  ));
+
+  // Обработка внутренней авторизации
   const handleLogin = useCallback(async (values: LoginFormType, formikHelpers: FormikHelpers<LoginFormType>) => {
     try {
       await postV1TokenLogin({ form: { email: values.email, password: values.password } });
-      window.location.href = RoutesLocation.home();
+      await queryClient.invalidateQueries({ queryKey: ['userGetCookies'] });
+      const params = SSOAuthorizationGet();
+      if (params === null) {
+        // Default redirect
+        window.location.href = RoutesLocation.home();
+      }
     } catch (error: any) {
       formikHelpers.setErrors({});
       formikHelpers.setErrors({ password: error.body.msg });
     }
   }, []);
-
-  if (user && user.sub && params.redirect_uri) {
-    const authSSO = useSSOAuth(params);
-    if (authSSO.data?.result) {
-      window.location.href = SSOAuthorizationComplete(authSSO.data?.result);
-    }
-    // @ts-ignore
-    const text = authSSO.error?.body?.msg || locale.SSO.Wait;
-    return (
-      <>
-        <div className='text-center text-[25px] font-bold mb-6'>{text}</div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -81,6 +86,7 @@ export const Login = () => {
           </>
         )}
       </Formik>
+      {ssoButtons}
     </>
   );
 };

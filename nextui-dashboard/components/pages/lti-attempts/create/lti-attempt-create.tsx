@@ -55,7 +55,7 @@ export const LTIAttemptCreate = () => {
       </ErrorModal>
     );
   if (result?.auto_redirect === true) {
-    window.location.href = result.next_url || '#';
+    window.location.href = result.next_url || '/';
     return;
   }
   return (

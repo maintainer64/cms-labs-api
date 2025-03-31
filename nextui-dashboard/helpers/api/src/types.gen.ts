@@ -216,6 +216,7 @@ export type models_LTIForm = {
   name: string;
   private_key: string;
   public_key: string;
+  sso_url?: string;
   target_link_uri: string;
   updated_at: string;
 };
@@ -226,6 +227,7 @@ export type models_LTIFormListItem = {
   lti_client_id: string;
   lti_deployment_id: string;
   name: string;
+  sso_url?: string;
   updated_at: string;
 };
 
@@ -498,6 +500,7 @@ export type usecases_LTIFormEditInputDTO = {
   id?: number;
   key_set_uri: string;
   name: string;
+  sso_url?: string;
   target_link_uri: string;
 };
 
@@ -540,6 +543,16 @@ export type usecases_LTIFormListResponse = {
   error: boolean;
   msg: string;
   result?: usecases_LTIFormListOutputDTO;
+};
+
+export type usecases_LTIFormListSSOOutputDTO = {
+  model: Array<models_LTIFormListItem>;
+};
+
+export type usecases_LTIFormListSSOResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_LTIFormListSSOOutputDTO;
 };
 
 export type usecases_LTIRoutingDeleteInputDTO = {
@@ -900,6 +913,8 @@ export type PostV1LtiFormListData = {
 };
 
 export type PostV1LtiFormListResponse = usecases_LTIFormListResponse;
+
+export type GetV1LtiFormSsoResponse = usecases_LTIFormListSSOResponse;
 
 export type PostV1LtiFormUpsertData = {
   /**

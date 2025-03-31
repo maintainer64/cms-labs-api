@@ -77,6 +77,7 @@ const (
 	PNETLabsTypeDefault     = "default"
 	PNETLabsTypeEnumeration = "enumeration"
 	PNETLabsTypeFile        = "file"
+	PNETLabsTypeSSO         = "sso"
 )
 
 type SSOTokenPublicExtraParams struct {

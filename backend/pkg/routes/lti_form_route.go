@@ -11,4 +11,5 @@ func V1LTIFormRoutes(a *fiber.App) {
 	group.Post("/list", controllers.LTIFormList)
 	group.Post("/delete", controllers.LTIFormDelete)
 	group.Post("/get", controllers.LTIFormGet)
+	group.Get("/sso", controllers.LTIFormSSOList)
 }

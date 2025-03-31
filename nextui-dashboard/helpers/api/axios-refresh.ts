@@ -9,6 +9,7 @@ const TokenManager = {
     if (options.method == 'POST' && options.url === '/v1/token/renew') return '';
     if (options.method == 'POST' && options.url === '/v1/token/login') return '';
     if (options.method == 'POST' && options.url === '/v1/token/logout') return '';
+    if (options.method == 'GET' && options.url === '/v1/lti-form/sso') return '';
     const currentTime = Math.floor(Date.now() / 1000); // Текущее время в секундах
     if (this.cachedTokens && this.tokenExpiration && currentTime < this.tokenExpiration) {
       return this.cachedTokens.access_token || '';

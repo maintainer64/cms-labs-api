@@ -177,6 +177,8 @@ const en = {
     FieldLTIDeployment: 'DeploymentID LTI',
     FieldKeySetURI: 'URL certificates LTI',
     DescriptionKeySetURI: 'Address suffix /mod/lti/certs.php',
+    FieldSSOURL: 'SSO LTI URL',
+    DescriptionSSOURL: 'Ссылка на элемент курса в инструменте LTI',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     MoodleProviderParams: {
@@ -313,6 +315,7 @@ const en = {
     FieldPNETLabsTypeDefault: 'Default',
     FieldPNETLabsTypeFile: 'File',
     FieldPNETLabsTypeEnumeration: 'Enumeration',
+    FieldPNETLabsTypeSSO: 'SSO',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',
     FieldPNETServer: 'Auto connect to server',

@@ -20,6 +20,7 @@ import type {
   PostV1LtiFormGetResponse,
   PostV1LtiFormListData,
   PostV1LtiFormListResponse,
+  GetV1LtiFormSsoResponse,
   PostV1LtiFormUpsertData,
   PostV1LtiFormUpsertResponse,
   PostV1LtiRoutingDeleteData,
@@ -218,6 +219,19 @@ export const postV1LtiFormList = (data: PostV1LtiFormListData): CancelablePromis
     method: 'POST',
     url: '/v1/lti-form/list',
     body: data.form
+  });
+};
+
+/**
+ * list sso url
+ * List sso url. Roles: [none]
+ * @returns usecases_LTIFormListSSOResponse OK
+ * @throws ApiError
+ */
+export const getV1LtiFormSso = (): CancelablePromise<GetV1LtiFormSsoResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/lti-form/sso'
   });
 };
 

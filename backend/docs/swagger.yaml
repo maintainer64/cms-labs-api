@@ -343,6 +343,8 @@ definitions:
         type: string
       public_key:
         type: string
+      sso_url:
+        type: string
       target_link_uri:
         type: string
       updated_at:
@@ -372,6 +374,8 @@ definitions:
       lti_deployment_id:
         type: string
       name:
+        type: string
+      sso_url:
         type: string
       updated_at:
         type: string
@@ -881,6 +885,8 @@ definitions:
         type: string
       name:
         type: string
+      sso_url:
+        type: string
       target_link_uri:
         type: string
     required:
@@ -961,6 +967,27 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.LTIFormListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIFormListSSOOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.LTIFormListItem'
+        type: array
+    required:
+    - model
+    type: object
+  usecases.LTIFormListSSOResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIFormListSSOOutputDTO'
     required:
     - error
     - msg
@@ -1675,6 +1702,23 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: list lti_form
+      tags:
+      - LTIForm
+  /v1/lti-form/sso:
+    get:
+      consumes:
+      - application/json
+      description: 'List sso url. Roles: [none]'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIFormListSSOResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list sso url
       tags:
       - LTIForm
   /v1/lti-form/upsert:

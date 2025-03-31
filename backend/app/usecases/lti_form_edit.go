@@ -11,15 +11,16 @@ type LTIFormEditUC struct {
 }
 
 type LTIFormEditInputDTO struct {
-	ID            uint   `json:"id"`
-	ClientID      string `json:"client_id" validate:"required"`
-	DeploymentID  string `json:"deployment_id" validate:"required"`
-	BaseURI       string `json:"base_uri" validate:"required"`
-	AuthTokenURI  string `json:"auth_token_uri" validate:"required"`
-	AuthLoginURI  string `json:"auth_login_uri" validate:"required"`
-	KeySetURI     string `json:"key_set_uri" validate:"required"`
-	TargetLinkURI string `json:"target_link_uri" validate:"required"`
-	Name          string `json:"name" validate:"required"`
+	ID            uint    `json:"id"`
+	ClientID      string  `json:"client_id" validate:"required"`
+	DeploymentID  string  `json:"deployment_id" validate:"required"`
+	BaseURI       string  `json:"base_uri" validate:"required"`
+	AuthTokenURI  string  `json:"auth_token_uri" validate:"required"`
+	AuthLoginURI  string  `json:"auth_login_uri" validate:"required"`
+	KeySetURI     string  `json:"key_set_uri" validate:"required"`
+	TargetLinkURI string  `json:"target_link_uri" validate:"required"`
+	Name          string  `json:"name" validate:"required"`
+	SSOURL        *string `json:"sso_url"`
 }
 
 type LTIFormEditOutputDTO struct {
@@ -39,6 +40,7 @@ func (u *LTIFormEditUC) Execute(dto LTIFormEditInputDTO) (LTIFormEditOutputDTO, 
 	entity.LTIAuthLoginURI = dto.AuthLoginURI
 	entity.KeySetURI = dto.KeySetURI
 	entity.TargetLinkURI = dto.TargetLinkURI
+	entity.SSOURL = dto.SSOURL
 	err := u.LTIFormQueries.Upsert(entity)
 	return LTIFormEditOutputDTO{ID: entity.ID}, err
 }

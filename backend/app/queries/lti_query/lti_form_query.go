@@ -131,6 +131,18 @@ func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 	return tx
 }
 
+func (q *LTIFormQueries) SSOURLList() ([]models.LTIFormListItem, error) {
+	var entities []models.LTIFormListItem
+	result := q.Model(&models.LTIForm{}).Order(
+		`created_at desc`,
+	).Where(
+		`sso_url != '' AND sso_url is not null`,
+	).Limit(MaxLimitCount).Offset(0).Find(&entities)
+	count := result.RowsAffected
+	q.Logger.Debug().Msg(fmt.Sprintf("SSOURLList list: count %+v", count))
+	return entities, result.Error
+}
+
 func (q *LTIFormQueries) Delete(id uint) error {
 	err := q.Where("id = ?", id).Delete(&models.LTIForm{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: delete entity by id: %+v", id))

@@ -49,6 +49,10 @@ export const LtiRoutingLabsType = () => {
     {
       key: 'enumeration',
       label: LTIRouting.FieldPNETLabsTypeEnumeration
+    },
+    {
+      key: 'sso',
+      label: LTIRouting.FieldPNETLabsTypeSSO
     }
   ];
 };
