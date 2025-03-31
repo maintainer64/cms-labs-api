@@ -9,7 +9,8 @@ const ru = {
     ErrorFieldPasswordRequired: 'Пароль не указан'
   },
   SSO: {
-    Wait: 'Подождите...'
+    Wait: 'Подождите...',
+    OR: 'или'
   },
   Auth: {
     ErrorPageTitle: 'Ошибка авторизации',
