@@ -68,6 +68,11 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 			Exception: errors.New("no route found for this user"),
 		}
 	}
+	if route.PNETLabsType == cms_client.PNETLabsTypeSSO {
+		return LTIAttemptCreateOutputDTO{
+			AutoRedirect: true,
+		}, nil
+	}
 	attempt, _ := u.LTIAttemptQueries.GetActiveByUserId(u.user.UserID(), route.ID)
 
 	if attempt.ID != 0 && attempt.RoomID != nil && dto.RoomNumber != 0 {

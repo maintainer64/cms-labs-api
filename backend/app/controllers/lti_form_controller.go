@@ -151,3 +151,26 @@ func LTIFormGet(c *fiber.Ctx) error {
 	}
 	return utils.FiberSuccessResponse{Result: output}
 }
+
+// LTIFormSSOList func for list of SSO URLs.
+// @Description List sso url. Roles: [none]
+// @Summary list sso url
+// @Tags LTIForm
+// @Accept json
+// @Produce json
+// @Success 200 {object} usecases.LTIFormListSSOResponse
+// @Security ApiKeyAuth
+// @Router /v1/lti-form/sso [get]
+func LTIFormSSOList(c *fiber.Ctx) error {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	container, err := di.NewDIContainer(diLoggerConf)
+	if err != nil {
+		return err
+	}
+	uc := container.LTIFormListSSOUC()
+	output, err := uc.Execute()
+	if err != nil {
+		return err
+	}
+	return utils.FiberSuccessResponse{Result: output}
+}

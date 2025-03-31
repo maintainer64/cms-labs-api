@@ -27,3 +27,9 @@ func (di *DIContainer) LTIFormDeleteUC() *usecases.LTIFormDeleteUC {
 		LTIFormQueries: di.Queries.LTIFormQueries,
 	}
 }
+
+func (di *DIContainer) LTIFormListSSOUC() *usecases.LTIFormListSSOUC {
+	return &usecases.LTIFormListSSOUC{
+		LTIFormQueries: di.Queries.LTIFormQueries,
+	}
+}

@@ -2,9 +2,10 @@ package models
 
 // LTIFormBase struct to describe LTIForm object.
 type LTIFormBase struct {
-	Name            string `gorm:"type:varchar(255)" json:"name" validate:"required"`
-	LTIClientID     string `gorm:"type:varchar(255);column:lti_client_id" json:"lti_client_id" validate:"required"`
-	LTIDeploymentID string `gorm:"type:varchar(255);column:lti_deployment_id" json:"lti_deployment_id" validate:"required"`
+	Name            string  `gorm:"type:varchar(255)" json:"name" validate:"required"`
+	LTIClientID     string  `gorm:"type:varchar(255);column:lti_client_id" json:"lti_client_id" validate:"required"`
+	LTIDeploymentID string  `gorm:"type:varchar(255);column:lti_deployment_id" json:"lti_deployment_id" validate:"required"`
+	SSOURL          *string `gorm:"type:varchar(255);column:sso_url" json:"sso_url"`
 }
 
 type LTIFormSecret struct {

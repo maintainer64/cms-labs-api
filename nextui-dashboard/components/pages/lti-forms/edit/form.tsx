@@ -137,7 +137,7 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
                   <Button variant='bordered'>{LTIForm.ButtonBaseURI}</Button>
                 </DropdownTrigger>
                 <DropdownMenu aria-label='Static Actions'>
-                  <DropdownItem key='ButtonBaseURIMoodle' onClick={ltiMoodleSettings.onOpen}>
+                  <DropdownItem key='ButtonBaseURIMoodle' onPress={ltiMoodleSettings.onOpen}>
                     {LTIForm.ButtonBaseURIMoodle}
                   </DropdownItem>
                 </DropdownMenu>
@@ -305,6 +305,14 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
                 </div>
               </AccordionItem>
             </Accordion>
+            <Input
+              variant='bordered'
+              label={LTIForm.FieldSSOURL}
+              description={LTIForm.DescriptionSSOURL}
+              type='url'
+              value={values.sso_url ?? ''}
+              onChange={handleChange('sso_url')}
+            />
             <Input
               variant='bordered'
               label={LTIForm.FieldCreatedAt}

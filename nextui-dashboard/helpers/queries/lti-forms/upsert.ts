@@ -20,7 +20,8 @@ export const useLTIFormsUpsert = (
           id: values.id,
           key_set_uri: values.key_set_uri,
           name: values.name,
-          target_link_uri: values.target_link_uri
+          target_link_uri: values.target_link_uri,
+          sso_url: values.sso_url ? values.sso_url : undefined
         }
       });
     },

@@ -335,6 +335,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/lti-form/sso": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List sso url. Roles: [none]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LTIForm"
+                ],
+                "summary": "list sso url",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIFormListSSOResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/lti-form/upsert": {
             "post": {
                 "security": [
@@ -2256,6 +2284,9 @@ const docTemplate = `{
                 "public_key": {
                     "type": "string"
                 },
+                "sso_url": {
+                    "type": "string"
+                },
                 "target_link_uri": {
                     "type": "string"
                 },
@@ -2287,6 +2318,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "sso_url": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -3044,6 +3078,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "sso_url": {
+                    "type": "string"
+                },
                 "target_link_uri": {
                     "type": "string"
                 }
@@ -3156,6 +3193,38 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
+                }
+            }
+        },
+        "usecases.LTIFormListSSOOutputDTO": {
+            "type": "object",
+            "required": [
+                "model"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LTIFormListItem"
+                    }
+                }
+            }
+        },
+        "usecases.LTIFormListSSOResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIFormListSSOOutputDTO"
                 }
             }
         },
