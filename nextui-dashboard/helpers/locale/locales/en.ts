@@ -9,7 +9,8 @@ const en = {
     ErrorFieldPasswordRequired: 'Password is required'
   },
   SSO: {
-    Wait: 'Please wait...'
+    Wait: 'Please wait...',
+    OR: 'or'
   },
   Auth: {
     ErrorPageTitle: 'Authorization Error',
