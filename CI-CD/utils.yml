@@ -52,6 +52,7 @@
   artifacts:
     paths:
       - VERSION
+    expire_in: 1 week
 
 .releases-branch:
   # Ветки для основного pipeline

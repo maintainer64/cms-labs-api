@@ -6,11 +6,11 @@ core-deploy:
   image: ${DOCKER_IMAGE}
   needs:
     - core-build-docker
+    - version
   environment:
     name: core-${CI_COMMIT_REF_SLUG}
   variables:
     FOLDER: core
-    VERSION: ${PIPELINE_VERSION}
 
 frontend-deploy:
   stage: deploy
@@ -20,8 +20,8 @@ frontend-deploy:
   image: ${DOCKER_IMAGE}
   needs:
     - frontend-build-docker
+    - version
   environment:
     name: front-${CI_COMMIT_REF_SLUG}
   variables:
     FOLDER: front
-    VERSION: ${PIPELINE_VERSION}
