@@ -217,8 +217,9 @@ func TestSSOOpenIdConfiguration(t *testing.T) {
 	_ = json.Unmarshal([]byte(body), &response)
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, response.Issuer, "/api/v1/sso", description)
+	assert.Equal(t, response.Issuer, "http://example.com", description)
 	assert.NotEmpty(t, response.AuthorizationEndpoint, description)
+	assert.Contains(t, response.AuthorizationEndpoint, "/api/v1/sso", description)
 	assert.NotEmpty(t, response.TokenEndpoint, description)
 	assert.NotEmpty(t, response.UserInfoEndpoint, description)
 	assert.NotEmpty(t, response.JwksUri, description)
