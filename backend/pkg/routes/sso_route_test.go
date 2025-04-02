@@ -127,6 +127,7 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.NotEmpty(t, response.AccessToken, description)
+	assert.NotEmpty(t, response.IdToken, description)
 	assert.NotEmpty(t, response.RefreshToken, description)
 	assert.Equal(t, "bearer", response.TokenType, description)
 	assert.Equal(t, fmt.Sprintf("%d", user.ID), response.UserId, description)

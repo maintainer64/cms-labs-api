@@ -38,6 +38,7 @@ func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cm
 	return &cms_client.SSOToken{
 		AccessToken:  accessToken.Token,
 		RefreshToken: refreshToken.Token,
+		IdToken:      accessToken.Token,
 		TokenType:    "bearer",
 		ExpiresIn:    accessToken.Exp,
 		State:        state,

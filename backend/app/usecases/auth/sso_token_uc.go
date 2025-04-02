@@ -36,6 +36,7 @@ type SSOTokenUC struct {
 type SwaggerSSOToken struct {
 	AccessToken  string `json:"access_token" required:"true"`
 	RefreshToken string `json:"refresh_token" required:"true"`
+	IdToken      string `json:"id_token" required:"true"`
 	TokenType    string `json:"token_type" required:"true"`
 	ExpiresIn    int64  `json:"expires_in" required:"true"`
 	State        string `json:"state"`
