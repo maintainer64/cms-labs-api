@@ -10,5 +10,6 @@ include:
 
 stages:
   - test
+  - version
   - build
   - deploy
