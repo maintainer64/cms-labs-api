@@ -8,4 +8,3 @@ go install github.com/rubenv/sql-migrate/...@latest
 go install golang.org/x/tools/cmd/cover@latest
 go install golang.org/x/tools/cmd/goimports@latest
 go install github.com/t-yuki/gocover-cobertura@latest
-go install golang.org/x/pkgsite/cmd/pkgsite@latest
