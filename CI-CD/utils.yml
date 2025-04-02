@@ -23,7 +23,7 @@
   # SSH_PORT - порт ssh
   # SSH_PRIVATE_KEY - ключ пользователя приватный ssh в base64
   # FOLDER - папка проекта пользователя
-  # VERSION - версия выкатываемой версии PIPELINE
+  # VERSION - файл с версией из артефактов
   before_script:
     - echo "Настраиваем SSH $SSH_USER@$SSH_HOST:$SSH_PORT"
     - mkdir -p ~/.ssh
@@ -31,6 +31,7 @@
     - chmod 600 ~/.ssh/id_rsa
     - echo "SSH настроен"
   script:
+    - VERSION="$(cat ./VERSION)"
     - echo "Подключаемся к серверу и выполняем docker-compose"
     - ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT "export VERSION=$VERSION && echo 'Используем версию $VERSION' && cd $FOLDER && docker compose pull && docker compose up -d"
 
