@@ -32,6 +32,7 @@ func (u *SSOJwksUC) Execute() (*SSOJWKSOutputDTO, error) {
 	inputDTO := &SSOJwksInputDTO{
 		PublicKeys: map[string]*rsa.PublicKey{
 			"access":  configs.AppConfig.JWT.AccessKey.PublicKey,
+			"id":      configs.AppConfig.JWT.AccessKey.PublicKey,
 			"refresh": configs.AppConfig.JWT.RefreshKey.PublicKey,
 		},
 	}

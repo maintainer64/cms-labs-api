@@ -67,6 +67,7 @@ export type auth_SSOTokenIntrospect = {
 export type auth_SwaggerSSOToken = {
   access_token?: string;
   expires_in?: number;
+  id_token?: string;
   refresh_token?: string;
   state?: string;
   token_type?: string;
@@ -256,7 +257,7 @@ export type models_LTIRouting = {
   pnet_labs_path?: string;
   /**
    * The type of PNETLabsType, cms_client.PNETLabsTypeDefault
-   * enum: default,enumeration
+   * enum: default,enumeration,file,sso
    */
   pnet_labs_type?: string;
   pnet_server_id?: number;

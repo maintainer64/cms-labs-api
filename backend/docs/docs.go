@@ -1934,6 +1934,9 @@ const docTemplate = `{
                 "expires_in": {
                     "type": "integer"
                 },
+                "id_token": {
+                    "type": "string"
+                },
                 "refresh_token": {
                     "type": "string"
                 },
@@ -2378,7 +2381,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "pnet_labs_type": {
-                    "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,enumeration",
+                    "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,enumeration,file,sso",
                     "type": "string"
                 },
                 "pnet_server_id": {

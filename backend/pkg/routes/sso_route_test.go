@@ -239,11 +239,11 @@ func TestSSOJwks(t *testing.T) {
 	_ = json.Unmarshal([]byte(body), &response)
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Len(t, response.Keys, 2, description) // access и refresh ключи
+	assert.Len(t, response.Keys, 3, description) // access + id и refresh ключи
 	for _, key := range response.Keys {
 		assert.Equal(t, "RSA", key.Kty, description)
 		assert.Equal(t, "sig", key.Use, description)
-		assert.Contains(t, []string{"access", "refresh"}, key.Kid, description)
+		assert.Contains(t, []string{"access", "refresh", "id"}, key.Kid, description)
 		assert.Equal(t, "RS256", key.Alg, description)
 		assert.NotEmpty(t, key.N, description)
 		assert.NotEmpty(t, key.E, description)
