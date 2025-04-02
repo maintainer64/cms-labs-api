@@ -45,7 +45,7 @@
     - rm -rf VERSION
     - |
       if [[ $CI_COMMIT_REF_SLUG = $CI_DEFAULT_BRANCH ]]; then
-        semantic-release --debug
+        npx semantic-release --debug
       else
         echo ${CI_PIPELINE_ID} > VERSION
       fi
