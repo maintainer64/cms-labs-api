@@ -25,10 +25,9 @@ core-build-docker:
     - core-build
     - version
   script:
+    - VERSION="$(cat ./VERSION)"
     - cd backend
     - echo "Building Docker image..."
-    - ls -ll
-    - VERSION="$(cat ./VERSION)"
     - docker build --no-cache -t $BACKEND_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
     - docker push $BACKEND_CI_IMAGE:$VERSION
@@ -61,9 +60,9 @@ frontend-build-docker:
     - frontend-build
     - version
   script:
+    - VERSION="$(cat ./VERSION)"
     - cd nextui-dashboard
     - echo "Building Docker image..."
-    - VERSION="$(cat ./VERSION)"
     - docker build --no-cache -t $FRONTEND_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
     - docker push $FRONTEND_CI_IMAGE:$VERSION
