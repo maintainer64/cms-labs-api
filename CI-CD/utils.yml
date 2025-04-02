@@ -34,6 +34,25 @@
     - echo "Подключаемся к серверу и выполняем docker-compose"
     - ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT "export VERSION=$VERSION && echo 'Используем версию $VERSION' && cd $FOLDER && docker compose pull && docker compose up -d"
 
+.semantic-release:
+  # Функция генерации версии пакета
+  image: $GO_BASE_CI_IMAGE:latest
+  variables:
+    REPOSITORY: $CI_SERVER_PROTOCOL://gitlab-ci-token:$GITLAB_TOKEN@$CI_SERVER_HOST:$CI_SERVER_PORT/$CI_PROJECT_PATH.git
+  script:
+    - git remote set-url origin $REPOSITORY
+    - rm -rf VERSION
+    - |
+      if [[ $CI_COMMIT_REF_SLUG = $CI_DEFAULT_BRANCH ]]; then
+        semantic-release --debug
+      else
+        echo ${CI_PIPELINE_ID} > VERSION
+      fi
+    - test -f VERSION
+  artifacts:
+    paths:
+      - VERSION
+
 .releases-branch:
   # Ветки для основного pipeline
   only:
