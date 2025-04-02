@@ -37,7 +37,7 @@ func (u *SSOOpenidConfiguration) Execute(inputDTO SSOOpenidConfigurationInputDTO
 	}
 	// Формируем ответ согласно спецификации OpenID Connect Discovery
 	return &SSOOpenidConfigurationOutputDTO{
-		Issuer:                            issuer,
+		Issuer:                            inputDTO.BaseURL,
 		AuthorizationEndpoint:             issuer + "/authorize",
 		TokenEndpoint:                     issuer + "/token",
 		UserInfoEndpoint:                  issuer + "/userinfo",
