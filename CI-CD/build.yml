@@ -27,6 +27,7 @@ core-build-docker:
   script:
     - cd backend
     - echo "Building Docker image..."
+    - ls -ll
     - VERSION="$(cat ./VERSION)"
     - docker build --no-cache -t $BACKEND_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
