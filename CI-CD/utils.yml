@@ -46,6 +46,7 @@
     - |
       if [[ $CI_COMMIT_REF_SLUG = $CI_DEFAULT_BRANCH ]]; then
         npx semantic-release --debug
+        git describe --tags --abbrev=0 > VERSION
       else
         echo ${CI_PIPELINE_ID} > VERSION
       fi
