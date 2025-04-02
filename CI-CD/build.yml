@@ -23,12 +23,14 @@ core-build-docker:
   image: ${DOCKER_IMAGE}
   needs:
     - core-build
+    - version
   script:
     - cd backend
     - echo "Building Docker image..."
-    - docker build --no-cache -t $BACKEND_CI_IMAGE:$PIPELINE_VERSION .
+    - VERSION="$(cat ./VERSION)"
+    - docker build --no-cache -t $BACKEND_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
-    - docker push $BACKEND_CI_IMAGE:$PIPELINE_VERSION
+    - docker push $BACKEND_CI_IMAGE:$VERSION
     - echo "Deploying application..."
 
 frontend-build:
@@ -39,6 +41,7 @@ frontend-build:
   image: $GO_BASE_CI_IMAGE:latest
   needs:
     - golang-test
+    - version
   script:
     - cd nextui-dashboard
     - echo "Frontend build static..."
@@ -56,12 +59,14 @@ frontend-build-docker:
   image: ${DOCKER_IMAGE}
   needs:
     - frontend-build
+    - version
   script:
     - cd nextui-dashboard
     - echo "Building Docker image..."
-    - docker build --no-cache -t $FRONTEND_CI_IMAGE:$PIPELINE_VERSION .
+    - VERSION="$(cat ./VERSION)"
+    - docker build --no-cache -t $FRONTEND_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
-    - docker push $FRONTEND_CI_IMAGE:$PIPELINE_VERSION
+    - docker push $FRONTEND_CI_IMAGE:$VERSION
     - echo "Deploying application..."
 
 pnet-lab-addon-build:

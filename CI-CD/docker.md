@@ -33,6 +33,8 @@ user@vm:~$ tree
 
 ### 1. Backend (`core/docker-compose.yml`)
 
+[⚙️ JWT токены](../backend/README.md#-jwt-токены)
+
 ```yaml
 version: '3.9'
 
@@ -52,10 +54,12 @@ services:
       SERVER_READ_TIMEOUT: "60"
 
       # JWT settings:
-      JWT_SECRET_KEY: "secret"
+      JWT_SECRET_KEY_PRIVATE: "-----BEGIN PRIVATE KEY-----\n"
+      JWT_SECRET_KEY_PUBLIC: "-----BEGIN PUBLIC KEY-----\n"
       JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT: "15"
-      JWT_REFRESH_KEY: "jwt"
-      JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT: "720"
+      JWT_REFRESH_KEY_PRIVATE: "-----BEGIN PRIVATE KEY-----\n"
+      JWT_REFRESH_KEY_PUBLIC: "-----BEGIN PUBLIC KEY-----\n"
+      JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT: "12"
 
       # Database settings:
       DB_TYPE: "mysql"
