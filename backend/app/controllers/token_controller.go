@@ -19,6 +19,10 @@ import (
 // @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Router /v1/token/renew [post]
 func TokensRenew(c *fiber.Ctx) error {
+	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+	if err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	refreshToken := c.Cookies(cms_client.SSORefreshTokenName, "")
 	if refreshToken == "" {
@@ -35,7 +39,7 @@ func TokensRenew(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.SSOTokenUC()
-	token, err := uc.SetContext(c.BaseURL()).Execute(
+	token, err := uc.SetContext(issuer).Execute(
 		auth.SSOTokenInputDTO{
 			GrantType:    auth.TokenGrantTypeRefreshToken,
 			RefreshToken: refreshToken,
@@ -65,9 +69,13 @@ func TokensRenew(c *fiber.Ctx) error {
 // @Success 200 {object} auth.SwaggerSSOTokenResponse
 // @Router /v1/token/login [post]
 func TokensByCredentials(c *fiber.Ctx) error {
+	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+	if err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.RenewManagerCredentialsInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err = utils.FiberValidatorBase(c, &dto)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
@@ -77,7 +85,7 @@ func TokensByCredentials(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.AuthTokenManager()
-	token, err := uc.NewJWTByCredentials(c.BaseURL(), dto.Email, dto.Password)
+	token, err := uc.NewJWTByCredentials(issuer, dto.Email, dto.Password)
 	if err != nil {
 		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
 	}
