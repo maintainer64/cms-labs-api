@@ -25,7 +25,7 @@ func TestSSOAuthorize(t *testing.T) {
 	user.UserRole = models.UsersRoleStudent
 	user.Name = "Name " + uuid.New().String()
 	f.DB.Create(&user)
-	authHeader := f.AuthorizationUser(user.ID, 0, "")
+	authHeader := f.AuthorizationUser(user.ID, 0)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     clientID,
@@ -62,7 +62,7 @@ func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	user.UserRole = models.UsersRoleStudent
 	user.Name = "Name " + uuid.New().String()
 	f.DB.Create(&user)
-	authHeader := f.AuthorizationUser(user.ID, 0, "")
+	authHeader := f.AuthorizationUser(user.ID, 0)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     "invalid-client",
@@ -141,7 +141,7 @@ func TestSSOIntrospectValidToken(t *testing.T) {
 	authHeaderClient, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
-	authHeader := f.AuthorizationUser(0, server.ID, "")
+	authHeader := f.AuthorizationUser(0, server.ID)
 
 	input := map[string]string{
 		"token": strings.Replace(authHeader, "Bearer ", "", 1),
@@ -177,7 +177,7 @@ func TestSSOUserInfo(t *testing.T) {
 	user.Email = uuid.New().String() + "@admin.com"
 	user.UserRole = models.UsersRoleAdmin
 	f.DB.Create(&user)
-	authHeader := f.AuthorizationUser(user.ID, server.ID, "")
+	authHeader := f.AuthorizationUser(user.ID, server.ID)
 
 	expectedCode := 200
 	statusCode, body := f.Request(

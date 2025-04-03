@@ -51,7 +51,7 @@ func (m *TokenManager) NewJWTByCredentials(issID string, email string, password 
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.NewJWTByUserId(issID, entity.ID, 0, "")
+	return m.NewJWTByUserId(issID, entity.ID, 0, nil)
 }
 
 func (m *TokenManager) NewJWTByLaunchID(issID string, launchID string) (*cms_client.SSOToken, error) {
@@ -63,15 +63,19 @@ func (m *TokenManager) NewJWTByLaunchID(issID string, launchID string) (*cms_cli
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.NewJWTByUserId(issID, entity.ID, 0, "")
+	return m.NewJWTByUserId(issID, entity.ID, 0, nil)
 }
 
 func (m *TokenManager) NewJWTByUserId(
 	issID string,
 	userId uint,
 	serverID uint,
-	state string,
+	attempt *models.TokenAttempt,
 ) (*cms_client.SSOToken, error) {
+	attemptState, attemptNonce := "", ""
+	if attempt != nil {
+		attemptState, attemptNonce = attempt.State, attempt.Nonce
+	}
 	userModel, err := m.UserQueries.Get(userId)
 	if err != nil {
 		return nil, err
@@ -85,19 +89,22 @@ func (m *TokenManager) NewJWTByUserId(
 			Iss:          issID,
 			Sub:          fmt.Sprintf("%d", userModel.ID),
 			Aud:          serverModel.ClientID,
-			Nonce:        state,
+			Azp:          serverModel.ClientID,
+			Nonce:        attemptNonce,
 			Email:        userModel.Email,
 			Name:         userModel.Name,
 			ServerID:     serverID,
 			Roles:        []string{userModel.UserRole},
 			LastLaunchId: userModel.LastLaunchID,
-		}, state)
+		}, attemptState)
 	if err != nil {
 		return nil, err
 	}
 	refreshModel := &models.TokenAttempt{}
 	refreshModel.UserID = userId
 	refreshModel.ServerID = serverID
+	refreshModel.State = attemptState
+	refreshModel.Nonce = attemptNonce
 	refreshModel.Token = jti
 	if err = m.TokenAttemptQueries.Upsert(refreshModel); err != nil {
 		return nil, err

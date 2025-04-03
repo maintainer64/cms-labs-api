@@ -262,13 +262,6 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.IMSLTIAssignmentGradeServices}
-                    type='text'
-                    value={LTIForm.MoodleProviderParams.IMSLTIAssignmentGradeServicesValue}
-                    readOnly
-                  />
-                  <Input
-                    variant='bordered'
                     label={LTIForm.MoodleProviderParams.IMSLTINamesRoleProvisioning}
                     type='text'
                     value={LTIForm.MoodleProviderParams.IMSLTINamesRoleProvisioningValue}

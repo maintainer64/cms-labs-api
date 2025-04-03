@@ -28,6 +28,8 @@ type SSOTokenPublicData struct {
 	Sub string `json:"sub"`
 	// Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)
 	Aud string `json:"aud"`
+	// Azp. Конкретное приложение, которое инициировало запрос (обычно client_id приложения, запрашивающего токен)
+	Azp string `json:"azp"`
 	// Exp. Время истечения срока действия токена (в Unix timestamp)
 	Exp int64 `json:"exp"`
 	// Iat. Время выдачи токена (в Unix timestamp)
@@ -40,7 +42,7 @@ type SSOTokenPublicData struct {
 	Name string `json:"name"`
 	// ServerID ID сервера аутентификации (как с Iss)
 	ServerID uint `json:"server_id"`
-	// Role. Роль пользователя
+	// Roles. Роли пользователя
 	Roles []string `json:"roles"`
 	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
@@ -63,6 +65,7 @@ func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 		"iss":            t.Iss,
 		"sub":            t.Sub,
 		"aud":            t.Aud,
+		"azp":            t.Aud,
 		"exp":            t.Exp,
 		"iat":            t.Iat,
 		"nonce":          t.Nonce,

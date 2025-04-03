@@ -13,7 +13,7 @@ import (
 func TestV1ServiceCardCreate(t *testing.T) {
 	description := "create service card"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
 	input := usecases.ServiceCardEditInputDTO{
@@ -50,7 +50,7 @@ func TestV1ServiceCardCreate(t *testing.T) {
 func TestV1ServiceCardList(t *testing.T) {
 	description := "list service cards"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
 
@@ -96,7 +96,7 @@ func TestV1ServiceCardList(t *testing.T) {
 func TestV1ServiceCardListPagination(t *testing.T) {
 	description := "list service cards with pagination"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
 
@@ -135,7 +135,7 @@ func TestV1ServiceCardListPagination(t *testing.T) {
 func TestV1ServiceCardListEmpty(t *testing.T) {
 	description := "list empty service cards"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -162,7 +162,7 @@ func TestV1ServiceCardListEmpty(t *testing.T) {
 func TestV1ServiceCardGet(t *testing.T) {
 	description := "get service card"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -204,7 +204,7 @@ func TestV1ServiceCardGet(t *testing.T) {
 func TestV1ServiceCardGetNotFound(t *testing.T) {
 	description := "get non-existent service card"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -229,7 +229,7 @@ func TestV1ServiceCardGetNotFound(t *testing.T) {
 func TestV1ServiceCardDelete(t *testing.T) {
 	description := "delete service card"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})

@@ -19,6 +19,7 @@ type SSOAuthorizeInputDTO struct {
 	ResponseType string `json:"response_type"`
 	Scope        string `json:"scope"`
 	Path         string `json:"path"`
+	Nonce        string `json:"nonce"`
 	State        string `json:"state"`
 	Extra        string `json:"extra"`
 }
@@ -26,9 +27,12 @@ type SSOAuthorizeInputDTO struct {
 type SSOAuthorizeOutputDTO struct {
 	RedirectUri string `json:"redirect_uri"`
 	Code        string `json:"code"`
+	Scope       string `json:"scope"`
 	Application string `json:"application"`
+	ClientID    string `json:"client_id"`
 	Path        string `json:"path"`
 	State       string `json:"state"`
+	Nonce       string `json:"nonce"`
 	Extra       string `json:"extra"`
 }
 
@@ -48,6 +52,13 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 	if err := u.validate(inputDTO); err != nil {
 		return nil, err
 	}
+	attemptState, attemptNonce := inputDTO.State, inputDTO.Nonce
+	if attemptState == "" {
+		attemptState = uuid.New().String()
+	}
+	if attemptNonce == "" {
+		attemptState = uuid.New().String()
+	}
 	u.Logger.Info().Msg(fmt.Sprintf("authorize sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 	server, err := u.PNETServerQueries.GetByClientId(inputDTO.ClientID)
 	if err != nil {
@@ -65,7 +76,8 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 	entityCreate.UserID = inputDTO.UserID
 	entityCreate.ServerID = server.ID
 	entityCreate.Token = ""
-	entityCreate.State = inputDTO.State
+	entityCreate.State = attemptState
+	entityCreate.Nonce = attemptNonce
 	entityCreate.AuthorizationCode = uuid.New().String()
 	err = u.TokenAttemptQueries.Upsert(entityCreate)
 	if err != nil {
@@ -75,9 +87,12 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 	return &SSOAuthorizeOutputDTO{
 		RedirectUri: inputDTO.RedirectUri,
 		Code:        entityCreate.AuthorizationCode,
+		Scope:       inputDTO.Scope,
 		Application: inputDTO.ClientID,
+		ClientID:    inputDTO.ClientID,
 		Path:        inputDTO.Path,
-		State:       inputDTO.State,
+		State:       attemptState,
+		Nonce:       attemptNonce,
 		Extra:       inputDTO.Extra,
 	}, nil
 

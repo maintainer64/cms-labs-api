@@ -99,9 +99,9 @@ const en = {
       ]
     },
     PnetServersTable: {
-      Title: 'PNET Servers',
+      Title: 'All Servers',
       ButtonAdd: 'Create',
-      SearchBar: 'Search PNET Servers',
+      SearchBar: 'Search All Servers',
       ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
@@ -245,15 +245,15 @@ const en = {
     DescriptionMaxCountUsers: 'Used to disable user allocation',
     FieldToken: 'Token',
     FieldLastOnlineStatus: 'Last active at',
-    FieldLastCountUsers: 'Last count users',
+    FieldLastCountUsers: 'Last count work labs',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
-      Title: 'Deleting a PNET Server entity',
-      Description: "When you take the PNET out, the PNET and CMS won't work together anymore"
+      Title: 'Deleting a Server entity',
+      Description: "When you take the Server out, the Server and CMS won't work together anymore"
     },
     StatsChart: {
-      Title: 'PNET stats',
+      Title: 'Server stats',
       Status: 'Status',
       StatusValueActive: 'Active',
       StatusValueAll: 'All',

@@ -56,7 +56,7 @@ func (f *FiberTestHTTP) Request(
 	return resp.StatusCode, responseString
 }
 
-func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state string) string {
+func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint) string {
 	if userID == 0 {
 		entity := models.User{}
 		entity.Email = uuid.New().String() + "@admin.com"
@@ -66,7 +66,7 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint, state stri
 	}
 	container, _ := di.NewDIContainer(&logs.ZeroLoggerConf{})
 	uc := container.AuthTokenManager()
-	token, _ := uc.NewJWTByUserId("", userID, serverID, state)
+	token, _ := uc.NewJWTByUserId("", userID, serverID, nil)
 	return "Bearer " + token.AccessToken
 }
 

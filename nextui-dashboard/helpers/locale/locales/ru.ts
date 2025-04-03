@@ -99,7 +99,7 @@ const ru = {
       ]
     },
     PnetServersTable: {
-      Title: 'Серверы PNET',
+      Title: 'Все серверы',
       ButtonAdd: 'Создать',
       SearchBar: 'Поиск серверов',
       ButtonEdit: 'Редактировать',
@@ -246,15 +246,15 @@ const ru = {
     DescriptionMaxCountUsers: 'Используется для отключения распределения пользователей',
     FieldToken: 'Токен',
     FieldLastOnlineStatus: 'Последняя актиность в',
-    FieldLastCountUsers: 'Последнее кол-во пользователей',
+    FieldLastCountUsers: 'Последнее кол-во запущенных лабораторных работ',
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в',
     DeletePopup: {
-      Title: 'Удаление сущности PNET-Server',
-      Description: 'При удалении интеграция между PNET сервером и CMS системой будет прекращена'
+      Title: 'Удаление сущности Server',
+      Description: 'При удалении интеграция между сервером и CMS системой будет прекращена'
     },
     StatsChart: {
-      Title: 'PNET статистика',
+      Title: 'Статистика серверов',
       Status: 'Статус',
       StatusValueActive: 'Активные',
       StatusValueAll: 'Все',

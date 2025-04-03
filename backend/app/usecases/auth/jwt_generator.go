@@ -19,6 +19,20 @@ type TokenDataWithExp struct {
 	Exp   int64  `json:"exp"`
 }
 
+// NewWithClaims creates a new [Token] with the specified signing method and
+// claims. Additional options can be specified, but are currently unused.
+func NewWithClaims(kid string, method jwt.SigningMethod, claims jwt.Claims, opts ...jwt.TokenOption) *jwt.Token {
+	return &jwt.Token{
+		Header: map[string]interface{}{
+			"typ": "JWT",
+			"alg": method.Alg(),
+			"kid": kid,
+		},
+		Claims: claims,
+		Method: method,
+	}
+}
+
 // GenerateNewTokens func for generate a new Access & Refresh tokens. Return jti (unique id on refresh token)
 func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cms_client.SSOToken, string, error) {
 	// Generate JWT Access token.
@@ -63,7 +77,7 @@ func generateNewAccessToken(entity *cms_client.SSOTokenPublicData) (*TokenDataWi
 	claims := entity.JWTClaims()
 
 	// Создаем токен с RSA алгоритмом
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	token := NewWithClaims("access", jwt.SigningMethodRS256, claims)
 
 	// Подписываем токен с использованием приватного ключа
 	t, err := token.SignedString(jwtConfig.PrivateKey)
@@ -101,7 +115,7 @@ func generateNewRefreshToken() (*TokenDataWithExp, string, error) {
 	}
 
 	// Создаем токен с RSA алгоритмом
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	token := NewWithClaims("refresh", jwt.SigningMethodRS256, claims)
 
 	// Подписываем токен с использованием приватного ключа
 	t, err := token.SignedString(jwtConfig.PrivateKey)
