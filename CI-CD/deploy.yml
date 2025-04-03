@@ -1,5 +1,7 @@
 core-deploy:
   stage: deploy
+  tags:
+    - ${TAG}
   extends:
     - .deploy-base-ssh
     - .releases-branch
@@ -14,6 +16,8 @@ core-deploy:
 
 frontend-deploy:
   stage: deploy
+  tags:
+    - ${TAG}
   extends:
     - .deploy-base-ssh
     - .releases-branch

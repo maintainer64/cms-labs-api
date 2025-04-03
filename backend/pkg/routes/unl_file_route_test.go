@@ -31,7 +31,7 @@ func TestV1UNLFileListSuccess(t *testing.T) {
 	entityDB2.Type = "pdf"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(0, 0, "") // Assuming user ID 1 is authorized
+	authHeader := f.AuthorizationUser(0, 0) // Assuming user ID 1 is authorized
 
 	input := usecases.UNLFileListInputDTO{
 		Search: "",
@@ -76,7 +76,7 @@ func TestV1UNLFileListFilterByType(t *testing.T) {
 	entityDB2.Type = "pdf"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UNLFileListInputDTO{
 		Search: "",
@@ -111,7 +111,7 @@ func TestV1UNLFileGetSuccess(t *testing.T) {
 	entityDB.Type = "txt"
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UNLFileGetInputDTO{
 		ID: entityDB.ID,
@@ -136,7 +136,7 @@ func TestV1UNLFileGetSuccess(t *testing.T) {
 func TestV1UNLFileGetNotFound(t *testing.T) {
 	description := "get non-existent UNL file"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	// Use a non-existent ID
 	input := usecases.UNLFileGetInputDTO{

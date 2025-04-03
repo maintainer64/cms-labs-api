@@ -2,14 +2,18 @@ workflow:
   rules:
     - if: $CI_COMMIT_REF_SLUG == "stage"
       variables:
+        TAG: stage
         DOCKER_PATH_BRANCH: stage
-        SENTRY_DEPLOY_ENVIRONMENT: stage
         SSH_USER: ${STAGE_SSH_USER}
         SSH_HOST: ${STAGE_SSH_HOST}
         SSH_PORT: ${STAGE_SSH_PORT}
         SSH_PRIVATE_KEY: ${STAGE_SSH_PRIVATE_KEY}
     - if: $CI_COMMIT_REF_SLUG == "master"
       variables:
+        TAG: prod
         DOCKER_PATH_BRANCH: master
-        SENTRY_DEPLOY_ENVIRONMENT: prod
+        SSH_USER: ${PROD_SSH_USER}
+        SSH_HOST: ${PROD_SSH_HOST}
+        SSH_PORT: ${PROD_SSH_PORT}
+        SSH_PRIVATE_KEY: ${PROD_SSH_PRIVATE_KEY}
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"

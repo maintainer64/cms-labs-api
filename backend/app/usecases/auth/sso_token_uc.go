@@ -58,6 +58,8 @@ type SwaggerSSOTokenPublicData struct {
 	Sub string `json:"sub"`
 	// Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)
 	Aud string `json:"aud"`
+	// Azp. Конкретное приложение, которое инициировало запрос (обычно client_id приложения, запрашивающего токен)
+	Azp string `json:"azp"`
 	// Exp. Время истечения срока действия токена (в Unix timestamp)
 	Exp int64 `json:"exp"`
 	// Iat. Время выдачи токена (в Unix timestamp)
@@ -120,7 +122,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		return nil, errors.New("invalid redirect_uri")
 	}
-	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, attempt.State)
+	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
 }
 
 func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
@@ -138,7 +140,7 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	}
 	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
 	if attempt.ServerID == 0 {
-		return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, "")
+		return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
 	}
 	server, err := u.PNETServerQueries.Get(attempt.ServerID)
 	if err != nil {
@@ -147,5 +149,5 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	if !server.IsActive {
 		return nil, errors.New("server is not active")
 	}
-	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, "")
+	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
 }

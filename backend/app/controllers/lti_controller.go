@@ -18,6 +18,10 @@ import (
 // @Router /v2/lti/launch [post]
 // @Router /v2/lti/launch [get]
 func LTILaunch(c *fiber.Ctx) error {
+	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+	if err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
@@ -29,7 +33,7 @@ func LTILaunch(c *fiber.Ctx) error {
 		return err
 	}
 	authManager := container.AuthTokenManager()
-	token, err := authManager.NewJWTByLaunchID(c.BaseURL(), c.Locals("LTILaunchID").(string))
+	token, err := authManager.NewJWTByLaunchID(issuer, c.Locals("LTILaunchID").(string))
 	if err != nil {
 		return err
 	}

@@ -113,6 +113,7 @@ func decodeToken(jwtToken *jwt.Token) (*cms_client.SSOTokenPublicData, error) {
 		Iss:          claims["iss"].(string),
 		Sub:          claims["sub"].(string),
 		Aud:          claims["aud"].(string),
+		Azp:          claims["azp"].(string),
 		Exp:          int64(claims["exp"].(float64)),
 		Iat:          int64(claims["iat"].(float64)),
 		Nonce:        claims["nonce"].(string),

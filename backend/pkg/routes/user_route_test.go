@@ -31,7 +31,7 @@ func TestV1UserCreate(t *testing.T) {
 		IsActive:  true,
 	}
 
-	authHeader := f.AuthorizationUser(entityDB.ID, 0, "")
+	authHeader := f.AuthorizationUser(entityDB.ID, 0)
 
 	expectedCode := 200
 	statusCode, body := f.Request(&FiberTestHttpRequest{
@@ -93,7 +93,7 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 	entityDB.DeletedAt = nil
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(entityDB.ID, 0, "")
+	authHeader := f.AuthorizationUser(entityDB.ID, 0)
 
 	input := usecases.UserEditInputDTO{
 		ID:        entityDB.ID,
@@ -139,7 +139,7 @@ func TestV1UserGetSuccess(t *testing.T) {
 	entityDB.DeletedAt = nil
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(entityDB.ID, 0, "")
+	authHeader := f.AuthorizationUser(entityDB.ID, 0)
 
 	input := usecases.UserGetInputDTO{
 		ID: entityDB.ID,
@@ -168,7 +168,7 @@ func TestV1UserGetSuccess(t *testing.T) {
 func TestV1UserGetNotFound(t *testing.T) {
 	description := "get non-existent user"
 	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	// Use a non-existent ID
 	input := usecases.UserGetInputDTO{
@@ -202,7 +202,7 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 	entityDB.DeletedAt = &deletedAt
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(0, 0, "")
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UserGetInputDTO{
 		ID: entityDB.ID,
@@ -247,7 +247,7 @@ func TestV1UserListSuccess(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0, "")
+	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
 
 	input := usecases.UserListInputDTO{
 		Search: "",
@@ -293,7 +293,7 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0, "")
+	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
 
 	input := usecases.UserListInputDTO{
 		Search: "John",
@@ -340,7 +340,7 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0, "")
+	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
 
 	input := usecases.UserListInputDTO{
 		Search:  "",
@@ -388,7 +388,7 @@ func TestV1UserListPagination(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0, "")
+	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
 
 	input := usecases.UserListInputDTO{
 		Search: "",

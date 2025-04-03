@@ -102,6 +102,10 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Router /v1/sso/token [post]
 func SSOToken(c *fiber.Ctx) error {
+	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+	if err != nil {
+		return err
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.SSOTokenInputDTO{}
 	dto.GrantType = c.FormValue("grant_type", "")
@@ -114,7 +118,7 @@ func SSOToken(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.SSOTokenUC()
-	output, err := uc.SetContext(c.BaseURL()).Execute(dto)
+	output, err := uc.SetContext(issuer).Execute(dto)
 	if err != nil {
 		return c.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
 	}

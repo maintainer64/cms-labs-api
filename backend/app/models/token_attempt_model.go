@@ -19,6 +19,7 @@ type TokenAttemptBase struct {
 type TokenAttemptSecret struct {
 	Token             string `gorm:"type:varchar(255)" json:"token"`
 	State             string `gorm:"type:varchar(255)" json:"state"`
+	Nonce             string `gorm:"type:varchar(255)" json:"nonce"`
 	AuthorizationCode string `gorm:"type:varchar(255)" json:"authorization_code"`
 }
 

@@ -27,17 +27,25 @@ type SSOOpenidConfigurationOutputDTO struct {
 type SSOOpenidConfiguration struct {
 }
 
+func IssuerURLByBaseUrl(baseUrl string) (string, error) {
+	issuer, err := url.JoinPath(baseUrl, "/api/v1/sso")
+	if err != nil {
+		return "", err
+	}
+	return issuer, nil
+}
+
 func (u *SSOOpenidConfiguration) Execute(inputDTO SSOOpenidConfigurationInputDTO) (
 	*SSOOpenidConfigurationOutputDTO, error,
 ) {
 	// Базовый URL вашего сервиса
-	issuer, err := url.JoinPath(inputDTO.BaseURL, "/api/v1/sso")
+	issuer, err := IssuerURLByBaseUrl(inputDTO.BaseURL)
 	if err != nil {
 		return nil, err
 	}
 	// Формируем ответ согласно спецификации OpenID Connect Discovery
 	return &SSOOpenidConfigurationOutputDTO{
-		Issuer:                            inputDTO.BaseURL,
+		Issuer:                            issuer,
 		AuthorizationEndpoint:             issuer + "/authorize",
 		TokenEndpoint:                     issuer + "/token",
 		UserInfoEndpoint:                  issuer + "/userinfo",

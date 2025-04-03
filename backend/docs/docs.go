@@ -1810,6 +1810,9 @@ const docTemplate = `{
                 "extra": {
                     "type": "string"
                 },
+                "nonce": {
+                    "type": "string"
+                },
                 "path": {
                     "type": "string"
                 },
@@ -1836,16 +1839,25 @@ const docTemplate = `{
                 "application": {
                     "type": "string"
                 },
+                "client_id": {
+                    "type": "string"
+                },
                 "code": {
                     "type": "string"
                 },
                 "extra": {
                     "type": "string"
                 },
+                "nonce": {
+                    "type": "string"
+                },
                 "path": {
                     "type": "string"
                 },
                 "redirect_uri": {
+                    "type": "string"
+                },
+                "scope": {
                     "type": "string"
                 },
                 "state": {
@@ -1956,6 +1968,10 @@ const docTemplate = `{
             "properties": {
                 "aud": {
                     "description": "Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)",
+                    "type": "string"
+                },
+                "azp": {
+                    "description": "Azp. Конкретное приложение, которое инициировало запрос (обычно client_id приложения, запрашивающего токен)",
                     "type": "string"
                 },
                 "email": {

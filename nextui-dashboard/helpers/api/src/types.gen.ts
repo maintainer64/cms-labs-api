@@ -21,6 +21,7 @@ export type auth_RenewManagerInputDTO = {
 export type auth_SSOAuthorizeInputDTO = {
   client_id?: string;
   extra?: string;
+  nonce?: string;
   path?: string;
   redirect_uri?: string;
   response_type?: string;
@@ -31,10 +32,13 @@ export type auth_SSOAuthorizeInputDTO = {
 
 export type auth_SSOAuthorizeOutputDTO = {
   application?: string;
+  client_id?: string;
   code?: string;
   extra?: string;
+  nonce?: string;
   path?: string;
   redirect_uri?: string;
+  scope?: string;
   state?: string;
 };
 
@@ -79,6 +83,10 @@ export type auth_SwaggerSSOTokenPublicData = {
    * Aud. Получатель токена (обычно client_id приложения, запрашивающего токен)
    */
   aud?: string;
+  /**
+   * Azp. Конкретное приложение, которое инициировало запрос (обычно client_id приложения, запрашивающего токен)
+   */
+  azp?: string;
   /**
    * Email. Почта уникальная пользователя
    */
