@@ -57,7 +57,7 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 		attemptState = uuid.New().String()
 	}
 	if attemptNonce == "" {
-		attemptState = uuid.New().String()
+		attemptNonce = uuid.New().String()
 	}
 	u.Logger.Info().Msg(fmt.Sprintf("authorize sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 	server, err := u.PNETServerQueries.GetByClientId(inputDTO.ClientID)
