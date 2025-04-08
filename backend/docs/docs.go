@@ -812,6 +812,118 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/role/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete role. Roles: [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "delete role",
+                "parameters": [
+                    {
+                        "description": "pnet_server id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/role/list": {
+            "post": {
+                "description": "List user. Roles[admin, instructor, student, any]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "list role",
+                "parameters": [
+                    {
+                        "description": "user list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleListInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/role/upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Upset role. Roles[admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "upsert role",
+                "parameters": [
+                    {
+                        "description": "user form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleEditInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleEditResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/service-card/delete": {
             "post": {
                 "security": [
@@ -2530,6 +2642,30 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Role": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ServiceCard": {
             "type": "object",
             "required": [
@@ -2681,8 +2817,7 @@ const docTemplate = `{
             "required": [
                 "created_at",
                 "group_name",
-                "updated_at",
-                "user_role"
+                "updated_at"
             ],
             "properties": {
                 "created_at": {
@@ -2711,9 +2846,6 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
-                },
-                "user_role": {
-                    "type": "string"
                 }
             }
         },
@@ -2722,8 +2854,7 @@ const docTemplate = `{
             "required": [
                 "created_at",
                 "group_name",
-                "updated_at",
-                "user_role"
+                "updated_at"
             ],
             "properties": {
                 "created_at": {
@@ -2748,9 +2879,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
-                    "type": "string"
-                },
-                "user_role": {
                     "type": "string"
                 }
             }
@@ -3485,6 +3613,12 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "type": {
                     "type": "string"
                 },
@@ -3535,6 +3669,12 @@ const docTemplate = `{
             "properties": {
                 "model": {
                     "$ref": "#/definitions/models.PNETServer"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -3617,6 +3757,106 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.PNETServerListOutputDTO"
+                }
+            }
+        },
+        "usecases.RoleDeleteInputDTO": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.RoleDeleteResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.RoleDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.RoleEditInputDTO": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.RoleEditResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.UserEditOutputDTO"
+                }
+            }
+        },
+        "usecases.RoleListInputDTO": {
+            "type": "object"
+        },
+        "usecases.RoleListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Role"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.RoleListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.RoleListOutputDTO"
                 }
             }
         },
@@ -3893,8 +4133,11 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "user_role": {
-                    "type": "string"
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -3937,6 +4180,12 @@ const docTemplate = `{
             "properties": {
                 "model": {
                     "$ref": "#/definitions/models.User"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -3978,6 +4227,23 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.UserListModel": {
+            "type": "object",
+            "required": [
+                "model"
+            ],
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.UserListItem"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "usecases.UserListOutputDTO": {
             "type": "object",
             "required": [
@@ -3988,7 +4254,7 @@ const docTemplate = `{
                 "model": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UserListItem"
+                        "$ref": "#/definitions/usecases.UserListModel"
                     }
                 },
                 "total_count": {

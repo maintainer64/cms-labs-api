@@ -43,6 +43,12 @@ import type {
   PostV1PnetServerPingResponse,
   PostV1PnetServerUpsertData,
   PostV1PnetServerUpsertResponse,
+  PostV1RoleDeleteData,
+  PostV1RoleDeleteResponse,
+  PostV1RoleListData,
+  PostV1RoleListResponse,
+  PostV1RoleUpsertData,
+  PostV1RoleUpsertResponse,
   PostV1ServiceCardDeleteData,
   PostV1ServiceCardDeleteResponse,
   PostV1ServiceCardGetData,
@@ -435,6 +441,54 @@ export const postV1PnetServerUpsert = (
   return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/pnet-server/upsert',
+    body: data.form
+  });
+};
+
+/**
+ * delete role
+ * Delete role. Roles: [admin]
+ * @param data The data for the request.
+ * @param data.form pnet_server id
+ * @returns usecases_RoleDeleteResponse OK
+ * @throws ApiError
+ */
+export const postV1RoleDelete = (data: PostV1RoleDeleteData): CancelablePromise<PostV1RoleDeleteResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/role/delete',
+    body: data.form
+  });
+};
+
+/**
+ * list role
+ * List user. Roles[admin, instructor, student, any]
+ * @param data The data for the request.
+ * @param data.form user list info
+ * @returns usecases_RoleListResponse OK
+ * @throws ApiError
+ */
+export const postV1RoleList = (data: PostV1RoleListData): CancelablePromise<PostV1RoleListResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/role/list',
+    body: data.form
+  });
+};
+
+/**
+ * upsert role
+ * Upset role. Roles[admin]
+ * @param data The data for the request.
+ * @param data.form user form info
+ * @returns usecases_RoleEditResponse OK
+ * @throws ApiError
+ */
+export const postV1RoleUpsert = (data: PostV1RoleUpsertData): CancelablePromise<PostV1RoleUpsertResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/role/upsert',
     body: data.form
   });
 };

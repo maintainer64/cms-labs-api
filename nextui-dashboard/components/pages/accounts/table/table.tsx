@@ -2,14 +2,14 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { models_UserListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
+import { UserItem } from '@/helpers/queries/users/model';
 
 interface UsersTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  users?: models_UserListItem[];
+  users?: UserItem[];
 }
 
 export const UsersTableWrapper = ({ users, isLoading, loadMore }: UsersTableWrapperProps) => {
@@ -20,7 +20,7 @@ export const UsersTableWrapper = ({ users, isLoading, loadMore }: UsersTableWrap
   } = useLanguageBrowser();
   return (
     <InfiniteScroll loadMore={loadMore} isLoading={isLoading}>
-      <div className=' w-full flex flex-col gap-4'>
+      <div className='w-full flex flex-col gap-4'>
         <Table aria-label='Users table'>
           <TableHeader columns={UsersTable.Columns}>
             {(column) => (

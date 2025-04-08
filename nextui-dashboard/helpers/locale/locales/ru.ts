@@ -27,6 +27,7 @@ const ru = {
     Home: 'Главная',
     MainMenu: 'Главное меню',
     Users: 'Пользователи',
+    Roles: 'Роли',
     Servers: 'Серверы',
     ServiceCards: 'Сервисы',
     LTIIntegrations: 'LTIs',
@@ -60,7 +61,7 @@ const ru = {
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'ИМЯ', uid: 'name' },
-        { name: 'РОЛЬ', uid: 'role' },
+        { name: 'РОЛИ', uid: 'role' },
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ]
     },
@@ -121,6 +122,17 @@ const ru = {
         Deactivated: 'Деактивирован'
       }
     },
+    RoleTable: {
+      Title: 'Все роли',
+      ButtonAdd: 'Создать',
+      SearchBar: 'Поиск ролей',
+      ButtonEdit: 'Редактировать',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'НАЗВАНИЕ', uid: 'name' },
+        { name: 'ДЕЙСТВИЕ', uid: 'actions' }
+      ]
+    },
     ServiceCardsTable: {
       Title: 'Сервисы',
       ButtonAdd: 'Создать',
@@ -148,11 +160,7 @@ const ru = {
     FieldID: 'ID',
     FieldName: 'Имя',
     FieldEmail: 'Почта',
-    FieldUserRole: 'Роль',
-    FieldUserRoleStudent: 'Студент',
-    FieldUserRoleInstructor: 'Преподаватель',
-    FieldUserRoleAssistant: 'Ассистент',
-    FieldUserRoleAdmin: 'Администратор',
+    FieldUserRole: 'Роли',
     FieldGroupName: 'Группа',
     FieldExternalLTIID: 'LTI ID',
     FieldIsDeactivated: 'Деактивирован',
@@ -238,6 +246,8 @@ const ru = {
     FieldType: 'Тип сервера',
     FieldClientID: 'ClientID',
     FieldClientIDDescription: 'Уникальное название сервера для SSO',
+    FieldAllowedRoles: 'Разрешенные роли',
+    FieldAllowedRolesDescription: 'Только эти роли смогут авторизоваться',
     FieldIsActive: 'Активный',
     FieldUnitRate: 'Процент распределения',
     FieldMinutesForDisconnect: 'Минуты для автоотключения',
@@ -262,6 +272,17 @@ const ru = {
       OrderByValueUnitRate: '% распр.',
       OrderByValueLastCountUsers: 'кол-во польз.',
       OrderByValueCreatedAt: 'дата'
+    }
+  },
+  Roles: {
+    FieldID: 'ID',
+    FieldName: 'Название',
+    FieldCode: 'Код',
+    FieldCreatedAt: 'Создан в',
+    FieldUpdatedAt: 'Обновлен в',
+    DeletePopup: {
+      Title: 'Удаление сущности Role',
+      Description: 'Данная роль отключится у всех пользователей'
     }
   },
   ServiceCards: {

@@ -3,15 +3,11 @@ package queries
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
 
-	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ory/go-convenience/mapx"
-	"github.com/ory/go-convenience/stringsx"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
@@ -160,28 +156,4 @@ func (q *UserQueries) listFilter(search string, ids []uint, tx *gorm.DB) *gorm.D
 		tx = tx.Or("id IN ?", ids)
 	}
 	return tx
-}
-
-func (q *UserQueries) UpdateByLaunchData(
-	launchID string,
-	launchData json.RawMessage,
-) error {
-	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: update launch data by id: %+v", launchID))
-	var jwtTokenPayload map[interface{}]interface{}
-	if err := json.Unmarshal(launchData, &jwtTokenPayload); err != nil {
-		return err
-	}
-	email := strings.ToLower(mapx.GetStringDefault(jwtTokenPayload, "email", ""))
-	userFromDB, _ := q.GetByEmail(email)
-	user := models.User{}
-	user.ID = userFromDB.ID
-	user.Email = email
-	user.Name = mapx.GetStringDefault(jwtTokenPayload, "name", "")
-	user.UserRole = stringsx.Coalesce(userFromDB.UserRole, models.UsersRoleStudent)
-	user.GroupName = stringsx.Coalesce(user.GroupName, userFromDB.GroupName)
-	user.LTIUserID = mapx.GetStringDefault(jwtTokenPayload, "sub", "")
-	user.DeletedAt = userFromDB.DeletedAt
-	user.LastLaunchID = launchID
-	err := q.Upsert(&user)
-	return err
 }

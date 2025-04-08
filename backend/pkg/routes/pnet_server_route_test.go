@@ -295,7 +295,6 @@ func TestV1PNETServerPingSuccess(t *testing.T) {
 
 	userEntity := models.User{}
 	userEntity.Email = uuid.New().String() + "@example.com"
-	userEntity.UserRole = models.UsersRoleStudent
 	f.DB.Create(&userEntity)
 
 	ltiRoutingEntity := models.LTIRouting{}

@@ -8,6 +8,7 @@ import (
 
 type UserGetUC struct {
 	UserQueries *queries.UserQueries
+	RoleQueries *queries.RoleQueries
 }
 
 type UserGetInputDTO struct {
@@ -16,6 +17,7 @@ type UserGetInputDTO struct {
 
 type UserGetOutputDTO struct {
 	Model models.User `json:"model" required:"true"`
+	Roles []uint      `json:"roles"`
 }
 
 type UserGetResponse = response.Response[UserGetOutputDTO]
@@ -25,7 +27,18 @@ func (u *UserGetUC) Execute(dto UserGetInputDTO) (UserGetOutputDTO, error) {
 	if err != nil && err.Error() == queries.UserNotActive.Error() {
 		err = nil
 	}
-	return UserGetOutputDTO{
+	if err != nil {
+		return UserGetOutputDTO{}, err
+	}
+	result := UserGetOutputDTO{
 		Model: form,
-	}, err
+	}
+	roles, err := u.RoleQueries.GetByRelationUsersIds([]uint{dto.ID})
+	if err != nil {
+		return result, err
+	}
+	if val, ok := roles[dto.ID]; ok {
+		result.Roles = val
+	}
+	return result, err
 }

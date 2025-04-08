@@ -526,6 +526,22 @@ definitions:
     - created_at
     - updated_at
     type: object
+  models.Role:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - updated_at
+    type: object
   models.ServiceCard:
     properties:
       created_at:
@@ -647,13 +663,10 @@ definitions:
         type: string
       updated_at:
         type: string
-      user_role:
-        type: string
     required:
     - created_at
     - group_name
     - updated_at
-    - user_role
     type: object
   models.UserListItem:
     properties:
@@ -673,13 +686,10 @@ definitions:
         type: string
       updated_at:
         type: string
-      user_role:
-        type: string
     required:
     - created_at
     - group_name
     - updated_at
-    - user_role
     type: object
   queries.RoundQueuePoolPnetListItem:
     properties:
@@ -1159,6 +1169,10 @@ definitions:
         type: integer
       name:
         type: string
+      roles:
+        items:
+          type: integer
+        type: array
       type:
         type: string
       unit_rate:
@@ -1196,6 +1210,10 @@ definitions:
     properties:
       model:
         $ref: '#/definitions/models.PNETServer'
+      roles:
+        items:
+          type: integer
+        type: array
     type: object
   usecases.PNETServerGetResponse:
     properties:
@@ -1252,6 +1270,72 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.PNETServerListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.RoleDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  usecases.RoleDeleteResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.RoleDeleteInputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.RoleEditInputDTO:
+    properties:
+      code:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  usecases.RoleEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.UserEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.RoleListInputDTO:
+    type: object
+  usecases.RoleListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.Role'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.RoleListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.RoleListOutputDTO'
     required:
     - error
     - msg
@@ -1432,8 +1516,10 @@ definitions:
         type: string
       name:
         type: string
-      user_role:
-        type: string
+      roles:
+        items:
+          type: integer
+        type: array
     required:
     - email
     - name
@@ -1464,6 +1550,10 @@ definitions:
     properties:
       model:
         $ref: '#/definitions/models.User'
+      roles:
+        items:
+          type: integer
+        type: array
     type: object
   usecases.UserGetResponse:
     properties:
@@ -1490,11 +1580,22 @@ definitions:
           type: integer
         type: array
     type: object
+  usecases.UserListModel:
+    properties:
+      model:
+        $ref: '#/definitions/models.UserListItem'
+      roles:
+        items:
+          type: integer
+        type: array
+    required:
+    - model
+    type: object
   usecases.UserListOutputDTO:
     properties:
       model:
         items:
-          $ref: '#/definitions/models.UserListItem'
+          $ref: '#/definitions/usecases.UserListModel'
         type: array
       total_count:
         type: integer
@@ -2013,6 +2114,76 @@ paths:
       summary: create pnet_server
       tags:
       - PNETServer
+  /v1/role/delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete role. Roles: [admin]'
+      parameters:
+      - description: pnet_server id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.RoleDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.RoleDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete role
+      tags:
+      - Role
+  /v1/role/list:
+    post:
+      consumes:
+      - application/json
+      description: List user. Roles[admin, instructor, student, any]
+      parameters:
+      - description: user list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.RoleListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.RoleListResponse'
+      summary: list role
+      tags:
+      - Role
+  /v1/role/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Upset role. Roles[admin]
+      parameters:
+      - description: user form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.RoleEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.RoleEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: upsert role
+      tags:
+      - Role
   /v1/service-card/delete:
     post:
       consumes:

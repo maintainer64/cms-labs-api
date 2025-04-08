@@ -27,6 +27,7 @@ const en = {
     Home: 'Home',
     MainMenu: 'Main Menu',
     Users: 'Users',
+    Roles: 'Roles',
     Servers: 'Servers',
     ServiceCards: 'Services',
     LTIIntegrations: 'LTIs',
@@ -60,7 +61,7 @@ const en = {
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'NAME', uid: 'name' },
-        { name: 'ROLE', uid: 'role' },
+        { name: 'ROLES', uid: 'role' },
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
@@ -121,6 +122,17 @@ const en = {
         Deactivated: 'Deactivated'
       }
     },
+    RoleTable: {
+      Title: 'Roles',
+      ButtonAdd: 'Create',
+      SearchBar: 'Search All Roles',
+      ButtonEdit: 'Edit',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'NAME', uid: 'name' },
+        { name: 'ACTIONS', uid: 'actions' }
+      ]
+    },
     ServiceCardsTable: {
       Title: 'Services',
       ButtonAdd: 'Create',
@@ -148,11 +160,7 @@ const en = {
     FieldID: 'ID',
     FieldName: 'Name',
     FieldEmail: 'Email',
-    FieldUserRole: 'Role',
-    FieldUserRoleStudent: 'Student',
-    FieldUserRoleInstructor: 'Instructor',
-    FieldUserRoleAssistant: 'Assistant',
-    FieldUserRoleAdmin: 'Admin',
+    FieldUserRole: 'Roles',
     FieldGroupName: 'Group',
     FieldExternalLTIID: 'LTI ID',
     FieldIsDeactivated: 'Is deactivated',
@@ -237,6 +245,8 @@ const en = {
     FieldType: 'Server type',
     FieldClientID: 'ClientID',
     FieldClientIDDescription: 'Unique server name for SSO',
+    FieldAllowedRoles: 'Allowed roles',
+    FieldAllowedRolesDescription: 'Only these roles will be able to log in',
     FieldIsActive: 'Active',
     FieldUnitRate: 'Percentage of distribution',
     FieldMinutesForDisconnect: 'Minutes for auto-shutdown',
@@ -261,6 +271,17 @@ const en = {
       OrderByValueUnitRate: '% rate.',
       OrderByValueLastCountUsers: 'count users',
       OrderByValueCreatedAt: 'date'
+    }
+  },
+  Roles: {
+    FieldID: 'ID',
+    FieldName: 'Name',
+    FieldCode: 'Code',
+    FieldCreatedAt: 'Created at',
+    FieldUpdatedAt: 'Updated at',
+    DeletePopup: {
+      Title: 'Deleting a Role entity',
+      Description: 'This role will be disabled for all users'
     }
   },
   ServiceCards: {

@@ -22,10 +22,20 @@ func TestSSOAuthorize(t *testing.T) {
 	// Создаем тестового пользователя
 	user := models.User{}
 	user.Email = "test" + uuid.New().String() + "@example.com"
-	user.UserRole = models.UsersRoleStudent
 	user.Name = "Name " + uuid.New().String()
 	f.DB.Create(&user)
 	authHeader := f.AuthorizationUser(user.ID, 0)
+
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     clientID,
@@ -59,9 +69,18 @@ func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	// Создаем тестового пользователя
 	user := models.User{}
 	user.Email = "test" + uuid.New().String() + "@example.com"
-	user.UserRole = models.UsersRoleStudent
 	user.Name = "Name " + uuid.New().String()
 	f.DB.Create(&user)
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
 	authHeader := f.AuthorizationUser(user.ID, 0)
 
 	input := auth.SSOAuthorizeInputDTO{
@@ -84,6 +103,129 @@ func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	assert.Contains(t, body, "PNETServer not found", description)
 }
 
+func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
+	description := "authorization with not match roles"
+	f := NewFiberTestHTTP()
+
+	// OpenID server
+	server := models.PNETServer{}
+	server.Type = models.ServerTypeOpenID
+	server.Name = uuid.New().String() + "_server"
+	server.Url = "https://localhost"
+	server.IsActive = true
+	server.Token = uuid.New().String()
+	server.ClientID = uuid.New().String()
+	f.DB.Create(&server)
+
+	customRole := models.Role{}
+	customRole.Code = "custom_role_" + uuid.New().String()
+	customRole.Name = "CustomRole"
+	f.DB.Create(&customRole)
+
+	serverRole := models.RoleRelation{}
+	serverRole.RoleID = customRole.ID
+	serverRole.ServerID = &server.ID
+	f.DB.Create(&serverRole)
+
+	// Создаем тестового пользователя
+	user := models.User{}
+	user.Email = "test" + uuid.New().String() + "@example.com"
+	user.Name = "Name " + uuid.New().String()
+	f.DB.Create(&user)
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
+	authHeader := f.AuthorizationUser(user.ID, 0)
+
+	input := auth.SSOAuthorizeInputDTO{
+		ClientID:     server.ClientID,
+		RedirectUri:  "https://localhost",
+		ResponseType: "code",
+		Scope:        "openid",
+		UserID:       user.ID,
+	}
+
+	expectedCode := 500
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/sso/authorize",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.Contains(t, body, "You cannot use SSO with this role", description)
+}
+
+func TestSSOAuthorizeMatchRoles(t *testing.T) {
+	description := "authorization with match roles"
+	f := NewFiberTestHTTP()
+
+	// OpenID server
+	server := models.PNETServer{}
+	server.Type = models.ServerTypeOpenID
+	server.Name = uuid.New().String() + "_server"
+	server.Url = "https://localhost"
+	server.IsActive = true
+	server.Token = uuid.New().String()
+	server.ClientID = uuid.New().String()
+	f.DB.Create(&server)
+
+	customRole := models.Role{}
+	customRole.Code = "custom_role_" + uuid.New().String()
+	customRole.Name = "CustomRole"
+	f.DB.Create(&customRole)
+
+	serverRole := models.RoleRelation{}
+	serverRole.RoleID = customRole.ID
+	serverRole.ServerID = &server.ID
+	f.DB.Create(&serverRole)
+
+	// Создаем тестового пользователя
+	user := models.User{}
+	user.Email = "test" + uuid.New().String() + "@example.com"
+	user.Name = "Name " + uuid.New().String()
+	f.DB.Create(&user)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = customRole.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
+	authHeader := f.AuthorizationUser(user.ID, 0)
+
+	input := auth.SSOAuthorizeInputDTO{
+		ClientID:     server.ClientID,
+		RedirectUri:  "https://localhost",
+		ResponseType: "code",
+		Scope:        "openid",
+		UserID:       user.ID,
+	}
+
+	expectedCode := 200
+	statusCode, body := f.Request(&FiberTestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/sso/authorize",
+		Body:          FiberRequestPayload(input),
+		Authorization: authHeader,
+	})
+
+	response := auth.SSOAuthorizeResponse{}
+	_ = json.Unmarshal([]byte(body), &response)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.NotEmpty(t, response.Result.Code, description)
+	assert.Equal(t, input.RedirectUri, response.Result.RedirectUri, description)
+	assert.Equal(t, input.ClientID, response.Result.Application, description)
+}
+
 func TestSSOTokenByAuthCode(t *testing.T) {
 	description := "get tokens by authorization code"
 	f := NewFiberTestHTTP()
@@ -95,9 +237,19 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 	// Создаем тестового пользователя
 	user := models.User{}
 	user.Email = "test" + uuid.New().String() + "@example.com"
-	user.UserRole = models.UsersRoleStudent
 	user.Name = "Name " + uuid.New().String()
 	f.DB.Create(&user)
+
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
 
 	// Создаем authorization code
 	attempt := models.TokenAttempt{}
@@ -175,8 +327,18 @@ func TestSSOUserInfo(t *testing.T) {
 	f.DB.Where("client_id = ?", clientID).Find(&server)
 	user := models.User{}
 	user.Email = uuid.New().String() + "@admin.com"
-	user.UserRole = models.UsersRoleAdmin
 	f.DB.Create(&user)
+
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
 	authHeader := f.AuthorizationUser(user.ID, server.ID)
 
 	expectedCode := 200
@@ -197,7 +359,7 @@ func TestSSOUserInfo(t *testing.T) {
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, user.Email, response.Email, description)
 	assert.Equal(t, user.Name, response.Name, description)
-	assert.Equal(t, user.UserRole, response.UserRoleMain(), description)
+	assert.Equal(t, role.Code, response.UserRoleMain(), description)
 	assert.Equal(t, fmt.Sprintf("%d", user.ID), response.Sub, description)
 	assert.Equal(t, server.ClientID, response.Aud, description)
 	assert.Equal(t, server.ID, response.ServerID, description)

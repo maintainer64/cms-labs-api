@@ -57,11 +57,37 @@ func (f *FiberTestHTTP) Request(
 }
 
 func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint) string {
+	roleAdmin := models.Role{}
+	roleAdmin.Code = "admin"
+	roleAdmin.Name = "Admin"
+	f.DB.Where("code = ?", roleAdmin.Code).First(&roleAdmin)
+	if roleAdmin.ID == 0 {
+		f.DB.Create(&roleAdmin)
+	}
+
+	roleInstructor := models.Role{}
+	roleInstructor.Code = "instructor"
+	roleInstructor.Name = "Instructor"
+	f.DB.Where("code = ?", roleInstructor.Code).First(&roleInstructor)
+	if roleInstructor.ID == 0 {
+		f.DB.Create(&roleInstructor)
+	}
+
 	if userID == 0 {
 		entity := models.User{}
 		entity.Email = uuid.New().String() + "@admin.com"
-		entity.UserRole = models.UsersRoleAdmin
 		f.DB.Create(&entity)
+
+		roleUserAdmin := models.RoleRelation{}
+		roleUserAdmin.RoleID = roleAdmin.ID
+		roleUserAdmin.UserID = &entity.ID
+		f.DB.Create(&roleUserAdmin)
+
+		roleUserInstructor := models.RoleRelation{}
+		roleUserInstructor.RoleID = roleInstructor.ID
+		roleUserInstructor.UserID = &entity.ID
+		f.DB.Create(&roleUserInstructor)
+
 		userID = entity.ID
 	}
 	container, _ := di.NewDIContainer(&logs.ZeroLoggerConf{})

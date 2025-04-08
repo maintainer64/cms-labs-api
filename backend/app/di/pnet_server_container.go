@@ -8,12 +8,14 @@ import (
 func (di *DIContainer) PNETServerEditUC() *usecases.PNETServerEditUC {
 	return &usecases.PNETServerEditUC{
 		PNETServerQueries: di.Queries.PNETServerQueries,
+		RoleQueries:       di.Queries.RoleQueries,
 	}
 }
 
 func (di *DIContainer) PNETServerGetUC() *usecases.PNETServerGetUC {
 	return &usecases.PNETServerGetUC{
 		PNETServerQueries: di.Queries.PNETServerQueries,
+		RoleQueries:       di.Queries.RoleQueries,
 	}
 }
 

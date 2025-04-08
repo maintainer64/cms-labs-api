@@ -9,6 +9,7 @@ import (
 )
 
 func (di *DIContainer) LTIProtocolDatastoreConfig() *lti_connector.LTIConnectorAPI {
+	logger := logs.NewZeroLogger(di.ZeroLogConf.SetName("lti_connector.LTIConnectorAPI"))
 	return &lti_connector.LTIConnectorAPI{
 		LTIFormQueries:       di.Queries.LTIFormQueries,
 		LTILaunchDataQueries: di.Queries.LTILaunchDataQueries,
@@ -18,9 +19,13 @@ func (di *DIContainer) LTIProtocolDatastoreConfig() *lti_connector.LTIConnectorA
 			Nonces:        di.Queries.LTINonceTokenQueries,
 			LaunchData:    di.Queries.LTILaunchDataQueries,
 			AccessTokens:  di.Queries.LTIAccessTokenQueries,
-			UserStore:     di.Queries.UserQueries,
+			UserStore: &datastore.ExternalDataUpdateQuery{
+				UserQueries: di.Queries.UserQueries,
+				RoleQueries: di.Queries.RoleQueries,
+				Logger:      logger,
+			},
 		},
-		Logger: logs.NewZeroLogger(di.ZeroLogConf.SetName("lti_connector.LTIConnectorAPI")),
+		Logger: logger,
 	}
 }
 

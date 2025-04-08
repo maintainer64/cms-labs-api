@@ -1,0 +1,99 @@
+package lti_query
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/goccy/go-json"
+	"github.com/ory/go-convenience/mapx"
+	"github.com/ory/go-convenience/stringsx"
+	"github.com/rs/zerolog"
+	"gitlab.com/a10869/api-modules/backend/app/models"
+	"gitlab.com/a10869/api-modules/backend/app/queries"
+)
+
+type ExternalDataUpdateQuery struct {
+	*queries.UserQueries
+	*queries.RoleQueries
+	*zerolog.Logger
+}
+
+func (q *ExternalDataUpdateQuery) UpdateByLaunchData(
+	launchID string,
+	launchData json.RawMessage,
+) error {
+	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: update launch data by id: %+v", launchID))
+	var jwtTokenPayload map[interface{}]interface{}
+	if err := json.Unmarshal(launchData, &jwtTokenPayload); err != nil {
+		return err
+	}
+	email := strings.ToLower(mapx.GetStringDefault(jwtTokenPayload, "email", ""))
+	userFromDB, _ := q.GetByEmail(email)
+	user := models.User{}
+	user.ID = userFromDB.ID
+	user.Email = email
+	user.Name = mapx.GetStringDefault(jwtTokenPayload, "name", "")
+	user.GroupName = stringsx.Coalesce(user.GroupName, userFromDB.GroupName)
+	user.LTIUserID = mapx.GetStringDefault(jwtTokenPayload, "sub", "")
+	user.DeletedAt = userFromDB.DeletedAt
+	user.LastLaunchID = launchID
+	err := q.UserQueries.Upsert(&user)
+	if err != nil {
+		return err
+	}
+
+	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: update roles by user id: %+v", user.ID))
+	userRoles, err := q.RoleQueries.GetRolesByUserId(user.ID)
+	if err != nil {
+		return err
+	}
+	rolesLTI := mapx.GetStringSliceDefault(jwtTokenPayload, "https://purl.imsglobal.org/spec/lti/claim/roles", []string{})
+	mainRoleCode := MapRoleCoreByLTIRoleCode(rolesLTI)
+	mainRole, err := q.RoleQueries.GetByCode(mainRoleCode)
+	if err != nil {
+		return err
+	}
+	setRoles := make([]uint, 0)
+	// Delete student, instructor role from userRoles
+	for _, userRole := range userRoles {
+		if userRole.Code == models.UsersRoleStudent || userRole.Code == models.UsersRoleAdmin {
+			continue
+		}
+		setRoles = append(setRoles, userRole.ID)
+	}
+	// Add mainRole
+	setRoles = append(setRoles, mainRole.ID)
+	err = q.RoleQueries.SetByUserId(user.ID, setRoles)
+	return err
+}
+
+// MapRoleCoreByLTIRoleCode функция маппинга роли в
+func MapRoleCoreByLTIRoleCode(rolesLTI []string) string {
+	for _, roleLTI := range rolesLTI {
+		switch roleLTI {
+		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Administrator":
+			return models.UsersRoleInstructor
+		case "Administrator":
+			return models.UsersRoleInstructor
+		case "http://purl.imsglobal.org/vocab/lis/v2/membership#ContentDeveloper":
+			continue
+		case "ContentDeveloper":
+			continue
+		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor":
+			return models.UsersRoleInstructor
+		case "Instructor":
+			return models.UsersRoleInstructor
+		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner":
+			continue
+		case "Learner":
+			continue
+		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Mentor":
+			return models.UsersRoleInstructor
+		case "Mentor":
+			return models.UsersRoleInstructor
+		default:
+			continue
+		}
+	}
+	return models.UsersRoleStudent
+}

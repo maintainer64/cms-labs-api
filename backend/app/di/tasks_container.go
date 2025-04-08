@@ -9,6 +9,7 @@ func (di *DIContainer) TaskStartup() *tasks.StartupFiberUC {
 	return &tasks.StartupFiberUC{
 		UserQueries:         di.Queries.UserQueries,
 		UserPasswordQueries: di.Queries.UserPasswordQueries,
+		RoleQueries:         di.Queries.RoleQueries,
 		Logger:              logs.NewZeroLogger(di.ZeroLogConf.SetName("tasks.StartupFiberUC")),
 	}
 }
