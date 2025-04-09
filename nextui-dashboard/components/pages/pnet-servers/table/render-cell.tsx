@@ -1,13 +1,14 @@
 import React from 'react';
-import { EditIcon } from '../../../icons/table/edit-icon';
-import { models_PNETServerListItem } from '@/helpers/api';
-import { Link } from 'react-router-dom';
-import { RoutesLocation } from '@/components/routes';
 import { Chip } from '@heroui/react';
 import dayjs from 'dayjs';
+import { PnetServerItem } from '@/helpers/queries/pnet-server/model';
+import { RolesChip } from '@/components/base-forms/roles';
+import { Link } from 'react-router-dom';
+import { RoutesLocation } from '@/components/routes';
+import { EditIcon } from '@/components/icons/table/edit-icon';
 
 interface Props {
-  item: models_PNETServerListItem;
+  item: PnetServerItem;
   columnKey: string | React.Key;
 }
 
@@ -50,16 +51,20 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
     case 'indicator':
       return (
         <div>
-          <div>
-            <span>
-              {ColumnIndicator.UnitRate}: {item.unit_rate}%
-            </span>
-          </div>
-          <div>
-            <span>
-              {ColumnIndicator.LastCountUsers}: {item.last_count_users}
-            </span>
-          </div>
+          {item.type === 'pnet' && (
+            <>
+              <div>
+                <span>
+                  {ColumnIndicator.UnitRate}: {item.unit_rate}%
+                </span>
+              </div>
+              <div>
+                <span>
+                  {ColumnIndicator.LastCountUsers}: {item.last_count_users}
+                </span>
+              </div>
+            </>
+          )}
         </div>
       );
     case 'status':
@@ -91,6 +96,12 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
               </div>
             </>
           )}
+        </div>
+      );
+    case 'role':
+      return (
+        <div className='flex items-center gap-4'>
+          <RolesChip roles={item.roles} maxRoles={3} />
         </div>
       );
     case 'actions':

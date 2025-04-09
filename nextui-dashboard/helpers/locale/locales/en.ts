@@ -109,11 +109,12 @@ const en = {
         { name: 'NAME', uid: 'name' },
         { name: 'INDICATORS', uid: 'indicator' },
         { name: 'STATUS', uid: 'status' },
+        { name: 'ROLES', uid: 'role' },
         { name: 'ACTIONS', uid: 'actions' }
       ],
       ColumnIndicator: {
         UnitRate: 'Distribution',
-        LastCountUsers: 'Users'
+        LastCountUsers: 'Labs'
       },
       ColumnStatus: {
         DisconnectDistribution: 'Disconnected from traffic',
@@ -269,7 +270,7 @@ const en = {
       StatusValueAll: 'All',
       OrderBy: 'Sort',
       OrderByValueUnitRate: '% rate.',
-      OrderByValueLastCountUsers: 'count users',
+      OrderByValueLastCountUsers: 'count lab',
       OrderByValueCreatedAt: 'date'
     }
   },
@@ -354,6 +355,11 @@ const en = {
     FieldOldPassword: 'Current password',
     FieldNewPassword: 'New password',
     FieldAgainPassword: 'New password again'
+  },
+  RoleBasedAccess: {
+    Title: 'Forbidden',
+    Description: 'Sorry, access to view this page is denied with your role',
+    Button: 'Go back'
   }
 };
 export default en;

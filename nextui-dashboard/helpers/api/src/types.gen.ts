@@ -704,8 +704,13 @@ export type usecases_PNETServerListInputDTO = {
   types?: Array<string>;
 };
 
+export type usecases_PNETServerListModel = {
+  model: models_PNETServerListItem;
+  roles?: Array<number>;
+};
+
 export type usecases_PNETServerListOutputDTO = {
-  model: Array<models_PNETServerListItem>;
+  model: Array<usecases_PNETServerListModel>;
   total_count: number;
 };
 

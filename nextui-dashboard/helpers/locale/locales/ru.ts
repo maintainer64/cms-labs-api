@@ -109,11 +109,12 @@ const ru = {
         { name: 'НАЗВАНИЕ', uid: 'name' },
         { name: 'ПОКАЗАТЕЛИ', uid: 'indicator' },
         { name: 'СТАТУС', uid: 'status' },
+        { name: 'РОЛИ', uid: 'role' },
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ],
       ColumnIndicator: {
         UnitRate: 'Распределение',
-        LastCountUsers: 'Пользователей'
+        LastCountUsers: 'Лаб.'
       },
       ColumnStatus: {
         DisconnectDistribution: 'Отключен от трафика',
@@ -270,7 +271,7 @@ const ru = {
       StatusValueAll: 'Все',
       OrderBy: 'Сортировка',
       OrderByValueUnitRate: '% распр.',
-      OrderByValueLastCountUsers: 'кол-во польз.',
+      OrderByValueLastCountUsers: 'кол-во лаб.',
       OrderByValueCreatedAt: 'дата'
     }
   },
@@ -355,6 +356,11 @@ const ru = {
     FieldOldPassword: 'Текущий пароль',
     FieldNewPassword: 'Новый пароль',
     FieldAgainPassword: 'Подтверждение нового пароля'
+  },
+  RoleBasedAccess: {
+    Title: 'Доступ запрещен',
+    Description: 'Извините, доступ для просмотра этой страницы запрещен с вашей ролью',
+    Button: 'Вернуться назад'
   }
 };
 export default ru;

@@ -7,6 +7,8 @@ import { CrumbsLayout } from '@/components/layout/crumbs';
 import { useParams } from 'react-router-dom';
 import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
 import { PnetServersEditForm } from '@/components/pages/pnet-servers/edit/form';
+import { UserRoleBase } from '@/helpers/queries/sso/auth';
+import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
 
 export const PnetFormsEdit = () => {
   const { id } = useParams();
@@ -36,7 +38,9 @@ export const PnetFormsEdit = () => {
   return (
     <CrumbsLayout name={PnetServersTable.Title} crumbs={crumbs}>
       <div className='max-w-[95rem] mx-auto w-full'>
-        <PnetServersEditForm id={parseInt(id ?? '', 10)} />
+        <RoleBasedAccess allowedRoles={[UserRoleBase.Admin]}>
+          <PnetServersEditForm id={parseInt(id ?? '', 10)} />
+        </RoleBasedAccess>
       </div>
     </CrumbsLayout>
   );

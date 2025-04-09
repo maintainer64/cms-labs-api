@@ -48,7 +48,7 @@ func MysqlConnection(l *zerolog.Logger) (*gorm.DB, error) {
 				},
 				logger.Config{
 					SlowThreshold:             200 * time.Millisecond,
-					LogLevel:                  logger.Info,
+					LogLevel:                  logger.Warn,
 					IgnoreRecordNotFoundError: false,
 					Colorful:                  false,
 				}),

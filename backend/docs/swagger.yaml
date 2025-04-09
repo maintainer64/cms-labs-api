@@ -1250,11 +1250,22 @@ definitions:
           type: string
         type: array
     type: object
+  usecases.PNETServerListModel:
+    properties:
+      model:
+        $ref: '#/definitions/models.PNETServerListItem'
+      roles:
+        items:
+          type: integer
+        type: array
+    required:
+    - model
+    type: object
   usecases.PNETServerListOutputDTO:
     properties:
       model:
         items:
-          $ref: '#/definitions/models.PNETServerListItem'
+          $ref: '#/definitions/usecases.PNETServerListModel'
         type: array
       total_count:
         type: integer

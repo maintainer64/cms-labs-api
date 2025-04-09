@@ -22,6 +22,7 @@ func (di *DIContainer) PNETServerGetUC() *usecases.PNETServerGetUC {
 func (di *DIContainer) PNETServerListUC() *usecases.PNETServerListUC {
 	return &usecases.PNETServerListUC{
 		PNETServerQueries: di.Queries.PNETServerQueries,
+		RoleQueries:       di.Queries.RoleQueries,
 	}
 }
 

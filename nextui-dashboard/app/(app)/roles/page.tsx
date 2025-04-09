@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from '@/components/layout/layout';
 import { RolesList } from '@/components/pages/roles';
-import { PnetFormsEdit } from '@/components/pages/roles/edit/pnet-forms-edit';
+import { RolesFormsEdit } from '@/components/pages/roles/edit/role-forms-edit';
 
 export const RolesListPage = () => {
   return (
@@ -14,7 +14,7 @@ export const RolesListPage = () => {
 export const RolesPageEdit = () => {
   return (
     <Layout>
-      <PnetFormsEdit />
+      <RolesFormsEdit />
     </Layout>
   );
 };

@@ -3724,6 +3724,23 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.PNETServerListModel": {
+            "type": "object",
+            "required": [
+                "model"
+            ],
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.PNETServerListItem"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "usecases.PNETServerListOutputDTO": {
             "type": "object",
             "required": [
@@ -3734,7 +3751,7 @@ const docTemplate = `{
                 "model": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.PNETServerListItem"
+                        "$ref": "#/definitions/usecases.PNETServerListModel"
                     }
                 },
                 "total_count": {

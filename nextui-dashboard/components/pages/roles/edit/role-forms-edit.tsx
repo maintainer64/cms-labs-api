@@ -8,8 +8,10 @@ import { useParams } from 'react-router-dom';
 import { RolesEditForm } from '@/components/pages/roles/edit/form';
 import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
 import { RolesIcon } from '@/components/icons/breadcrumb/roles-icon';
+import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
+import { UserRoleBase } from '@/helpers/queries/sso/auth';
 
-export const PnetFormsEdit = () => {
+export const RolesFormsEdit = () => {
   const { id } = useParams();
   const { locale } = useLanguageBrowser();
   const {
@@ -42,7 +44,9 @@ export const PnetFormsEdit = () => {
   return (
     <CrumbsLayout name={RoleTable.Title} crumbs={crumbs}>
       <div className='max-w-[95rem] mx-auto w-full'>
-        <RolesEditForm id={parseInt(id ?? '', 10)} />
+        <RoleBasedAccess allowedRoles={[UserRoleBase.Admin]}>
+          <RolesEditForm id={parseInt(id ?? '', 10)} />
+        </RoleBasedAccess>
       </div>
     </CrumbsLayout>
   );
