@@ -6,7 +6,7 @@ import "time"
 type LTIAttemptBase struct {
 	AttemptID    string    `gorm:"type:varchar(255)" json:"attempt_id" validate:"required"`
 	UserID       uint      `gorm:"type:int" json:"user_id"`
-	PNETServerID uint      `gorm:"type:int" json:"pnet_server_id"`
+	PNETServerID *uint     `gorm:"type:int" json:"pnet_server_id"`
 	LTIRoutingID uint      `gorm:"type:int" json:"lti_routing_id"`
 	ExpiredAt    time.Time `gorm:"type:datetime(3)" json:"expired_at" validate:"required"`
 }
