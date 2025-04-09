@@ -32,7 +32,7 @@ export const RolesList = () => {
     {
       icon: <RolesIcon />,
       name: locale.Sidebar.Roles,
-      href: RoutesLocation.accounts()
+      href: RoutesLocation.roles()
     },
     {
       icon: undefined,
