@@ -26,12 +26,12 @@ export const CardPnetServers = () => {
   const chartData: Props = {
     type: 'pie',
     series: rows?.map((server) => {
-      if (orderBy === 'lastCountUsers') return server.last_count_users || 0;
-      return server.unit_rate || 0;
+      if (orderBy === 'lastCountUsers') return server.model.last_count_users || 0;
+      return server.model.unit_rate || 0;
     }),
     options: {
       labels: rows?.map((server) => {
-        return server.name || `#${server.id}`;
+        return server.model.name || `#${server.model.id}`;
       })
     }
   };

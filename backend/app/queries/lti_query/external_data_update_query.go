@@ -56,7 +56,7 @@ func (q *ExternalDataUpdateQuery) UpdateByLaunchData(
 	setRoles := make([]uint, 0)
 	// Delete student, instructor role from userRoles
 	for _, userRole := range userRoles {
-		if userRole.Code == models.UsersRoleStudent || userRole.Code == models.UsersRoleAdmin {
+		if userRole.Code == models.UsersRoleStudent || userRole.Code == models.UsersRoleInstructor {
 			continue
 		}
 		setRoles = append(setRoles, userRole.ID)

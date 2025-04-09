@@ -167,7 +167,7 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 		_ = json.Unmarshal([]byte(body), &bodyModel)
 		ids := make([]uint, 0)
 		for _, model := range bodyModel.Result.Model {
-			ids = append(ids, model.ID)
+			ids = append(ids, model.Model.ID)
 		}
 		assert.Equal(t, statusCode, 200, test.description)
 		assert.Equal(t, test.ids, ids, test.description)

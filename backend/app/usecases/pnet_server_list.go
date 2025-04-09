@@ -27,6 +27,9 @@ type PNETServerListResponse = response.Response[PNETServerListOutputDTO]
 
 func (u *PNETServerListUC) Execute(dto PNETServerListInputDTO) (PNETServerListOutputDTO, error) {
 	entities, count, err := u.PNETServerQueries.List(dto)
+	if err != nil {
+		return PNETServerListOutputDTO{}, err
+	}
 	serverIDS := make([]uint, 0)
 	for _, entity := range entities {
 		serverIDS = append(serverIDS, entity.ID)

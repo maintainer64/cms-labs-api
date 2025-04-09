@@ -99,7 +99,7 @@ func TestRoleUpsertUnauthorized(t *testing.T) {
 		Code: "test-role",
 	}
 
-	expectedCode := fiber.StatusUnauthorized
+	expectedCode := fiber.StatusForbidden
 	statusCode, body := f.Request(&FiberTestHttpRequest{
 		Method:        "POST",
 		Route:         "/api/v1/role/upsert",
@@ -200,7 +200,7 @@ func TestRoleDeleteUnauthorized(t *testing.T) {
 		ID: role.ID,
 	}
 
-	expectedCode := fiber.StatusUnauthorized
+	expectedCode := fiber.StatusForbidden
 	statusCode, body := f.Request(&FiberTestHttpRequest{
 		Method:        "POST",
 		Route:         "/api/v1/role/delete",
