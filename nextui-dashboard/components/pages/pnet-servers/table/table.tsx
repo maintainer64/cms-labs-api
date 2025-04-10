@@ -4,12 +4,13 @@ import { RenderCellWithLocale } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
 import { models_PNETServerListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
+import { PnetServerItem } from '@/helpers/queries/pnet-server/model';
 
 interface PnetServerTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: models_PNETServerListItem[];
+  rows?: PnetServerItem[];
 }
 
 export const PnetServerTableWrapper = ({ rows, isLoading, loadMore }: PnetServerTableWrapperProps) => {

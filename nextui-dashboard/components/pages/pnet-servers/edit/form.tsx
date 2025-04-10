@@ -2,7 +2,6 @@
 import React from 'react';
 import { addToast, Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
 import { Formik } from 'formik';
-import { models_PNETServer } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
@@ -13,12 +12,14 @@ import { usePnetServerByID } from '@/helpers/queries/pnet-server/get';
 import { usePnetServerDelete } from '@/helpers/queries/pnet-server/delete';
 import { usePnetServerUpsert } from '@/helpers/queries/pnet-server/upsert';
 import { PasswordInput } from '@/components/base-forms/password';
+import { MapServerItem, PnetServerItem } from '@/helpers/queries/pnet-server/model';
+import { RolesSelector } from '@/components/base-forms/roles';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_PNETServer = {
+const defaultValues: PnetServerItem = {
   client_id: '',
   type: 'pnet',
   created_at: '',
@@ -31,7 +32,8 @@ const defaultValues: models_PNETServer = {
   token: '',
   unit_rate: 0,
   updated_at: '',
-  url: ''
+  url: '',
+  roles: []
 };
 
 export const PnetServersEditForm = ({ id }: EditFormProps) => {
@@ -40,7 +42,7 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
   } = useLanguageBrowser();
   const navigate = useNavigate();
   const response = usePnetServerByID(id);
-  const initialValues = response.data?.result?.model ?? defaultValues;
+  const initialValues = MapServerItem(response.data?.result?.model, response.data?.result?.roles) ?? defaultValues;
   const { mutate } = usePnetServerUpsert({
     onSuccess: (data, { formikHelpers }) => {
       navigate(RoutesLocation.pnetServersEdit(data.result?.id?.toString() || ''), { replace: true });
@@ -119,6 +121,12 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
               type='text'
               value={values.client_id ?? ''}
               onChange={handleChange('client_id')}
+            />
+            <RolesSelector
+              label={PnetServers.FieldAllowedRoles}
+              description={PnetServers.FieldAllowedRolesDescription}
+              selectedKeys={values.roles ?? []}
+              onSelectionChange={(keys) => setFieldValue('roles', Array.from(keys))}
             />
             <Select
               variant='bordered'

@@ -42,9 +42,14 @@ const (
 	SSOAuthorizeResponseType = "code"
 )
 
+var (
+	SSOAuthorizeUCRoles = errors.New("You cannot use SSO with this role")
+)
+
 type SSOAuthorizeUC struct {
 	TokenAttemptQueries *queries.TokenAttemptQueries
 	PNETServerQueries   *queries.PNETServerQueries
+	RoleQueries         *queries.RoleQueries
 	*zerolog.Logger
 }
 
@@ -72,6 +77,10 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 		u.Logger.Info().Msg(fmt.Sprintf("invalid redirect_uri sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
 		return nil, errors.New("invalid redirect_uri")
 	}
+	err = u.validateRoles(server.ID, inputDTO.UserID)
+	if err != nil {
+		return nil, err
+	}
 	entityCreate := &models.TokenAttempt{}
 	entityCreate.UserID = inputDTO.UserID
 	entityCreate.ServerID = server.ID
@@ -96,6 +105,37 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 		Extra:       inputDTO.Extra,
 	}, nil
 
+}
+
+func (u *SSOAuthorizeUC) validateRoles(serverID uint, userID uint) error {
+	serverRolesMap, err := u.RoleQueries.GetByRelationServerIds([]uint{serverID})
+	if err != nil {
+		return err
+	}
+	serverRoles, ok := serverRolesMap[serverID]
+	if !ok {
+		u.Logger.Info().Msg(fmt.Sprintf("server sso without whitelist roles serverID %d", serverID))
+		return nil
+	}
+	userRolesMap, err := u.RoleQueries.GetByRelationUsersIds([]uint{userID})
+	if err != nil {
+		return err
+	}
+	userRoles, ok := userRolesMap[userID]
+	if !ok {
+		u.Logger.Info().Msg(fmt.Sprintf("client without roles userID %d", userID))
+		return SSOAuthorizeUCRoles
+	}
+	for _, serverRoleId := range serverRoles {
+		for _, userRoleId := range userRoles {
+			if userRoleId == serverRoleId {
+				u.Logger.Info().Msg(fmt.Sprintf("user and server roles match roleID: %d", userRoleId))
+				return nil
+			}
+		}
+	}
+	u.Logger.Info().Msg(fmt.Sprintf("userID: %d and server roles not match", userID))
+	return SSOAuthorizeUCRoles
 }
 
 func (u *SSOAuthorizeUC) validate(inputDTO SSOAuthorizeInputDTO) error {

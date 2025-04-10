@@ -1,13 +1,12 @@
-import { Chip } from '@heroui/react';
 import React from 'react';
 import { EditIcon } from '../../../icons/table/edit-icon';
-import { models_UserListItem } from '@/helpers/api';
-import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
+import { RolesChip } from '@/components/base-forms/roles';
+import { UserItem } from '@/helpers/queries/users/model';
 
 interface Props {
-  item: models_UserListItem;
+  item: UserItem;
   columnKey: string | React.Key;
 }
 
@@ -34,18 +33,13 @@ export const RenderCell = ({ item, columnKey }: Props) => {
       );
     case 'role':
       return (
-        <div>
-          <div>
-            <span>{item.user_role}</span>
-          </div>
-          <div>
-            <span>{item.group_name}</span>
-          </div>
+        <div className='flex items-center gap-4'>
+          <RolesChip roles={item.roles} maxRoles={3} />
         </div>
       );
     case 'actions':
       return (
-        <div className='flex items-center gap-4 '>
+        <div className='flex items-center gap-4'>
           <div>
             <Link to={RoutesLocation.accountsEdit(item.id?.toString())}>
               <EditIcon size={20} fill='#979797' />

@@ -1,8 +1,7 @@
 'use client';
 import React from 'react';
-import { addToast, Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
+import { addToast, Button, Checkbox, Input } from '@heroui/react';
 import { Formik } from 'formik';
-import { models_User } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useUserUpsert } from '@/helpers/queries/users/upsert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,12 +9,14 @@ import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { useUserByID } from '@/helpers/queries/users/get';
 import { Loading } from '@/components/scroll/loader';
+import { RolesSelector } from '@/components/base-forms/roles';
+import { MapUserItem, UserItem } from '@/helpers/queries/users/model';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_User = {
+const defaultValues: UserItem = {
   created_at: '',
   deleted_at: '',
   email: '',
@@ -25,19 +26,7 @@ const defaultValues: models_User = {
   lti_user_id: '',
   name: '',
   updated_at: '',
-  user_role: 'student'
-};
-
-export const UserRoles = () => {
-  const {
-    locale: { UserForm }
-  } = useLanguageBrowser();
-  return [
-    { key: 'student', label: UserForm.FieldUserRoleStudent },
-    { key: 'instructor', label: UserForm.FieldUserRoleInstructor },
-    { key: 'assistant', label: UserForm.FieldUserRoleAssistant },
-    { key: 'admin', label: UserForm.FieldUserRoleAdmin }
-  ];
+  roles: []
 };
 
 export const AccountsEditForm = ({ id }: EditFormProps) => {
@@ -45,9 +34,9 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
     locale: { UserForm, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const response = useUserByID(id);
-  const roles = UserRoles();
-  const initialValues = response.data?.result?.model ?? defaultValues;
+  const queryUser = useUserByID(id);
+  const initialValues = MapUserItem(queryUser.data?.result?.model, queryUser.data?.result?.roles) ?? defaultValues;
+
   const { mutate } = useUserUpsert({
     onSuccess: (data, { formikHelpers }) => {
       navigate(RoutesLocation.accountsEdit(data.result?.id?.toString() || ''), { replace: true });
@@ -64,7 +53,7 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  if (response.isLoading) return <Loading size='md' />;
+  if (queryUser.isLoading) return <Loading size='md' />;
   return (
     <Formik
       initialValues={initialValues}
@@ -97,16 +86,11 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
               value={values.email ?? ''}
               onChange={handleChange('email')}
             />
-            <Select
-              variant='bordered'
+            <RolesSelector
               label={UserForm.FieldUserRole}
-              selectedKeys={[values.user_role ?? '']}
-              onSelectionChange={(keys) => setFieldValue('user_role', keys.currentKey || 'student')}
-            >
-              {roles.map((role) => (
-                <SelectItem key={role.key}>{role.label}</SelectItem>
-              ))}
-            </Select>
+              selectedKeys={values.roles ?? []}
+              onSelectionChange={(keys) => setFieldValue('roles', Array.from(keys))}
+            />
             <Input
               variant='bordered'
               label={UserForm.FieldGroupName}

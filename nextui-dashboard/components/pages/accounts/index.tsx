@@ -9,12 +9,13 @@ import { CrumbsLayout } from '@/components/layout/crumbs';
 import SearchInput from '@/components/sidebar/search-input';
 import { Link } from 'react-router-dom';
 import { useUsersList } from '@/helpers/queries/users/get';
+import { MapUserItem } from '@/helpers/queries/users/model';
 
 export const Accounts = () => {
   const { locale } = useLanguageBrowser();
   const {
     locale: {
-      Tables: { UsersTable }
+      Tables: { UsersTable, RoleTable }
     }
   } = useLanguageBrowser();
   const crumbs = [
@@ -36,7 +37,9 @@ export const Accounts = () => {
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
   const response = useUsersList({ limit: 100, search: searchTerm });
-  const users = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
+  const users =
+    response?.data?.pages.flatMap((p) => p.result?.model.map((item) => MapUserItem(item.model, item.roles)) ?? []) ||
+    [];
   const totalCount = response.data?.pages[0].result?.total_count ?? 0;
   return (
     <CrumbsLayout name={`${UsersTable.Title} (${totalCount})`} crumbs={crumbs}>
@@ -44,6 +47,9 @@ export const Accounts = () => {
         <div className='flex justify-between flex-wrap gap-4 items-center'>
           <div className='flex items-center gap-3 flex-nowrap w-full'>
             <SearchInput placeholder={UsersTable.SearchBar} setValue={setSearchTerm} />
+            <Link to={RoutesLocation.roles()}>
+              <Button color='default'>{RoleTable.Title}</Button>
+            </Link>
             <Link to={RoutesLocation.accountsCreate()}>
               <Button color='primary'>{UsersTable.ButtonAdd}</Button>
             </Link>

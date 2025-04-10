@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import { postV1PnetServerGet, postV1PnetServerList, usecases_PNETServerListInputDTO } from '@/helpers/api';
 import { InputProps } from '@heroui/input/dist/input';
+import { MapServerItem } from '@/helpers/queries/pnet-server/model';
 
 export const usePnetServerList = (params?: usecases_PNETServerListInputDTO) => {
   return useInfiniteQuery({
@@ -63,7 +64,7 @@ export const usePnetServerAutocompleteData = (search: string, props: InputProps)
     ]
   });
 
-  const entitiesSearch = results?.[0]?.data?.result?.model || [];
+  const entitiesSearch = (results?.[0]?.data?.result?.model || []).map((item) => MapServerItem(item.model, item.roles));
   const entityCurrent = results?.[1]?.data?.result?.model;
   const entities =
     entityCurrent && !entitiesSearch.find((entity) => entity.id === entityCurrent.id)

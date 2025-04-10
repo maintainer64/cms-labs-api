@@ -2,13 +2,14 @@ import { useMutation } from '@tanstack/react-query';
 import { models_PNETServer, postV1PnetServerUpsert, PostV1PnetServerUpsertResponse } from '@/helpers/api';
 import { TFormikData, TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '../base';
+import { PnetServerItem } from '@/helpers/queries/pnet-server/model';
 
 export const usePnetServerUpsert = (
-  options: TMutationCustomOptions<PostV1PnetServerUpsertResponse, unknown, TFormikData<models_PNETServer>> = {}
+  options: TMutationCustomOptions<PostV1PnetServerUpsertResponse, unknown, TFormikData<PnetServerItem>> = {}
 ) => {
-  return useMutation<PostV1PnetServerUpsertResponse, unknown, TFormikData<models_PNETServer>>({
+  return useMutation<PostV1PnetServerUpsertResponse, unknown, TFormikData<PnetServerItem>>({
     // @ts-expect-error: return nullable value
-    mutationFn: ({ values }: TFormikData<models_PNETServer>) => {
+    mutationFn: ({ values }: TFormikData<PnetServerItem>) => {
       if (values === null) return null;
       return postV1PnetServerUpsert({
         form: {
@@ -20,7 +21,8 @@ export const usePnetServerUpsert = (
           unit_rate: values.unit_rate,
           url: values.url || '',
           type: values.type || 'pnet',
-          client_id: values.client_id || ''
+          client_id: values.client_id || '',
+          roles: values.roles?.map((roleId) => parseInt(roleId.toString()))
         }
       });
     },

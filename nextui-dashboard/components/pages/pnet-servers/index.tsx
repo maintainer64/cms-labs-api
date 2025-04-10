@@ -9,6 +9,7 @@ import SearchInput from '@/components/sidebar/search-input';
 import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
 import { usePnetServerList } from '@/helpers/queries/pnet-server/get';
 import { PnetServerTableWrapper } from '@/components/pages/pnet-servers/table/table';
+import { MapServerItem } from '@/helpers/queries/pnet-server/model';
 
 export const PnetServersList = () => {
   const { locale } = useLanguageBrowser();
@@ -36,7 +37,9 @@ export const PnetServersList = () => {
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
   const response = usePnetServerList({ limit: 100, search: searchTerm });
-  const rows = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
+  const rows =
+    response?.data?.pages.flatMap((p) => p.result?.model?.map((item) => MapServerItem(item.model, item.roles)) ?? []) ||
+    [];
   const totalCount = response.data?.pages[0].result?.total_count ?? 0;
   return (
     <CrumbsLayout name={`${PnetServersTable.Title} (${totalCount})`} crumbs={crumbs}>

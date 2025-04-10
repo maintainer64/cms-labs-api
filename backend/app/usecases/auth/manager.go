@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"time"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
@@ -15,6 +16,7 @@ import (
 
 type TokenManager struct {
 	UserQueries         *queries.UserQueries
+	RoleQueries         *queries.RoleQueries
 	PNETServerQueries   *queries.PNETServerQueries
 	UserPasswordQueries *queries.UserPasswordQueries
 	TokenAttemptQueries *queries.TokenAttemptQueries
@@ -84,6 +86,10 @@ func (m *TokenManager) NewJWTByUserId(
 	if serverID != 0 {
 		serverModel, _ = m.PNETServerQueries.Get(serverID)
 	}
+	rolesJWT, err := m.JWTRolesByUserId(userModel.ID)
+	if err != nil {
+		return nil, err
+	}
 	tokens, jti, err := GenerateNewTokens(
 		&cms_client.SSOTokenPublicData{
 			Iss:          issID,
@@ -94,7 +100,7 @@ func (m *TokenManager) NewJWTByUserId(
 			Email:        userModel.Email,
 			Name:         userModel.Name,
 			ServerID:     serverID,
-			Roles:        []string{userModel.UserRole},
+			Roles:        rolesJWT,
 			LastLaunchId: userModel.LastLaunchID,
 		}, attemptState)
 	if err != nil {
@@ -110,6 +116,47 @@ func (m *TokenManager) NewJWTByUserId(
 		return nil, err
 	}
 	return tokens, nil
+}
+
+func (m *TokenManager) JWTRolesByUserId(
+	userId uint,
+) ([]string, error) {
+	rolesJWT := make([]string, 0)
+	var isAdmin, isStudent, isInstructor bool
+	roles, err := m.RoleQueries.GetRolesByUserId(userId)
+	if err != nil {
+		return rolesJWT, err
+	}
+	// Delete all default roles
+	for _, role := range roles {
+		if role.Code == models.UsersRoleStudent {
+			isStudent = true
+			continue
+		}
+		if role.Code == models.UsersRoleAdmin {
+			isAdmin = true
+			continue
+		}
+		if role.Code == models.UsersRoleInstructor {
+			isInstructor = true
+			continue
+		}
+		rolesJWT = append(rolesJWT, role.Code)
+	}
+	// The administrator applies only if he is a instructor
+	if isAdmin && isInstructor {
+		rolesJWT = slices.Insert(rolesJWT, 0, models.UsersRoleAdmin)
+		return rolesJWT, nil
+	}
+	if isInstructor {
+		rolesJWT = slices.Insert(rolesJWT, 0, models.UsersRoleInstructor)
+		return rolesJWT, nil
+	}
+	if isStudent {
+		rolesJWT = slices.Insert(rolesJWT, 0, models.UsersRoleStudent)
+		return rolesJWT, nil
+	}
+	return rolesJWT, nil
 }
 
 func ExpiresRefreshCookie() time.Time {
