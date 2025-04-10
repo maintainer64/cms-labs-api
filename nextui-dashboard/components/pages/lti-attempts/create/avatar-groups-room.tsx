@@ -10,8 +10,6 @@ interface AvatarGroupsRoomProps {
 
 export const AvatarGroupsRoom = ({ members, collaboration }: AvatarGroupsRoomProps) => {
   const emptyAvatar = new Array((collaboration || 0) - (members?.length || 0)).fill(undefined);
-  emptyAvatar.map(() => console.log('ddd'));
-  console.log();
   return (
     <div className='mx-4'>
       <AvatarGroup isBordered>

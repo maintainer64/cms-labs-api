@@ -9,6 +9,7 @@ import (
 func (di *DIContainer) authTokenManager(db *database.Queries) *auth.TokenManager {
 	return &auth.TokenManager{
 		UserQueries:         db.UserQueries,
+		RoleQueries:         db.RoleQueries,
 		PNETServerQueries:   db.PNETServerQueries,
 		UserPasswordQueries: db.UserPasswordQueries,
 		TokenAttemptQueries: db.TokenAttemptQueries,
@@ -39,6 +40,7 @@ func (di *DIContainer) SSOAuthorizeUC() *auth.SSOAuthorizeUC {
 	return &auth.SSOAuthorizeUC{
 		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
 		PNETServerQueries:   di.Queries.PNETServerQueries,
+		RoleQueries:         di.Queries.RoleQueries,
 		Logger:              logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.SSOAuthorizeUC")),
 	}
 }

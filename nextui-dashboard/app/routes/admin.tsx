@@ -15,6 +15,7 @@ import {
   LTIAttemptsPageUser
 } from '@/app/(app)/lti-attempts/page';
 import { ServiceCardsPage, ServiceCardsPageEdit } from '@/app/(app)/service-cards/page';
+import { RolesListPage, RolesPageEdit } from '@/app/(app)/roles/page';
 
 const RoutesAdmin = () => {
   return (
@@ -23,6 +24,9 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.accountsEdit()} element={<AccountsPageEdit />} />
       <Route path={RoutesLocation.accountsCreate()} element={<AccountsPageEdit />} />
       <Route path={RoutesLocation.profileChangePassword()} element={<ProfilePagePasswordChange />} />
+      <Route path={RoutesLocation.roles()} element={<RolesListPage />} />
+      <Route path={RoutesLocation.rolesEdit()} element={<RolesPageEdit />} />
+      <Route path={RoutesLocation.rolesCreate()} element={<RolesPageEdit />} />
       <Route path={RoutesLocation.ltiForms()} element={<LTIFormsPage />} />
       <Route path={RoutesLocation.ltiFormsEdit()} element={<LTIFormsPageEdit />} />
       <Route path={RoutesLocation.ltiFormsCreate()} element={<LTIFormsPageEdit />} />

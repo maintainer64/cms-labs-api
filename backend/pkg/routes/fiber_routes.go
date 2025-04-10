@@ -11,6 +11,7 @@ func FiberRoutes(app *fiber.App) {
 	V1SSORoute(app)
 	V1UNLFileRoutes(app)
 	V1UserRoutes(app)
+	V1RoleRoutes(app)
 	V1LTIFormRoutes(app)
 	V1LTIAttemptRoutes(app)
 	V1PNETServerRoutes(app)

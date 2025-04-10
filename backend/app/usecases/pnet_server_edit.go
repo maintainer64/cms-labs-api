@@ -8,6 +8,7 @@ import (
 
 type PNETServerEditUC struct {
 	PNETServerQueries *queries.PNETServerQueries
+	RoleQueries       *queries.RoleQueries
 }
 
 type PNETServerEditInputDTO struct {
@@ -20,6 +21,7 @@ type PNETServerEditInputDTO struct {
 	MinutesForDisconnect int    `json:"minutes_for_disconnect"`
 	MaxCountUsersLimit   int    `json:"max_count_users_limit"`
 	UnitRate             int    `json:"unit_rate"`
+	Roles                []uint `json:"roles"`
 }
 
 type PNETServerEditOutputDTO struct {
@@ -40,5 +42,9 @@ func (u *PNETServerEditUC) Execute(dto PNETServerEditInputDTO) (PNETServerEditOu
 	entity.MinutesForDisconnect = dto.MinutesForDisconnect
 	entity.MaxCountUsersLimit = dto.MaxCountUsersLimit
 	err := u.PNETServerQueries.Upsert(entity)
+	if err != nil {
+		return PNETServerEditOutputDTO{}, err
+	}
+	err = u.RoleQueries.SetByServerId(entity.ID, dto.Roles)
 	return PNETServerEditOutputDTO{ID: entity.ID}, err
 }

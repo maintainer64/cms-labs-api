@@ -10,3 +10,9 @@ export const useSSOAuth = (params: auth_SSOAuthorizeInputDTO) => {
     retry: 1
   });
 };
+
+export enum UserRoleBase {
+  Admin = 'admin',
+  Instructor = 'instructor',
+  Student = 'student'
+}

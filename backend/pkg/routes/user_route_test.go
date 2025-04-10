@@ -18,20 +18,35 @@ func TestV1UserCreate(t *testing.T) {
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
-	entityDB.UserRole = models.UsersRoleAdmin
 	f.DB.Create(&entityDB)
+
+	roleStudent := models.Role{}
+	roleStudent.Code = "student" + uuid.New().String()
+	roleStudent.Name = "Student"
+	f.DB.Create(&roleStudent)
+
+	roleAdmin := models.Role{}
+	roleAdmin.Code = "admin" + uuid.New().String()
+	roleAdmin.Name = "Admin"
+	f.DB.Create(&roleAdmin)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = roleStudent.ID
+	roleUser.UserID = &entityDB.ID
+
+	f.DB.Create(&roleUser)
 
 	input := usecases.UserEditInputDTO{
 		ID:        entityDB.ID,
 		Name:      "John Doe",
 		Email:     entityDB.Email,
 		LTIUserID: "lti123",
-		UserRole:  models.UsersRoleStudent,
+		Roles:     []uint{roleAdmin.ID},
 		GroupName: "Group A",
 		IsActive:  true,
 	}
 
-	authHeader := f.AuthorizationUser(entityDB.ID, 0)
+	authHeader := f.AuthorizationUser(0, 0)
 
 	expectedCode := 200
 	statusCode, body := f.Request(&FiberTestHttpRequest{
@@ -53,9 +68,13 @@ func TestV1UserCreate(t *testing.T) {
 	assert.Equal(t, input.Name, entity.Name, description)
 	assert.Equal(t, input.Email, entity.Email, description)
 	assert.Equal(t, input.LTIUserID, entity.LTIUserID, description)
-	assert.Equal(t, input.UserRole, entity.UserRole, description)
 	assert.Equal(t, input.GroupName, entity.GroupName, description)
 	assert.True(t, entity.IsActive(), description)
+
+	var entityRelationRole models.RoleRelation
+	err = f.DB.Where("user_id = ?", entity.ID).Find(&entityRelationRole).Error
+	assert.NoError(t, err, description)
+	assert.Equal(t, entityRelationRole.RoleID, roleAdmin.ID, description)
 }
 
 func TestV1UserCreateUnauthorized(t *testing.T) {
@@ -67,7 +86,6 @@ func TestV1UserCreateUnauthorized(t *testing.T) {
 		Name:      "John Doe",
 		Email:     "john.doe@example.com",
 		LTIUserID: "lti123",
-		UserRole:  "student",
 		GroupName: "Group A",
 		IsActive:  true,
 	}
@@ -89,18 +107,16 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
-	entityDB.UserRole = models.UsersRoleAdmin
 	entityDB.DeletedAt = nil
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(entityDB.ID, 0)
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UserEditInputDTO{
 		ID:        entityDB.ID,
 		Name:      "John Doe",
 		Email:     entityDB.Email,
 		LTIUserID: "lti123",
-		UserRole:  models.UsersRoleStudent,
 		GroupName: "Group A",
 		IsActive:  false,
 	}
@@ -135,11 +151,10 @@ func TestV1UserGetSuccess(t *testing.T) {
 	entityDB.Name = "John Doe"
 	entityDB.GroupName = "Group A"
 	entityDB.LTIUserID = "lti123"
-	entityDB.UserRole = models.UsersRoleAdmin
 	entityDB.DeletedAt = nil
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(entityDB.ID, 0)
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UserGetInputDTO{
 		ID: entityDB.ID,
@@ -159,7 +174,6 @@ func TestV1UserGetSuccess(t *testing.T) {
 	assert.Equal(t, entityDB.ID, bodyModel.Result.Model.ID, description)
 	assert.Equal(t, entityDB.Name, bodyModel.Result.Model.Name, description)
 	assert.Equal(t, entityDB.Email, bodyModel.Result.Model.Email, description)
-	assert.Equal(t, entityDB.UserRole, bodyModel.Result.Model.UserRole, description)
 	assert.Equal(t, entityDB.GroupName, bodyModel.Result.Model.GroupName, description)
 	assert.Equal(t, entityDB.LTIUserID, bodyModel.Result.Model.LTIUserID, description)
 	assert.True(t, bodyModel.Result.Model.IsActive(), description)
@@ -198,7 +212,6 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 	entityDB.Name = "John Doe"
 	entityDB.GroupName = "Group A"
 	entityDB.LTIUserID = "lti123"
-	entityDB.UserRole = models.UsersRoleStudent
 	entityDB.DeletedAt = &deletedAt
 	f.DB.Create(&entityDB)
 
@@ -234,7 +247,6 @@ func TestV1UserListSuccess(t *testing.T) {
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
-	entityDB1.UserRole = models.UsersRoleAdmin
 	entityDB1.GroupName = "Group A"
 	entityDB1.LTIUserID = "lti123"
 	f.DB.Create(&entityDB1)
@@ -242,12 +254,11 @@ func TestV1UserListSuccess(t *testing.T) {
 	entityDB2 := models.User{}
 	entityDB2.Email = uuid.New().String() + "@example.com"
 	entityDB2.Name = "Jane Doe"
-	entityDB2.UserRole = models.UsersRoleInstructor
 	entityDB2.GroupName = "Group B"
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UserListInputDTO{
 		Search: "",
@@ -266,7 +277,7 @@ func TestV1UserListSuccess(t *testing.T) {
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Equal(t, 2, len(bodyModel.Result.Model), description)
+	assert.Equal(t, 3, len(bodyModel.Result.Model), description)
 }
 
 func TestV1UserListFilterBySearch(t *testing.T) {
@@ -280,7 +291,6 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
-	entityDB1.UserRole = models.UsersRoleAdmin
 	entityDB1.GroupName = "Group A"
 	entityDB1.LTIUserID = "lti123"
 	f.DB.Create(&entityDB1)
@@ -288,12 +298,11 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 	entityDB2 := models.User{}
 	entityDB2.Email = uuid.New().String() + "@example.com"
 	entityDB2.Name = "Jane Doe"
-	entityDB2.UserRole = models.UsersRoleInstructor
 	entityDB2.GroupName = "Group B"
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UserListInputDTO{
 		Search: "John",
@@ -313,7 +322,7 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, 1, len(bodyModel.Result.Model), description)
-	assert.Equal(t, entityDB1.Name, bodyModel.Result.Model[0].Name, description)
+	assert.Equal(t, entityDB1.Name, bodyModel.Result.Model[0].Model.Name, description)
 }
 
 func TestV1UserListFilterByIDs(t *testing.T) {
@@ -327,7 +336,6 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
-	entityDB1.UserRole = models.UsersRoleAdmin
 	entityDB1.GroupName = "Group A"
 	entityDB1.LTIUserID = "lti123"
 	f.DB.Create(&entityDB1)
@@ -335,12 +343,11 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 	entityDB2 := models.User{}
 	entityDB2.Email = uuid.New().String() + "@example.com"
 	entityDB2.Name = "Jane Doe"
-	entityDB2.UserRole = models.UsersRoleInstructor
 	entityDB2.GroupName = "Group B"
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UserListInputDTO{
 		Search:  "",
@@ -361,7 +368,7 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, 1, len(bodyModel.Result.Model), description)
-	assert.Equal(t, entityDB1.ID, bodyModel.Result.Model[0].ID, description)
+	assert.Equal(t, entityDB1.ID, bodyModel.Result.Model[0].Model.ID, description)
 }
 
 func TestV1UserListPagination(t *testing.T) {
@@ -375,7 +382,6 @@ func TestV1UserListPagination(t *testing.T) {
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
-	entityDB1.UserRole = models.UsersRoleAdmin
 	entityDB1.GroupName = "Group A"
 	entityDB1.LTIUserID = "lti123"
 	f.DB.Create(&entityDB1)
@@ -383,17 +389,16 @@ func TestV1UserListPagination(t *testing.T) {
 	entityDB2 := models.User{}
 	entityDB2.Email = uuid.New().String() + "@example.com"
 	entityDB2.Name = "Jane Doe"
-	entityDB2.UserRole = models.UsersRoleInstructor
 	entityDB2.GroupName = "Group B"
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(entityDB1.ID, 0)
+	authHeader := f.AuthorizationUser(0, 0)
 
 	input := usecases.UserListInputDTO{
 		Search: "",
 		Limit:  1,
-		Offset: 1,
+		Offset: 2,
 	}
 
 	expectedCode := 200
@@ -408,7 +413,7 @@ func TestV1UserListPagination(t *testing.T) {
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, 1, len(bodyModel.Result.Model), description)
-	assert.Equal(t, entityDB1.ID, bodyModel.Result.Model[0].ID, description)
+	assert.Equal(t, entityDB1.ID, bodyModel.Result.Model[0].Model.ID, description)
 }
 
 func TestV1UserListUnauthorized(t *testing.T) {

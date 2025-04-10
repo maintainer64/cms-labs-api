@@ -27,6 +27,7 @@ const en = {
     Home: 'Home',
     MainMenu: 'Main Menu',
     Users: 'Users',
+    Roles: 'Roles',
     Servers: 'Servers',
     ServiceCards: 'Services',
     LTIIntegrations: 'LTIs',
@@ -60,7 +61,7 @@ const en = {
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'NAME', uid: 'name' },
-        { name: 'ROLE', uid: 'role' },
+        { name: 'ROLES', uid: 'role' },
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
@@ -108,11 +109,12 @@ const en = {
         { name: 'NAME', uid: 'name' },
         { name: 'INDICATORS', uid: 'indicator' },
         { name: 'STATUS', uid: 'status' },
+        { name: 'ROLES', uid: 'role' },
         { name: 'ACTIONS', uid: 'actions' }
       ],
       ColumnIndicator: {
         UnitRate: 'Distribution',
-        LastCountUsers: 'Users'
+        LastCountUsers: 'Labs'
       },
       ColumnStatus: {
         DisconnectDistribution: 'Disconnected from traffic',
@@ -120,6 +122,17 @@ const en = {
         Activated: 'Active',
         Deactivated: 'Deactivated'
       }
+    },
+    RoleTable: {
+      Title: 'Roles',
+      ButtonAdd: 'Create',
+      SearchBar: 'Search All Roles',
+      ButtonEdit: 'Edit',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'NAME', uid: 'name' },
+        { name: 'ACTIONS', uid: 'actions' }
+      ]
     },
     ServiceCardsTable: {
       Title: 'Services',
@@ -148,11 +161,7 @@ const en = {
     FieldID: 'ID',
     FieldName: 'Name',
     FieldEmail: 'Email',
-    FieldUserRole: 'Role',
-    FieldUserRoleStudent: 'Student',
-    FieldUserRoleInstructor: 'Instructor',
-    FieldUserRoleAssistant: 'Assistant',
-    FieldUserRoleAdmin: 'Admin',
+    FieldUserRole: 'Roles',
     FieldGroupName: 'Group',
     FieldExternalLTIID: 'LTI ID',
     FieldIsDeactivated: 'Is deactivated',
@@ -237,6 +246,8 @@ const en = {
     FieldType: 'Server type',
     FieldClientID: 'ClientID',
     FieldClientIDDescription: 'Unique server name for SSO',
+    FieldAllowedRoles: 'Allowed roles',
+    FieldAllowedRolesDescription: 'Only these roles will be able to log in',
     FieldIsActive: 'Active',
     FieldUnitRate: 'Percentage of distribution',
     FieldMinutesForDisconnect: 'Minutes for auto-shutdown',
@@ -259,8 +270,19 @@ const en = {
       StatusValueAll: 'All',
       OrderBy: 'Sort',
       OrderByValueUnitRate: '% rate.',
-      OrderByValueLastCountUsers: 'count users',
+      OrderByValueLastCountUsers: 'count lab',
       OrderByValueCreatedAt: 'date'
+    }
+  },
+  Roles: {
+    FieldID: 'ID',
+    FieldName: 'Name',
+    FieldCode: 'Code',
+    FieldCreatedAt: 'Created at',
+    FieldUpdatedAt: 'Updated at',
+    DeletePopup: {
+      Title: 'Deleting a Role entity',
+      Description: 'This role will be disabled for all users'
     }
   },
   ServiceCards: {
@@ -333,6 +355,11 @@ const en = {
     FieldOldPassword: 'Current password',
     FieldNewPassword: 'New password',
     FieldAgainPassword: 'New password again'
+  },
+  RoleBasedAccess: {
+    Title: 'Forbidden',
+    Description: 'Sorry, access to view this page is denied with your role',
+    Button: 'Go back'
   }
 };
 export default en;

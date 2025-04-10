@@ -9,6 +9,8 @@ import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
 import SearchInput from '@/components/sidebar/search-input';
 import { LTIFormsTableWrapper } from '@/components/pages/lti-forms/table/table';
 import { useLTIFormsList } from '@/helpers/queries/lti-forms/get';
+import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
+import { UserRoleBase } from '@/helpers/queries/sso/auth';
 
 export const LTIFormsList = () => {
   const { locale } = useLanguageBrowser();
@@ -50,11 +52,13 @@ export const LTIFormsList = () => {
           </div>
         </div>
         <div className='max-w-[95rem] mx-auto w-full'>
-          <LTIFormsTableWrapper
-            rows={rows}
-            isLoading={response.isLoading}
-            loadMore={response.fetchNextPage.bind(response.fetchNextPage)}
-          />
+          <RoleBasedAccess allowedRoles={[UserRoleBase.Admin]}>
+            <LTIFormsTableWrapper
+              rows={rows}
+              isLoading={response.isLoading}
+              loadMore={response.fetchNextPage.bind(response.fetchNextPage)}
+            />
+          </RoleBasedAccess>
         </div>
       </>
     </CrumbsLayout>

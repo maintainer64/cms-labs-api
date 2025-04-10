@@ -12,6 +12,7 @@ import (
 
 type UserEditUC struct {
 	UserQueries *queries.UserQueries
+	RoleQueries *queries.RoleQueries
 }
 
 type UserEditInputDTO struct {
@@ -19,7 +20,7 @@ type UserEditInputDTO struct {
 	Name      string `json:"name" validate:"required"`
 	Email     string `json:"email" validate:"required"`
 	LTIUserID string `json:"lti_user_id"`
-	UserRole  string `json:"user_role"`
+	Roles     []uint `json:"roles"`
 	GroupName string `json:"group_name"`
 	IsActive  bool   `json:"is_active"`
 }
@@ -38,10 +39,6 @@ func (u *UserEditUC) Execute(dto UserEditInputDTO) (UserEditOutputDTO, error) {
 	entity.Email = stringsx.Coalesce(dto.Email, userFromDB.Email)
 	entity.Name = stringsx.Coalesce(dto.Name, userFromDB.Name)
 	entity.LTIUserID = stringsx.Coalesce(dto.LTIUserID, userFromDB.LTIUserID)
-	entity.UserRole = stringsx.Coalesce(
-		models.UsersRoleValidate(dto.UserRole),
-		models.UsersRoleValidate(userFromDB.UserRole),
-	)
 	entity.GroupName = stringsx.Coalesce(dto.GroupName, userFromDB.GroupName)
 	entity.DeletedAt = userFromDB.DeletedAt
 	entity.LastLaunchID = userFromDB.LastLaunchID
@@ -52,5 +49,9 @@ func (u *UserEditUC) Execute(dto UserEditInputDTO) (UserEditOutputDTO, error) {
 		entity.DeletedAt = &now
 	}
 	err := u.UserQueries.Upsert(entity)
+	if err != nil {
+		return UserEditOutputDTO{}, err
+	}
+	err = u.RoleQueries.SetByUserId(entity.ID, dto.Roles)
 	return UserEditOutputDTO{ID: entity.ID}, err
 }

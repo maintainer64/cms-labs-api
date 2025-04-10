@@ -28,6 +28,7 @@ type Queries struct {
 	*queries.ServiceCardQueries
 	*queries.TokenAttemptQueries
 	*queries.UNLFileQueries
+	*queries.RoleQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -55,6 +56,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		ServiceCardQueries:    &queries.ServiceCardQueries{DB: db, Logger: l},
 		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db, Logger: l},
 		UNLFileQueries:        &queries.UNLFileQueries{DB: db, Logger: l},
+		RoleQueries:           &queries.RoleQueries{DB: db, Logger: l},
 	}, nil
 }
 

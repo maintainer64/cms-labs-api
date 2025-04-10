@@ -8,6 +8,7 @@ import (
 
 type PNETServerGetUC struct {
 	PNETServerQueries *queries.PNETServerQueries
+	RoleQueries       *queries.RoleQueries
 }
 
 type PNETServerGetInputDTO struct {
@@ -16,13 +17,25 @@ type PNETServerGetInputDTO struct {
 
 type PNETServerGetOutputDTO struct {
 	Model models.PNETServer `json:"model" required:"true"`
+	Roles []uint            `json:"roles"`
 }
 
 type PNETServerGetResponse = response.Response[PNETServerGetOutputDTO]
 
 func (u *PNETServerGetUC) Execute(dto PNETServerGetInputDTO) (PNETServerGetOutputDTO, error) {
 	form, err := u.PNETServerQueries.Get(dto.ID)
-	return PNETServerGetOutputDTO{
+	if err != nil {
+		return PNETServerGetOutputDTO{}, err
+	}
+	result := PNETServerGetOutputDTO{
 		Model: form,
-	}, err
+	}
+	roles, err := u.RoleQueries.GetByRelationServerIds([]uint{dto.ID})
+	if err != nil {
+		return result, err
+	}
+	if val, ok := roles[dto.ID]; ok {
+		result.Roles = val
+	}
+	return result, err
 }

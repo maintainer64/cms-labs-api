@@ -31,7 +31,7 @@ func ExtractTokenMetadata(
 	}
 	if len(roles) != 0 && !hasIntersection(roles, tokenData.Roles) {
 		return nil, utils.FiberValidationException{
-			Status:    fiber.StatusUnauthorized,
+			Status:    fiber.StatusForbidden,
 			Exception: errors.New("User with current role is not allow action"),
 		}
 	}

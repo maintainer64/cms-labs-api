@@ -318,6 +318,14 @@ export type models_PNETServerListItem = {
   url?: string;
 };
 
+export type models_Role = {
+  code?: string;
+  created_at: string;
+  id?: number;
+  name?: string;
+  updated_at: string;
+};
+
 export type models_ServiceCard = {
   created_at: string;
   description: string;
@@ -375,7 +383,6 @@ export type models_User = {
   lti_user_id?: string;
   name?: string;
   updated_at: string;
-  user_role: string;
 };
 
 export type models_UserListItem = {
@@ -387,7 +394,6 @@ export type models_UserListItem = {
   lti_user_id?: string;
   name?: string;
   updated_at: string;
-  user_role: string;
 };
 
 export type queries_RoundQueuePoolPnetListItem = {
@@ -650,6 +656,7 @@ export type usecases_PNETServerEditInputDTO = {
   max_count_users_limit?: number;
   minutes_for_disconnect?: number;
   name: string;
+  roles?: Array<number>;
   type: string;
   unit_rate?: number;
   url: string;
@@ -671,6 +678,7 @@ export type usecases_PNETServerGetInputDTO = {
 
 export type usecases_PNETServerGetOutputDTO = {
   model?: models_PNETServer;
+  roles?: Array<number>;
 };
 
 export type usecases_PNETServerGetResponse = {
@@ -696,8 +704,13 @@ export type usecases_PNETServerListInputDTO = {
   types?: Array<string>;
 };
 
+export type usecases_PNETServerListModel = {
+  model: models_PNETServerListItem;
+  roles?: Array<number>;
+};
+
 export type usecases_PNETServerListOutputDTO = {
-  model: Array<models_PNETServerListItem>;
+  model: Array<usecases_PNETServerListModel>;
   total_count: number;
 };
 
@@ -705,6 +718,41 @@ export type usecases_PNETServerListResponse = {
   error: boolean;
   msg: string;
   result?: usecases_PNETServerListOutputDTO;
+};
+
+export type usecases_RoleDeleteInputDTO = {
+  id: number;
+};
+
+export type usecases_RoleDeleteResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_RoleDeleteInputDTO;
+};
+
+export type usecases_RoleEditInputDTO = {
+  code?: string;
+  id?: number;
+  name?: string;
+};
+
+export type usecases_RoleEditResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_UserEditOutputDTO;
+};
+
+export type usecases_RoleListInputDTO = unknown;
+
+export type usecases_RoleListOutputDTO = {
+  model: Array<models_Role>;
+  total_count: number;
+};
+
+export type usecases_RoleListResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_RoleListOutputDTO;
 };
 
 export type usecases_ServiceCardDeleteInputDTO = {
@@ -806,7 +854,7 @@ export type usecases_UserEditInputDTO = {
   is_active?: boolean;
   lti_user_id?: string;
   name: string;
-  user_role?: string;
+  roles?: Array<number>;
 };
 
 export type usecases_UserEditOutputDTO = {
@@ -825,6 +873,7 @@ export type usecases_UserGetInputDTO = {
 
 export type usecases_UserGetOutputDTO = {
   model?: models_User;
+  roles?: Array<number>;
 };
 
 export type usecases_UserGetResponse = {
@@ -840,8 +889,13 @@ export type usecases_UserListInputDTO = {
   user_ids?: Array<number>;
 };
 
+export type usecases_UserListModel = {
+  model: models_UserListItem;
+  roles?: Array<number>;
+};
+
 export type usecases_UserListOutputDTO = {
-  model: Array<models_UserListItem>;
+  model: Array<usecases_UserListModel>;
   total_count: number;
 };
 
@@ -1022,6 +1076,33 @@ export type PostV1PnetServerUpsertData = {
 };
 
 export type PostV1PnetServerUpsertResponse = usecases_PNETServerEditResponse;
+
+export type PostV1RoleDeleteData = {
+  /**
+   * pnet_server id
+   */
+  form: usecases_RoleDeleteInputDTO;
+};
+
+export type PostV1RoleDeleteResponse = usecases_RoleDeleteResponse;
+
+export type PostV1RoleListData = {
+  /**
+   * user list info
+   */
+  form: usecases_RoleListInputDTO;
+};
+
+export type PostV1RoleListResponse = usecases_RoleListResponse;
+
+export type PostV1RoleUpsertData = {
+  /**
+   * user form info
+   */
+  form: usecases_RoleEditInputDTO;
+};
+
+export type PostV1RoleUpsertResponse = usecases_RoleEditResponse;
 
 export type PostV1ServiceCardDeleteData = {
   /**
