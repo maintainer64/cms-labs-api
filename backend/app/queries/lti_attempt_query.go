@@ -150,6 +150,75 @@ func (q *LTIAttemptQueries) listFilter(userIds []uint, tx *gorm.DB) *gorm.DB {
 	return tx
 }
 
+// AllocatedServerLock получает advisory lock по roomID или attemptID и возвращает функцию для освобождения
+func (q *LTIAttemptQueries) AllocatedServerLock(attemptID uint, roomID *uint) (func(), error) {
+	// Определяем ID для блокировки
+	var lockID uint64
+	if roomID != nil && *roomID != 0 {
+		lockID = uint64(*roomID)
+	} else {
+		lockID = uint64(attemptID)
+	}
+
+	// Пытаемся получить блокировку с таймаутом 10 секунд
+	var result int
+	err := q.Raw("SELECT GET_LOCK(?, 10)", lockID).Scan(&result).Error
+	if err != nil {
+		q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries: failed to acquire advisory lock: %v", err))
+		return nil, fmt.Errorf("failed to acquire advisory lock: %v", err)
+	}
+	if result != 1 {
+		q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries: could not acquire advisory lock for ID %d", lockID))
+		return nil, fmt.Errorf("could not acquire advisory lock for ID %d", lockID)
+	}
+
+	// Функция для освобождения блокировки
+	unlockFn := func() {
+		q.Exec("SELECT RELEASE_LOCK(?)", lockID)
+	}
+
+	return unlockFn, nil
+}
+
+// AllocatedServer закрепляет сервер за attempt(ами)
+// Если roomID != nil и != 0 - обновляет все attempts с этим roomID
+// Иначе обновляет только указанный attempt
+func (q *LTIAttemptQueries) AllocatedServer(attemptID uint, roomID *uint, pnetServerID uint) error {
+	q.Logger.Info().Msg(
+		fmt.Sprintf(
+			"LTIAttemptQueries: set attemptID: %d by pnetServerID: %d",
+			attemptID,
+			pnetServerID,
+		),
+	)
+	updateData := map[string]interface{}{
+		"pnet_server_id": pnetServerID,
+		"updated_at":     time.Now().UTC(),
+	}
+
+	if roomID != nil && *roomID != 0 {
+		// Обновляем все attempts с этим roomID
+		err := q.Model(&models.LTIAttempt{}).
+			Where("room_id = ?", *roomID).
+			Updates(updateData).Error
+		if err != nil {
+			q.Logger.Info().Msg(fmt.Sprintf("failed to update attempts by roomID %d: %v", *roomID, err))
+			return fmt.Errorf("failed to update attempts by roomID %d: %v", *roomID, err)
+		}
+		return nil
+	}
+
+	// Обновляем только указанный attempt
+	err := q.Model(&models.LTIAttempt{}).
+		Where("id = ?", attemptID).
+		Updates(updateData).Error
+	if err != nil {
+		q.Logger.Info().Msg(fmt.Sprintf("failed to update attempt %d: %v", attemptID, err))
+		return fmt.Errorf("failed to update attempt %d: %v", attemptID, err)
+	}
+	return nil
+}
+
 func (q *LTIAttemptQueries) Delete(id uint) error {
 	err := q.Where("id = ?", id).Delete(&models.LTIAttempt{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: delete entity by id: %+v", id))

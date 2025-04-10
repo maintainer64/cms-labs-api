@@ -13,7 +13,7 @@ export const useLTIAttemptCreate = () => {
       return postV1LtiAttemptCreate({ form: {} });
     },
     retry: 2,
-    refetchInterval: 30000 // 30 seconds
+    refetchInterval: 10000 // 10 seconds
   });
 };
 

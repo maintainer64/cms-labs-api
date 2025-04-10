@@ -29,7 +29,7 @@ func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOu
 		return LTIAttemptEditOutputDTO{}, err
 	}
 	entity.ID = dto.ID
-	entity.PNETServerID = dto.PNETServerID
+	entity.PNETServerID = &dto.PNETServerID
 	entity.ExpiredAt = dto.ExpiredAt
 	err = u.LTIAttemptQueries.Upsert(&entity)
 	return LTIAttemptEditOutputDTO{ID: entity.ID}, err

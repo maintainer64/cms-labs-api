@@ -306,7 +306,7 @@ func TestV1PNETServerPingSuccess(t *testing.T) {
 	attemptEntity.AttemptID = uuid.New().String()
 	attemptEntity.UserID = userEntity.ID
 	attemptEntity.LTIRoutingID = ltiRoutingEntity.ID
-	attemptEntity.PNETServerID = serverEntity.ID
+	attemptEntity.PNETServerID = &serverEntity.ID
 	attemptEntity.ExpiredAt = time.Now().UTC().Add(30 * time.Minute)
 	f.DB.Create(&attemptEntity)
 
