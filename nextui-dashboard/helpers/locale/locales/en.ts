@@ -309,7 +309,7 @@ const en = {
       ErrorPageRefresh: 'Try again',
       ModalTitle: 'Connecting to laboratory',
       ModalDescription: 'Tell this room number to another person or write it yourself.',
-      ModalDescriptionChange: 'Click the "edit" button to change room.',
+      ModalDescriptionChange: 'Press the "change" button to change the room.',
       ButtonCopy: 'Copy',
       ButtonRollback: 'Rollback',
       ButtonChange: 'Change',

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/usecases"
@@ -94,6 +96,11 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+	// Получаем hostname без порта
+	host := c.Hostname()
+	if strings.Contains(host, ":") {
+		host = strings.Split(host, ":")[0]
+	}
 	// Выполняем редирект
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
@@ -102,7 +109,7 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		MaxAge:   output.CookieMaxAge,
 		Expires:  output.CookieAge,
 		HTTPOnly: true,
-		Domain:   c.Hostname(),
+		Domain:   host,
 	})
 	c.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
