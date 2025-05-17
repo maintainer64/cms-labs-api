@@ -38,6 +38,11 @@ func (s *Scheduler) Start() {
 	s.wg.Add(1)
 	go func() {
 		defer s.wg.Done()
+		for _, task := range s.tasks {
+			if err := task.Execute(); err != nil {
+				s.Logger.Warn().Msg(fmt.Sprintf("Task execution error: %v\n", err))
+			}
+		}
 		ticker := time.NewTicker(s.Interval)
 		defer ticker.Stop()
 
