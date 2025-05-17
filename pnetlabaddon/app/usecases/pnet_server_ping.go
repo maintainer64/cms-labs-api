@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -20,8 +21,8 @@ type PnetServerPingUC struct {
 	*zerolog.Logger
 }
 
-// ClearOldExternalUnlFiles - очистка старых файлов, у которых нет активной сессии
-func (u *PnetServerPingUC) ClearOldExternalUnlFiles(activeFilePaths []string) error {
+// FilterClearOldExternalUnlFiles - получение списка файлов, которые нужно удалить
+func (u *PnetServerPingUC) FilterClearOldExternalUnlFiles(osFilePaths, activeFilePaths []string) []string {
 	// Создаем быстрый поиска разрешенных файлов
 	allowedFiles := make(map[string]bool)
 	for _, f := range activeFilePaths {
@@ -32,25 +33,38 @@ func (u *PnetServerPingUC) ClearOldExternalUnlFiles(activeFilePaths []string) er
 		if !strings.HasPrefix(filePathDB, prefix) {
 			continue
 		}
-		allowedFiles[strings.TrimPrefix(filePathDB, prefix)] = true
+		allowedFiles[filepath.Base(filePathDB)] = true
 	}
+	removeFilePaths := make([]string, 0)
+	for _, filePath := range osFilePaths {
+		file := filepath.Base(filePath)
+		if allowedFiles[file] {
+			continue
+		}
+		removeFilePaths = append(removeFilePaths, filePath)
+	}
+	return removeFilePaths
+}
 
+// ClearOldExternalUnlFiles - очистка старых файлов, у которых нет активной сессии
+func (u *PnetServerPingUC) ClearOldExternalUnlFiles(activeFilePaths []string) error {
+	osFilePaths := make([]string, 0)
 	files, err := os.ReadDir(path.Join(pathOptUNetLab, pathExternal))
 	if err != nil {
 		log.Warn().Msg(fmt.Sprintf("ClearOldExternalUnlFiles: failed to read directory: %v", err))
 		return fmt.Errorf("failed to read directory: %v", err)
 	}
-	// 4. Удаляем старые UNL файлы
+	// Получаем все файлы из external директории
 	for _, file := range files {
 		if file.IsDir() {
 			continue
 		}
-		if allowedFiles[file.Name()] {
-			continue
-		}
-		if err := os.Remove(path.Join(pathOptUNetLab, pathExternal, file.Name())); err != nil {
-			log.Warn().Msg(fmt.Sprintf("ClearOldExternalUnlFiles: failed to remove file: %v", err))
-			continue
+		osFilePaths = append(osFilePaths, path.Join(pathOptUNetLab, pathExternal, file.Name()))
+	}
+	removeFilePaths := u.FilterClearOldExternalUnlFiles(osFilePaths, activeFilePaths)
+	for _, filePath := range removeFilePaths {
+		if err := os.Remove(filePath); err != nil {
+			log.Warn().Msg(fmt.Sprintf("ClearOldExternalUnlFiles: failed to remove file %s: %v", filePath, err))
 		}
 	}
 	return nil
