@@ -9,7 +9,7 @@ func FiberRoutes(app *fiber.App) {
 	SwaggerRoute(app)
 	V1AuthRoute(app)
 	V1SSORoute(app)
-	V1UNLFileRoutes(app)
+	V1CurlRequestRoutes(app)
 	V1UserRoutes(app)
 	V1RoleRoutes(app)
 	V1LTIFormRoutes(app)

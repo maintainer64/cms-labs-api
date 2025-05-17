@@ -16,6 +16,7 @@ import {
 } from '@/app/(app)/lti-attempts/page';
 import { ServiceCardsPage, ServiceCardsPageEdit } from '@/app/(app)/service-cards/page';
 import { RolesListPage, RolesPageEdit } from '@/app/(app)/roles/page';
+import { CurlRequestPage, CurlRequestPageEdit } from '@/app/(app)/curl-requests/page';
 
 const RoutesAdmin = () => {
   return (
@@ -33,6 +34,9 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.ltiRouting()} element={<LTIRoutingPage />} />
       <Route path={RoutesLocation.ltiRoutingEdit()} element={<LTIRoutingPageEdit />} />
       <Route path={RoutesLocation.ltiRoutingCreate()} element={<LTIRoutingPageEdit />} />
+      <Route path={RoutesLocation.curlRequest()} element={<CurlRequestPage />} />
+      <Route path={RoutesLocation.curlRequestEdit()} element={<CurlRequestPageEdit />} />
+      <Route path={RoutesLocation.curlRequestCreate()} element={<CurlRequestPageEdit />} />
       <Route path={RoutesLocation.ltiRedirect()} element={<LTIAttemptPageConfirm />} />
       <Route path={RoutesLocation.ltiRedirectCreate()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.ltiAttemptUser()} element={<LTIAttemptsPageUser />} />

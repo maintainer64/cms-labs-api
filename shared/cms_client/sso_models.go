@@ -78,10 +78,9 @@ func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 }
 
 const (
-	PNETLabsTypeDefault     = "default"
-	PNETLabsTypeEnumeration = "enumeration"
-	PNETLabsTypeFile        = "file"
-	PNETLabsTypeSSO         = "sso"
+	PNETLabsTypeDefault = "default"
+	PNETLabsTypeCurl    = "curl"
+	PNETLabsTypeSSO     = "sso"
 )
 
 type SSOTokenPublicExtraParams struct {

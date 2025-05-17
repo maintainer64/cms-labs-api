@@ -17,6 +17,7 @@ func NewServiceAuthMiddleware() fiber.Handler {
 		"/api/v1/sso/introspect",
 		"/api/v1/unl-file/sync",
 		"/api/v1/pnet-server/ping",
+		"/api/v1/curl-request/execute",
 	}
 	return basicauth.New(
 		basicauth.Config{

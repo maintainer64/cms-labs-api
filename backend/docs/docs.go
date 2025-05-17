@@ -23,6 +23,201 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/curl-request/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete pnet_server. Roles: [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CurlRequest"
+                ],
+                "summary": "delete curl_request",
+                "parameters": [
+                    {
+                        "description": "curl_request_id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/curl-request/execute": {
+            "post": {
+                "description": "execute request.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CurlRequest",
+                    "EXTERNAL"
+                ],
+                "summary": "execute request",
+                "parameters": [
+                    {
+                        "description": "pnet_server id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/external.CurlRequestExecuteInputDTO"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/v1/curl-request/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get curl_request. Roles: [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CurlRequest"
+                ],
+                "summary": "get curl_request",
+                "parameters": [
+                    {
+                        "description": "pnet_server id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/curl-request/list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List pnet_server. Roles: [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CurlRequest"
+                ],
+                "summary": "list pnet_server",
+                "parameters": [
+                    {
+                        "description": "pnet_server list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestListInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/curl-request/upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create curl_request. Roles [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CurlRequest"
+                ],
+                "summary": "create curl_request",
+                "parameters": [
+                    {
+                        "description": "curl_request form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestEditResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/lti-attempt/create": {
             "post": {
                 "security": [
@@ -1556,126 +1751,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/unl-file/get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get unl_file.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "UNLFile"
-                ],
-                "summary": "get unl_file",
-                "parameters": [
-                    {
-                        "description": "unl_file id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UNLFileGetInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UNLFileGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/unl-file/list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List unl_file.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "UNLFile"
-                ],
-                "summary": "list unl_file",
-                "parameters": [
-                    {
-                        "description": "unl_file list info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UNLFileListInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UNLFileListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/unl-file/sync": {
-            "post": {
-                "description": "sync from git unl_file.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "UNLFile",
-                    "EXTERNAL"
-                ],
-                "summary": "sync from git unl_file",
-                "parameters": [
-                    {
-                        "description": "sync params",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/external.UNLFileSyncInputDTO"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Basic-токен, созданный клиентом",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/external.UNLFileSyncResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/user/get": {
             "post": {
                 "security": [
@@ -2206,6 +2281,23 @@ const docTemplate = `{
                 }
             }
         },
+        "external.CurlRequestExecuteInputDTO": {
+            "type": "object",
+            "required": [
+                "curl_request_id"
+            ],
+            "properties": {
+                "curl_request_id": {
+                    "type": "integer"
+                },
+                "override": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "external.PNETServerPingInputDTO": {
             "type": "object",
             "properties": {
@@ -2243,40 +2335,69 @@ const docTemplate = `{
                 }
             }
         },
-        "external.UNLFileSyncInputDTO": {
-            "type": "object",
-            "properties": {
-                "branch": {
-                    "type": "string"
-                },
-                "repository": {
-                    "type": "string"
-                }
-            }
-        },
-        "external.UNLFileSyncOutputDTO": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "external.UNLFileSyncResponse": {
+        "models.CurlRequest": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "created_at",
+                "updated_at"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
+                "body": {
                     "type": "string"
                 },
-                "result": {
-                    "$ref": "#/definitions/external.UNLFileSyncOutputDTO"
+                "created_at": {
+                    "type": "string"
+                },
+                "headers": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "raw": {
+                    "type": "string"
+                },
+                "timeout": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CurlRequestListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         },
@@ -2509,7 +2630,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "pnet_labs_type": {
-                    "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,enumeration,file,sso",
+                    "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,curl,sso",
                     "type": "string"
                 },
                 "pnet_server_id": {
@@ -2746,72 +2867,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.UNLFile": {
-            "type": "object",
-            "required": [
-                "created_at",
-                "path",
-                "updated_at"
-            ],
-            "properties": {
-                "content": {
-                    "description": "Содержимое файла",
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "synced_id": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.UNLFileListItem": {
-            "type": "object",
-            "required": [
-                "created_at",
-                "path",
-                "updated_at"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
         "models.User": {
             "type": "object",
             "required": [
@@ -2958,6 +3013,186 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO"
+                }
+            }
+        },
+        "usecases.CurlRequestDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.CurlRequestDeleteResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.CurlRequestEditInputDTO": {
+            "type": "object",
+            "required": [
+                "headers",
+                "method",
+                "name",
+                "url"
+            ],
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "headers": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "raw_request": {
+                    "type": "string"
+                },
+                "timeout": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.CurlRequestEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.CurlRequestEditResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.CurlRequestEditOutputDTO"
+                }
+            }
+        },
+        "usecases.CurlRequestGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.CurlRequestGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.CurlRequest"
+                }
+            }
+        },
+        "usecases.CurlRequestGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.CurlRequestGetOutputDTO"
+                }
+            }
+        },
+        "usecases.CurlRequestListInputDTO": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.CurlRequestListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.CurlRequestListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.CurlRequestListResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.CurlRequestListOutputDTO"
                 }
             }
         },
@@ -4036,92 +4271,6 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.ServiceCardListOutputDTO"
-                }
-            }
-        },
-        "usecases.UNLFileGetInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.UNLFileGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "model": {
-                    "$ref": "#/definitions/models.UNLFile"
-                }
-            }
-        },
-        "usecases.UNLFileGetResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.UNLFileGetOutputDTO"
-                }
-            }
-        },
-        "usecases.UNLFileListInputDTO": {
-            "type": "object",
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "search": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "usecases.UNLFileListOutputDTO": {
-            "type": "object",
-            "required": [
-                "model"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.UNLFileListItem"
-                    }
-                }
-            }
-        },
-        "usecases.UNLFileListResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.UNLFileListOutputDTO"
                 }
             }
         },

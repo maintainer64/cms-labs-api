@@ -157,6 +157,13 @@ export type external_AttemptDTO = {
   user_id?: number;
 };
 
+export type external_CurlRequestExecuteInputDTO = {
+  curl_request_id: number;
+  override?: {
+    [key: string]: string;
+  };
+};
+
 export type external_PNETServerPingInputDTO = {
   attempts?: Array<external_AttemptDTO>;
 };
@@ -171,19 +178,27 @@ export type external_PNETServerPingResponse = {
   result?: external_PNETServerPingOutputDTO;
 };
 
-export type external_UNLFileSyncInputDTO = {
-  branch?: string;
-  repository?: string;
+export type models_CurlRequest = {
+  body?: string;
+  created_at: string;
+  headers?: {
+    [key: string]: string;
+  };
+  id?: number;
+  method?: string;
+  name?: string;
+  raw?: string;
+  timeout?: number;
+  updated_at: string;
+  url?: string;
 };
 
-export type external_UNLFileSyncOutputDTO = {
-  count?: number;
-};
-
-export type external_UNLFileSyncResponse = {
-  error: boolean;
-  msg: string;
-  result?: external_UNLFileSyncOutputDTO;
+export type models_CurlRequestListItem = {
+  created_at: string;
+  id?: number;
+  name?: string;
+  updated_at: string;
+  url?: string;
 };
 
 export type models_LTIAttempt = {
@@ -265,7 +280,7 @@ export type models_LTIRouting = {
   pnet_labs_path?: string;
   /**
    * The type of PNETLabsType, cms_client.PNETLabsTypeDefault
-   * enum: default,enumeration,file,sso
+   * enum: default,curl,sso
    */
   pnet_labs_type?: string;
   pnet_server_id?: number;
@@ -350,29 +365,6 @@ export type models_ServiceCardListItem = {
   url: string;
 };
 
-export type models_UNLFile = {
-  /**
-   * Содержимое файла
-   */
-  content?: Array<number>;
-  created_at: string;
-  deleted_at?: string;
-  id?: number;
-  path: string;
-  synced_id?: string;
-  type?: string;
-  updated_at: string;
-};
-
-export type models_UNLFileListItem = {
-  created_at: string;
-  deleted_at?: string;
-  id?: number;
-  path: string;
-  type?: string;
-  updated_at: string;
-};
-
 export type models_User = {
   created_at: string;
   deleted_at?: string;
@@ -420,6 +412,71 @@ export type round_queue_pool_pnet_RoundQueuePoolPnetUpsertResponse = {
   error: boolean;
   msg: string;
   result?: round_queue_pool_pnet_RoundQueuePoolPnetUpsertOutputDTO;
+};
+
+export type usecases_CurlRequestDeleteInputDTO = {
+  id?: number;
+};
+
+export type usecases_CurlRequestDeleteResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_CurlRequestDeleteInputDTO;
+};
+
+export type usecases_CurlRequestEditInputDTO = {
+  body?: string;
+  headers: {
+    [key: string]: string;
+  };
+  id?: number;
+  method: string;
+  name: string;
+  raw_request?: string;
+  timeout?: number;
+  url: string;
+};
+
+export type usecases_CurlRequestEditOutputDTO = {
+  id?: number;
+};
+
+export type usecases_CurlRequestEditResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_CurlRequestEditOutputDTO;
+};
+
+export type usecases_CurlRequestGetInputDTO = {
+  id?: number;
+};
+
+export type usecases_CurlRequestGetOutputDTO = {
+  model?: models_CurlRequest;
+};
+
+export type usecases_CurlRequestGetResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_CurlRequestGetOutputDTO;
+};
+
+export type usecases_CurlRequestListInputDTO = {
+  ids?: Array<number>;
+  limit?: number;
+  offset?: number;
+  search?: string;
+};
+
+export type usecases_CurlRequestListOutputDTO = {
+  model: Array<models_CurlRequestListItem>;
+  total_count: number;
+};
+
+export type usecases_CurlRequestListResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_CurlRequestListOutputDTO;
 };
 
 export type usecases_LTIAttemptCreateInputDTO = {
@@ -816,37 +873,6 @@ export type usecases_ServiceCardListResponse = {
   result?: usecases_ServiceCardListOutputDTO;
 };
 
-export type usecases_UNLFileGetInputDTO = {
-  id?: number;
-};
-
-export type usecases_UNLFileGetOutputDTO = {
-  model?: models_UNLFile;
-};
-
-export type usecases_UNLFileGetResponse = {
-  error: boolean;
-  msg: string;
-  result?: usecases_UNLFileGetOutputDTO;
-};
-
-export type usecases_UNLFileListInputDTO = {
-  limit?: number;
-  offset?: number;
-  search?: string;
-  type?: Array<string>;
-};
-
-export type usecases_UNLFileListOutputDTO = {
-  model: Array<models_UNLFileListItem>;
-};
-
-export type usecases_UNLFileListResponse = {
-  error: boolean;
-  msg: string;
-  result?: usecases_UNLFileListOutputDTO;
-};
-
 export type usecases_UserEditInputDTO = {
   email: string;
   group_name?: string;
@@ -904,6 +930,55 @@ export type usecases_UserListResponse = {
   msg: string;
   result?: usecases_UserListOutputDTO;
 };
+
+export type PostV1CurlRequestDeleteData = {
+  /**
+   * curl_request_id
+   */
+  form: usecases_CurlRequestDeleteInputDTO;
+};
+
+export type PostV1CurlRequestDeleteResponse = usecases_CurlRequestDeleteResponse;
+
+export type PostV1CurlRequestExecuteData = {
+  /**
+   * Basic-токен, созданный клиентом
+   */
+  authorization: string;
+  /**
+   * pnet_server id
+   */
+  form: external_CurlRequestExecuteInputDTO;
+};
+
+export type PostV1CurlRequestExecuteResponse = unknown;
+
+export type PostV1CurlRequestGetData = {
+  /**
+   * pnet_server id
+   */
+  form: usecases_CurlRequestGetInputDTO;
+};
+
+export type PostV1CurlRequestGetResponse = usecases_CurlRequestGetResponse;
+
+export type PostV1CurlRequestListData = {
+  /**
+   * pnet_server list info
+   */
+  form: usecases_CurlRequestListInputDTO;
+};
+
+export type PostV1CurlRequestListResponse = usecases_CurlRequestListResponse;
+
+export type PostV1CurlRequestUpsertData = {
+  /**
+   * curl_request form info
+   */
+  form: usecases_CurlRequestEditInputDTO;
+};
+
+export type PostV1CurlRequestUpsertResponse = usecases_CurlRequestEditResponse;
 
 export type PostV1LtiAttemptCreateData = {
   /**
@@ -1261,37 +1336,6 @@ export type PostV1TokenRenewData = {
 };
 
 export type PostV1TokenRenewResponse = auth_SwaggerSSOTokenResponse;
-
-export type PostV1UnlFileGetData = {
-  /**
-   * unl_file id
-   */
-  form: usecases_UNLFileGetInputDTO;
-};
-
-export type PostV1UnlFileGetResponse = usecases_UNLFileGetResponse;
-
-export type PostV1UnlFileListData = {
-  /**
-   * unl_file list info
-   */
-  form: usecases_UNLFileListInputDTO;
-};
-
-export type PostV1UnlFileListResponse = usecases_UNLFileListResponse;
-
-export type PostV1UnlFileSyncData = {
-  /**
-   * Basic-токен, созданный клиентом
-   */
-  authorization: string;
-  /**
-   * sync params
-   */
-  form: external_UNLFileSyncInputDTO;
-};
-
-export type PostV1UnlFileSyncResponse = external_UNLFileSyncResponse;
 
 export type PostV1UserGetData = {
   /**

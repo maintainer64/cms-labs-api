@@ -29,10 +29,12 @@ const ru = {
     Users: 'Пользователи',
     Roles: 'Роли',
     Servers: 'Серверы',
+    CurlRequests: 'API',
     ServiceCards: 'Сервисы',
     LTIIntegrations: 'LTIs',
     LTIRouting: 'Маршруты LTI',
     LTIAttempts: 'Попытки LTI',
+    APIRequests: 'Запросы по API',
     AnyList: 'Список',
     Profile: 'Профиль',
     Edit: 'Редактирование',
@@ -93,6 +95,17 @@ const ru = {
       ButtonAdd: 'Создать',
       SearchBar: 'Поиск маршрутов',
       ButtonEdit: 'Редактировать',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'НАЗВАНИЕ', uid: 'name' },
+        { name: 'ДЕЙСТВИЕ', uid: 'actions' }
+      ]
+    },
+    CurlRequestTable: {
+      Title: 'Запросы по API',
+      ButtonAdd: 'Создать',
+      SearchBar: 'Поиск API',
+      ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'НАЗВАНИЕ', uid: 'name' },
@@ -222,6 +235,20 @@ const ru = {
       Description: 'При удалении интеграция между LMS системой будет прекращена'
     }
   },
+  CurlRequest: {
+    FieldID: 'ID',
+    FieldName: 'Название',
+    FieldTimeout: 'Таймаут',
+    FieldTimeoutDescription: 'Прекращение запроса в секундах',
+    FieldCurl: 'Curl',
+    FieldCurlDescription: 'Поддерживаются параметры переданные через $ ($userID, $sessionID)',
+    FieldCreatedAt: 'Создано в',
+    FieldUpdatedAt: 'Обновлено в',
+    DeletePopup: {
+      Title: 'Удаление запроса по API',
+      Description: 'При удалении будет невозможно вызвать API'
+    }
+  },
   LTIFormAttempt: {
     FieldID: 'ID попытки',
     FieldRoomNumber: 'Номер комнаты',
@@ -337,8 +364,7 @@ const ru = {
     FieldPinnedSessionMinutes: 'Закрепить сессию в минутах',
     FieldPNETLabsType: 'Тип подключения',
     FieldPNETLabsTypeDefault: 'Прямое',
-    FieldPNETLabsTypeFile: 'Файл',
-    FieldPNETLabsTypeEnumeration: 'Перечисление',
+    FieldPNETLabsTypeCurl: 'Запрос по API',
     FieldPNETLabsTypeSSO: 'SSO',
     FieldPNETLabsPath: 'Подключение к лабораторной работе',
     FieldPNETTestPath: 'Запуск тестов лабораторной работы',

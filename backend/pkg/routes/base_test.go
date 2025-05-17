@@ -4,9 +4,13 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"strings"
+
+	"github.com/go-resty/resty/v2"
+	"github.com/h2non/gock"
 
 	"gitlab.com/a10869/api-modules/shared/logs"
 
@@ -118,6 +122,13 @@ func NewFiberTestHTTP() *FiberTestHTTP {
 	}
 	// Load .env local file form the additional
 	configs.AppConfig.Reload()
+
+	// Inject Resty
+	di.NewRestyClient = func() *resty.Client {
+		return resty.NewWithClient(
+			&http.Client{Transport: gock.DefaultTransport},
+		)
+	}
 
 	// Define a new Fiber app.
 	app := fiber.New()

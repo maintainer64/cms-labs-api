@@ -5737,6 +5737,13 @@ parent-module@^1.0.0:
   dependencies:
     callsites "^3.0.0"
 
+parse-curl@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/parse-curl/-/parse-curl-0.2.6.tgz#bf755ae6b572de2745daf6b98af144dff32d225b"
+  integrity sha512-ENhXeIxG4A6wFvYSU87b0o3Tp6U+Wup069GYhXCn0ZP/E7evfvomTSM/MeEOs3QTyuye+u2r7fFRj6nX0q9kQA==
+  dependencies:
+    shellwords "^0.1.0"
+
 parse-json@^5.0.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-5.2.0.tgz#c76fc66dee54231c962b22bcc8a72cf2f99753cd"
@@ -6313,6 +6320,11 @@ shebang-regex@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
+
+shellwords@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
+  integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
 
 side-channel-list@^1.0.0:
   version "1.0.0"
