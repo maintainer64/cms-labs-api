@@ -7,6 +7,9 @@ import { CrumbsLayout } from '@/components/layout/crumbs';
 import { useParams } from 'react-router-dom';
 import { CurlRequestIcon } from '@/components/icons/breadcrumb/curl-request-icon';
 import { CurlRequestEditForm } from '@/components/pages/curl-requests/edit/form';
+import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
+import { UserRoleBase } from '@/helpers/queries/sso/auth';
+import { PnetServersEditForm } from '@/components/pages/pnet-servers/edit/form';
 
 export const CurlRequestEdit = () => {
   const { id } = useParams();
@@ -36,7 +39,9 @@ export const CurlRequestEdit = () => {
   return (
     <CrumbsLayout name={CurlRequestTable.Title} crumbs={crumbs}>
       <div className='max-w-[95rem] mx-auto w-full'>
-        <CurlRequestEditForm id={parseInt(id ?? '', 10)} />
+        <RoleBasedAccess allowedRoles={[UserRoleBase.Admin]}>
+          <CurlRequestEditForm id={parseInt(id ?? '', 10)} />
+        </RoleBasedAccess>
       </div>
     </CrumbsLayout>
   );
