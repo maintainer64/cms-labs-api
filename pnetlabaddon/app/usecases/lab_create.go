@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -80,7 +81,7 @@ func (u *LabCreateUC) DownloadLab(
 	curlRequestID string,
 	attemptId string,
 ) (string, error) {
-	fileName := fmt.Sprintf("%s.unl", attemptId)
+	fileName := filepath.Clean(fmt.Sprintf("%s.unl", attemptId))
 	u64, err := strconv.ParseUint(curlRequestID, 10, 32)
 	if err != nil {
 		u.Logger.Info().Msg(
@@ -110,7 +111,7 @@ func (u *LabCreateUC) DownloadLab(
 		)
 		return "", nil
 	}
-	if err := os.MkdirAll(filepath.Join(pathOptUNetLab, pathExternal), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(pathOptUNetLab, pathExternal), 0750); err != nil {
 		u.Logger.Info().Msg(
 			fmt.Sprintf(
 				"LabCreateUC: failed to create directory curlRequestID: %s, attemptId: %s",
@@ -120,8 +121,13 @@ func (u *LabCreateUC) DownloadLab(
 		)
 		return "", fmt.Errorf("failed to create directory: %v", err)
 	}
+
 	// Записываем файл (создаем или перезаписываем существующий)
-	file, err := os.Create(filepath.Join(pathOptUNetLab, pathExternal, fileName))
+	filePath := filepath.Join(pathOptUNetLab, pathExternal, fileName)
+	if !strings.HasPrefix(filePath, filepath.Join(pathOptUNetLab, pathExternal)) {
+		return "", fmt.Errorf("invalid path")
+	}
+	file, err := os.Create(filepath.Clean(filePath))
 	if err != nil {
 		u.Logger.Info().Msg(
 			fmt.Sprintf(
