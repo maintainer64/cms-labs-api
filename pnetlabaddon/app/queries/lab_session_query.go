@@ -37,10 +37,11 @@ func (q *LabSessionQuery) GetByAttemptId(attemptId string) (models.LabSession, e
 
 // LabSessionRunningLabs модель для активных сессий лабораторных
 type LabSessionRunningLabs struct {
-	LabSessionID  int    `gorm:"column:lab_session_id" json:"lab_session_id"`
-	LabSessionLID string `gorm:"column:lab_session_lid" json:"lab_session_lid"`
-	Name          string `gorm:"column:name" json:"name"`
-	Email         string `gorm:"column:email" json:"email"`
+	LabSessionID   int    `gorm:"column:lab_session_id" json:"lab_session_id"`
+	LabSessionLID  string `gorm:"column:lab_session_lid" json:"lab_session_lid"`
+	LabSessionPath string `gorm:"column:lab_session_path" json:"lab_session_path"`
+	Name           string `gorm:"column:name" json:"name"`
+	Email          string `gorm:"column:email" json:"email"`
 }
 
 func (q *LabSessionQuery) GetRunningLabs() ([]LabSessionRunningLabs, error) {
@@ -48,7 +49,7 @@ func (q *LabSessionQuery) GetRunningLabs() ([]LabSessionRunningLabs, error) {
 	query := q.Table(
 		q.tableName(&models.LabSession{})+" AS lab_sessions",
 	).Select(
-		"lab_sessions.lab_session_id, users.name, lab_sessions.lab_session_lid, users.email",
+		"lab_sessions.lab_session_id, lab_sessions.lab_session_path, users.name, lab_sessions.lab_session_lid, users.email",
 	).Joins(
 		"left join "+q.tableName(&models.User{})+" users on users.pod = lab_sessions.lab_session_pod",
 	).Where(

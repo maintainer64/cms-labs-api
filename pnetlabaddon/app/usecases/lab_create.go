@@ -152,12 +152,12 @@ func (u *LabCreateUC) DownloadLab(
 	u.Logger.Info().Msg(
 		fmt.Sprintf(
 			"LabCreateUC: created file: %s by curlRequestID: %s, attemptId: %s",
-			filepath.Join(pathExternal, fileName),
+			filepath.Join("/", pathExternal, fileName),
 			curlRequestID,
 			attemptId,
 		),
 	)
-	return filepath.Join(pathExternal, fileName), nil
+	return filepath.Join("/", pathExternal, fileName), nil
 }
 
 func (u *LabCreateUC) Execute(dto LabCreateInputDTO) error {
