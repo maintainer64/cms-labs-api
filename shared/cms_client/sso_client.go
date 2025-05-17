@@ -41,6 +41,25 @@ func (c *CMSClient) SSOUserInfo(accessToken string) (*SSOTokenPublicData, error)
 	return &ssoToken, err
 }
 
+func (c *CMSClient) DownloadUNLFile(
+	curlRequestID uint,
+	overrides map[string]string,
+) ([]byte, error) {
+	const path = "/api/v1/curl-request/execute"
+	payload := map[string]interface{}{
+		"curl_request_id": curlRequestID,
+		"overrides":       overrides,
+	}
+	response, err := c.client.R().SetBasicAuth(c.Config.ClientID, c.Config.Token).SetBody(payload).Post(path)
+	if response == nil {
+		return nil, NewCMSError("", 0)
+	}
+	if response.IsError() {
+		return nil, NewCMSError("external error", response.StatusCode())
+	}
+	return response.Body(), err
+}
+
 func (c *CMSClient) SSOAuthorizeURI(
 	redirectUri string,
 	scope string,
