@@ -13,6 +13,7 @@ import { RoutesLocation } from '@/components/routes';
 import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
 import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
 import { RouterIcon } from '@/components/icons/breadcrumb/router-icon';
+import { CurlRequestIcon } from '@/components/icons/breadcrumb/curl-request-icon';
 
 export const SidebarWrapper = () => {
   const { pathname } = useLocation();
@@ -57,6 +58,12 @@ export const SidebarWrapper = () => {
                 title={locale.Sidebar.Servers}
                 icon={<ServersIcon />}
                 href={RoutesLocation.pnetServers()}
+              />
+              <SidebarItem
+                isActive={pathname === RoutesLocation.curlRequest()}
+                title={locale.Sidebar.CurlRequests}
+                icon={<CurlRequestIcon />}
+                href={RoutesLocation.curlRequest()}
               />
             </SidebarMenu>
           </div>

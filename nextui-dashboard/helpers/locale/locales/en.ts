@@ -29,10 +29,12 @@ const en = {
     Users: 'Users',
     Roles: 'Roles',
     Servers: 'Servers',
+    CurlRequests: 'API',
     ServiceCards: 'Services',
     LTIIntegrations: 'LTIs',
     LTIRouting: 'LTI Routes',
     LTIAttempts: 'LTI Attempts',
+    APIRequests: 'API Requests',
     AnyList: 'List',
     Profile: 'Profile',
     Edit: 'Edit',
@@ -92,6 +94,17 @@ const en = {
       Title: 'LTI Routing',
       ButtonAdd: 'Create',
       SearchBar: 'Search route',
+      ButtonEdit: 'Edit',
+      Columns: [
+        { name: 'ID', uid: 'id' },
+        { name: 'NAME', uid: 'name' },
+        { name: 'ACTIONS', uid: 'actions' }
+      ]
+    },
+    CurlRequestTable: {
+      Title: 'API Requests',
+      ButtonAdd: 'Create',
+      SearchBar: 'Search API',
       ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
@@ -188,7 +201,7 @@ const en = {
     FieldKeySetURI: 'URL certificates LTI',
     DescriptionKeySetURI: 'Address suffix /mod/lti/certs.php',
     FieldSSOURL: 'SSO LTI URL',
-    DescriptionSSOURL: 'Ссылка на элемент курса в инструменте LTI',
+    DescriptionSSOURL: 'Link to the course element in the LTI tool',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     MoodleProviderParams: {
@@ -219,6 +232,20 @@ const en = {
     DeletePopup: {
       Title: 'Deleting an LTI-Forms entity',
       Description: 'Upon removal, integration between the LMS system will be terminated'
+    }
+  },
+  CurlRequest: {
+    FieldID: 'ID',
+    FieldName: 'Name',
+    FieldCurl: 'Curl',
+    FieldTimeout: 'Timeout',
+    FieldTimeoutDescription: 'Request termination in seconds',
+    FieldCurlDescription: 'Parameters passed via $ are supported ($userID, $SessionID)',
+    FieldCreatedAt: 'Created at',
+    FieldUpdatedAt: 'Updated at',
+    DeletePopup: {
+      Title: 'Deleting an API request',
+      Description: 'It will be impossible to call the API when deleting it'
     }
   },
   LTIFormAttempt: {
@@ -336,8 +363,7 @@ const en = {
     FieldPinnedSessionMinutes: 'Pinned session on minutes',
     FieldPNETLabsType: 'Type connection',
     FieldPNETLabsTypeDefault: 'Default',
-    FieldPNETLabsTypeFile: 'File',
-    FieldPNETLabsTypeEnumeration: 'Enumeration',
+    FieldPNETLabsTypeCurl: 'API Request',
     FieldPNETLabsTypeSSO: 'SSO',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',

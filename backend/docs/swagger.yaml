@@ -227,6 +227,17 @@ definitions:
     required:
     - attempt_id
     type: object
+  external.CurlRequestExecuteInputDTO:
+    properties:
+      curl_request_id:
+        type: integer
+      override:
+        additionalProperties:
+          type: string
+        type: object
+    required:
+    - curl_request_id
+    type: object
   external.PNETServerPingInputDTO:
     properties:
       attempts:
@@ -251,29 +262,49 @@ definitions:
     - error
     - msg
     type: object
-  external.UNLFileSyncInputDTO:
+  models.CurlRequest:
     properties:
-      branch:
+      body:
         type: string
-      repository:
+      created_at:
         type: string
-    type: object
-  external.UNLFileSyncOutputDTO:
-    properties:
-      count:
+      headers:
+        additionalProperties:
+          type: string
+        type: object
+      id:
         type: integer
-    type: object
-  external.UNLFileSyncResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
+      method:
         type: string
-      result:
-        $ref: '#/definitions/external.UNLFileSyncOutputDTO'
+      name:
+        type: string
+      raw:
+        type: string
+      timeout:
+        type: integer
+      updated_at:
+        type: string
+      url:
+        type: string
     required:
-    - error
-    - msg
+    - created_at
+    - updated_at
+    type: object
+  models.CurlRequestListItem:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+      url:
+        type: string
+    required:
+    - created_at
+    - updated_at
     type: object
   models.LTIAttempt:
     properties:
@@ -434,7 +465,7 @@ definitions:
       pnet_labs_type:
         description: |-
           The type of PNETLabsType, cms_client.PNETLabsTypeDefault
-          enum: default,enumeration,file,sso
+          enum: default,curl,sso
         type: string
       pnet_server_id:
         type: integer
@@ -598,51 +629,6 @@ definitions:
     - updated_at
     - url
     type: object
-  models.UNLFile:
-    properties:
-      content:
-        description: Содержимое файла
-        items:
-          type: integer
-        type: array
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      path:
-        type: string
-      synced_id:
-        type: string
-      type:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - created_at
-    - path
-    - updated_at
-    type: object
-  models.UNLFileListItem:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      path:
-        type: string
-      type:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - created_at
-    - path
-    - updated_at
-    type: object
   models.User:
     properties:
       created_at:
@@ -739,6 +725,125 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.CurlRequestDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.CurlRequestDeleteResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.CurlRequestEditInputDTO:
+    properties:
+      body:
+        type: string
+      headers:
+        additionalProperties:
+          type: string
+        type: object
+      id:
+        type: integer
+      method:
+        type: string
+      name:
+        type: string
+      raw_request:
+        type: string
+      timeout:
+        type: integer
+      url:
+        type: string
+    required:
+    - headers
+    - method
+    - name
+    - url
+    type: object
+  usecases.CurlRequestEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.CurlRequestEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.CurlRequestEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.CurlRequestGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.CurlRequestGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.CurlRequest'
+    type: object
+  usecases.CurlRequestGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.CurlRequestGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.CurlRequestListInputDTO:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+    type: object
+  usecases.CurlRequestListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.CurlRequestListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.CurlRequestListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.CurlRequestListOutputDTO'
     required:
     - error
     - msg
@@ -1457,62 +1562,6 @@ definitions:
     - error
     - msg
     type: object
-  usecases.UNLFileGetInputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.UNLFileGetOutputDTO:
-    properties:
-      model:
-        $ref: '#/definitions/models.UNLFile'
-    type: object
-  usecases.UNLFileGetResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.UNLFileGetOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.UNLFileListInputDTO:
-    properties:
-      limit:
-        type: integer
-      offset:
-        type: integer
-      search:
-        type: string
-      type:
-        items:
-          type: string
-        type: array
-    type: object
-  usecases.UNLFileListOutputDTO:
-    properties:
-      model:
-        items:
-          $ref: '#/definitions/models.UNLFileListItem'
-        type: array
-    required:
-    - model
-    type: object
-  usecases.UNLFileListResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.UNLFileListOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
   usecases.UserEditInputDTO:
     properties:
       email:
@@ -1638,6 +1687,128 @@ info:
   title: API
   version: "1.0"
 paths:
+  /v1/curl-request/delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete pnet_server. Roles: [admin]'
+      parameters:
+      - description: curl_request_id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.CurlRequestDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete curl_request
+      tags:
+      - CurlRequest
+  /v1/curl-request/execute:
+    post:
+      consumes:
+      - application/json
+      description: execute request.
+      parameters:
+      - description: pnet_server id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/external.CurlRequestExecuteInputDTO'
+      - description: Basic-токен, созданный клиентом
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: execute request
+      tags:
+      - CurlRequest
+      - EXTERNAL
+  /v1/curl-request/get:
+    post:
+      consumes:
+      - application/json
+      description: 'get curl_request. Roles: [admin]'
+      parameters:
+      - description: pnet_server id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.CurlRequestGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.CurlRequestGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get curl_request
+      tags:
+      - CurlRequest
+  /v1/curl-request/list:
+    post:
+      consumes:
+      - application/json
+      description: 'List pnet_server. Roles: [admin, instructor]'
+      parameters:
+      - description: pnet_server list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.CurlRequestListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.CurlRequestListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list pnet_server
+      tags:
+      - CurlRequest
+  /v1/curl-request/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create curl_request. Roles [admin]
+      parameters:
+      - description: curl_request form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.CurlRequestEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create curl_request
+      tags:
+      - CurlRequest
   /v1/lti-attempt/create:
     post:
       consumes:
@@ -2602,82 +2773,6 @@ paths:
       summary: renew access and refresh tokens
       tags:
       - Token
-  /v1/unl-file/get:
-    post:
-      consumes:
-      - application/json
-      description: get unl_file.
-      parameters:
-      - description: unl_file id
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.UNLFileGetInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.UNLFileGetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: get unl_file
-      tags:
-      - UNLFile
-  /v1/unl-file/list:
-    post:
-      consumes:
-      - application/json
-      description: List unl_file.
-      parameters:
-      - description: unl_file list info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.UNLFileListInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.UNLFileListResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: list unl_file
-      tags:
-      - UNLFile
-  /v1/unl-file/sync:
-    post:
-      consumes:
-      - application/json
-      description: sync from git unl_file.
-      parameters:
-      - description: sync params
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/external.UNLFileSyncInputDTO'
-      - description: Basic-токен, созданный клиентом
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/external.UNLFileSyncResponse'
-      summary: sync from git unl_file
-      tags:
-      - UNLFile
-      - EXTERNAL
   /v1/user/get:
     post:
       consumes:

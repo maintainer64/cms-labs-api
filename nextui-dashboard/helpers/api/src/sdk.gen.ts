@@ -4,6 +4,16 @@ import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type {
+  PostV1CurlRequestDeleteData,
+  PostV1CurlRequestDeleteResponse,
+  PostV1CurlRequestExecuteData,
+  PostV1CurlRequestExecuteResponse,
+  PostV1CurlRequestGetData,
+  PostV1CurlRequestGetResponse,
+  PostV1CurlRequestListData,
+  PostV1CurlRequestListResponse,
+  PostV1CurlRequestUpsertData,
+  PostV1CurlRequestUpsertResponse,
   PostV1LtiAttemptCreateData,
   PostV1LtiAttemptCreateResponse,
   PostV1LtiAttemptDeleteData,
@@ -76,12 +86,6 @@ import type {
   PostV1TokenPasswordChangeResponse,
   PostV1TokenRenewData,
   PostV1TokenRenewResponse,
-  PostV1UnlFileGetData,
-  PostV1UnlFileGetResponse,
-  PostV1UnlFileListData,
-  PostV1UnlFileListResponse,
-  PostV1UnlFileSyncData,
-  PostV1UnlFileSyncResponse,
   PostV1UserGetData,
   PostV1UserGetResponse,
   PostV1UserListData,
@@ -91,6 +95,100 @@ import type {
   GetV2LtiLoginResponse,
   PostV2LtiLoginResponse
 } from './types.gen';
+
+/**
+ * delete curl_request
+ * Delete pnet_server. Roles: [admin]
+ * @param data The data for the request.
+ * @param data.form curl_request_id
+ * @returns usecases_CurlRequestDeleteResponse OK
+ * @throws ApiError
+ */
+export const postV1CurlRequestDelete = (
+  data: PostV1CurlRequestDeleteData
+): CancelablePromise<PostV1CurlRequestDeleteResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/curl-request/delete',
+    body: data.form
+  });
+};
+
+/**
+ * execute request
+ * execute request.
+ * @param data The data for the request.
+ * @param data.form pnet_server id
+ * @param data.authorization Basic-токен, созданный клиентом
+ * @returns unknown OK
+ * @throws ApiError
+ */
+export const postV1CurlRequestExecute = (
+  data: PostV1CurlRequestExecuteData
+): CancelablePromise<PostV1CurlRequestExecuteResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/curl-request/execute',
+    headers: {
+      Authorization: data.authorization
+    },
+    body: data.form
+  });
+};
+
+/**
+ * get curl_request
+ * get curl_request. Roles: [admin]
+ * @param data The data for the request.
+ * @param data.form pnet_server id
+ * @returns usecases_CurlRequestGetResponse OK
+ * @throws ApiError
+ */
+export const postV1CurlRequestGet = (
+  data: PostV1CurlRequestGetData
+): CancelablePromise<PostV1CurlRequestGetResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/curl-request/get',
+    body: data.form
+  });
+};
+
+/**
+ * list pnet_server
+ * List pnet_server. Roles: [admin, instructor]
+ * @param data The data for the request.
+ * @param data.form pnet_server list info
+ * @returns usecases_CurlRequestListResponse OK
+ * @throws ApiError
+ */
+export const postV1CurlRequestList = (
+  data: PostV1CurlRequestListData
+): CancelablePromise<PostV1CurlRequestListResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/curl-request/list',
+    body: data.form
+  });
+};
+
+/**
+ * create curl_request
+ * Create curl_request. Roles [admin]
+ * @param data The data for the request.
+ * @param data.form curl_request form info
+ * @returns usecases_CurlRequestEditResponse OK
+ * @throws ApiError
+ */
+export const postV1CurlRequestUpsert = (
+  data: PostV1CurlRequestUpsertData
+): CancelablePromise<PostV1CurlRequestUpsertResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/curl-request/upsert',
+    body: data.form
+  });
+};
 
 /**
  * create lti_attempt
@@ -783,58 +881,6 @@ export const postV1TokenRenew = (data: PostV1TokenRenewData): CancelablePromise<
   return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/token/renew',
-    body: data.form
-  });
-};
-
-/**
- * get unl_file
- * get unl_file.
- * @param data The data for the request.
- * @param data.form unl_file id
- * @returns usecases_UNLFileGetResponse OK
- * @throws ApiError
- */
-export const postV1UnlFileGet = (data: PostV1UnlFileGetData): CancelablePromise<PostV1UnlFileGetResponse> => {
-  return __request(OpenAPI, {
-    method: 'POST',
-    url: '/v1/unl-file/get',
-    body: data.form
-  });
-};
-
-/**
- * list unl_file
- * List unl_file.
- * @param data The data for the request.
- * @param data.form unl_file list info
- * @returns usecases_UNLFileListResponse OK
- * @throws ApiError
- */
-export const postV1UnlFileList = (data: PostV1UnlFileListData): CancelablePromise<PostV1UnlFileListResponse> => {
-  return __request(OpenAPI, {
-    method: 'POST',
-    url: '/v1/unl-file/list',
-    body: data.form
-  });
-};
-
-/**
- * sync from git unl_file
- * sync from git unl_file.
- * @param data The data for the request.
- * @param data.form sync params
- * @param data.authorization Basic-токен, созданный клиентом
- * @returns external_UNLFileSyncResponse OK
- * @throws ApiError
- */
-export const postV1UnlFileSync = (data: PostV1UnlFileSyncData): CancelablePromise<PostV1UnlFileSyncResponse> => {
-  return __request(OpenAPI, {
-    method: 'POST',
-    url: '/v1/unl-file/sync',
-    headers: {
-      Authorization: data.authorization
-    },
     body: data.form
   });
 };

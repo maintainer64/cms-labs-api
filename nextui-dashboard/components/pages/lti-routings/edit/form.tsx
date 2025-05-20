@@ -45,11 +45,7 @@ export const LtiRoutingLabsType = () => {
   } = useLanguageBrowser();
   return [
     { key: 'default', label: LTIRouting.FieldPNETLabsTypeDefault },
-    { key: 'file', label: LTIRouting.FieldPNETLabsTypeFile },
-    {
-      key: 'enumeration',
-      label: LTIRouting.FieldPNETLabsTypeEnumeration
-    },
+    { key: 'curl', label: LTIRouting.FieldPNETLabsTypeCurl },
     {
       key: 'sso',
       label: LTIRouting.FieldPNETLabsTypeSSO

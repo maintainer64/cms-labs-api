@@ -20,6 +20,7 @@ func (di *DIContainer) LabCreateUC() *usecases.LabCreateUC {
 	return &usecases.LabCreateUC{
 		UserQueries:     di.Queries.UserQueries,
 		LabSessionQuery: di.Queries.LabSessionQuery,
+		CMSClient:       di.CMSClient(),
 		Logger:          logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.LabCreateUC")),
 	}
 }
