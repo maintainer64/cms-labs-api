@@ -17,7 +17,7 @@ export const useCurlRequestUpsert = (
       return postV1CurlRequestUpsert({
         form: {
           body: curlParsed.body || '',
-          headers: curlParsed.headers || {},
+          headers: curlParsed.header || {},
           id: values.id,
           method: curlParsed.method || '',
           name: values.name ?? '',

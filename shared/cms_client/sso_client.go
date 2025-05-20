@@ -48,7 +48,7 @@ func (c *CMSClient) DownloadUNLFile(
 	const path = "/api/v1/curl-request/execute"
 	payload := map[string]interface{}{
 		"curl_request_id": curlRequestID,
-		"overrides":       overrides,
+		"override":        overrides,
 	}
 	response, err := c.client.R().SetBasicAuth(c.Config.ClientID, c.Config.Token).SetBody(payload).Post(path)
 	if response == nil {
