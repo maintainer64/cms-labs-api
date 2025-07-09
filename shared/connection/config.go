@@ -20,3 +20,15 @@ type ServerConfig struct {
 	ServerReadTimeout int
 	Layer             string
 }
+
+type K8SConfig struct {
+	ConfigYaml string
+	Namespace  string
+}
+
+type GitConfig struct {
+	BaseUrl string
+	Token   string
+	RepoId  int
+	Branch  string
+}

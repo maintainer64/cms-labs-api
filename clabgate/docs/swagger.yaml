@@ -1,0 +1,76 @@
+basePath: /clabgate/api
+definitions:
+  queries.TaskCodeRegistryItem:
+    properties:
+      filename:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  usecases.TasksListInputDTO:
+    type: object
+  usecases.TasksListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/queries.TaskCodeRegistryItem'
+        type: array
+    required:
+    - model
+    type: object
+  usecases.TasksListResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TasksListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+info:
+  contact:
+    email: your@mail.com
+    name: API Support
+  description: This is an auto-generated API Docs.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Clabernetes Gate API
+  version: "1.0"
+paths:
+  /v1/tasks/list:
+    post:
+      consumes:
+      - application/json
+      description: 'List tasks. Roles: [admin, instructor]'
+      parameters:
+      - description: tasks list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TasksListInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TasksListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list tasks
+      tags:
+      - Tasks
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -22,32 +22,20 @@ func ExtractTokenMetadata(
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
-	tokenData, err := decodeToken(token)
+	tokenData, err := cms_client.SSODecodeToken(token)
 	if err != nil {
 		return nil, utils.FiberValidationException{
 			Status:    fiber.StatusUnauthorized,
 			Exception: err,
 		}
 	}
-	if len(roles) != 0 && !hasIntersection(roles, tokenData.Roles) {
+	if len(roles) != 0 && !cms_client.SSOHasIntersection(roles, tokenData.Roles) {
 		return nil, utils.FiberValidationException{
 			Status:    fiber.StatusForbidden,
 			Exception: errors.New("User with current role is not allow action"),
 		}
 	}
 	return tokenData, nil
-}
-
-// Вспомогательная функция для проверки пересечения ролей
-func hasIntersection(allowedRoles, userRoles []string) bool {
-	for _, userRole := range userRoles {
-		for _, allowedRole := range allowedRoles {
-			if userRole == allowedRole {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func extractToken(c *fiber.Ctx) string {
@@ -84,44 +72,4 @@ func verifyToken(tokenString string) (*jwt.Token, error) {
 	}
 
 	return token, nil
-}
-
-func getStringSlice(claims map[string]interface{}, key string) []string {
-	var result []string
-	if val, ok := claims[key]; ok {
-		if slice, ok := val.([]interface{}); ok {
-			for _, item := range slice {
-				if str, ok := item.(string); ok {
-					result = append(result, str)
-				}
-			}
-		}
-	}
-	return result
-}
-
-func decodeToken(jwtToken *jwt.Token) (*cms_client.SSOTokenPublicData, error) {
-	// Setting and checking token and credentials.
-	claims, ok := jwtToken.Claims.(jwt.MapClaims)
-	if !ok || !jwtToken.Valid {
-		return nil, utils.FiberValidationException{
-			Status:    fiber.StatusUnauthorized,
-			Exception: errors.New("token invalid"),
-		}
-	}
-	tokenData := cms_client.SSOTokenPublicData{
-		Iss:          claims["iss"].(string),
-		Sub:          claims["sub"].(string),
-		Aud:          claims["aud"].(string),
-		Azp:          claims["azp"].(string),
-		Exp:          int64(claims["exp"].(float64)),
-		Iat:          int64(claims["iat"].(float64)),
-		Nonce:        claims["nonce"].(string),
-		Email:        claims["email"].(string),
-		Name:         claims["name"].(string),
-		ServerID:     uint(claims["server_id"].(float64)),
-		Roles:        getStringSlice(claims, "roles"),
-		LastLaunchId: claims["last_launch_id"].(string),
-	}
-	return &tokenData, nil
 }

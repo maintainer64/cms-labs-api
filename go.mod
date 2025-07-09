@@ -1,6 +1,6 @@
 module gitlab.com/a10869/api-modules
 
-go 1.23.0
+go 1.24.4
 
 require (
 	github.com/h2non/gock v1.2.0 // indirect

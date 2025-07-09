@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
-	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/logs"
@@ -23,7 +22,7 @@ import (
 func ServiceCardCreate(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -59,7 +58,7 @@ func ServiceCardCreate(c *fiber.Ctx) error {
 func ServiceCardList(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -95,7 +94,7 @@ func ServiceCardList(c *fiber.Ctx) error {
 func ServiceCardDelete(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -131,7 +130,7 @@ func ServiceCardDelete(c *fiber.Ctx) error {
 func ServiceCardGet(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}

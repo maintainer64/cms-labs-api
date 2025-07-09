@@ -2,6 +2,7 @@ package lti_query
 
 import (
 	"fmt"
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"strings"
 
 	"github.com/goccy/go-json"
@@ -56,7 +57,7 @@ func (q *ExternalDataUpdateQuery) UpdateByLaunchData(
 	setRoles := make([]uint, 0)
 	// Delete student, instructor role from userRoles
 	for _, userRole := range userRoles {
-		if userRole.Code == models.UsersRoleStudent || userRole.Code == models.UsersRoleInstructor {
+		if userRole.Code == cms_client.SSOUsersRoleStudent || userRole.Code == cms_client.SSOUsersRoleAdmin {
 			continue
 		}
 		setRoles = append(setRoles, userRole.ID)
@@ -72,28 +73,28 @@ func MapRoleCoreByLTIRoleCode(rolesLTI []string) string {
 	for _, roleLTI := range rolesLTI {
 		switch roleLTI {
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Administrator":
-			return models.UsersRoleInstructor
+			return cms_client.SSOUsersRoleAdmin
 		case "Administrator":
-			return models.UsersRoleInstructor
+			return cms_client.SSOUsersRoleAdmin
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#ContentDeveloper":
 			continue
 		case "ContentDeveloper":
 			continue
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor":
-			return models.UsersRoleInstructor
+			return cms_client.SSOUsersRoleAdmin
 		case "Instructor":
-			return models.UsersRoleInstructor
+			return cms_client.SSOUsersRoleAdmin
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner":
 			continue
 		case "Learner":
 			continue
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Mentor":
-			return models.UsersRoleInstructor
+			return cms_client.SSOUsersRoleAdmin
 		case "Mentor":
-			return models.UsersRoleInstructor
+			return cms_client.SSOUsersRoleAdmin
 		default:
 			continue
 		}
 	}
-	return models.UsersRoleStudent
+	return cms_client.SSOUsersRoleStudent
 }

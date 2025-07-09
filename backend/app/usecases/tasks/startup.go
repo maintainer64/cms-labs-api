@@ -4,6 +4,7 @@ import (
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -46,19 +47,19 @@ func (u *StartupFiberUC) userDefaultCreate() (uint, error) {
 
 func (u *StartupFiberUC) createRoles() []uint {
 	student := &models.Role{}
-	student.Code = models.UsersRoleStudent
+	student.Code = cms_client.SSOUsersRoleStudent
 	student.Name = "Student"
 
 	_ = u.RoleQueries.Upsert(student)
 
 	instructor := &models.Role{}
-	instructor.Code = models.UsersRoleInstructor
+	instructor.Code = cms_client.SSOUsersRoleAdmin
 	instructor.Name = "Instructor"
 
 	_ = u.RoleQueries.Upsert(instructor)
 
 	admin := &models.Role{}
-	admin.Code = models.UsersRoleAdmin
+	admin.Code = cms_client.SSOUsersRoleAdmin
 	admin.Name = "Admin"
 
 	_ = u.RoleQueries.Upsert(admin)

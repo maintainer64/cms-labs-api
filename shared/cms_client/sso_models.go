@@ -10,6 +10,12 @@ import (
 
 const SSORefreshTokenName = "cms-labs-refresh-token" // #nosec G101
 
+var (
+	SSOUsersRoleAdmin      string = "admin"
+	SSOUsersRoleInstructor string = "instructor"
+	SSOUsersRoleStudent    string = "student"
+)
+
 type SSOToken struct {
 	AccessToken  string `json:"access_token" required:"true"`
 	RefreshToken string `json:"refresh_token" required:"true"`

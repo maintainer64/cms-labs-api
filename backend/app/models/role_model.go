@@ -1,11 +1,5 @@
 package models
 
-var (
-	UsersRoleAdmin      string = "admin"
-	UsersRoleInstructor string = "instructor"
-	UsersRoleStudent    string = "student"
-)
-
 // RoleBase struct to describe Role object.
 type RoleBase struct {
 	Code string `gorm:"type:varchar(255)" json:"code" valid:"required"`

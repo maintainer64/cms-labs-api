@@ -16,6 +16,7 @@ pre_commit: clean
 generate:
 	make -C backend generate
 	make -C gen generate
+	make -C clabgate generate
 	make -C pnetlabaddon generate
 	make -C shared generate
 	yarn --cwd nextui-dashboard generate

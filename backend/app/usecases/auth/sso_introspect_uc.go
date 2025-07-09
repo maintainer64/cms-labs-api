@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -71,7 +72,7 @@ func (u *SSOIntrospectUC) ByAccess(inputDTO SSOIntrospectInputDTO) (*SSOTokenInt
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
-	tokenData, err := decodeToken(token)
+	tokenData, err := cms_client.SSODecodeToken(token)
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}

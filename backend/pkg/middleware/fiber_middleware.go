@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 	"gitlab.com/a10869/api-modules/shared/logs"
+	"gitlab.com/a10869/api-modules/shared/middleware"
 )
 
 // FiberMiddleware provide Fiber's built-in middlewares.
@@ -29,7 +30,9 @@ func FiberMiddleware(a *fiber.App) {
 		NewJWTMiddleware(),
 		// Add simple logger.
 		logs.NewFiberZerologLogger(),
+		// SSO форматирование
+		InternalSSOFormatterNew(configs.AppConfig.Debug),
 		// InternalFormatterException
-		InternalFormatterNew(configs.AppConfig.Debug),
+		middleware.InternalFormatterNew(configs.AppConfig.Debug),
 	)
 }

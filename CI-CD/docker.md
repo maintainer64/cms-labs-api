@@ -123,6 +123,7 @@ services:
       - "5200:80"
     environment:
       CMS_CORE_SERVICE: "http://core-backend:5000"
+      CLABGATE_SERVICE: "http://clabgate:5000"
       SYSTEM_DNS: "127.0.0.11"
       SSL_CONF: ""
   #      SSL_CONF: "include ssl.conf;"

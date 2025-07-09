@@ -3,9 +3,9 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
-	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
@@ -24,7 +24,7 @@ func LTIFormCreate(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func LTIFormList(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func LTIFormDelete(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -130,7 +130,7 @@ func LTIFormGet(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}

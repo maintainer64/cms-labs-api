@@ -1,6 +1,6 @@
 module gitlab.com/a10869/api-modules/gen
 
-go 1.23.0
+go 1.24.4
 
 require github.com/stretchr/testify v1.10.0
 

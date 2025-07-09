@@ -1,6 +1,6 @@
 module gitlab.com/a10869/api-modules/pnetlabaddon
 
-go 1.23.0
+go 1.24.4
 
 replace gitlab.com/a10869/api-modules/shared => ../shared
 

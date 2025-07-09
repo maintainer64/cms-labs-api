@@ -129,15 +129,15 @@ func (m *TokenManager) JWTRolesByUserId(
 	}
 	// Delete all default roles
 	for _, role := range roles {
-		if role.Code == models.UsersRoleStudent {
+		if role.Code == cms_client.SSOUsersRoleStudent {
 			isStudent = true
 			continue
 		}
-		if role.Code == models.UsersRoleAdmin {
+		if role.Code == cms_client.SSOUsersRoleAdmin {
 			isAdmin = true
 			continue
 		}
-		if role.Code == models.UsersRoleInstructor {
+		if role.Code == cms_client.SSOUsersRoleAdmin {
 			isInstructor = true
 			continue
 		}
@@ -145,15 +145,15 @@ func (m *TokenManager) JWTRolesByUserId(
 	}
 	// The administrator applies only if he is a instructor
 	if isAdmin && isInstructor {
-		rolesJWT = slices.Insert(rolesJWT, 0, models.UsersRoleAdmin)
+		rolesJWT = slices.Insert(rolesJWT, 0, cms_client.SSOUsersRoleAdmin)
 		return rolesJWT, nil
 	}
 	if isInstructor {
-		rolesJWT = slices.Insert(rolesJWT, 0, models.UsersRoleInstructor)
+		rolesJWT = slices.Insert(rolesJWT, 0, cms_client.SSOUsersRoleAdmin)
 		return rolesJWT, nil
 	}
 	if isStudent {
-		rolesJWT = slices.Insert(rolesJWT, 0, models.UsersRoleStudent)
+		rolesJWT = slices.Insert(rolesJWT, 0, cms_client.SSOUsersRoleStudent)
 		return rolesJWT, nil
 	}
 	return rolesJWT, nil

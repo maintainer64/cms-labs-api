@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
-	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
@@ -25,7 +24,7 @@ func PNETServerCreate(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -66,7 +65,7 @@ func PNETServerList(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -102,7 +101,7 @@ func PNETServerDelete(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
@@ -143,7 +142,7 @@ func PNETServerGet(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{models.UsersRoleAdmin, models.UsersRoleInstructor},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
 	); err != nil {
 		return err
 	}
