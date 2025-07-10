@@ -3,6 +3,7 @@ package cms_client
 import (
 	"encoding/base64"
 	"strconv"
+	"strings"
 
 	"github.com/goccy/go-json"
 	"github.com/golang-jwt/jwt/v5"
@@ -64,6 +65,18 @@ func (t *SSOTokenPublicData) UserRoleMain() string {
 		return t.Roles[0]
 	}
 	return ""
+}
+
+func UsernameByEmail(email string) string {
+	parts := strings.Split(email, "@")
+	if len(parts) > 0 {
+		return parts[0]
+	}
+	return email
+}
+
+func (t *SSOTokenPublicData) Username() string {
+	return UsernameByEmail(t.Email)
 }
 
 func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {

@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
+	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/connection"
 )
 
 type GitlabCodeRegistryQuery struct {
 	Config *connection.GitConfig
 	Client *resty.Client
+	*zerolog.Logger
 }
 
 type GitlabCodeRegistryFileResult struct {
@@ -33,28 +35,33 @@ func (g *GitlabCodeRegistryQuery) TasksList() ([]TaskCodeRegistryItem, error) {
 		"%s/api/v4/projects/%s/repository/files/%s?ref=%s",
 		g.Config.BaseUrl, g.Config.RepoId, GitClabGateTasksConfig, g.Config.Branch,
 	)
+	g.Logger.Debug().Msg(fmt.Sprintf("TasksList url: %s", uri))
 	var responseJson GitlabCodeRegistryFileResult
 	response, err := g.Client.R().SetHeaders(map[string]string{
-		"Content-Type":  "application/json",
 		"PRIVATE-TOKEN": g.Config.Token,
 	}).SetResult(&responseJson).Get(uri)
 	if response == nil {
+		g.Logger.Info().Msg(fmt.Sprintf("TasksList: url is incorrect: %s", uri))
 		return nil, errors.New("gitlab server not create response")
 	}
 	if response.IsError() {
+		g.Logger.Info().Msg(fmt.Sprintf("TasksList: statusCode: %d", response.StatusCode()))
 		return nil, fmt.Errorf("gitlab server error statusCode: %d", response.StatusCode())
 	}
 	if responseJson.Content == "" || responseJson.Encoding != "base64" {
+		g.Logger.Info().Msg("TasksList: gitlab file not encoded base64")
 		return nil, errors.New("gitlab file not encoded base64")
 	}
 	content, err := base64.StdEncoding.DecodeString(responseJson.Content)
 	if err != nil {
+		g.Logger.Info().Msg(fmt.Sprintf("TasksList: content is not decoded base64"))
 		return nil, err
 	}
-	var results []TaskCodeRegistryItem
-	err = json.Unmarshal(content, &results)
+	var result TaskCodeRegistry
+	err = json.Unmarshal(content, &result)
 	if err != nil {
+		g.Logger.Info().Msg(fmt.Sprintf("TasksList: content is not decoded json %s", content))
 		return nil, err
 	}
-	return results, nil
+	return result.Labs, nil
 }

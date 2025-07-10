@@ -72,6 +72,9 @@ func (u *SSOIntrospectUC) ByAccess(inputDTO SSOIntrospectInputDTO) (*SSOTokenInt
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
+	if !token.Valid {
+		return nil, utils.FiberValidationException{Status: fiber.StatusBadRequest, Exception: fmt.Errorf("invalid token")}
+	}
 	tokenData, err := cms_client.SSODecodeToken(token)
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}

@@ -7,7 +7,7 @@ import (
 
 func (di *DIContainer) TasksListUC() *usecases.TasksListUC {
 	return &usecases.TasksListUC{
-		Logger:    logs.NewZeroLogger(di.ZeroLogConf.SetName("tasks.StartupFiberUC")),
+		Logger:    logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TasksListUC")),
 		GitClient: di.GitClient(),
 	}
 }

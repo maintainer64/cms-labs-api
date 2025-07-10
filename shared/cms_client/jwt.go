@@ -24,7 +24,7 @@ func SSOTokenGetStringSlice(claims map[string]interface{}, key string) []string 
 func SSODecodeToken(jwtToken *jwt.Token) (*SSOTokenPublicData, error) {
 	// Setting and checking token and credentials.
 	claims, ok := jwtToken.Claims.(jwt.MapClaims)
-	if !ok || !jwtToken.Valid {
+	if !ok {
 		return nil, utils.FiberValidationException{
 			Status:    fiber.StatusUnauthorized,
 			Exception: errors.New("token invalid"),

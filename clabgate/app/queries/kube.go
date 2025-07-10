@@ -3,9 +3,10 @@ package queries
 import (
 	"context"
 	"fmt"
+	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/connection"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"log"
+	"k8s.io/client-go/dynamic"
 	"strings"
 	"time"
 
@@ -18,8 +19,15 @@ import (
 
 type KubernetesAdminQuery struct {
 	clientset        *kubernetes.Clientset
+	dynamicClient    dynamic.Interface
 	defaultNamespace string
+	*zerolog.Logger
 }
+
+const (
+	NamespaceListRole   = "namespace-lister"
+	NamespaceAccessRole = "namespace-access"
+)
 
 // NewKubernetesAdmin создает новый экземпляр администратора Kubernetes
 func NewKubernetesAdmin(settings *connection.K8SConfig) (*KubernetesAdminQuery, error) {
@@ -32,7 +40,15 @@ func NewKubernetesAdmin(settings *connection.K8SConfig) (*KubernetesAdminQuery, 
 	if err != nil {
 		return nil, fmt.Errorf("failed to create kubernetes clientset: %v", err)
 	}
-	return &KubernetesAdminQuery{clientset: clientset, defaultNamespace: settings.Namespace}, nil
+	dynamicClient, err := dynamic.NewForConfig(config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create kubernetes dynamicClient: %v", err)
+	}
+	return &KubernetesAdminQuery{
+		clientset:        clientset,
+		dynamicClient:    dynamicClient,
+		defaultNamespace: settings.Namespace,
+	}, nil
 }
 
 func (k *KubernetesAdminQuery) NormalizeEntityName(entityName string) string {
@@ -72,12 +88,12 @@ func (k *KubernetesAdminQuery) NormalizeEntityName(entityName string) string {
 }
 
 // CreateUser создает ServiceAccount, если он еще не существует
-func (k *KubernetesAdminQuery) CreateUser(ctx context.Context, username string) (*corev1.ServiceAccount, error) {
+func (k *KubernetesAdminQuery) CreateUser(ctx context.Context, username string) (*corev1.ServiceAccount, bool, error) {
 	// Проверяем существование ServiceAccount
 	sa, err := k.clientset.CoreV1().ServiceAccounts(k.defaultNamespace).Get(ctx, username, metav1.GetOptions{})
 	if err == nil {
-		log.Printf("ServiceAccount %s already exists", username)
-		return sa, nil
+		k.Logger.Info().Msg(fmt.Sprintf("ServiceAccount %s already exists", username))
+		return sa, false, nil
 	}
 
 	// Если не существует, создаем
@@ -89,20 +105,23 @@ func (k *KubernetesAdminQuery) CreateUser(ctx context.Context, username string) 
 
 	sa, err = k.clientset.CoreV1().ServiceAccounts(k.defaultNamespace).Create(ctx, serviceAccount, metav1.CreateOptions{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create service account: %v", err)
+		return nil, false, fmt.Errorf("failed to create service account: %v", err)
 	}
-
-	log.Printf("ServiceAccount %s created", username)
-	return sa, nil
+	k.Logger.Info().Msg(fmt.Sprintf("ServiceAccount %s created", username))
+	return sa, true, nil
 }
 
 // CreateNamespace создает namespace, если он еще не существует
-func (k *KubernetesAdminQuery) CreateNamespace(ctx context.Context, username string, namespace string) (*corev1.Namespace, error) {
+func (k *KubernetesAdminQuery) CreateNamespace(
+	ctx context.Context,
+	username string,
+	namespace string,
+) (*corev1.Namespace, bool, error) {
 	// Проверяем существование namespace
 	ns, err := k.clientset.CoreV1().Namespaces().Get(ctx, namespace, metav1.GetOptions{})
 	if err == nil {
-		log.Printf("Namespace %s already exists", namespace)
-		return ns, nil
+		k.Logger.Info().Msg(fmt.Sprintf("Namespace %s already exists", namespace))
+		return ns, false, nil
 	}
 
 	// Если не существует, создаем
@@ -117,163 +136,133 @@ func (k *KubernetesAdminQuery) CreateNamespace(ctx context.Context, username str
 
 	createdNs, err := k.clientset.CoreV1().Namespaces().Create(ctx, newNs, metav1.CreateOptions{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create namespace: %v", err)
+		return nil, false, fmt.Errorf("failed to create namespace: %v", err)
 	}
-
-	log.Printf("Namespace %s created", namespace)
-	return createdNs, nil
+	k.Logger.Info().Msg(fmt.Sprintf("Namespace %s created", namespace))
+	return createdNs, true, nil
 }
 
-// GrantAccess предоставляет пользователю полные права только в своих неймспейсах (username-*)
-func (k *KubernetesAdminQuery) GrantAccess(ctx context.Context, username string) error {
-	user := k.NormalizeEntityName(username)
-
-	// 1. Получаем список неймспейсов пользователя
-	listOpts := metav1.ListOptions{
-		LabelSelector: fmt.Sprintf("owner=%s", user),
-	}
-	nsList, err := k.clientset.CoreV1().Namespaces().List(ctx, listOpts)
-	if err != nil {
-		return fmt.Errorf("failed to list namespaces for %s: %v", user, err)
-	}
-
-	// Собираем имена неймспейсов пользователя
-	var userNamespaces []string
-	for _, ns := range nsList.Items {
-		if strings.HasPrefix(ns.Name, user+"-") {
-			userNamespaces = append(userNamespaces, ns.Name)
-		}
-	}
-
-	// 2. Создаем ClusterRole для просмотра списка неймспейсов (требуется для Dashboard)
-	viewRole := &rbacv1.ClusterRole{
+// GrantAccessNamespacesList - выдача доступов в список неймспейсов
+func (k *KubernetesAdminQuery) GrantAccessNamespacesList(ctx context.Context, username []string) error {
+	namespaceRole := &rbacv1.ClusterRole{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: fmt.Sprintf("%s-namespace-lister", user),
+			Name: NamespaceListRole,
 		},
 		Rules: []rbacv1.PolicyRule{
 			{
 				APIGroups: []string{""},
 				Resources: []string{"namespaces"},
-				Verbs:     []string{"list"},
+				Verbs:     []string{"list", "get"},
 			},
 		},
 	}
 
-	// Создаем или обновляем ClusterRole
-	if _, err := k.clientset.RbacV1().ClusterRoles().Update(ctx, viewRole, metav1.UpdateOptions{}); err != nil {
+	// 1. Создаем или обновляем ClusterRole
+	if _, err := k.clientset.RbacV1().ClusterRoles().Update(ctx, namespaceRole, metav1.UpdateOptions{}); err != nil {
 		if errors.IsNotFound(err) {
-			if _, err := k.clientset.RbacV1().ClusterRoles().Create(ctx, viewRole, metav1.CreateOptions{}); err != nil {
-				log.Printf("ERROR: create namespace lister ClusterRole failed: %v", err)
+			if _, err := k.clientset.RbacV1().ClusterRoles().Create(ctx, namespaceRole, metav1.CreateOptions{}); err != nil {
+				k.Logger.Warn().Msg(fmt.Sprintf("ERROR: create namespace lister ClusterRole failed: %v", err))
 			}
 		} else {
-			log.Printf("ERROR: update namespace lister ClusterRole failed: %v", err)
+			k.Logger.Warn().Msg(fmt.Sprintf("ERROR: update namespace lister ClusterRole failed: %v", err))
 		}
 	}
 
-	// 3. Создаем ClusterRole для просмотра только своих неймспейсов
-	restrictedViewRole := &rbacv1.ClusterRole{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: fmt.Sprintf("%s-namespace-viewer", user),
-		},
-		Rules: []rbacv1.PolicyRule{
-			{
-				APIGroups:     []string{""},
-				Resources:     []string{"namespaces"},
-				Verbs:         []string{"get"},
-				ResourceNames: userNamespaces,
-			},
-		},
-	}
-
-	if _, err := k.clientset.RbacV1().ClusterRoles().Update(ctx, restrictedViewRole, metav1.UpdateOptions{}); err != nil {
-		if errors.IsNotFound(err) {
-			if _, err := k.clientset.RbacV1().ClusterRoles().Create(ctx, restrictedViewRole, metav1.CreateOptions{}); err != nil {
-				log.Printf("ERROR: create restricted namespace viewer ClusterRole failed: %v", err)
-			}
-		} else {
-			log.Printf("ERROR: update restricted namespace viewer ClusterRole failed: %v", err)
-		}
-	}
-
-	// 4. Создаем ClusterRoleBinding для обоих ролей
-	binding := &rbacv1.ClusterRoleBinding{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: fmt.Sprintf("%s-namespace-access", user),
-		},
-		Subjects: []rbacv1.Subject{
-			{
-				Kind:      "ServiceAccount",
-				Name:      user,
-				Namespace: k.defaultNamespace,
-			},
-		},
-		RoleRef: rbacv1.RoleRef{
-			Kind:     "ClusterRole",
-			Name:     fmt.Sprintf("%s-namespace-lister", user),
-			APIGroup: "rbac.authorization.k8s.io",
-		},
-	}
-
-	// Удаляем старый binding если существует
-	_ = k.clientset.RbacV1().ClusterRoleBindings().Delete(ctx, binding.Name, metav1.DeleteOptions{})
-	if _, err := k.clientset.RbacV1().ClusterRoleBindings().Create(ctx, binding, metav1.CreateOptions{}); err != nil {
-		log.Printf("ERROR: create namespace access ClusterRoleBinding failed: %v", err)
-	}
-
-	// 5. Даем полные права в каждом неймспейсе пользователя
-	roleName := fmt.Sprintf("%s-full-access", user)
-	rbName := fmt.Sprintf("%s-full-access-binding", user)
-
-	for _, ns := range nsList.Items {
-		if !strings.HasPrefix(ns.Name, user+"-") {
-			continue
-		}
-
-		role := &rbacv1.Role{
+	for _, username := range username {
+		// 2. Создаем ClusterRoleBinding для ролей
+		binding := &rbacv1.ClusterRoleBinding{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      roleName,
-				Namespace: ns.Name,
+				Name: fmt.Sprintf("%s-%s", username, NamespaceListRole),
 			},
-			Rules: []rbacv1.PolicyRule{{
-				APIGroups: []string{"*"},
-				Resources: []string{"*"},
-				Verbs:     []string{"*"},
-			}},
+			Subjects: []rbacv1.Subject{
+				{
+					Kind:      "ServiceAccount",
+					Name:      username,
+					Namespace: k.defaultNamespace,
+				},
+			},
+			RoleRef: rbacv1.RoleRef{
+				Kind:     "ClusterRole",
+				Name:     NamespaceListRole,
+				APIGroup: "rbac.authorization.k8s.io",
+			},
 		}
+		_, _ = k.clientset.RbacV1().ClusterRoleBindings().Create(ctx, binding, metav1.CreateOptions{})
+	}
+	return nil
+}
 
-		if _, err := k.clientset.RbacV1().Roles(ns.Name).Update(ctx, role, metav1.UpdateOptions{}); err != nil {
-			if errors.IsNotFound(err) {
-				if _, err := k.clientset.RbacV1().Roles(ns.Name).Create(ctx, role, metav1.CreateOptions{}); err != nil {
-					log.Printf("ERROR: create Role %s in %s failed: %v", roleName, ns.Name, err)
-				}
-			} else {
-				log.Printf("ERROR: update Role %s in %s failed: %v", roleName, ns.Name, err)
+// GetUserNamespacesOwner - получить все неймспейсы где пользователь является владельцем
+func (k *KubernetesAdminQuery) GetUserNamespacesOwner(ctx context.Context, username string) ([]string, error) {
+	// 1. Получаем список неймспейсов пользователя
+	listOpts := metav1.ListOptions{
+		LabelSelector: fmt.Sprintf("owner=%s", username),
+	}
+	nsList, err := k.clientset.CoreV1().Namespaces().List(ctx, listOpts)
+	if err != nil {
+		return []string{}, fmt.Errorf("failed to list namespaces for %s: %v", username, err)
+	}
+
+	// Собираем имена неймспейсов пользователя
+	var userNamespaces []string
+	for _, ns := range nsList.Items {
+		if strings.HasPrefix(ns.Name, username+"-") {
+			userNamespaces = append(userNamespaces, ns.Name)
+		}
+	}
+	return userNamespaces, nil
+}
+
+// GrantAccessUserNamespace выдача полных прав пользователям в неймспейс
+func (k *KubernetesAdminQuery) GrantAccessUserNamespace(
+	ctx context.Context,
+	namespace string,
+	usernames []string,
+) error {
+	// 1. Создаём роль полного доступа
+	roleNameAccess := fmt.Sprintf("%s-full-access", namespace)
+	role := &rbacv1.Role{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      roleNameAccess,
+			Namespace: namespace,
+		},
+		Rules: []rbacv1.PolicyRule{{
+			APIGroups: []string{"*"},
+			Resources: []string{"*"},
+			Verbs:     []string{"*"},
+		}},
+	}
+
+	if _, err := k.clientset.RbacV1().Roles(namespace).Update(ctx, role, metav1.UpdateOptions{}); err != nil {
+		if errors.IsNotFound(err) {
+			if _, err := k.clientset.RbacV1().Roles(namespace).Create(ctx, role, metav1.CreateOptions{}); err != nil {
+				k.Logger.Warn().Msg(fmt.Sprintf("ERROR: create Role %s in %s failed: %v", roleNameAccess, namespace, err))
 			}
+		} else {
+			k.Logger.Warn().Msg(fmt.Sprintf("ERROR: update Role %s in %s failed: %v", roleNameAccess, namespace, err))
 		}
+	}
 
+	for _, username := range usernames {
+		rbName := fmt.Sprintf("%s-full-access-binding", username)
 		rb := &rbacv1.RoleBinding{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      rbName,
-				Namespace: ns.Name,
+				Namespace: namespace,
 			},
 			Subjects: []rbacv1.Subject{{
 				Kind:      "ServiceAccount",
-				Name:      user,
+				Name:      username,
 				Namespace: k.defaultNamespace,
 			}},
 			RoleRef: rbacv1.RoleRef{
 				APIGroup: "rbac.authorization.k8s.io",
 				Kind:     "Role",
-				Name:     roleName,
+				Name:     roleNameAccess,
 			},
 		}
-
-		_ = k.clientset.RbacV1().RoleBindings(ns.Name).Delete(ctx, rbName, metav1.DeleteOptions{})
-		if _, err := k.clientset.RbacV1().RoleBindings(ns.Name).Create(ctx, rb, metav1.CreateOptions{}); err != nil {
-			log.Printf("ERROR: create RoleBinding %s in %s failed: %v", rbName, ns.Name, err)
-		}
+		_, _ = k.clientset.RbacV1().RoleBindings(namespace).Create(ctx, rb, metav1.CreateOptions{})
 	}
-
 	return nil
 }
 
@@ -327,40 +316,4 @@ func (k *KubernetesAdminQuery) GetUserToken(ctx context.Context, username string
 			time.Sleep(1 * time.Second)
 		}
 	}
-}
-
-func main() {
-	admin, err := NewKubernetesAdmin(nil)
-	if err != nil {
-		log.Fatalf("Failed to create Kubernetes admin: %v", err)
-	}
-
-	ctx := context.Background()
-	username := admin.NormalizeEntityName("kodolov-s")
-	namespace := admin.NormalizeEntityName("kodolov-s-task-one")
-
-	// 1. Создаем пользователя (ServiceAccount)
-	_, err = admin.CreateUser(ctx, username)
-	if err != nil {
-		log.Fatalf("Failed to create user: %v", err)
-	}
-
-	// 2. Создаем namespace
-	_, err = admin.CreateNamespace(ctx, username, namespace)
-	if err != nil {
-		log.Fatalf("Failed to create namespace: %v", err)
-	}
-
-	// 3. Выдаем права на exec в namespace
-	err = admin.GrantAccess(ctx, username)
-	if err != nil {
-		log.Fatalf("Failed to grant exec access: %v", err)
-	}
-
-	// 4. Получаем токен для пользователя
-	token, err := admin.GetUserToken(ctx, username)
-	if err != nil {
-		log.Fatalf("Failed to get user token: %v", err)
-	}
-	log.Printf("Token for user %s: %s", username, token)
 }

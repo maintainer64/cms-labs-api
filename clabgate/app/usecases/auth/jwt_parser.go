@@ -17,7 +17,7 @@ func ExtractTokenMetadata(
 	c *fiber.Ctx,
 	roles []string,
 ) (*cms_client.SSOTokenPublicData, error) {
-	token, err := jwt.Parse(extractToken(c), nil, jwt.WithoutClaimsValidation())
+	token, _, err := new(jwt.Parser).ParseUnverified(extractToken(c), jwt.MapClaims{})
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}

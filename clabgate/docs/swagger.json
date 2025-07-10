@@ -54,20 +54,145 @@
                     }
                 }
             }
+        },
+        "/v1/topologies/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List tasks. Roles: [student, admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "list tasks",
+                "parameters": [
+                    {
+                        "description": "topology namespace",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TopologiesGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TopologiesGetResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "queries.TaskCodeRegistryItem": {
             "type": "object",
             "properties": {
-                "filename": {
+                "full_path": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "topology.TopologiesEdge": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/topology.TopologiesEdgeData"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "topology.TopologiesEdgeData": {
+            "type": "object",
+            "properties": {
+                "source": {
+                    "$ref": "#/definitions/topology.TopologiesEdgeDataItem"
+                },
+                "target": {
+                    "$ref": "#/definitions/topology.TopologiesEdgeDataItem"
+                }
+            }
+        },
+        "topology.TopologiesEdgeDataItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "topology.TopologiesNode": {
+            "type": "object",
+            "properties": {
+                "icon": {
+                    "description": "Icon enum:cloud,router,server,switch,desktop",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "topology.Topology": {
+            "type": "object",
+            "properties": {
+                "direction": {
+                    "type": "string"
+                },
+                "edges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/topology.TopologiesEdge"
+                    }
+                },
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/topology.TopologiesNode"
+                    }
                 }
             }
         },
@@ -103,6 +228,40 @@
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.TasksListOutputDTO"
+                }
+            }
+        },
+        "usecases.TopologiesGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "namespace": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TopologiesGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "topology": {
+                    "$ref": "#/definitions/topology.Topology"
+                }
+            }
+        },
+        "usecases.TopologiesGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TopologiesGetOutputDTO"
                 }
             }
         }

@@ -2,12 +2,68 @@ basePath: /clabgate/api
 definitions:
   queries.TaskCodeRegistryItem:
     properties:
-      filename:
+      full_path:
         type: string
       id:
         type: string
+      title:
+        type: string
+    type: object
+  topology.TopologiesEdge:
+    properties:
+      data:
+        $ref: '#/definitions/topology.TopologiesEdgeData'
+      id:
+        type: string
+      source:
+        type: string
+      target:
+        type: string
+      type:
+        type: string
+    type: object
+  topology.TopologiesEdgeData:
+    properties:
+      source:
+        $ref: '#/definitions/topology.TopologiesEdgeDataItem'
+      target:
+        $ref: '#/definitions/topology.TopologiesEdgeDataItem'
+    type: object
+  topology.TopologiesEdgeDataItem:
+    properties:
+      id:
+        type: string
+      label:
+        type: string
       name:
         type: string
+      type:
+        type: string
+    type: object
+  topology.TopologiesNode:
+    properties:
+      icon:
+        description: Icon enum:cloud,router,server,switch,desktop
+        type: string
+      id:
+        type: string
+      label:
+        type: string
+      type:
+        type: string
+    type: object
+  topology.Topology:
+    properties:
+      direction:
+        type: string
+      edges:
+        items:
+          $ref: '#/definitions/topology.TopologiesEdge'
+        type: array
+      nodes:
+        items:
+          $ref: '#/definitions/topology.TopologiesNode'
+        type: array
     type: object
   usecases.TasksListInputDTO:
     type: object
@@ -28,6 +84,28 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.TasksListOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.TopologiesGetInputDTO:
+    properties:
+      namespace:
+        type: string
+    type: object
+  usecases.TopologiesGetOutputDTO:
+    properties:
+      topology:
+        $ref: '#/definitions/topology.Topology'
+    type: object
+  usecases.TopologiesGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TopologiesGetOutputDTO'
     required:
     - error
     - msg
@@ -63,6 +141,30 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/usecases.TasksListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list tasks
+      tags:
+      - Tasks
+  /v1/topologies/get:
+    post:
+      consumes:
+      - application/json
+      description: 'List tasks. Roles: [student, admin, instructor]'
+      parameters:
+      - description: topology namespace
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TopologiesGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TopologiesGetResponse'
       security:
       - ApiKeyAuth: []
       summary: list tasks

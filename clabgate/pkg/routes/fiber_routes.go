@@ -8,5 +8,6 @@ func FiberRoutes(app *fiber.App) {
 	// Routes.
 	SwaggerRoute(app)
 	V1TasksRoute(app)
+	V1TopologyRoute(app)
 	NotFoundRoute(app)
 }

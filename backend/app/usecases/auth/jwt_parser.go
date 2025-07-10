@@ -22,6 +22,9 @@ func ExtractTokenMetadata(
 	if err != nil {
 		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
 	}
+	if !token.Valid {
+		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: errors.New("invalid token")}
+	}
 	tokenData, err := cms_client.SSODecodeToken(token)
 	if err != nil {
 		return nil, utils.FiberValidationException{

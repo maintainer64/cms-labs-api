@@ -4,6 +4,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
 	"gitlab.com/a10869/api-modules/clabgate/pkg/configs"
+	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
 var (
@@ -17,6 +18,7 @@ func (di *DIContainer) GitClient() queries.GitCodeRegistry {
 		return &queries.GitlabCodeRegistryQuery{
 			Config: configs.AppConfig.GitlabConfig,
 			Client: NewRestyClient(),
+			Logger: logs.NewZeroLogger(di.ZeroLogConf.SetName("queries.GitlabCodeRegistryQuery")),
 		}
 	}
 	return nil

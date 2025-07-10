@@ -27,7 +27,7 @@ func (c *AppConfigModel) Reload() {
 	}
 	c.GitlabConfig = &connection.GitConfig{
 		BaseUrl: os.Getenv("GITLAB_BASE_URL"),
-		RepoId:  getEnvInt("GITLAB_REPO_ID"),
+		RepoId:  os.Getenv("GITLAB_REPO_ID"),
 		Token:   os.Getenv("GITLAB_ACCESS_KEY"),
 		Branch:  os.Getenv("GITLAB_BRANCH"),
 	}

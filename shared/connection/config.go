@@ -29,6 +29,6 @@ type K8SConfig struct {
 type GitConfig struct {
 	BaseUrl string
 	Token   string
-	RepoId  int
+	RepoId  string
 	Branch  string
 }
