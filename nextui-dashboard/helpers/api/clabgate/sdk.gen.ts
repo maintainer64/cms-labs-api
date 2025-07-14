@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostV1TasksListData, PostV1TasksListResponse, PostV1TopologiesGetData, PostV1TopologiesGetResponse } from './types.gen';
+import type { PostV1TasksListData, PostV1TasksListResponse, PostV1TopologiesCreateData, PostV1TopologiesCreateResponse, PostV1TopologiesDeleteData, PostV1TopologiesDeleteResponse, PostV1TopologiesGetData, PostV1TopologiesGetResponse } from './types.gen';
 
 /**
  * list tasks
@@ -17,6 +17,38 @@ export const postV1TasksList = (data: PostV1TasksListData): CancelablePromise<Po
     return __request(OpenAPI, {
         method: 'POST',
         url: '/v1/tasks/list',
+        body: data.form
+    });
+};
+
+/**
+ * create personal topologies
+ * create personal topology. Roles: [student, admin, instructor]
+ * @param data The data for the request.
+ * @param data.form create params
+ * @returns usecases_TopologiesCreateResponse OK
+ * @throws ApiError
+ */
+export const postV1TopologiesCreate = (data: PostV1TopologiesCreateData): CancelablePromise<PostV1TopologiesCreateResponse> => {
+    return __request(OpenAPI, {
+        method: 'POST',
+        url: '/v1/topologies/create',
+        body: data.form
+    });
+};
+
+/**
+ * delete personal topologies
+ * delete personal topology. Roles: [student, admin, instructor]
+ * @param data The data for the request.
+ * @param data.form delete params
+ * @returns usecases_TopologiesDeleteResponse OK
+ * @throws ApiError
+ */
+export const postV1TopologiesDelete = (data: PostV1TopologiesDeleteData): CancelablePromise<PostV1TopologiesDeleteResponse> => {
+    return __request(OpenAPI, {
+        method: 'POST',
+        url: '/v1/topologies/delete',
         body: data.form
     });
 };

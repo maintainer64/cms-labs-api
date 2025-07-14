@@ -3,6 +3,7 @@
 export type queries_TaskCodeRegistryItem = {
     full_path?: string;
     id?: string;
+    namespace_suffix?: string;
     title?: string;
 };
 
@@ -54,6 +55,39 @@ export type usecases_TasksListResponse = {
     result?: usecases_TasksListOutputDTO;
 };
 
+export type usecases_TopologiesCreateInputDTO = {
+    redeploy?: boolean;
+    task_id?: string;
+    user_email?: string;
+};
+
+export type usecases_TopologiesCreateOutputDTO = {
+    deploy_created?: boolean;
+    namespace?: string;
+    namespace_created?: boolean;
+    user_created?: boolean;
+};
+
+export type usecases_TopologiesCreateResponse = {
+    error: boolean;
+    msg: string;
+    result?: usecases_TopologiesCreateOutputDTO;
+};
+
+export type usecases_TopologiesDeleteInputDTO = {
+    namespaces?: Array<(string)>;
+};
+
+export type usecases_TopologiesDeleteOutputDTO = {
+    namespaces?: Array<(string)>;
+};
+
+export type usecases_TopologiesDeleteResponse = {
+    error: boolean;
+    msg: string;
+    result?: usecases_TopologiesDeleteOutputDTO;
+};
+
 export type usecases_TopologiesGetInputDTO = {
     namespace?: string;
 };
@@ -76,6 +110,24 @@ export type PostV1TasksListData = {
 };
 
 export type PostV1TasksListResponse = (usecases_TasksListResponse);
+
+export type PostV1TopologiesCreateData = {
+    /**
+     * create params
+     */
+    form: usecases_TopologiesCreateInputDTO;
+};
+
+export type PostV1TopologiesCreateResponse = (usecases_TopologiesCreateResponse);
+
+export type PostV1TopologiesDeleteData = {
+    /**
+     * delete params
+     */
+    form: usecases_TopologiesDeleteInputDTO;
+};
+
+export type PostV1TopologiesDeleteResponse = (usecases_TopologiesDeleteResponse);
 
 export type PostV1TopologiesGetData = {
     /**

@@ -23,3 +23,11 @@ func (di *DIContainer) GitClient() queries.GitCodeRegistry {
 	}
 	return nil
 }
+
+func (di *DIContainer) KubernetesAdmin() (*queries.KubernetesAdminQuery, error) {
+	kubeQuery, err := queries.NewKubernetesAdmin(
+		configs.AppConfig.K8S,
+		di.ZeroLogConf.SetName("queries.KubernetesAdminQuery"),
+	)
+	return kubeQuery, err
+}

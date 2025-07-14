@@ -8,5 +8,6 @@ import (
 func V1TopologyRoute(a *fiber.App) {
 	group := a.Group("/clabgate/api/v1/topologies")
 	group.Post("/get", controllers.TopologiesGet)
-	group.Post("/create", controllers.TopologiesGet)
+	group.Post("/create", controllers.TopologiesCreate)
+	group.Post("/delete", controllers.TopologiesDelete)
 }

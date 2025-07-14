@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/connection"
+	"gitlab.com/a10869/api-modules/shared/logs"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/dynamic"
 	"strings"
@@ -30,7 +31,7 @@ const (
 )
 
 // NewKubernetesAdmin создает новый экземпляр администратора Kubernetes
-func NewKubernetesAdmin(settings *connection.K8SConfig) (*KubernetesAdminQuery, error) {
+func NewKubernetesAdmin(settings *connection.K8SConfig, zeroLogConf *logs.ZeroLoggerConf) (*KubernetesAdminQuery, error) {
 	config, err := clientcmd.RESTConfigFromKubeConfig([]byte(settings.ConfigYaml))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create config from KUBECONFIG: %v", err)
@@ -48,6 +49,7 @@ func NewKubernetesAdmin(settings *connection.K8SConfig) (*KubernetesAdminQuery, 
 		clientset:        clientset,
 		dynamicClient:    dynamicClient,
 		defaultNamespace: settings.Namespace,
+		Logger:           logs.NewZeroLogger(zeroLogConf),
 	}, nil
 }
 
@@ -261,6 +263,7 @@ func (k *KubernetesAdminQuery) GrantAccessUserNamespace(
 				Name:     roleNameAccess,
 			},
 		}
+		k.Logger.Info().Msg(fmt.Sprintf("Granting access to username %s in role %s", username, rbName))
 		_, _ = k.clientset.RbacV1().RoleBindings(namespace).Create(ctx, rb, metav1.CreateOptions{})
 	}
 	return nil
@@ -316,4 +319,29 @@ func (k *KubernetesAdminQuery) GetUserToken(ctx context.Context, username string
 			time.Sleep(1 * time.Second)
 		}
 	}
+}
+
+// GetNamespaceByName - получить определенный неймспейс
+func (k *KubernetesAdminQuery) GetNamespaceByName(
+	ctx context.Context,
+	name string,
+) (*corev1.Namespace, error) {
+	// Проверяем существование namespace
+	k.Logger.Info().Msg(fmt.Sprintf("Get namespace by name %s", name))
+	ns, err := k.clientset.CoreV1().Namespaces().Get(ctx, name, metav1.GetOptions{})
+	if err != nil {
+		k.Logger.Info().Msg(fmt.Sprintf("Namespace %s is not defined", name))
+		return ns, err
+	}
+	return ns, nil
+}
+
+// DeleteNamespaceByName - удалить определенный неймспейс
+func (k *KubernetesAdminQuery) DeleteNamespaceByName(
+	ctx context.Context,
+	name string,
+) error {
+	// Проверяем существование namespace
+	k.Logger.Info().Msg(fmt.Sprintf("Delete namespace by name %s", name))
+	return k.clientset.CoreV1().Namespaces().Delete(ctx, name, metav1.DeleteOptions{})
 }

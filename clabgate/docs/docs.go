@@ -62,6 +62,84 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/topologies/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create personal topology. Roles: [student, admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Topology"
+                ],
+                "summary": "create personal topologies",
+                "parameters": [
+                    {
+                        "description": "create params",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TopologiesCreateInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TopologiesCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/topologies/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete personal topology. Roles: [student, admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Topology"
+                ],
+                "summary": "delete personal topologies",
+                "parameters": [
+                    {
+                        "description": "delete params",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TopologiesDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TopologiesDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/topologies/get": {
             "post": {
                 "security": [
@@ -77,7 +155,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Tasks"
+                    "Topology"
                 ],
                 "summary": "list tasks",
                 "parameters": [
@@ -110,6 +188,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
+                    "type": "string"
+                },
+                "namespace_suffix": {
                     "type": "string"
                 },
                 "title": {
@@ -235,6 +316,95 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.TasksListOutputDTO"
+                }
+            }
+        },
+        "usecases.TopologiesCreateInputDTO": {
+            "type": "object",
+            "properties": {
+                "redeploy": {
+                    "type": "boolean"
+                },
+                "task_id": {
+                    "type": "string"
+                },
+                "user_email": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TopologiesCreateOutputDTO": {
+            "type": "object",
+            "properties": {
+                "deploy_created": {
+                    "type": "boolean"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "namespace_created": {
+                    "type": "boolean"
+                },
+                "user_created": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "usecases.TopologiesCreateResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TopologiesCreateOutputDTO"
+                }
+            }
+        },
+        "usecases.TopologiesDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "namespaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "usecases.TopologiesDeleteOutputDTO": {
+            "type": "object",
+            "properties": {
+                "namespaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "usecases.TopologiesDeleteResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TopologiesDeleteOutputDTO"
                 }
             }
         },

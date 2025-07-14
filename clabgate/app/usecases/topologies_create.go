@@ -45,7 +45,9 @@ func (u *TopologiesCreateUC) Execute(dto TopologiesCreateInputDTO) (TopologiesCr
 	if u.user == nil {
 		return output, errors.New("not logged in")
 	}
+	// Это пользователь, который просит доступ до неймспейса (токен)
 	usernameConnected := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username())
+	// Это пользователь, который владелец неймспейса (email)
 	usernameOwner := u.KubernetesAdminQuery.NormalizeEntityName(cms_client.UsernameByEmail(dto.UserEmail))
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
@@ -62,7 +64,7 @@ func (u *TopologiesCreateUC) Execute(dto TopologiesCreateInputDTO) (TopologiesCr
 		return output, err
 	}
 	namespace := u.KubernetesAdminQuery.NormalizeEntityName(
-		fmt.Sprintf("%s-%s", usernameConnected, task.NamespaceSuffix),
+		fmt.Sprintf("%s-%s", usernameOwner, task.NamespaceSuffix),
 	)
 	u.Logger.Info().Msg(fmt.Sprintf("TopologiesCreateUC: Namespace is: %s", namespace))
 	output.Namespace = namespace
@@ -75,6 +77,12 @@ func (u *TopologiesCreateUC) Execute(dto TopologiesCreateInputDTO) (TopologiesCr
 	_, _, err = u.KubernetesAdminQuery.CreateUser(ctx, usernameOwner)
 	if err != nil {
 		return output, err
+	}
+	if usernameConnected != usernameOwner {
+		_, err = u.KubernetesAdminQuery.GetNamespaceByName(ctx, namespace)
+		if err != nil {
+			return output, err
+		}
 	}
 	_, namespaceCreated, err := u.KubernetesAdminQuery.CreateNamespace(ctx, usernameOwner, namespace)
 	output.NamespaceCreated = namespaceCreated
@@ -104,7 +112,7 @@ func (u *TopologiesCreateUC) Execute(dto TopologiesCreateInputDTO) (TopologiesCr
 		}
 	}
 	u.Logger.Info().Msg(fmt.Sprintf("TopologiesCreateUC: namespace deployed: %s", namespace))
-	output.DeployCreated = trueit
+	output.DeployCreated = true
 	return output, err
 }
 
