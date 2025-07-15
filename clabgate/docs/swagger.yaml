@@ -90,6 +90,46 @@ definitions:
     - error
     - msg
     type: object
+  usecases.TokenAccessGetInputDTO:
+    type: object
+  usecases.TokenAccessGetOutputDTO:
+    properties:
+      token:
+        type: string
+    type: object
+  usecases.TokenAccessGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TokenAccessGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.TokenFileYAMLGetInputDTO:
+    type: object
+  usecases.TokenFileYAMLGetOutputDTO:
+    properties:
+      content:
+        type: string
+      filename:
+        type: string
+    type: object
+  usecases.TokenFileYAMLGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TokenFileYAMLGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
   usecases.TopologiesCreateInputDTO:
     properties:
       redeploy:
@@ -206,6 +246,54 @@ paths:
       summary: list tasks
       tags:
       - Tasks
+  /v1/tokens/json:
+    post:
+      consumes:
+      - application/json
+      description: 'Token cluster. Roles: [student, admin, instructor]'
+      parameters:
+      - description: params
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TokenAccessGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TokenAccessGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: token cluster json
+      tags:
+      - Token
+  /v1/tokens/yaml:
+    post:
+      consumes:
+      - application/json
+      description: 'Token cluster. Roles: [student, admin, instructor]'
+      parameters:
+      - description: params
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TokenFileYAMLGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TokenFileYAMLGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: token cluster yaml
+      tags:
+      - Token
   /v1/topologies/create:
     post:
       consumes:

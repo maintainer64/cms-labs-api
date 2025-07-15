@@ -55,6 +55,31 @@ export type usecases_TasksListResponse = {
     result?: usecases_TasksListOutputDTO;
 };
 
+export type usecases_TokenAccessGetInputDTO = unknown;
+
+export type usecases_TokenAccessGetOutputDTO = {
+    token?: string;
+};
+
+export type usecases_TokenAccessGetResponse = {
+    error: boolean;
+    msg: string;
+    result?: usecases_TokenAccessGetOutputDTO;
+};
+
+export type usecases_TokenFileYAMLGetInputDTO = unknown;
+
+export type usecases_TokenFileYAMLGetOutputDTO = {
+    content?: string;
+    filename?: string;
+};
+
+export type usecases_TokenFileYAMLGetResponse = {
+    error: boolean;
+    msg: string;
+    result?: usecases_TokenFileYAMLGetOutputDTO;
+};
+
 export type usecases_TopologiesCreateInputDTO = {
     redeploy?: boolean;
     task_id?: string;
@@ -110,6 +135,24 @@ export type PostV1TasksListData = {
 };
 
 export type PostV1TasksListResponse = (usecases_TasksListResponse);
+
+export type PostV1TokensJsonData = {
+    /**
+     * params
+     */
+    form: usecases_TokenAccessGetInputDTO;
+};
+
+export type PostV1TokensJsonResponse = (usecases_TokenAccessGetResponse);
+
+export type PostV1TokensYamlData = {
+    /**
+     * params
+     */
+    form: usecases_TokenFileYAMLGetInputDTO;
+};
+
+export type PostV1TokensYamlResponse = (usecases_TokenFileYAMLGetResponse);
 
 export type PostV1TopologiesCreateData = {
     /**

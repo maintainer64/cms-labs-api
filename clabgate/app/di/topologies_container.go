@@ -34,7 +34,7 @@ func (di *DIContainer) TopologiesDeleteUC() (*usecases.TopologiesDeleteUC, error
 		return nil, err
 	}
 	return &usecases.TopologiesDeleteUC{
-		Logger:               logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TopologiesCreateUC")),
+		Logger:               logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TopologiesDeleteUC")),
 		KubernetesAdminQuery: kubeQuery,
 	}, nil
 }

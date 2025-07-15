@@ -62,6 +62,84 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/tokens/json": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Token cluster. Roles: [student, admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "token cluster json",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TokenAccessGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TokenAccessGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/tokens/yaml": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Token cluster. Roles: [student, admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "token cluster yaml",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TokenFileYAMLGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TokenFileYAMLGetResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/topologies/create": {
             "post": {
                 "security": [
@@ -316,6 +394,67 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.TasksListOutputDTO"
+                }
+            }
+        },
+        "usecases.TokenAccessGetInputDTO": {
+            "type": "object"
+        },
+        "usecases.TokenAccessGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TokenAccessGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TokenAccessGetOutputDTO"
+                }
+            }
+        },
+        "usecases.TokenFileYAMLGetInputDTO": {
+            "type": "object"
+        },
+        "usecases.TokenFileYAMLGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TokenFileYAMLGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TokenFileYAMLGetOutputDTO"
                 }
             }
         },

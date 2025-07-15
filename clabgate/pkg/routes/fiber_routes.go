@@ -9,5 +9,6 @@ func FiberRoutes(app *fiber.App) {
 	SwaggerRoute(app)
 	V1TasksRoute(app)
 	V1TopologyRoute(app)
+	V1TokenRoute(app)
 	NotFoundRoute(app)
 }
