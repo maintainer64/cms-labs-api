@@ -2,8 +2,9 @@ package auth
 
 import (
 	"errors"
-	"github.com/golang-jwt/jwt/v5"
 	"strings"
+
+	"github.com/golang-jwt/jwt/v5"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 

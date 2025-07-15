@@ -2,6 +2,7 @@ package cms_client
 
 import (
 	"errors"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"gitlab.com/a10869/api-modules/shared/utils"
@@ -40,6 +41,7 @@ func SSODecodeToken(jwtToken *jwt.Token) (*SSOTokenPublicData, error) {
 		Nonce:        claims["nonce"].(string),
 		Email:        claims["email"].(string),
 		Name:         claims["name"].(string),
+		Username:     claims["username"].(string),
 		ServerID:     uint(claims["server_id"].(float64)),
 		Roles:        SSOTokenGetStringSlice(claims, "roles"),
 		LastLaunchId: claims["last_launch_id"].(string),

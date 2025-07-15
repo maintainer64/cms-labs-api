@@ -63,7 +63,7 @@ const docTemplate = `{
             }
         },
         "/v1/tokens/json": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -102,13 +102,8 @@ const docTemplate = `{
             }
         },
         "/v1/tokens/yaml": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Token cluster. Roles: [student, admin, instructor]",
+            "get": {
+                "description": "Token cluster. Roles: any",
                 "consumes": [
                     "application/json"
                 ],
@@ -467,7 +462,7 @@ const docTemplate = `{
                 "task_id": {
                     "type": "string"
                 },
-                "user_email": {
+                "username": {
                     "type": "string"
                 }
             }

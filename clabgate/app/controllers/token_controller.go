@@ -57,11 +57,7 @@ func TokenAccessJson(c *fiber.Ctx) error {
 // @Success 200 {object} usecases.TokenFileYAMLGetResponse
 // @Router /v1/tokens/yaml [get]
 func TokenAccessYaml(c *fiber.Ctx) error {
-	fileContent := configs.AppConfig.K8S.KrewConfigYaml
-	filename := "kubeconfig.yaml"
-
-	// Set headers and send file
-	c.Set(fiber.HeaderContentDisposition, `attachment; filename="`+filename+`"`)
+	c.Set(fiber.HeaderContentDisposition, `attachment; filename="kubeconfig.yaml"`)
 	c.Set(fiber.HeaderContentType, "application/octet-stream")
-	return c.Send(configs.AppConfig.K8S.KrewConfigYaml)
+	return c.Send([]byte(configs.AppConfig.K8S.KrewConfigYaml))
 }

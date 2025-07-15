@@ -1,9 +1,10 @@
 package configs
 
 import (
-	"gitlab.com/a10869/api-modules/shared/connection"
 	"os"
 	"strconv"
+
+	"gitlab.com/a10869/api-modules/shared/connection"
 )
 
 type AppConfigModel struct {

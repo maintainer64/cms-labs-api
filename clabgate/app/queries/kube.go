@@ -3,13 +3,14 @@ package queries
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/connection"
 	"gitlab.com/a10869/api-modules/shared/logs"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/dynamic"
-	"strings"
-	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"

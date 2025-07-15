@@ -1,8 +1,9 @@
 package topology
 
 import (
-	"github.com/goccy/go-json"
 	"testing"
+
+	"github.com/goccy/go-json"
 )
 
 func TestConvert(t *testing.T) {

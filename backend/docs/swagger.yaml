@@ -431,6 +431,52 @@ definitions:
     - name
     - updated_at
     type: object
+  models.LTIRouting:
+    properties:
+      collaboration:
+        description: Параметры
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_default:
+        type: boolean
+      lti_course_id:
+        type: string
+      lti_description:
+        type: string
+      lti_params_task:
+        type: string
+      lti_sub_id:
+        type: string
+      lti_task_id:
+        description: Автоматические
+        type: string
+      lti_title:
+        description: LTI Params
+        type: string
+      name:
+        type: string
+      pinned_session_minutes:
+        type: integer
+      pnet_labs_path:
+        type: string
+      pnet_labs_type:
+        description: |-
+          The type of PNETLabsType, cms_client.PNETLabsTypeDefault
+          enum: default,curl,sso
+        type: string
+      pnet_server_id:
+        type: integer
+      pnet_test_path:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - updated_at
+    type: object
   models.LTIRoutingListItem:
     properties:
       created_at:
@@ -1071,6 +1117,95 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.LTIFormListSSOOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIRoutingDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LTIRoutingDeleteResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIRoutingDeleteInputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIRoutingEditInputDTO:
+    properties:
+      collaboration:
+        type: integer
+      id:
+        type: integer
+      is_default:
+        type: boolean
+      lti_course_id:
+        type: string
+      lti_description:
+        type: string
+      lti_params_task:
+        type: string
+      lti_sub_id:
+        type: string
+      lti_task_id:
+        type: string
+      lti_title:
+        type: string
+      name:
+        type: string
+      pinned_session_minutes:
+        type: integer
+      pnet_labs_path:
+        type: string
+      pnet_labs_type:
+        type: string
+      pnet_server_id:
+        type: integer
+      pnet_test_path:
+        type: string
+    type: object
+  usecases.LTIRoutingEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LTIRoutingEditResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIRoutingEditOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
+  usecases.LTIRoutingGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.LTIRoutingGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.LTIRouting'
+    type: object
+  usecases.LTIRoutingGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIRoutingGetOutputDTO'
     required:
     - error
     - msg
@@ -1907,6 +2042,54 @@ paths:
       summary: create lti_form
       tags:
       - LTIForm
+  /v1/lti-routing/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete lti_routing. Roles [admin, instructor]
+      parameters:
+      - description: lti_routing id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIRoutingDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIRoutingDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete lti_routing
+      tags:
+      - LTIRouting
+  /v1/lti-routing/get:
+    post:
+      consumes:
+      - application/json
+      description: get lti_routing. Roles [admin, instructor]
+      parameters:
+      - description: lti_routing id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIRoutingGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIRoutingGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get lti_routing
+      tags:
+      - LTIRouting
   /v1/lti-routing/list:
     post:
       consumes:
@@ -1929,6 +2112,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: list lti_routing
+      tags:
+      - LTIRouting
+  /v1/lti-routing/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create lti_routing. Roles [admin, instructor]
+      parameters:
+      - description: lti_routing form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIRoutingEditInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIRoutingEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create lti_routing
       tags:
       - LTIRouting
   /v1/pnet-server-queue/list:

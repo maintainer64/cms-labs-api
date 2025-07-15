@@ -2,8 +2,9 @@ package auth
 
 import (
 	"fmt"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"time"
+
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/queries"

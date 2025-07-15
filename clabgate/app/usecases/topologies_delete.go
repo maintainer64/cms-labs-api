@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
@@ -38,7 +39,7 @@ func (u *TopologiesDeleteUC) Execute(dto TopologiesDeleteInputDTO) (TopologiesDe
 	if u.user == nil {
 		return output, errors.New("not logged in")
 	}
-	username := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username())
+	username := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username)
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,

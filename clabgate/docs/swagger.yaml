@@ -136,7 +136,7 @@ definitions:
         type: boolean
       task_id:
         type: string
-      user_email:
+      username:
         type: string
     type: object
   usecases.TopologiesCreateOutputDTO:
@@ -247,7 +247,7 @@ paths:
       tags:
       - Tasks
   /v1/tokens/json:
-    post:
+    get:
       consumes:
       - application/json
       description: 'Token cluster. Roles: [student, admin, instructor]'
@@ -271,10 +271,10 @@ paths:
       tags:
       - Token
   /v1/tokens/yaml:
-    post:
+    get:
       consumes:
       - application/json
-      description: 'Token cluster. Roles: [student, admin, instructor]'
+      description: 'Token cluster. Roles: any'
       parameters:
       - description: params
         in: body
@@ -289,8 +289,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/usecases.TokenFileYAMLGetResponse'
-      security:
-      - ApiKeyAuth: []
       summary: token cluster yaml
       tags:
       - Token

@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"gitlab.com/a10869/api-modules/shared/logs"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )

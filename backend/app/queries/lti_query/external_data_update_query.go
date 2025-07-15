@@ -2,8 +2,9 @@ package lti_query
 
 import (
 	"fmt"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"strings"
+
+	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	"github.com/goccy/go-json"
 	"github.com/ory/go-convenience/mapx"

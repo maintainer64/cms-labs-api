@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases/response"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"gitlab.com/a10869/api-modules/shared/utils"
-	"slices"
 )
 
 type TopologiesCreateUC struct {
@@ -21,9 +22,9 @@ type TopologiesCreateUC struct {
 }
 
 type TopologiesCreateInputDTO struct {
-	UserEmail string `json:"user_email"`
-	TaskID    string `json:"task_id"`
-	ReDeploy  bool   `json:"redeploy"`
+	Username string `json:"username"`
+	TaskID   string `json:"task_id"`
+	ReDeploy bool   `json:"redeploy"`
 }
 
 type TopologiesCreateOutputDTO struct {
@@ -46,9 +47,9 @@ func (u *TopologiesCreateUC) Execute(dto TopologiesCreateInputDTO) (TopologiesCr
 		return output, errors.New("not logged in")
 	}
 	// Это пользователь, который просит доступ до неймспейса (токен)
-	usernameConnected := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username())
-	// Это пользователь, который владелец неймспейса (email)
-	usernameOwner := u.KubernetesAdminQuery.NormalizeEntityName(cms_client.UsernameByEmail(dto.UserEmail))
+	usernameConnected := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username)
+	// Это пользователь, который владелец неймспейса (username)
+	usernameOwner := u.KubernetesAdminQuery.NormalizeEntityName(dto.Username)
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,

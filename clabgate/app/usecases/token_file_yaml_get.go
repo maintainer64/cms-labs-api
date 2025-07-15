@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"errors"
+
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases/response"
@@ -35,7 +36,7 @@ func (u *TokenFileYAMLGetUC) Execute(dto TokenFileYAMLGetInputDTO) (TokenFileYAM
 	if u.user == nil {
 		return output, errors.New("not logged in")
 	}
-	username := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username())
+	username := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username)
 	ctx := context.Background()
 	token, err := u.KubernetesAdminQuery.GetUserToken(ctx, username)
 	if err != nil {

@@ -6,6 +6,8 @@ import (
 	"slices"
 	"time"
 
+	"gitlab.com/a10869/api-modules/shared/k8s_utils"
+
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	"gitlab.com/a10869/api-modules/backend/app/models"
@@ -98,6 +100,7 @@ func (m *TokenManager) NewJWTByUserId(
 			Azp:          serverModel.ClientID,
 			Nonce:        attemptNonce,
 			Email:        userModel.Email,
+			Username:     k8s_utils.NormalizeK8SEntityName(k8s_utils.UsernameByEmail(userModel.Email)),
 			Name:         userModel.Name,
 			ServerID:     serverID,
 			Roles:        rolesJWT,

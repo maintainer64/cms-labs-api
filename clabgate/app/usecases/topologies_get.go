@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
@@ -11,7 +13,6 @@ import (
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases/response"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"gitlab.com/a10869/api-modules/shared/utils"
-	"strings"
 )
 
 type TopologiesGetUC struct {
@@ -39,7 +40,7 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 	if u.user == nil {
 		return TopologiesGetOutputDTO{}, errors.New("not logged in")
 	}
-	username := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username())
+	username := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username)
 	namespace := u.KubernetesAdminQuery.NormalizeEntityName(dto.Namespace)
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},

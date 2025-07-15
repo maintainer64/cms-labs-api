@@ -2,9 +2,10 @@ package cms_client
 
 import (
 	"encoding/base64"
+	"strconv"
+
 	"github.com/goccy/go-json"
 	"github.com/golang-jwt/jwt/v5"
-	"strconv"
 )
 
 const SSORefreshTokenName = "cms-labs-refresh-token" // #nosec G101

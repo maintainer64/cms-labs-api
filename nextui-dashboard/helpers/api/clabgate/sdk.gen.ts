@@ -3,7 +3,20 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostV1TasksListData, PostV1TasksListResponse, PostV1TokensJsonData, PostV1TokensJsonResponse, PostV1TokensYamlData, PostV1TokensYamlResponse, PostV1TopologiesCreateData, PostV1TopologiesCreateResponse, PostV1TopologiesDeleteData, PostV1TopologiesDeleteResponse, PostV1TopologiesGetData, PostV1TopologiesGetResponse } from './types.gen';
+import type {
+  PostV1TasksListData,
+  PostV1TasksListResponse,
+  GetV1TokensJsonData,
+  GetV1TokensJsonResponse,
+  GetV1TokensYamlData,
+  GetV1TokensYamlResponse,
+  PostV1TopologiesCreateData,
+  PostV1TopologiesCreateResponse,
+  PostV1TopologiesDeleteData,
+  PostV1TopologiesDeleteResponse,
+  PostV1TopologiesGetData,
+  PostV1TopologiesGetResponse
+} from './types.gen';
 
 /**
  * list tasks
@@ -14,11 +27,11 @@ import type { PostV1TasksListData, PostV1TasksListResponse, PostV1TokensJsonData
  * @throws ApiError
  */
 export const postV1TasksList = (data: PostV1TasksListData): CancelablePromise<PostV1TasksListResponse> => {
-    return __request(OpenAPI, {
-        method: 'POST',
-        url: '/v1/tasks/list',
-        body: data.form
-    });
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/tasks/list',
+    body: data.form
+  });
 };
 
 /**
@@ -29,28 +42,28 @@ export const postV1TasksList = (data: PostV1TasksListData): CancelablePromise<Po
  * @returns usecases_TokenAccessGetResponse OK
  * @throws ApiError
  */
-export const postV1TokensJson = (data: PostV1TokensJsonData): CancelablePromise<PostV1TokensJsonResponse> => {
-    return __request(OpenAPI, {
-        method: 'POST',
-        url: '/v1/tokens/json',
-        body: data.form
-    });
+export const getV1TokensJson = (data: GetV1TokensJsonData): CancelablePromise<GetV1TokensJsonResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/tokens/json',
+    body: data.form
+  });
 };
 
 /**
  * token cluster yaml
- * Token cluster. Roles: [student, admin, instructor]
+ * Token cluster. Roles: any
  * @param data The data for the request.
  * @param data.form params
  * @returns usecases_TokenFileYAMLGetResponse OK
  * @throws ApiError
  */
-export const postV1TokensYaml = (data: PostV1TokensYamlData): CancelablePromise<PostV1TokensYamlResponse> => {
-    return __request(OpenAPI, {
-        method: 'POST',
-        url: '/v1/tokens/yaml',
-        body: data.form
-    });
+export const getV1TokensYaml = (data: GetV1TokensYamlData): CancelablePromise<GetV1TokensYamlResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/tokens/yaml',
+    body: data.form
+  });
 };
 
 /**
@@ -61,12 +74,14 @@ export const postV1TokensYaml = (data: PostV1TokensYamlData): CancelablePromise<
  * @returns usecases_TopologiesCreateResponse OK
  * @throws ApiError
  */
-export const postV1TopologiesCreate = (data: PostV1TopologiesCreateData): CancelablePromise<PostV1TopologiesCreateResponse> => {
-    return __request(OpenAPI, {
-        method: 'POST',
-        url: '/v1/topologies/create',
-        body: data.form
-    });
+export const postV1TopologiesCreate = (
+  data: PostV1TopologiesCreateData
+): CancelablePromise<PostV1TopologiesCreateResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/topologies/create',
+    body: data.form
+  });
 };
 
 /**
@@ -77,12 +92,14 @@ export const postV1TopologiesCreate = (data: PostV1TopologiesCreateData): Cancel
  * @returns usecases_TopologiesDeleteResponse OK
  * @throws ApiError
  */
-export const postV1TopologiesDelete = (data: PostV1TopologiesDeleteData): CancelablePromise<PostV1TopologiesDeleteResponse> => {
-    return __request(OpenAPI, {
-        method: 'POST',
-        url: '/v1/topologies/delete',
-        body: data.form
-    });
+export const postV1TopologiesDelete = (
+  data: PostV1TopologiesDeleteData
+): CancelablePromise<PostV1TopologiesDeleteResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/topologies/delete',
+    body: data.form
+  });
 };
 
 /**
@@ -94,9 +111,9 @@ export const postV1TopologiesDelete = (data: PostV1TopologiesDeleteData): Cancel
  * @throws ApiError
  */
 export const postV1TopologiesGet = (data: PostV1TopologiesGetData): CancelablePromise<PostV1TopologiesGetResponse> => {
-    return __request(OpenAPI, {
-        method: 'POST',
-        url: '/v1/topologies/get',
-        body: data.form
-    });
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/topologies/get',
+    body: data.form
+  });
 };

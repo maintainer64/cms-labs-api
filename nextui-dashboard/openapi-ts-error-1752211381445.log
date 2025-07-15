@@ -1,6 +1,6 @@
-Error opening file "/Users/gubanov/golang/cms-labs-urfu/clubgate/docs/swagger.json" 
+Error opening file "/Users/gubanov/golang/cms-labs-urfu/clubgate/docs/swagger.json"
 ENOENT: no such file or directory, open '/Users/gubanov/golang/cms-labs-urfu/clubgate/docs/swagger.json'
-JSONParserError: Error opening file "/Users/gubanov/golang/cms-labs-urfu/clubgate/docs/swagger.json" 
+JSONParserError: Error opening file "/Users/gubanov/golang/cms-labs-urfu/clubgate/docs/swagger.json"
 ENOENT: no such file or directory, open '/Users/gubanov/golang/cms-labs-urfu/clubgate/docs/swagger.json'
     at Object.handler (/Users/gubanov/golang/cms-labs-urfu/nextui-dashboard/node_modules/@hey-api/json-schema-ref-parser/dist/lib/resolvers/file.js:58:19)
     at async $RefParser.parse (/Users/gubanov/golang/cms-labs-urfu/nextui-dashboard/node_modules/@hey-api/json-schema-ref-parser/dist/lib/index.js:187:17)
