@@ -2,11 +2,9 @@ package cms_client
 
 import (
 	"encoding/base64"
-	"strconv"
-	"strings"
-
 	"github.com/goccy/go-json"
 	"github.com/golang-jwt/jwt/v5"
+	"strconv"
 )
 
 const SSORefreshTokenName = "cms-labs-refresh-token" // #nosec G101
@@ -43,6 +41,8 @@ type SSOTokenPublicData struct {
 	Iat int64 `json:"iat"`
 	// Nonce.(Если запрос авторизации включал nonce) Случайное значение для предотвращения атак подмены
 	Nonce string `json:"nonce"`
+	// Username. Уникальный никнейм пользователя
+	Username string `json:"username"`
 	// Email. Почта уникальная пользователя
 	Email string `json:"email"`
 	// Name. Полное ФИО пользователя
@@ -67,18 +67,6 @@ func (t *SSOTokenPublicData) UserRoleMain() string {
 	return ""
 }
 
-func UsernameByEmail(email string) string {
-	parts := strings.Split(email, "@")
-	if len(parts) > 0 {
-		return parts[0]
-	}
-	return email
-}
-
-func (t *SSOTokenPublicData) Username() string {
-	return UsernameByEmail(t.Email)
-}
-
 func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 	return jwt.MapClaims{
 		"iss":            t.Iss,
@@ -90,6 +78,7 @@ func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 		"nonce":          t.Nonce,
 		"email":          t.Email,
 		"name":           t.Name,
+		"username":       t.Username,
 		"server_id":      t.ServerID,
 		"roles":          t.Roles,
 		"last_launch_id": t.LastLaunchId,

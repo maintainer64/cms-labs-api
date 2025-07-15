@@ -22,8 +22,9 @@ type ServerConfig struct {
 }
 
 type K8SConfig struct {
-	ConfigYaml string
-	Namespace  string
+	ConfigYaml     string
+	KrewConfigYaml string
+	Namespace      string
 }
 
 type GitConfig struct {

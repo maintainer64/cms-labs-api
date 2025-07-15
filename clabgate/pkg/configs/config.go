@@ -22,8 +22,9 @@ func (c *AppConfigModel) Reload() {
 		Layer:             os.Getenv("STAGE_STATUS"),
 	}
 	c.K8S = &connection.K8SConfig{
-		ConfigYaml: os.Getenv("K8S_CONFIG"),
-		Namespace:  os.Getenv("K8S_NAMESPACE"),
+		ConfigYaml:     os.Getenv("K8S_CONFIG"),
+		KrewConfigYaml: os.Getenv("K8S_KREW_CONFIG"),
+		Namespace:      os.Getenv("K8S_NAMESPACE"),
 	}
 	c.GitlabConfig = &connection.GitConfig{
 		BaseUrl: os.Getenv("GITLAB_BASE_URL"),
