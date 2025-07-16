@@ -44,6 +44,7 @@ export type topology_TopologiesNodeDataItem = {
      */
     icon?: string;
     id?: string;
+    kind?: string;
     label?: string;
     type?: string;
 };

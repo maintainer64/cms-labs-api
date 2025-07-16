@@ -27,7 +27,7 @@ export const nodeTypeDefault = ({data}: topology_TopologiesNode) => {
                 {data?.label || 'Unnamed'}
             </div>
 
-            {data?.type && (
+            {data?.kind && (
                 <div className='
                     absolute -bottom-8 left-1/2 transform -translate-x-1/2
                     px-2 py-1
@@ -39,7 +39,7 @@ export const nodeTypeDefault = ({data}: topology_TopologiesNode) => {
                     whitespace-nowrap
                     z-10
                 '>
-                    {data.type}
+                    {data.kind}
                     <div
                         className='absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-700 dark:bg-gray-200 rotate-45'/>
                 </div>

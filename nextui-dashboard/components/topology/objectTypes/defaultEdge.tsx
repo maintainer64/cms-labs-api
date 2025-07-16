@@ -83,10 +83,10 @@ export const edgeTypeDefault = ({
             <path id={id} className='react-flow__edge-path' d={edgePath} markerEnd={markerEnd} style={style}/>
             {/* Лейбл для source */}
             <EdgeLabel x={sourceLabelPos.x} y={sourceLabelPos.y}
-                       label={data?.source?.label || data?.source?.name}/>
+                       label={data?.source?.name || data?.source?.label}/>
             {/* Лейбл для target */}
             <EdgeLabel x={targetLabelPos.x} y={targetLabelPos.y}
-                       label={data?.target?.label || data?.target?.name}/>
+                       label={data?.target?.name || data?.target?.label}/>
         </>
     );
 };

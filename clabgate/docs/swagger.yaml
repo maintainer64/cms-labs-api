@@ -63,6 +63,8 @@ definitions:
         type: string
       id:
         type: string
+      kind:
+        type: string
       label:
         type: string
       type:

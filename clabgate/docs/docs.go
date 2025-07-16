@@ -350,6 +350,9 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "kind": {
+                    "type": "string"
+                },
                 "label": {
                     "type": "string"
                 },

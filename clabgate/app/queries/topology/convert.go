@@ -76,6 +76,7 @@ func Convert(yamlData []byte) (*Topology, error) {
 				ID:    nodeName,
 				Label: label,
 				Type:  "default",
+				Kind:  nodeData.Kind,
 				Icon:  icon,
 			},
 		})
