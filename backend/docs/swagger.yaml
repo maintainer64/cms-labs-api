@@ -177,6 +177,9 @@ definitions:
         description: Sub. Уникальный идентификатор пользователя в системе OpenID Provider
           (OP)
         type: string
+      username:
+        description: Username. Уникальный никнейм пользователя
+        type: string
     type: object
   auth.SwaggerSSOTokenResponse:
     properties:
@@ -514,7 +517,7 @@ definitions:
       token:
         type: string
       type:
-        description: 'enumeration: ServerTypePnet, ServerTypeOpenID'
+        description: 'enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes'
         type: string
       unit_rate:
         type: integer
@@ -545,7 +548,7 @@ definitions:
       name:
         type: string
       type:
-        description: 'enumeration: ServerTypePnet, ServerTypeOpenID'
+        description: 'enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes'
         type: string
       unit_rate:
         type: integer

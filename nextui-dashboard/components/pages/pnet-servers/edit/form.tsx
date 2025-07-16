@@ -136,6 +136,7 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
             >
               <SelectItem key='pnet'>PNET</SelectItem>
               <SelectItem key='openid'>OpenID</SelectItem>
+              <SelectItem key='k8s'>K8S</SelectItem>
             </Select>
             <Checkbox type='checkbox' defaultSelected={!!values.is_active} onChange={handleChange('is_active')}>
               {PnetServers.FieldIsActive}

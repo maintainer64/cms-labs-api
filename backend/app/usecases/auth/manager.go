@@ -140,7 +140,7 @@ func (m *TokenManager) JWTRolesByUserId(
 			isAdmin = true
 			continue
 		}
-		if role.Code == cms_client.SSOUsersRoleAdmin {
+		if role.Code == cms_client.SSOUsersRoleInstructor {
 			isInstructor = true
 			continue
 		}
@@ -152,7 +152,7 @@ func (m *TokenManager) JWTRolesByUserId(
 		return rolesJWT, nil
 	}
 	if isInstructor {
-		rolesJWT = slices.Insert(rolesJWT, 0, cms_client.SSOUsersRoleAdmin)
+		rolesJWT = slices.Insert(rolesJWT, 0, cms_client.SSOUsersRoleInstructor)
 		return rolesJWT, nil
 	}
 	if isStudent {

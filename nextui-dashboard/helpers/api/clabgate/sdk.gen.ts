@@ -3,20 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type {
-  PostV1TasksListData,
-  PostV1TasksListResponse,
-  GetV1TokensJsonData,
-  GetV1TokensJsonResponse,
-  GetV1TokensYamlData,
-  GetV1TokensYamlResponse,
-  PostV1TopologiesCreateData,
-  PostV1TopologiesCreateResponse,
-  PostV1TopologiesDeleteData,
-  PostV1TopologiesDeleteResponse,
-  PostV1TopologiesGetData,
-  PostV1TopologiesGetResponse
-} from './types.gen';
+import type { PostV1TasksListData, PostV1TasksListResponse, GetV1TokensJsonData, GetV1TokensJsonResponse, GetV1TokensYamlData, GetV1TokensYamlResponse, PostV1TopologiesCreateData, PostV1TopologiesCreateResponse, PostV1TopologiesDeleteData, PostV1TopologiesDeleteResponse, PostV1TopologiesGetData, PostV1TopologiesGetResponse } from './types.gen';
 
 /**
  * list tasks
@@ -27,11 +14,11 @@ import type {
  * @throws ApiError
  */
 export const postV1TasksList = (data: PostV1TasksListData): CancelablePromise<PostV1TasksListResponse> => {
-  return __request(OpenAPI, {
-    method: 'POST',
-    url: '/v1/tasks/list',
-    body: data.form
-  });
+    return __request(OpenAPI, {
+        method: 'POST',
+        url: '/v1/tasks/list',
+        body: data.form
+    });
 };
 
 /**
@@ -43,11 +30,11 @@ export const postV1TasksList = (data: PostV1TasksListData): CancelablePromise<Po
  * @throws ApiError
  */
 export const getV1TokensJson = (data: GetV1TokensJsonData): CancelablePromise<GetV1TokensJsonResponse> => {
-  return __request(OpenAPI, {
-    method: 'GET',
-    url: '/v1/tokens/json',
-    body: data.form
-  });
+    return __request(OpenAPI, {
+        method: 'GET',
+        url: '/v1/tokens/json',
+        body: data.form
+    });
 };
 
 /**
@@ -59,11 +46,11 @@ export const getV1TokensJson = (data: GetV1TokensJsonData): CancelablePromise<Ge
  * @throws ApiError
  */
 export const getV1TokensYaml = (data: GetV1TokensYamlData): CancelablePromise<GetV1TokensYamlResponse> => {
-  return __request(OpenAPI, {
-    method: 'GET',
-    url: '/v1/tokens/yaml',
-    body: data.form
-  });
+    return __request(OpenAPI, {
+        method: 'GET',
+        url: '/v1/tokens/yaml',
+        body: data.form
+    });
 };
 
 /**
@@ -74,14 +61,12 @@ export const getV1TokensYaml = (data: GetV1TokensYamlData): CancelablePromise<Ge
  * @returns usecases_TopologiesCreateResponse OK
  * @throws ApiError
  */
-export const postV1TopologiesCreate = (
-  data: PostV1TopologiesCreateData
-): CancelablePromise<PostV1TopologiesCreateResponse> => {
-  return __request(OpenAPI, {
-    method: 'POST',
-    url: '/v1/topologies/create',
-    body: data.form
-  });
+export const postV1TopologiesCreate = (data: PostV1TopologiesCreateData): CancelablePromise<PostV1TopologiesCreateResponse> => {
+    return __request(OpenAPI, {
+        method: 'POST',
+        url: '/v1/topologies/create',
+        body: data.form
+    });
 };
 
 /**
@@ -92,14 +77,12 @@ export const postV1TopologiesCreate = (
  * @returns usecases_TopologiesDeleteResponse OK
  * @throws ApiError
  */
-export const postV1TopologiesDelete = (
-  data: PostV1TopologiesDeleteData
-): CancelablePromise<PostV1TopologiesDeleteResponse> => {
-  return __request(OpenAPI, {
-    method: 'POST',
-    url: '/v1/topologies/delete',
-    body: data.form
-  });
+export const postV1TopologiesDelete = (data: PostV1TopologiesDeleteData): CancelablePromise<PostV1TopologiesDeleteResponse> => {
+    return __request(OpenAPI, {
+        method: 'POST',
+        url: '/v1/topologies/delete',
+        body: data.form
+    });
 };
 
 /**
@@ -111,9 +94,9 @@ export const postV1TopologiesDelete = (
  * @throws ApiError
  */
 export const postV1TopologiesGet = (data: PostV1TopologiesGetData): CancelablePromise<PostV1TopologiesGetResponse> => {
-  return __request(OpenAPI, {
-    method: 'POST',
-    url: '/v1/topologies/get',
-    body: data.form
-  });
+    return __request(OpenAPI, {
+        method: 'POST',
+        url: '/v1/topologies/get',
+        body: data.form
+    });
 };

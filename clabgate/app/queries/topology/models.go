@@ -1,12 +1,22 @@
 package topology
 
+// TopologiesNodeDataItem представляет данные о ноде
+type TopologiesNodeDataItem struct {
+	ID    string `json:"id"`
+	Label string `json:"label"`
+	Type  string `json:"type"`
+	// Icon enum:cloud,router,server,switch,desktop
+	Icon string `json:"icon"`
+}
+
 // TopologiesNode представляет узел топологии
 type TopologiesNode struct {
 	ID    string `json:"id"`
 	Label string `json:"label"`
 	Type  string `json:"type"`
 	// Icon enum:cloud,router,server,switch,desktop
-	Icon string `json:"icon"`
+	Icon string                 `json:"icon"`
+	Data TopologiesNodeDataItem `json:"data"`
 }
 
 // TopologiesEdgeDataItem представляет данные о конечной точке связи

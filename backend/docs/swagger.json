@@ -2196,6 +2196,10 @@
                 "sub": {
                     "description": "Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)",
                     "type": "string"
+                },
+                "username": {
+                    "description": "Username. Уникальный никнейм пользователя",
+                    "type": "string"
                 }
             }
         },
@@ -2696,7 +2700,7 @@
                     "type": "string"
                 },
                 "type": {
-                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID",
+                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes",
                     "type": "string"
                 },
                 "unit_rate": {
@@ -2742,7 +2746,7 @@
                     "type": "string"
                 },
                 "type": {
-                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID",
+                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes",
                     "type": "string"
                 },
                 "unit_rate": {

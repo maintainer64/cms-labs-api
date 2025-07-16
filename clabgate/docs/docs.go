@@ -322,6 +322,27 @@ const docTemplate = `{
         "topology.TopologiesNode": {
             "type": "object",
             "properties": {
+                "data": {
+                    "$ref": "#/definitions/topology.TopologiesNodeDataItem"
+                },
+                "icon": {
+                    "description": "Icon enum:cloud,router,server,switch,desktop",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "topology.TopologiesNodeDataItem": {
+            "type": "object",
+            "properties": {
                 "icon": {
                     "description": "Icon enum:cloud,router,server,switch,desktop",
                     "type": "string"

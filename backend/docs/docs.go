@@ -2203,6 +2203,10 @@ const docTemplate = `{
                 "sub": {
                     "description": "Sub. Уникальный идентификатор пользователя в системе OpenID Provider (OP)",
                     "type": "string"
+                },
+                "username": {
+                    "description": "Username. Уникальный никнейм пользователя",
+                    "type": "string"
                 }
             }
         },
@@ -2703,7 +2707,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID",
+                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes",
                     "type": "string"
                 },
                 "unit_rate": {
@@ -2749,7 +2753,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID",
+                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes",
                     "type": "string"
                 },
                 "unit_rate": {

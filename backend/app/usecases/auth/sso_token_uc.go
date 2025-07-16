@@ -66,6 +66,8 @@ type SwaggerSSOTokenPublicData struct {
 	Iat int64 `json:"iat"`
 	// Nonce.(Если запрос авторизации включал nonce) Случайное значение для предотвращения атак подмены
 	Nonce string `json:"nonce"`
+	// Username. Уникальный никнейм пользователя
+	Username string `json:"username"`
 	// Email. Почта уникальная пользователя
 	Email string `json:"email"`
 	// Name. Полное ФИО пользователя

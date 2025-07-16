@@ -23,6 +23,11 @@ function setupProxy(): CommonServerOptions["proxy"] {
             target: "http://localhost:5000",
             secure: false,
             changeOrigin: true,
+        },
+        "/clabgate/api/": {
+            target: "http://localhost:5001",
+            secure: false,
+            changeOrigin: true,
         }
     };
 }

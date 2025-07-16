@@ -80,7 +80,7 @@ func (q *RoleQueries) GetByRelationServerIds(serverIds []uint) (map[uint][]uint,
 }
 
 func (q *RoleQueries) SetByUserId(userId uint, roleIds []uint) error {
-	q.Logger.Info().Msg(fmt.Sprintf("RoleQueries: set roles %d count by user_id = %d", roleIds, userId))
+	q.Logger.Info().Msg(fmt.Sprintf("RoleQueries: set roles %d count by user_id = %d", len(roleIds), userId))
 	// Начинаем транзакцию
 	return q.Transaction(func(tx *gorm.DB) error {
 		// Удаляем старые роли пользователя

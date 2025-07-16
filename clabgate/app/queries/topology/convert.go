@@ -56,11 +56,28 @@ func Convert(yamlData []byte) (*Topology, error) {
 
 	// Обрабатываем узлы
 	for nodeName, nodeData := range topology.Topology.Nodes {
+		label := nodeData.Labels["flow_label"]
+		if label == "" {
+			label = nodeName
+		}
+		if label == "" {
+			label = nodeData.Kind
+		}
+		icon := nodeData.Labels["flow_icon"]
+		if icon == "" {
+			icon = nodeData.Kind
+		}
 		output.Nodes = append(output.Nodes, TopologiesNode{
 			ID:    nodeName,
-			Label: nodeData.Labels["flow_label"],
-			Type:  nodeData.Kind,
-			Icon:  nodeData.Labels["flow_icon"],
+			Label: label,
+			Type:  "default",
+			Icon:  icon,
+			Data: TopologiesNodeDataItem{
+				ID:    nodeName,
+				Label: label,
+				Type:  "default",
+				Icon:  icon,
+			},
 		})
 	}
 

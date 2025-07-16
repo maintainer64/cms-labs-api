@@ -53,7 +53,7 @@ func (u *StartupFiberUC) createRoles() []uint {
 	_ = u.RoleQueries.Upsert(student)
 
 	instructor := &models.Role{}
-	instructor.Code = cms_client.SSOUsersRoleAdmin
+	instructor.Code = cms_client.SSOUsersRoleInstructor
 	instructor.Name = "Instructor"
 
 	_ = u.RoleQueries.Upsert(instructor)
