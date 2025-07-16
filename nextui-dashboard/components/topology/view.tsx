@@ -25,7 +25,7 @@ export const TopologyFlowVisualization = () => {
     const {nodes, edges} = getLayoutElements(
         initNodes,
         initEdges,
-        "TB"
+        (queryTopology.data?.result?.topology?.direction || "TB") as "TB" | "LR",
     );
     console.log({nodes, edges})
     if (queryTopology.isLoading) return <Loading size='md'/>;
