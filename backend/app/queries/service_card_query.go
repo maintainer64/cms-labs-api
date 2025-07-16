@@ -14,13 +14,13 @@ import (
 )
 
 type ServiceCardQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *ServiceCardQueries) Get(id uint) (models.ServiceCard, error) {
 	var entity models.ServiceCard
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -35,7 +35,7 @@ func (q *ServiceCardQueries) Upsert(entity *models.ServiceCard) error {
 		return nil
 	}
 	entityDB := models.ServiceCard{}
-	q.Where("id = ?", entity.ID).Find(&entityDB)
+	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
 		q.Logger.Debug().Msg(fmt.Sprintf("ServiceCardQueries: entity update: %+v", entityDB))
@@ -43,7 +43,7 @@ func (q *ServiceCardQueries) Upsert(entity *models.ServiceCard) error {
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -52,7 +52,7 @@ func (q *ServiceCardQueries) Upsert(entity *models.ServiceCard) error {
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }
@@ -65,13 +65,13 @@ func (q *ServiceCardQueries) List(
 	var entities []models.ServiceCardListItem
 	result := q.listFilter(
 		search,
-		q.Limit(MaxLimitCount).Offset(0),
+		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Debug().Msg(fmt.Sprintf("ServiceCardQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
-		q.Limit(limit).Offset(offset),
+		q.DB.Limit(limit).Offset(offset),
 	).Find(&entities)
 	q.Logger.Debug().Msg(fmt.Sprintf("ServiceCardQueries list: entities %+v", entities))
 	return entities, count, result.Error
@@ -88,7 +88,7 @@ func (q *ServiceCardQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 }
 
 func (q *ServiceCardQueries) Delete(id uint) error {
-	err := q.Where("id = ?", id).Delete(&models.ServiceCard{}).Error
+	err := q.DB.Where("id = ?", id).Delete(&models.ServiceCard{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("ServiceCardQueries: delete entity by id: %+v", id))
 	return err
 }

@@ -13,8 +13,8 @@ const (
 )
 
 type GuacamoleQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *GuacamoleQueries) UserReplace(
@@ -24,7 +24,7 @@ func (q *GuacamoleQueries) UserReplace(
 ) error {
 	q.Logger.Info().Msg(fmt.Sprintf("GuacamoleQueries: UserReplace by id: %+v", userId))
 	entityId := userId + 1000
-	err := q.Exec(
+	err := q.DB.Exec(
 		"REPLACE INTO `guacdb`.`guacamole_entity` (entity_id, name, type) VALUES (?, ?, ?)",
 		entityId,
 		userName,
@@ -33,7 +33,7 @@ func (q *GuacamoleQueries) UserReplace(
 	if err != nil {
 		return err
 	}
-	err = q.Exec(
+	err = q.DB.Exec(
 		"REPLACE INTO `guacdb`.`guacamole_user` (user_id, entity_id, password_hash, password_date) VALUES (?, ?, UNHEX(SHA2(?,256)), NOW())",
 		entityId,
 		entityId,
@@ -42,7 +42,7 @@ func (q *GuacamoleQueries) UserReplace(
 	if err != nil {
 		return err
 	}
-	err = q.Exec(
+	err = q.DB.Exec(
 		"REPLACE INTO `guacdb`.`guacamole_user_permission` (entity_id, affected_user_id, permission) VALUES (?, ?, ?)",
 		entityId,
 		entityId,
@@ -56,11 +56,11 @@ func (q *GuacamoleQueries) TokenReplace(
 	userName string,
 	token string,
 ) error {
-	err := q.Exec("delete from `html5` where username = ? OR pod = ?", userName, userId).Error
+	err := q.DB.Exec("delete from `html5` where username = ? OR pod = ?", userName, userId).Error
 	if err != nil {
 		return err
 	}
-	err = q.Exec(
+	err = q.DB.Exec(
 		"replace into `html5` (username, pod, token) values (?, ?, ?)",
 		userName,
 		userId,

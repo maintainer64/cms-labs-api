@@ -17,7 +17,7 @@ import {
 import { ServiceCardsPage, ServiceCardsPageEdit } from '@/app/(app)/service-cards/page';
 import { RolesListPage, RolesPageEdit } from '@/app/(app)/roles/page';
 import { CurlRequestPage, CurlRequestPageEdit } from '@/app/(app)/curl-requests/page';
-import {TopologyPageConnect, TopologyPageView} from "@/app/(app)/topology/page";
+import { TopologyPageConnect, TopologyPageView } from '@/app/(app)/topology/page';
 
 const RoutesAdmin = () => {
   return (

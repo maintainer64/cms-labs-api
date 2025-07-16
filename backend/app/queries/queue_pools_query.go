@@ -10,12 +10,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
-	"gorm.io/gorm"
+	gorm "gorm.io/gorm"
 )
 
 type RoundQueuePoolQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *RoundQueuePoolQueries) tableName(object interface{}) string {
@@ -34,7 +34,7 @@ type RoundQueuePoolPnetListItem struct {
 
 func (q *RoundQueuePoolQueries) Get(id uint) (models.RoundQueuePool, error) {
 	var entity models.RoundQueuePool
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -58,7 +58,7 @@ func (q *RoundQueuePoolQueries) UpsertQueueByPnetServerIds(ids []uint) error {
 		entity.Type = models.RoundQueuePoolTypePNET
 		entities = append(entities, entity)
 	}
-	err := q.Transaction(
+	err := q.DB.Transaction(
 		func(tx *gorm.DB) error {
 			if err := tx.Where("type = ?", models.RoundQueuePoolTypePNET).Delete(&models.RoundQueuePool{}).Error; err != nil {
 				return err
@@ -74,7 +74,7 @@ func (q *RoundQueuePoolQueries) UpsertQueueByPnetServerIds(ids []uint) error {
 
 func (q *RoundQueuePoolQueries) List() ([]RoundQueuePoolPnetListItem, error) {
 	var entities []RoundQueuePoolPnetListItem
-	query := q.Table(
+	query := q.DB.Table(
 		q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools",
 	).Select(
 		"pnet_servers.id, pnet_servers.name, round_queue_pools.type, round_queue_pools.last_used, round_queue_pools.connected_at",
@@ -94,7 +94,7 @@ func (q *RoundQueuePoolQueries) List() ([]RoundQueuePoolPnetListItem, error) {
 
 func (q *RoundQueuePoolQueries) GetNextByType(poolType string) (models.RoundQueuePool, error) {
 	var entityID uint
-	err := q.Transaction(
+	err := q.DB.Transaction(
 		func(tx *gorm.DB) error {
 			entity, err := q.nextPoolItemByType(tx, poolType)
 			if err != nil {

@@ -17,8 +17,8 @@ import (
 )
 
 type LTIAttemptQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 const MaxLimitCount = 5000
@@ -31,7 +31,7 @@ func (q *LTIAttemptQueries) tableName(object interface{}) string {
 
 func (q *LTIAttemptQueries) Get(id uint) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -43,7 +43,7 @@ func (q *LTIAttemptQueries) Get(id uint) (models.LTIAttempt, error) {
 
 func (q *LTIAttemptQueries) GetByAttemptID(attemptID string) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
-	result := q.Where("attempt_id = ?", attemptID).Find(&entity)
+	result := q.DB.Where("attempt_id = ?", attemptID).Find(&entity)
 	if entity.ID == 0 {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -58,7 +58,7 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 		return nil
 	}
 	entityDB := models.LTIAttempt{}
-	q.Where("id = ?", entity.ID).Find(&entityDB)
+	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
 		q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: entity update: %+v", entityDB))
@@ -71,7 +71,7 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 		)
 		entity.UpdatedAt = time.Now().UTC()
 		entity.UserID = entityDB.UserID
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -84,14 +84,14 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 		)
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }
 
 func (q *LTIAttemptQueries) GetActiveByUserId(userId uint, routeId uint) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
-	result := q.Model(&entity).Where(
+	result := q.DB.Model(&entity).Where(
 		"user_id = ? AND lti_routing_id = ?",
 		userId,
 		routeId,
@@ -106,7 +106,7 @@ func (q *LTIAttemptQueries) GetByRoomID(roomID uint) ([]models.LTIAttempt, error
 	if roomID == 0 {
 		return entities, nil
 	}
-	result := q.Model(&entities).Where(
+	result := q.DB.Model(&entities).Where(
 		"room_id = ?",
 		roomID,
 	).Where(
@@ -125,7 +125,7 @@ func (q *LTIAttemptQueries) List(
 	var entities []models.LTIAttemptListItem
 	result := q.listFilter(
 		userIds,
-		q.Limit(limit).Offset(offset),
+		q.DB.Limit(limit).Offset(offset),
 	).Find(&entities)
 	return entities, result.Error
 }
@@ -162,7 +162,7 @@ func (q *LTIAttemptQueries) AllocatedServerLock(attemptID uint, roomID *uint) (f
 
 	// Пытаемся получить блокировку с таймаутом 10 секунд
 	var result int
-	err := q.Raw("SELECT GET_LOCK(?, 10)", lockID).Scan(&result).Error
+	err := q.DB.Raw("SELECT GET_LOCK(?, 10)", lockID).Scan(&result).Error
 	if err != nil {
 		q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries: failed to acquire advisory lock: %v", err))
 		return nil, fmt.Errorf("failed to acquire advisory lock: %v", err)
@@ -174,7 +174,7 @@ func (q *LTIAttemptQueries) AllocatedServerLock(attemptID uint, roomID *uint) (f
 
 	// Функция для освобождения блокировки
 	unlockFn := func() {
-		q.Exec("SELECT RELEASE_LOCK(?)", lockID)
+		q.DB.Exec("SELECT RELEASE_LOCK(?)", lockID)
 	}
 
 	return unlockFn, nil
@@ -198,7 +198,7 @@ func (q *LTIAttemptQueries) AllocatedServer(attemptID uint, roomID *uint, pnetSe
 
 	if roomID != nil && *roomID != 0 {
 		// Обновляем все attempts с этим roomID
-		err := q.Model(&models.LTIAttempt{}).
+		err := q.DB.Model(&models.LTIAttempt{}).
 			Where("room_id = ?", *roomID).
 			Updates(updateData).Error
 		if err != nil {
@@ -209,7 +209,7 @@ func (q *LTIAttemptQueries) AllocatedServer(attemptID uint, roomID *uint, pnetSe
 	}
 
 	// Обновляем только указанный attempt
-	err := q.Model(&models.LTIAttempt{}).
+	err := q.DB.Model(&models.LTIAttempt{}).
 		Where("id = ?", attemptID).
 		Updates(updateData).Error
 	if err != nil {
@@ -220,7 +220,7 @@ func (q *LTIAttemptQueries) AllocatedServer(attemptID uint, roomID *uint, pnetSe
 }
 
 func (q *LTIAttemptQueries) Delete(id uint) error {
-	err := q.Where("id = ?", id).Delete(&models.LTIAttempt{}).Error
+	err := q.DB.Where("id = ?", id).Delete(&models.LTIAttempt{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIAttemptQueries: delete entity by id: %+v", id))
 	return err
 }

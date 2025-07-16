@@ -1,4 +1,4 @@
-import {InternalNode, Position} from '@xyflow/react';
+import { InternalNode, Position } from '@xyflow/react';
 
 interface GetNodeIntersectionType {
   x: number;

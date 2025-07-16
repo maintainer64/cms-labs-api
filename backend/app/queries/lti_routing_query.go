@@ -14,13 +14,13 @@ import (
 )
 
 type LTIRoutingQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *LTIRoutingQueries) Get(id uint) (models.LTIRouting, error) {
 	var entity models.LTIRouting
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -35,7 +35,7 @@ func (q *LTIRoutingQueries) Upsert(entity *models.LTIRouting) error {
 		return nil
 	}
 	entityDB := models.LTIRouting{}
-	q.Where("id = ?", entity.ID).Find(&entityDB)
+	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
 		q.Logger.Debug().Msg(fmt.Sprintf("LTIRoutingQueries: entity update: %+v", entityDB))
@@ -43,7 +43,7 @@ func (q *LTIRoutingQueries) Upsert(entity *models.LTIRouting) error {
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -52,7 +52,7 @@ func (q *LTIRoutingQueries) Upsert(entity *models.LTIRouting) error {
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }
@@ -65,13 +65,13 @@ func (q *LTIRoutingQueries) List(
 	var entities []models.LTIRoutingListItem
 	result := q.listFilter(
 		search,
-		q.Limit(MaxLimitCount).Offset(0),
+		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIRoutingQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
-		q.Limit(limit).Offset(offset),
+		q.DB.Limit(limit).Offset(offset),
 	).Find(&entities)
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIRoutingQueries list: entities %+v", entities))
 	return entities, count, result.Error
@@ -93,7 +93,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 	customParams []string,
 ) (models.LTIRouting, error) {
 	var entity models.LTIRouting
-	tx := q.Model(&models.LTIRouting{})
+	tx := q.DB.Model(&models.LTIRouting{})
 	tx = tx.Order(`created_at desc`).Limit(1).Offset(0)
 	execute := false
 	q.Logger.Debug().Msg(
@@ -133,7 +133,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 	)
 	if entity.ID == 0 {
 		q.Logger.Info().Msg("LTIRoutingQueries: GetRelevantRouting default params")
-		q.Model(&models.LTIRouting{}).Where("is_default = ?", true).Scan(&entity).Order(`created_at desc`).Limit(1).Offset(0)
+		q.DB.Model(&models.LTIRouting{}).Where("is_default = ?", true).Scan(&entity).Order(`created_at desc`).Limit(1).Offset(0)
 		q.Logger.Info().Msg(
 			fmt.Sprintf(
 				"LTIRoutingQueries: GetRelevantRouting fetch default result: routingId=%+v routingName=%+v",
@@ -146,7 +146,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 }
 
 func (q *LTIRoutingQueries) Delete(id uint) error {
-	err := q.Where("id = ?", id).Delete(&models.LTIRouting{}).Error
+	err := q.DB.Where("id = ?", id).Delete(&models.LTIRouting{}).Error
 	q.Logger.Info().Msg(fmt.Sprintf("LTIRoutingQueries: delete entity by id: %+v", id))
 	return err
 }

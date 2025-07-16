@@ -1,10 +1,10 @@
-import {nodeTypeDefault} from './defaultNode';
-import {edgeTypeDefault} from './defaultEdge';
+import { nodeTypeDefault } from './defaultNode';
+import { edgeTypeDefault } from './defaultEdge';
 
 export const nodeTypes = {
-    default: nodeTypeDefault,
+  default: nodeTypeDefault
 };
 
 export const edgeTypes = {
-    default: edgeTypeDefault
+  default: edgeTypeDefault
 };

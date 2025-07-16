@@ -44,7 +44,7 @@ func (u *PNETServerPingUC) Execute(dto PNETServerPingInputDTO) (PNETServerPingOu
 		return PNETServerPingOutputDTO{}, errors.New("not authorized service")
 	}
 	log.Info().Msg("PNETServerPingUC: Update last online status and count attempts/users")
-	err := u.PNETServerQueries.Transaction(
+	err := u.PNETServerQueries.DB.Transaction(
 		func(tx *gorm.DB) error {
 			serverEntity, err := u.PNETServerQueries.GetByClientId(u.xServiceId)
 			if err != nil {

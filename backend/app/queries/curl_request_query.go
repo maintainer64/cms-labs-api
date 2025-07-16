@@ -10,12 +10,12 @@ import (
 	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
-	"gorm.io/gorm"
+	gorm "gorm.io/gorm"
 )
 
 type CurlRequestQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 type CurlRequestQueriesListDTO struct {
@@ -33,7 +33,7 @@ func (q *CurlRequestQueries) tableName(object interface{}) string {
 
 func (q *CurlRequestQueries) Get(id uint) (models.CurlRequest, error) {
 	var entity models.CurlRequest
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -48,7 +48,7 @@ func (q *CurlRequestQueries) Upsert(entity *models.CurlRequest) error {
 		return nil
 	}
 	entityDB := models.CurlRequest{}
-	q.Where("id = ?", entity.ID).Find(&entityDB)
+	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
 		q.Logger.Debug().Msg(fmt.Sprintf("CurlRequestQueries: entity update: %+v", entityDB))
@@ -56,7 +56,7 @@ func (q *CurlRequestQueries) Upsert(entity *models.CurlRequest) error {
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -65,7 +65,7 @@ func (q *CurlRequestQueries) Upsert(entity *models.CurlRequest) error {
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }
@@ -74,13 +74,13 @@ func (q *CurlRequestQueries) List(filter CurlRequestQueriesListDTO) ([]models.Cu
 	var entities []models.CurlRequestListItem
 	result := q.listFilter(
 		filter,
-		q.Limit(MaxLimitCount).Offset(0),
+		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Debug().Msg(fmt.Sprintf("CurlRequestQueries list: count %+v", count))
 	result = q.listFilter(
 		filter,
-		q.Limit(filter.Limit).Offset(filter.Offset),
+		q.DB.Limit(filter.Limit).Offset(filter.Offset),
 	).Find(&entities)
 	q.Logger.Debug().Msg(fmt.Sprintf("CurlRequestQueries list: entities %+v", entities))
 	return entities, count, result.Error
@@ -99,7 +99,7 @@ func (q *CurlRequestQueries) listFilter(filter CurlRequestQueriesListDTO, tx *go
 }
 
 func (q *CurlRequestQueries) Delete(id uint) error {
-	tx := q.Where("id = ?", id).Delete(&models.CurlRequest{})
+	tx := q.DB.Where("id = ?", id).Delete(&models.CurlRequest{})
 	q.Logger.Debug().Msg(fmt.Sprintf("CurlRequestQueries: delete entity by id: %+v", id))
 	return tx.Error
 }

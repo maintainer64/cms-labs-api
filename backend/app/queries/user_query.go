@@ -19,13 +19,13 @@ var (
 )
 
 type UserQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *UserQueries) Get(id uint) (models.User, error) {
 	var entity models.User
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -46,7 +46,7 @@ func (q *UserQueries) Upsert(entity *models.User) error {
 		return nil
 	}
 	entityDB := models.User{}
-	q.Where("id = ?", entity.ID).Find(&entityDB)
+	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
 		q.Logger.Debug().Msg(fmt.Sprintf("UserQueries: entity update: %+v", entityDB))
@@ -54,7 +54,7 @@ func (q *UserQueries) Upsert(entity *models.User) error {
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -63,7 +63,7 @@ func (q *UserQueries) Upsert(entity *models.User) error {
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }
@@ -78,7 +78,7 @@ func (q *UserQueries) GetByEmail(email string) (models.User, error) {
 	if email == "" {
 		return entity, err
 	}
-	q.Where("email = ?", email).Limit(1).Find(&entity)
+	q.DB.Where("email = ?", email).Limit(1).Find(&entity)
 	if entity.Email != email {
 		return entity, err
 	}
@@ -102,7 +102,7 @@ func (q *UserQueries) GetByLaunchID(launchID string) (models.User, error) {
 	if launchID == "" {
 		return entity, err
 	}
-	q.Where("last_launch_id = ?", launchID).Limit(1).Find(&entity)
+	q.DB.Where("last_launch_id = ?", launchID).Limit(1).Find(&entity)
 	q.Logger.Info().Msg(fmt.Sprintf(
 		"UserQueries: get user by last_launch_id=%+v fetched id=%+v",
 		launchID,
@@ -131,14 +131,14 @@ func (q *UserQueries) List(
 	result := q.listFilter(
 		search,
 		ids,
-		q.Limit(MaxLimitCount).Offset(0),
+		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Debug().Msg(fmt.Sprintf("UserQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
 		ids,
-		q.Limit(limit).Offset(offset),
+		q.DB.Limit(limit).Offset(offset),
 	).Find(&entities)
 	q.Logger.Debug().Msg(fmt.Sprintf("UserQueries list: entities %+v", entities))
 	return entities, count, result.Error

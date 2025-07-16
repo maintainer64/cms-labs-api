@@ -10,7 +10,7 @@ import (
 )
 
 type LabSessionQuery struct {
-	*gorm.DB
+	DB *gorm.DB
 }
 
 var (
@@ -25,7 +25,7 @@ func (q *LabSessionQuery) tableName(object interface{}) string {
 
 func (q *LabSessionQuery) GetByAttemptId(attemptId string) (models.LabSession, error) {
 	entityDB := models.LabSession{}
-	q.Where("lab_session_lid = ?", attemptId).Find(&entityDB)
+	q.DB.Where("lab_session_lid = ?", attemptId).Find(&entityDB)
 	if entityDB.LabSessionID != 0 {
 		return entityDB, nil
 	}
@@ -46,7 +46,7 @@ type LabSessionRunningLabs struct {
 
 func (q *LabSessionQuery) GetRunningLabs() ([]LabSessionRunningLabs, error) {
 	var entities []LabSessionRunningLabs
-	query := q.Table(
+	query := q.DB.Table(
 		q.tableName(&models.LabSession{})+" AS lab_sessions",
 	).Select(
 		"lab_sessions.lab_session_id, lab_sessions.lab_session_path, users.name, lab_sessions.lab_session_lid, users.email",

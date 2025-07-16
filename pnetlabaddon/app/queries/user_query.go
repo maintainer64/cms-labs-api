@@ -14,12 +14,12 @@ var (
 )
 
 type UserQueries struct {
-	*gorm.DB
+	DB *gorm.DB
 }
 
 func (q *UserQueries) Get(id int) (models.User, error) {
 	entityDB := models.User{}
-	q.Where("pod = ?", id).Find(&entityDB)
+	q.DB.Where("pod = ?", id).Find(&entityDB)
 	if entityDB.Pod != 0 {
 		return entityDB, nil
 	}
@@ -31,11 +31,11 @@ func (q *UserQueries) Get(id int) (models.User, error) {
 
 func (q *UserQueries) GetOrCreateByEmail(user models.User) (models.User, error) {
 	entityDB := models.User{}
-	q.Where("email = ?", user.Email).Find(&entityDB)
+	q.DB.Where("email = ?", user.Email).Find(&entityDB)
 	if entityDB.Pod != 0 {
 		return entityDB, nil
 	}
-	result := q.Create(&user)
+	result := q.DB.Create(&user)
 	if result.Error != nil {
 		return user, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,

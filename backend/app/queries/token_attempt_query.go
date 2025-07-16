@@ -13,13 +13,13 @@ import (
 )
 
 type TokenAttemptQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *TokenAttemptQueries) GetByTokenId(tokenId string) (models.TokenAttempt, error) {
 	entity := models.TokenAttempt{}
-	q.Where("token = ?", tokenId).Limit(1).Find(&entity)
+	q.DB.Where("token = ?", tokenId).Limit(1).Find(&entity)
 	exception := utils.FiberValidationException{
 		Status:    fiber.StatusNotFound,
 		Exception: errors.New("TokenAttempt has not found"),
@@ -32,7 +32,7 @@ func (q *TokenAttemptQueries) GetByTokenId(tokenId string) (models.TokenAttempt,
 
 func (q *TokenAttemptQueries) GetByAuthCode(code string) (models.TokenAttempt, error) {
 	entity := models.TokenAttempt{}
-	q.Where("authorization_code = ?", code).Limit(1).Find(&entity)
+	q.DB.Where("authorization_code = ?", code).Limit(1).Find(&entity)
 	exception := utils.FiberValidationException{
 		Status:    fiber.StatusNotFound,
 		Exception: errors.New("TokenAttempt code not found"),
@@ -48,7 +48,7 @@ func (q *TokenAttemptQueries) Upsert(entity *models.TokenAttempt) error {
 	if err != nil {
 		return nil
 	}
-	result := q.Create(entity)
+	result := q.DB.Create(entity)
 	q.Logger.Debug().Msg(fmt.Sprintf("TokenAttemptQueries: entity create: %+v", entity))
 	q.Logger.Info().Msg(fmt.Sprintf("TokenAttemptQueries: entity create user_id=%+v", entity.UserID))
 	return result.Error
@@ -56,7 +56,7 @@ func (q *TokenAttemptQueries) Upsert(entity *models.TokenAttempt) error {
 
 func (q *TokenAttemptQueries) GetByParams(userID uint, serverID uint) (models.TokenAttempt, error) {
 	entity := models.TokenAttempt{}
-	q.Where("user_id = ?", userID).Where("server_id = ?", serverID).
+	q.DB.Where("user_id = ?", userID).Where("server_id = ?", serverID).
 		Limit(1).Find(&entity)
 	exception := utils.FiberValidationException{
 		Status:    fiber.StatusNotFound,
@@ -69,7 +69,7 @@ func (q *TokenAttemptQueries) GetByParams(userID uint, serverID uint) (models.To
 }
 
 func (q *TokenAttemptQueries) DeleteByParams(userID uint, serverID uint) error {
-	result := q.Where("user_id = ?", userID).Where("server_id = ?", serverID).Delete(
+	result := q.DB.Where("user_id = ?", userID).Where("server_id = ?", serverID).Delete(
 		&models.TokenAttempt{},
 	)
 	if result.Error != nil {

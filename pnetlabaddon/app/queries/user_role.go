@@ -11,18 +11,18 @@ const (
 )
 
 type UserRoleQueries struct {
-	*gorm.DB
+	DB *gorm.DB
 }
 
 func (q *UserRoleQueries) GetOrCreateDefault() (models.UserRole, error) {
 	entityDB := models.UserRole{}
-	q.Where("user_role_name = ?", UserRoleStudent).Find(&entityDB)
+	q.DB.Where("user_role_name = ?", UserRoleStudent).Find(&entityDB)
 	if entityDB.UserRoleID != 0 {
 		return entityDB, nil
 	}
 	entityDB.UserRoleName = UserRoleStudent
 	entityDB.UserRoleWorkspace = "/"
 	entityDB.UserRoleNote = UserRoleStudentDescription
-	result := q.Create(&entityDB)
+	result := q.DB.Create(&entityDB)
 	return entityDB, result.Error
 }

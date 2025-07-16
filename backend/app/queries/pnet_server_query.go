@@ -20,8 +20,8 @@ import (
 )
 
 type PNETServerQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 type PNETServerQueriesListDTO struct {
@@ -56,7 +56,7 @@ func (q *PNETServerQueries) tableName(object interface{}) string {
 
 func (q *PNETServerQueries) Get(id uint) (models.PNETServer, error) {
 	var entity models.PNETServer
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -83,7 +83,7 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 		return nil
 	}
 	entityDB := models.PNETServer{}
-	q.Where("id = ?", entity.ID).Find(&entityDB)
+	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
 		q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries: entity update: %+v", entityDB))
@@ -93,7 +93,7 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 		entity.UpdatedAt = time.Now().UTC()
 		entity.LastOnlineStatus = entityDB.LastOnlineStatus
 		entity.Token = stringsx.Coalesce(entityDB.Token, q.securityTokenGenerate())
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -103,7 +103,7 @@ func (q *PNETServerQueries) Upsert(entity *models.PNETServer) error {
 		entity.Token = q.securityTokenGenerate()
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }
@@ -112,13 +112,13 @@ func (q *PNETServerQueries) List(filter PNETServerQueriesListDTO) ([]models.PNET
 	var entities []models.PNETServerListItem
 	result := q.listFilter(
 		filter,
-		q.Limit(MaxLimitCount).Offset(0),
+		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries list: count %+v", count))
 	result = q.listFilter(
 		filter,
-		q.Limit(filter.Limit).Offset(filter.Offset),
+		q.DB.Limit(filter.Limit).Offset(filter.Offset),
 	).Find(&entities)
 	q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries list: entities %+v", entities))
 	return entities, count, result.Error
@@ -153,14 +153,14 @@ func (q *PNETServerQueries) listFilter(filter PNETServerQueriesListDTO, tx *gorm
 }
 
 func (q *PNETServerQueries) Delete(id uint) error {
-	tx := q.Where("id = ?", id).Delete(&models.PNETServer{})
+	tx := q.DB.Where("id = ?", id).Delete(&models.PNETServer{})
 	q.Logger.Debug().Msg(fmt.Sprintf("PNETServerQueries: delete entity by id: %+v", id))
 	return tx.Error
 }
 
 func (q *PNETServerQueries) GetByClientId(clientID string) (models.PNETServer, error) {
 	var entity models.PNETServer
-	result := q.Where("client_id = ?", clientID).Limit(1).Find(&entity)
+	result := q.DB.Where("client_id = ?", clientID).Limit(1).Find(&entity)
 	if entity.ID == 0 {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
