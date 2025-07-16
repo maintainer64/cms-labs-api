@@ -1,22 +1,14 @@
 import React from 'react';
 import { useTopologyCreate } from '@/helpers/queries/topology/get';
-import { useLocation } from 'react-router-dom';
 import { Loading } from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
 import { RoutesLocation } from '@/components/routes';
-import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
+import { useParamsConnectTopology } from '@/components/topology/utils';
 
 export const TopologyConnect = () => {
-  const { search } = useLocation();
-  const user = useUserProfile();
-
-  const query = new URLSearchParams(search);
-  const queryTopologyCreate = useTopologyCreate(
-    query.get('username') || user.username,
-    query.get('taskId') || '',
-    false
-  );
+  const params = useParamsConnectTopology();
+  const queryTopologyCreate = useTopologyCreate(params.username, params.taskId, params.redeploy);
   if (queryTopologyCreate.isLoading) return <Loading size='md' />;
   if (queryTopologyCreate.error) {
     // @ts-ignore
@@ -29,6 +21,8 @@ export const TopologyConnect = () => {
       </ErrorModal>
     );
   }
-  window.location.href = RoutesLocation.topologyView(queryTopologyCreate.data?.result?.namespace ?? '');
+  window.location.href =
+    RoutesLocation.topologyView(queryTopologyCreate.data?.result?.namespace ?? '') +
+    `?username=${params.username}&taskId=${params.taskId}`;
   return <></>;
 };

@@ -17,4 +17,5 @@ var (
 
 type GitCodeRegistry interface {
 	TasksList() ([]TaskCodeRegistryItem, error)
+	DeployTopology(pathFile string, namespace string) (string, error)
 }

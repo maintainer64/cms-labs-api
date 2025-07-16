@@ -3,8 +3,8 @@ package cms_client
 import (
 	"errors"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
+	fiber "github.com/gofiber/fiber/v2"
+	jwt "github.com/golang-jwt/jwt/v5"
 	"gitlab.com/a10869/api-modules/shared/utils"
 )
 

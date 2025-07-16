@@ -11,15 +11,15 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
 )
 
 type LTIFormQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func ltiGenerateKeys(l *zerolog.Logger) (string, string, error) {
@@ -54,7 +54,7 @@ func ltiGenerateKeys(l *zerolog.Logger) (string, string, error) {
 }
 func (q *LTIFormQueries) Get(id uint) (models.LTIForm, error) {
 	var entity models.LTIForm
-	result := q.First(&entity, id)
+	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -69,7 +69,7 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 		return nil
 	}
 	entityDB := models.LTIForm{}
-	q.Where("id = ?", entity.ID).Find(&entityDB)
+	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
 		q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: entity update: %+v", entityDB))
@@ -79,7 +79,7 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 		entity.PublicKey = entityDB.PublicKey
 		entity.PrivateKey = entityDB.PrivateKey
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	}
 	// Create
@@ -94,7 +94,7 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 	}
 	entity.PublicKey = publicKey
 	entity.PrivateKey = privateKey
-	result := q.Create(entity)
+	result := q.DB.Create(entity)
 	return result.Error
 }
 
@@ -108,13 +108,13 @@ func (q *LTIFormQueries) List(
 	var entities []models.LTIFormListItem
 	result := q.listFilter(
 		search,
-		q.Limit(MaxLimitCount).Offset(0),
+		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
-		q.Limit(limit).Offset(offset),
+		q.DB.Limit(limit).Offset(offset),
 	).Find(&entities)
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries list: entities %+v", entities))
 	return entities, count, result.Error
@@ -133,7 +133,7 @@ func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 
 func (q *LTIFormQueries) SSOURLList() ([]models.LTIFormListItem, error) {
 	var entities []models.LTIFormListItem
-	result := q.Model(&models.LTIForm{}).Order(
+	result := q.DB.Model(&models.LTIForm{}).Order(
 		`created_at desc`,
 	).Where(
 		`sso_url != '' AND sso_url is not null`,
@@ -144,7 +144,7 @@ func (q *LTIFormQueries) SSOURLList() ([]models.LTIFormListItem, error) {
 }
 
 func (q *LTIFormQueries) Delete(id uint) error {
-	err := q.Where("id = ?", id).Delete(&models.LTIForm{}).Error
+	err := q.DB.Where("id = ?", id).Delete(&models.LTIForm{}).Error
 	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: delete entity by id: %+v", id))
 	return err
 }

@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 	"strconv"
 
-	"github.com/goccy/go-json"
-	"github.com/golang-jwt/jwt/v5"
+	json "github.com/goccy/go-json"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 const SSORefreshTokenName = "cms-labs-refresh-token" // #nosec G101

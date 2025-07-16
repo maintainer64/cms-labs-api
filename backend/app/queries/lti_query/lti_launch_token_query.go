@@ -7,9 +7,9 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/shared/utils"
 
 	"gitlab.com/a10869/api-modules/backend/app/models"
@@ -17,13 +17,13 @@ import (
 )
 
 type LTILaunchDataQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *LTILaunchDataQueries) Get(id string) (models.LTILaunchData, error) {
 	var entity models.LTILaunchData
-	result := q.First(&entity, "id = ?", id)
+	result := q.DB.First(&entity, "id = ?", id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -39,7 +39,7 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 	}
 	entityDB := models.LTILaunchData{}
 	if entityDB.ID != "" {
-		q.Where("id = ?", entity.ID).Find(&entityDB)
+		q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	}
 	if entityDB.ID != "" {
 		// Update
@@ -48,7 +48,7 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -56,7 +56,7 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 		q.Logger.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create launch_id=%+v", entity.ID))
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }

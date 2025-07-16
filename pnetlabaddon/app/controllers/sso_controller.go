@@ -3,7 +3,7 @@ package controllers
 import (
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/usecases"
 	"gitlab.com/a10869/api-modules/shared/cms_client"

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/clabgate/app/di"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases/auth"

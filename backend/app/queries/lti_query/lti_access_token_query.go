@@ -9,9 +9,9 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
@@ -22,13 +22,13 @@ func accessTokenIndex(tokenURI, clientID string, scopes []string) string {
 }
 
 type LTIAccessTokenQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *LTIAccessTokenQueries) GetByIndex(index string) (models.LTIAccessToken, error) {
 	var entity models.LTIAccessToken
-	q.Where("`index` = ?", index).Find(&entity)
+	q.DB.Where("`index` = ?", index).Find(&entity)
 	if entity.Index != index {
 		return entity, utils.FiberValidationException{
 			Status:    fiber.StatusNotFound,
@@ -49,7 +49,7 @@ func (q *LTIAccessTokenQueries) Upsert(entity *models.LTIAccessToken) error {
 		entity.ID = entityDB.ID
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Save(&entity)
+		result := q.DB.Save(&entity)
 		return result.Error
 	} else {
 		// Create
@@ -57,7 +57,7 @@ func (q *LTIAccessTokenQueries) Upsert(entity *models.LTIAccessToken) error {
 		entity.ID = 0
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
-		result := q.Create(entity)
+		result := q.DB.Create(entity)
 		return result.Error
 	}
 }

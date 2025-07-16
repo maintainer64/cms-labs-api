@@ -1,7 +1,7 @@
 package di
 
 import (
-	"github.com/go-resty/resty/v2"
+	resty "github.com/go-resty/resty/v2"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
 	"gitlab.com/a10869/api-modules/clabgate/pkg/configs"
 	"gitlab.com/a10869/api-modules/shared/logs"

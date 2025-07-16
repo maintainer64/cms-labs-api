@@ -11,7 +11,7 @@ import (
 
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 
-	"github.com/golang-jwt/jwt/v5"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 type TokenDataWithExp struct {

@@ -24,7 +24,7 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 
 	"gitlab.com/a10869/api-modules/shared/http_debug"
 

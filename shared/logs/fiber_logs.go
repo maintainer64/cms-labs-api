@@ -3,7 +3,7 @@ package logs
 
 import (
 	"github.com/gofiber/contrib/fiberzerolog"
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 )
 
 func NewFiberZerologLogger() fiber.Handler {

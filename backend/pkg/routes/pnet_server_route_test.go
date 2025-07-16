@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 

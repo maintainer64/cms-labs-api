@@ -22,7 +22,7 @@ func TestGenerateFunc(t *testing.T) {
 			Content: `package controllers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/simple-app/backend/app/di"
 	"github.com/simple-app/backend/app/usecases"
 	"github.com/simple-app/backend/pkg/response"
@@ -143,7 +143,7 @@ func UserFormLegacyGet(c *fiber.Ctx) error {
 			Content: `package di
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/simple-app/backend/app/usecases"
 	"github.com/simple-app/backend/pkg/response"
 )
@@ -228,7 +228,7 @@ type UserFormLegacy struct {
 import (
 	"errors"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/simple-app/backend/app/models"
 	"github.com/simple-app/backend/pkg/response"
 	"gorm.io/gorm"
@@ -327,7 +327,7 @@ func (q *UserFormLegacyQueries) Delete(id uint) error {
 			Content: `package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/simple-app/backend/app/controllers"
 )
 

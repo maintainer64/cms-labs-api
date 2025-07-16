@@ -25,7 +25,7 @@ func (q *LTIFormQueries) FindRegistrationByIssuerAndClientID(issuer, clientID st
 		return Registration{}, errors.New("received empty issuer argument")
 	}
 	entityDB := models.LTIForm{}
-	query := q.Where("base_uri = ?", issuer)
+	query := q.DB.Where("base_uri = ?", issuer)
 	if clientID != "" {
 		// Use the client ID to disambiguate multiple registrations for an issuer.  The (optional) client ID
 		// parameter can disambiguate between multiple registrations from a single issuer.
@@ -76,7 +76,7 @@ func (q *LTIFormQueries) FindDeployment(issuer, deploymentID string) (Deployment
 		return Deployment{}, fmt.Errorf("received invalid deployment ID: %v", err)
 	}
 	entityDB := models.LTIForm{}
-	result := q.Where("base_uri = ?", issuer).Where("lti_deployment_id = ?", deploymentID).Find(&entityDB)
+	result := q.DB.Where("base_uri = ?", issuer).Where("lti_deployment_id = ?", deploymentID).Find(&entityDB)
 	if result.Error != nil {
 		return Deployment{}, ErrRegistrationNotFound
 	}

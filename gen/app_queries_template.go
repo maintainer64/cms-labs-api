@@ -5,7 +5,7 @@ const AppQueriesTemplate = `package queries
 import (
 	"errors"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"{{.Root}}/app/models"
 	"{{.Root}}/pkg/response"
 	"gorm.io/gorm"

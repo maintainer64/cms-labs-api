@@ -44,9 +44,9 @@ func (u *LabCreateUC) CreateOrUpdateLab(
 	lab, _ := u.LabSessionQuery.GetByAttemptId(attemptId)
 	if lab.LabSessionID != 0 {
 		lab.AddJoinedUser(userPod)
-		u.LabSessionQuery.Save(&lab)
+		u.LabSessionQuery.DB.Save(&lab)
 		user.LabSession = &lab.LabSessionID
-		u.UserQueries.Save(&user)
+		u.UserQueries.DB.Save(&user)
 		log.Info().Msg(
 			fmt.Sprintf(
 				"UpdateLab by unlFilePathServer: %s, attemptId:%s and userPod: %d",
@@ -63,9 +63,9 @@ func (u *LabCreateUC) CreateOrUpdateLab(
 		LabSessionJoined: fmt.Sprintf("%d", userPod),
 		LabSessionPath:   unlFilePathServer,
 	}
-	u.LabSessionQuery.Save(&lab)
+	u.LabSessionQuery.DB.Save(&lab)
 	user.LabSession = &lab.LabSessionID
-	u.UserQueries.Save(&user)
+	u.UserQueries.DB.Save(&user)
 	log.Info().Msg(
 		fmt.Sprintf(
 			"CreateLab by unlFilePathServer: %s, attemptId:%s and userPod: %d",
@@ -101,7 +101,7 @@ func (u *LabCreateUC) DownloadLab(
 	if err != nil {
 		return "", err
 	}
-	if fileContent == nil || len(fileContent) <= 0 {
+	if len(fileContent) <= 0 {
 		u.Logger.Info().Msg(
 			fmt.Sprintf(
 				"LabCreateUC: file content downloaded is empty by curlRequestID: %s, attemptId: %s",

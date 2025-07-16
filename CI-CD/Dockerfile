@@ -28,6 +28,10 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/$(dpkg --print-architecture)/kubectl" && \
+     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+     rm kubectl
+
 # Установка Node.js инструментов
 RUN npm install -g npm@latest && \
     npm install -g yarn semantic-release @semantic-release/git @semantic-release/gitlab @semantic-release/commit-analyzer @semantic-release/release-notes-generator

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"fmt"
-	"math/rand/v2"
+	rand "math/rand/v2"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

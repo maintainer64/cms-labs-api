@@ -10,7 +10,7 @@ import (
 	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
 	"gitlab.com/a10869/api-modules/shared/connection"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 )
 
 // StartServerWithGracefulShutdown function for starting server with a graceful shutdown.

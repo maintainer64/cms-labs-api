@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries/topology"
@@ -27,6 +27,7 @@ type TopologiesGetInputDTO struct {
 
 type TopologiesGetOutputDTO struct {
 	Topology *topology.Topology `json:"topology"`
+	WebUrl   string             `json:"web_url"`
 }
 
 type TopologiesGetResponse = response.Response[TopologiesGetOutputDTO]
@@ -65,7 +66,9 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 		u.Logger.Error().Msg(fmt.Sprintf("TopologiesGetUC: Unmarshal topology error: %v by namespace: %v", err, dto.Namespace))
 		return TopologiesGetOutputDTO{}, err
 	}
+	webUrl, _ := u.KubernetesAdminQuery.GetSecretByName(ctx, namespace, queries.GitlabWebUrlDeploy)
 	return TopologiesGetOutputDTO{
 		Topology: topologyContent,
+		WebUrl:   webUrl,
 	}, err
 }

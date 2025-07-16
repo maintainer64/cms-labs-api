@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/a10869/api-modules/backend/app/models"

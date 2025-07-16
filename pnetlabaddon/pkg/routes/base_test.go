@@ -9,17 +9,17 @@ import (
 
 	"gitlab.com/a10869/api-modules/shared/connection"
 
-	"github.com/go-resty/resty/v2"
+	resty "github.com/go-resty/resty/v2"
 	"github.com/h2non/gock"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
 
 	"gitlab.com/a10869/api-modules/shared/logs"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 
 	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/middleware"
 	"gorm.io/gorm"

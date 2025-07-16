@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
@@ -39,6 +40,7 @@ func (u *TokenAccessGetUC) Execute(dto TokenAccessGetInputDTO) (TokenAccessGetOu
 	ctx := context.Background()
 	token, err := u.KubernetesAdminQuery.GetUserToken(ctx, username)
 	if err != nil {
+		u.Logger.Warn().Msg(fmt.Sprintf("token access get request error: %s", err))
 		return output, err
 	}
 	output.Token = token

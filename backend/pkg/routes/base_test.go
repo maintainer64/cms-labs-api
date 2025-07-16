@@ -9,19 +9,19 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/go-resty/resty/v2"
+	resty "github.com/go-resty/resty/v2"
 	"github.com/h2non/gock"
 
 	"gitlab.com/a10869/api-modules/shared/logs"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 
 	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gitlab.com/a10869/api-modules/backend/pkg/middleware"
 	"gitlab.com/a10869/api-modules/backend/platform/database"

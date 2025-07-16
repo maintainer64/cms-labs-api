@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/clabgate/app/di"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases/auth"
@@ -16,7 +16,6 @@ import (
 // @Tags Token
 // @Accept json
 // @Produce json
-// @Param form body usecases.TokenAccessGetInputDTO true "params"
 // @Success 200 {object} usecases.TokenAccessGetResponse
 // @Security ApiKeyAuth
 // @Router /v1/tokens/json [get]
@@ -27,10 +26,6 @@ func TokenAccessJson(c *fiber.Ctx) error {
 	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.TokenAccessGetInputDTO{}
-	err = utils.FiberValidatorBase(c, &dto)
-	if err != nil {
-		return err
-	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return err
@@ -53,7 +48,6 @@ func TokenAccessJson(c *fiber.Ctx) error {
 // @Tags Token
 // @Accept json
 // @Produce json
-// @Param form body usecases.TokenFileYAMLGetInputDTO true "params"
 // @Success 200 {object} usecases.TokenFileYAMLGetResponse
 // @Router /v1/tokens/yaml [get]
 func TokenAccessYaml(c *fiber.Ctx) error {

@@ -3,7 +3,7 @@ package main
 const AppDITemplate = `package di
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"{{.Root}}/app/usecases"
 	"{{.Root}}/pkg/response"
 )

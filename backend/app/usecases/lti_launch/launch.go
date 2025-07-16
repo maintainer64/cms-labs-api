@@ -13,11 +13,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 
 	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/jwk"

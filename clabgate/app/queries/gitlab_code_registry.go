@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/go-resty/resty/v2"
-	"github.com/goccy/go-json"
+	resty "github.com/go-resty/resty/v2"
+	json "github.com/goccy/go-json"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/connection"
 )
@@ -14,7 +14,7 @@ import (
 type GitlabCodeRegistryQuery struct {
 	Config *connection.GitConfig
 	Client *resty.Client
-	*zerolog.Logger
+	Logger *zerolog.Logger
 }
 
 type GitlabCodeRegistryFileResult struct {
@@ -31,6 +31,10 @@ type GitlabCodeRegistryFileResult struct {
 	Content         string `json:"content"`
 }
 
+type GitlabPipelineTrigger struct {
+	WebUrl string `json:"web_url"`
+}
+
 func (g *GitlabCodeRegistryQuery) TasksList() ([]TaskCodeRegistryItem, error) {
 	uri := fmt.Sprintf(
 		"%s/api/v4/projects/%s/repository/files/%s?ref=%s",
@@ -38,8 +42,8 @@ func (g *GitlabCodeRegistryQuery) TasksList() ([]TaskCodeRegistryItem, error) {
 	)
 	g.Logger.Debug().Msg(fmt.Sprintf("TasksList url: %s", uri))
 	var responseJson GitlabCodeRegistryFileResult
-	response, err := g.Client.R().SetHeaders(map[string]string{
-		"PRIVATE-TOKEN": g.Config.Token,
+	response, _ := g.Client.R().SetHeaders(map[string]string{
+		"PRIVATE-TOKEN": g.Config.AccessToken,
 	}).SetResult(&responseJson).Get(uri)
 	if response == nil {
 		g.Logger.Info().Msg(fmt.Sprintf("TasksList: url is incorrect: %s", uri))
@@ -55,7 +59,7 @@ func (g *GitlabCodeRegistryQuery) TasksList() ([]TaskCodeRegistryItem, error) {
 	}
 	content, err := base64.StdEncoding.DecodeString(responseJson.Content)
 	if err != nil {
-		g.Logger.Info().Msg(fmt.Sprintf("TasksList: content is not decoded base64"))
+		g.Logger.Info().Msg("TasksList: content is not decoded base64")
 		return nil, err
 	}
 	var result TaskCodeRegistry
@@ -65,4 +69,28 @@ func (g *GitlabCodeRegistryQuery) TasksList() ([]TaskCodeRegistryItem, error) {
 		return nil, err
 	}
 	return result.Labs, nil
+}
+
+func (g *GitlabCodeRegistryQuery) DeployTopology(pathFile string, namespace string) (string, error) {
+	uri := fmt.Sprintf(
+		"%s/api/v4/projects/%s/trigger/pipeline",
+		g.Config.BaseUrl, g.Config.RepoId,
+	)
+	g.Logger.Debug().Msg(fmt.Sprintf("DeployTopology url: %s", uri))
+	var responseJson GitlabPipelineTrigger
+	response, _ := g.Client.R().SetFormData(map[string]string{
+		"token": g.Config.TriggerToken,
+		"ref":   g.Config.Branch,
+		"variables[CLABERNETES_TOPOLOGY_NAMESPACE]": namespace,
+		"variables[CLABERNETES_TOPOLOGY_PATH]":      pathFile,
+	}).SetResult(&responseJson).Post(uri)
+	if response == nil {
+		g.Logger.Info().Msg(fmt.Sprintf("DeployTopology: url is incorrect: %s", uri))
+		return "", errors.New("gitlab server not create response")
+	}
+	if response.IsError() {
+		g.Logger.Info().Msg(fmt.Sprintf("TasksList: statusCode: %d", response.StatusCode()))
+		return "", fmt.Errorf("gitlab server error statusCode: %d", response.StatusCode())
+	}
+	return responseJson.WebUrl, nil
 }

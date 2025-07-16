@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	_ "github.com/joho/godotenv/autoload" // load .env file automatically
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	_ "gitlab.com/a10869/api-modules/backend/docs" // load API Docs files (Swagger)

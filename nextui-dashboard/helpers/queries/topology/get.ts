@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { postV1TopologiesCreate, postV1TopologiesGet } from '@/helpers/api';
+import { getV1TokensJson, postV1TopologiesCreate, postV1TopologiesGet } from '@/helpers/api';
 
 export const useTopologyCreate = (username?: string, taskId?: string, redeploy = false) => {
   return useQuery({
@@ -33,5 +33,15 @@ export const useTopologyGet = (namespace?: string) => {
     },
     retry: 10,
     retryDelay: 5000
+  });
+};
+
+export const useTopologyTokenJson = () => {
+  return useQuery({
+    queryKey: ['getV1TokensJson'],
+    queryFn: () => {
+      return getV1TokensJson({ form: {} });
+    },
+    retry: 0
   });
 };

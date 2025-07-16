@@ -6,7 +6,7 @@ import (
 
 	"gitlab.com/a10869/api-modules/shared/logs"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 )

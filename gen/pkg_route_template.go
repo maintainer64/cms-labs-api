@@ -3,7 +3,7 @@ package main
 const PKGRouteTemplate = `package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"{{.Root}}/app/controllers"
 )
 

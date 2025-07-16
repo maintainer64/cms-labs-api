@@ -2,7 +2,7 @@
 package logs
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 )
 
 // NewOptionsFiberNoContent Функция отправляет 204 на все OPTIONS запросы для браузера

@@ -106,8 +106,6 @@ definitions:
     - error
     - msg
     type: object
-  usecases.TokenAccessGetInputDTO:
-    type: object
   usecases.TokenAccessGetOutputDTO:
     properties:
       token:
@@ -124,8 +122,6 @@ definitions:
     required:
     - error
     - msg
-    type: object
-  usecases.TokenFileYAMLGetInputDTO:
     type: object
   usecases.TokenFileYAMLGetOutputDTO:
     properties:
@@ -213,6 +209,8 @@ definitions:
     properties:
       topology:
         $ref: '#/definitions/topology.Topology'
+      web_url:
+        type: string
     type: object
   usecases.TopologiesGetResponse:
     properties:
@@ -267,13 +265,6 @@ paths:
       consumes:
       - application/json
       description: 'Token cluster. Roles: [student, admin, instructor]'
-      parameters:
-      - description: params
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TokenAccessGetInputDTO'
       produces:
       - application/json
       responses:
@@ -291,13 +282,6 @@ paths:
       consumes:
       - application/json
       description: 'Token cluster. Roles: any'
-      parameters:
-      - description: params
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TokenFileYAMLGetInputDTO'
       produces:
       - application/json
       responses:

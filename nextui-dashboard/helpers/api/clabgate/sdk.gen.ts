@@ -6,9 +6,7 @@ import { request as __request } from './core/request';
 import type {
   PostV1TasksListData,
   PostV1TasksListResponse,
-  GetV1TokensJsonData,
   GetV1TokensJsonResponse,
-  GetV1TokensYamlData,
   GetV1TokensYamlResponse,
   PostV1TopologiesCreateData,
   PostV1TopologiesCreateResponse,
@@ -37,32 +35,26 @@ export const postV1TasksList = (data: PostV1TasksListData): CancelablePromise<Po
 /**
  * token cluster json
  * Token cluster. Roles: [student, admin, instructor]
- * @param data The data for the request.
- * @param data.form params
  * @returns usecases_TokenAccessGetResponse OK
  * @throws ApiError
  */
-export const getV1TokensJson = (data: GetV1TokensJsonData): CancelablePromise<GetV1TokensJsonResponse> => {
+export const getV1TokensJson = (): CancelablePromise<GetV1TokensJsonResponse> => {
   return __request(OpenAPI, {
     method: 'GET',
-    url: '/v1/tokens/json',
-    body: data.form
+    url: '/v1/tokens/json'
   });
 };
 
 /**
  * token cluster yaml
  * Token cluster. Roles: any
- * @param data The data for the request.
- * @param data.form params
  * @returns usecases_TokenFileYAMLGetResponse OK
  * @throws ApiError
  */
-export const getV1TokensYaml = (data: GetV1TokensYamlData): CancelablePromise<GetV1TokensYamlResponse> => {
+export const getV1TokensYaml = (): CancelablePromise<GetV1TokensYamlResponse> => {
   return __request(OpenAPI, {
     method: 'GET',
-    url: '/v1/tokens/yaml',
-    body: data.form
+    url: '/v1/tokens/yaml'
   });
 };
 

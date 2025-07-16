@@ -10,6 +10,7 @@ const iconComponents: Record<string, ReactNode> = {
   switch: <SwitchIcon />,
   desktop: <DesktopIcon />,
   linux: <DesktopIcon />,
+  pc: <DesktopIcon />,
   server: <ServerIcon />,
   cloud: <CloudIcon />
 };

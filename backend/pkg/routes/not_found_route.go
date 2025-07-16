@@ -1,6 +1,6 @@
 package routes
 
-import "github.com/gofiber/fiber/v2"
+import fiber "github.com/gofiber/fiber/v2"
 
 // NotFoundRoute func for describe 404 Error route.
 func NotFoundRoute(a *fiber.App) {

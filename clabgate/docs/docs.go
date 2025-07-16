@@ -80,17 +80,6 @@ const docTemplate = `{
                     "Token"
                 ],
                 "summary": "token cluster json",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TokenAccessGetInputDTO"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -114,17 +103,6 @@ const docTemplate = `{
                     "Token"
                 ],
                 "summary": "token cluster yaml",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TokenFileYAMLGetInputDTO"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -416,9 +394,6 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.TokenAccessGetInputDTO": {
-            "type": "object"
-        },
         "usecases.TokenAccessGetOutputDTO": {
             "type": "object",
             "properties": {
@@ -444,9 +419,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/usecases.TokenAccessGetOutputDTO"
                 }
             }
-        },
-        "usecases.TokenFileYAMLGetInputDTO": {
-            "type": "object"
         },
         "usecases.TokenFileYAMLGetOutputDTO": {
             "type": "object",
@@ -579,6 +551,9 @@ const docTemplate = `{
             "properties": {
                 "topology": {
                     "$ref": "#/definitions/topology.Topology"
+                },
+                "web_url": {
+                    "type": "string"
                 }
             }
         },

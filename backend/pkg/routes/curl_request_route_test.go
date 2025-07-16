@@ -3,7 +3,7 @@ package routes
 import (
 	"testing"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 	"github.com/google/uuid"
 	"github.com/h2non/gock"
 	"github.com/stretchr/testify/assert"

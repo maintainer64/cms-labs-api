@@ -3,7 +3,7 @@ package queries
 import (
 	"errors"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/models"
 	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"

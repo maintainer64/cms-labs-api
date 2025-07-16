@@ -28,10 +28,11 @@ func (c *AppConfigModel) Reload() {
 		Namespace:      os.Getenv("K8S_NAMESPACE"),
 	}
 	c.GitlabConfig = &connection.GitConfig{
-		BaseUrl: os.Getenv("GITLAB_BASE_URL"),
-		RepoId:  os.Getenv("GITLAB_REPO_ID"),
-		Token:   os.Getenv("GITLAB_ACCESS_KEY"),
-		Branch:  os.Getenv("GITLAB_BRANCH"),
+		BaseUrl:      os.Getenv("GITLAB_BASE_URL"),
+		RepoId:       os.Getenv("GITLAB_REPO_ID"),
+		AccessToken:  os.Getenv("GITLAB_ACCESS_KEY"),
+		TriggerToken: os.Getenv("GITLAB_TRIGGER_KEY"),
+		Branch:       os.Getenv("GITLAB_BRANCH"),
 	}
 }
 

@@ -27,8 +27,8 @@ type KubernetesAdminQuery struct {
 }
 
 const (
-	NamespaceListRole   = "namespace-lister"
-	NamespaceAccessRole = "namespace-access"
+	NamespaceListRole  = "namespace-lister"
+	GitlabWebUrlDeploy = "deploy-logs"
 )
 
 // NewKubernetesAdmin создает новый экземпляр администратора Kubernetes
@@ -278,7 +278,12 @@ func (k *KubernetesAdminQuery) GetUserToken(ctx context.Context, username string
 
 	// Попробуем получить существующий секрет
 	if secret, err := k.clientset.CoreV1().Secrets(k.defaultNamespace).Get(ctx, secretName, metav1.GetOptions{}); err == nil {
-		if token, exists := secret.Data["token"]; exists {
+		if token, exists := secret.Data[corev1.ServiceAccountTokenKey]; exists {
+			k.Logger.Info().Msg(
+				fmt.Sprintf(
+					"Granting access to service account %s in namespace %s", username, k.defaultNamespace,
+				),
+			)
 			return string(token), nil
 		}
 	}
@@ -314,7 +319,7 @@ func (k *KubernetesAdminQuery) GetUserToken(ctx context.Context, username string
 				return "", fmt.Errorf("failed to get secret: %v", err)
 			}
 
-			if token, exists := updatedSecret.Data["token"]; exists && len(token) > 0 {
+			if token, exists := updatedSecret.Data[corev1.ServiceAccountTokenKey]; exists && len(token) > 0 {
 				return string(token), nil
 			}
 			time.Sleep(1 * time.Second)

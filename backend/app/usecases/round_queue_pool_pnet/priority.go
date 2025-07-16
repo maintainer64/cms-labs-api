@@ -6,7 +6,7 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/thoas/go-funk"
+	funk "github.com/thoas/go-funk"
 )
 
 type ServerStats struct {

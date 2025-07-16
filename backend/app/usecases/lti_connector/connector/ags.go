@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 )
 
 // AGS implements Assignment & Grades Services functions.

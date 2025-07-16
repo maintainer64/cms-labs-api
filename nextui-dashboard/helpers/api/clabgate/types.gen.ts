@@ -67,8 +67,6 @@ export type usecases_TasksListResponse = {
   result?: usecases_TasksListOutputDTO;
 };
 
-export type usecases_TokenAccessGetInputDTO = unknown;
-
 export type usecases_TokenAccessGetOutputDTO = {
   token?: string;
 };
@@ -78,8 +76,6 @@ export type usecases_TokenAccessGetResponse = {
   msg: string;
   result?: usecases_TokenAccessGetOutputDTO;
 };
-
-export type usecases_TokenFileYAMLGetInputDTO = unknown;
 
 export type usecases_TokenFileYAMLGetOutputDTO = {
   content?: string;
@@ -131,6 +127,7 @@ export type usecases_TopologiesGetInputDTO = {
 
 export type usecases_TopologiesGetOutputDTO = {
   topology?: topology_Topology;
+  web_url?: string;
 };
 
 export type usecases_TopologiesGetResponse = {
@@ -148,21 +145,7 @@ export type PostV1TasksListData = {
 
 export type PostV1TasksListResponse = usecases_TasksListResponse;
 
-export type GetV1TokensJsonData = {
-  /**
-   * params
-   */
-  form: usecases_TokenAccessGetInputDTO;
-};
-
 export type GetV1TokensJsonResponse = usecases_TokenAccessGetResponse;
-
-export type GetV1TokensYamlData = {
-  /**
-   * params
-   */
-  form: usecases_TokenFileYAMLGetInputDTO;
-};
 
 export type GetV1TokensYamlResponse = usecases_TokenFileYAMLGetResponse;
 

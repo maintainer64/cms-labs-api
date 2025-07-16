@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases/response"
@@ -114,7 +114,13 @@ func (u *TopologiesCreateUC) Execute(dto TopologiesCreateInputDTO) (TopologiesCr
 	}
 	u.Logger.Info().Msg(fmt.Sprintf("TopologiesCreateUC: namespace deployed: %s", namespace))
 	output.DeployCreated = true
-	return output, err
+	webUrl, err := u.GitClient.DeployTopology(task.FullPath, namespace)
+	if err != nil {
+		u.Logger.Error().Msg(fmt.Sprintf("TopologiesCreateUC: DeployTopology failed: %s", err))
+	}
+	u.Logger.Info().Msg(fmt.Sprintf("TopologiesCreateUC: Create deploy url: %s", webUrl))
+	_ = u.KubernetesAdminQuery.SetSecretByName(ctx, namespace, queries.GitlabWebUrlDeploy, webUrl)
+	return output, nil
 }
 
 func (u *TopologiesCreateUC) FindTaskById(taskID string) (*queries.TaskCodeRegistryItem, error) {

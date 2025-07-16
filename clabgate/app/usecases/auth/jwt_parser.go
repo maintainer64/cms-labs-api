@@ -4,13 +4,13 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/golang-jwt/jwt/v5"
+	jwt "github.com/golang-jwt/jwt/v5"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	"gitlab.com/a10869/api-modules/shared/utils"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 )
 
 // ExtractTokenMetadata func to extract metadata from JWT.

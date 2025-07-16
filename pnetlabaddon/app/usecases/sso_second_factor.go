@@ -128,7 +128,7 @@ func (u *SSOSecondFactorUC) Execute(dto SSOSecondFactorInputDTO) (*SSOSecondFact
 	userDB.OnlineTime = time.Now().Unix()
 	offline := 1
 	userDB.Offline = &offline
-	result := u.UserQueries.Save(&userDB)
+	result := u.UserQueries.DB.Save(&userDB)
 	if result.Error != nil {
 		return nil, result.Error
 	}

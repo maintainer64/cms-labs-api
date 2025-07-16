@@ -3,7 +3,7 @@ package main
 const AppControllersTemplate = `package controllers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"{{.Root}}/app/di"
 	"{{.Root}}/app/usecases"
 	"{{.Root}}/pkg/response"

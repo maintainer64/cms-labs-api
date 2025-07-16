@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-resty/resty/v2"
+	resty "github.com/go-resty/resty/v2"
 	"github.com/rs/zerolog/log"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 )

@@ -15,7 +15,7 @@ import (
 	"encoding/pem"
 	"net/http"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/macewan-cs/lti/connector"

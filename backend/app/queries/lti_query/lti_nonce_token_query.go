@@ -11,13 +11,13 @@ import (
 )
 
 type LTINonceTokenQueries struct {
-	*gorm.DB
-	*zerolog.Logger
+	DB     *gorm.DB
+	Logger *zerolog.Logger
 }
 
 func (q *LTINonceTokenQueries) ClearOldValues() error {
 	timeThreshold := time.Now().UTC().Add(-5 * time.Minute)
-	result := q.Where("created_at <= ?", timeThreshold).Delete(&models.LTINonceToken{})
+	result := q.DB.Where("created_at <= ?", timeThreshold).Delete(&models.LTINonceToken{})
 	if result.Error != nil {
 		return result.Error
 	}
@@ -36,7 +36,7 @@ func (q *LTINonceTokenQueries) StoreNonce(nonce string, targetLinkURI string) er
 	entity.CreatedAt = time.Now().UTC()
 	entity.UpdatedAt = time.Now().UTC()
 	q.Logger.Debug().Msg(fmt.Sprintf("LTINonceTokenQueries: store nonce %+v", entity))
-	result := q.Create(entity)
+	result := q.DB.Create(entity)
 	q.Logger.Info().Msg(fmt.Sprintf("LTINonceTokenQueries: stored nonce: %+v", entity.Nonce))
 	return result.Error
 }
@@ -54,7 +54,7 @@ func (q *LTINonceTokenQueries) TestAndClearNonce(
 		nonce,
 		targetLinkURI,
 	))
-	result := q.Where("nonce = ?", nonce).Where("target_link_uri = ?", targetLinkURI).Find(&entityDB)
+	result := q.DB.Where("nonce = ?", nonce).Where("target_link_uri = ?", targetLinkURI).Find(&entityDB)
 	q.Logger.Info().Msg(fmt.Sprintf(
 		"LTINonceTokenQueries: checked nonce token: %+v",
 		nonce,
@@ -62,6 +62,6 @@ func (q *LTINonceTokenQueries) TestAndClearNonce(
 	if result.Error != nil {
 		return result.Error
 	}
-	q.Where("id = ?", entityDB.ID).Delete(&entityDB)
+	q.DB.Where("id = ?", entityDB.ID).Delete(&entityDB)
 	return nil
 }

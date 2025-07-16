@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 )
 
 // NRPS implements Names & Roles Provisioning Services functions.

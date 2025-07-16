@@ -6,7 +6,7 @@ import (
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 	"github.com/ory/go-convenience/mapx"
 	"github.com/ory/go-convenience/stringsx"
 	"github.com/rs/zerolog"
@@ -30,7 +30,7 @@ func (q *ExternalDataUpdateQuery) UpdateByLaunchData(
 		return err
 	}
 	email := strings.ToLower(mapx.GetStringDefault(jwtTokenPayload, "email", ""))
-	userFromDB, _ := q.GetByEmail(email)
+	userFromDB, _ := q.UserQueries.GetByEmail(email)
 	user := models.User{}
 	user.ID = userFromDB.ID
 	user.Email = email

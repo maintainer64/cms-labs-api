@@ -6,14 +6,14 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/shared/utils"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 	"github.com/ory/go-convenience/mapx"
 	"github.com/rs/zerolog/log"
 	"gitlab.com/a10869/api-modules/backend/app/models"

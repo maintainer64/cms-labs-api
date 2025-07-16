@@ -1,23 +1,23 @@
-import React from 'react';
-import { TopologyFlowVisualization } from '@/components/topology/view';
+import React, { useReducer } from 'react';
+import { TopologyFlowVisualization, TopologyLayout } from '@/components/topology/view';
 import { TopologyConnect } from '@/components/topology/connect';
+import { TerminalWindows } from '@/components/topology/terminal/window';
+import { terminalInitialState, terminalReducer } from '@/components/topology/terminal/context';
 
 export const TopologyPageConnect = () => {
   return (
-    <div className='flex h-screen'>
-      <div className='flex-1 flex-col flex items-center justify-center p-6'>
-        <TopologyConnect />
-      </div>
-    </div>
+    <TopologyLayout>
+      <TopologyConnect />
+    </TopologyLayout>
   );
 };
 
 export const TopologyPageView = () => {
+  const [state, dispatch] = useReducer(terminalReducer, terminalInitialState);
   return (
-    <div className='flex h-screen'>
-      <div className='flex-1 flex-col flex items-center justify-center p-6'>
-        <TopologyFlowVisualization />
-      </div>
-    </div>
+    <TopologyLayout>
+      <TerminalWindows isMock={true} clients={state.clients} dispatch={dispatch} />
+      <TopologyFlowVisualization dispatch={dispatch} />
+    </TopologyLayout>
   );
 };
