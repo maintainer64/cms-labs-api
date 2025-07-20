@@ -43,6 +43,7 @@ func externalSSOMock() (int, string, string) {
 		"nonce":          "24d9b73d-f0b9-4435-92e2-6c6ee7b7c9b5",
 		"email":          externalUserEmail,
 		"name":           externalUserName,
+		"username":       externalUserEmail,
 		"server_id":      2,
 		"role":           "student",
 		"last_launch_id": "1",

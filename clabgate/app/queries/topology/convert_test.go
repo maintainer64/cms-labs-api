@@ -46,14 +46,28 @@ spec:
 					{
 						ID:    "node1",
 						Label: "S1",
-						Type:  "nokia_srlinux",
+						Type:  "default",
 						Icon:  "switch",
+						Data: TopologiesNodeDataItem{
+							ID:    "node1",
+							Label: "S1",
+							Type:  "default",
+							Icon:  "switch",
+							Kind:  "nokia_srlinux",
+						},
 					},
 					{
 						ID:    "node2",
 						Label: "PC1",
-						Type:  "linux",
+						Type:  "default",
 						Icon:  "linux",
+						Data: TopologiesNodeDataItem{
+							ID:    "node2",
+							Label: "PC1",
+							Type:  "default",
+							Icon:  "linux",
+							Kind:  "linux",
+						},
 					},
 				},
 				Edges: []TopologiesEdge{
@@ -66,13 +80,13 @@ spec:
 							Source: TopologiesEdgeDataItem{
 								ID:    "node1",
 								Name:  "eth1",
-								Type:  "nokia_srlinux",
+								Type:  "default",
 								Label: "S1",
 							},
 							Target: TopologiesEdgeDataItem{
 								ID:    "node2",
 								Name:  "eth1",
-								Type:  "linux",
+								Type:  "default",
 								Label: "PC1",
 							},
 						},
@@ -149,8 +163,15 @@ spec:
 					{
 						ID:    "node1",
 						Label: "S1",
-						Type:  "nokia_srlinux",
+						Type:  "default",
 						Icon:  "switch",
+						Data: TopologiesNodeDataItem{
+							ID:    "node1",
+							Label: "S1",
+							Type:  "default",
+							Icon:  "switch",
+							Kind:  "nokia_srlinux",
+						},
 					},
 				},
 				Edges: []TopologiesEdge{},

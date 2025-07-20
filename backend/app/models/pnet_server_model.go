@@ -28,11 +28,27 @@ type PNETServerBase struct {
 }
 
 func (t *PNETServerBase) HasPrefixUrl(redirectUri string) bool {
+	// Очищаем redirectUri от http:// и https://
 	redirectUri = strings.TrimPrefix(redirectUri, "http://")
 	redirectUri = strings.TrimPrefix(redirectUri, "https://")
-	url := strings.TrimPrefix(t.Url, "http://")
-	url = strings.TrimPrefix(url, "https://")
-	return strings.HasPrefix(redirectUri, url)
+
+	// Разделяем URL-адреса в t.Url по запятой или точке с запятой
+	urls := strings.FieldsFunc(t.Url, func(r rune) bool {
+		return r == ',' || r == ';'
+	})
+
+	// Проверяем каждый URL
+	for _, u := range urls {
+		url := strings.TrimSpace(u)
+		url = strings.TrimPrefix(url, "http://")
+		url = strings.TrimPrefix(url, "https://")
+
+		if strings.HasPrefix(redirectUri, url) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func PNETServeIsRealActive(db *gorm.DB) *gorm.DB {
