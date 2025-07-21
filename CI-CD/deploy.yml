@@ -14,6 +14,22 @@ core-deploy:
   variables:
     FOLDER: core
 
+clabgate-deploy:
+  stage: deploy
+  tags:
+    - ${TAG}
+  extends:
+    - .deploy-base-ssh
+    - .releases-branch
+  image: ${DOCKER_IMAGE}
+  needs:
+    - clabgate-build-docker
+    - version
+  environment:
+    name: clabgate-${CI_COMMIT_REF_SLUG}
+  variables:
+    FOLDER: clabgate
+
 frontend-deploy:
   stage: deploy
   tags:

@@ -33,6 +33,41 @@ core-build-docker:
     - docker push $BACKEND_CI_IMAGE:$VERSION
     - echo "Deploying application..."
 
+clabgate-build:
+  stage: build
+  extends:
+    - .dependencies
+    - .releases-branch
+  image: $GO_BASE_CI_IMAGE:latest
+  needs:
+    - golang-test
+  script:
+    - cd clabgate
+    - echo "Building apiserver bin..."
+    - make build
+  artifacts:
+    expose_as: 'Clabgate build'
+    paths:
+      - backend/build
+
+clabgate-build-docker:
+  stage: build
+  extends:
+    - .registry_login
+    - .releases-branch
+  image: ${DOCKER_IMAGE}
+  needs:
+    - clabgate-build
+    - version
+  script:
+    - VERSION="$(cat ./VERSION)"
+    - cd clabgate
+    - echo "Building Docker image..."
+    - docker build --no-cache -t $CLABGATE_CI_IMAGE:$VERSION  .
+    - echo "Pushing Docker image to GitLab Registry..."
+    - docker push $CLABGATE_CI_IMAGE:$VERSION
+    - echo "Deploying application..."
+
 frontend-build:
   stage: build
   extends:

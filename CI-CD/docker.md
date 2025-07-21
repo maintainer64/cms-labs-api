@@ -1,8 +1,8 @@
 # Документация по настройке и запуску окружения
 
 Данная документация описывает структуру проекта, настройку и запуск окружения с использованием Docker Compose. Проект
-состоит из трех основных компонентов: `core-backend`, `mysqldatabase` и `core-frontend`, которые взаимодействуют через
-общую сеть `cms-net`.
+состоит из 4 основных компонентов: `core-backend`, `clabgate`, `mysqldatabase` и `core-frontend`, которые
+взаимодействуют через общую сеть `cms-net`.
 
 ---
 
@@ -15,6 +15,8 @@ user@vm:~$ tree
 .
 ├── core
 │   └── docker-compose.yml
+├── clabgate
+│   └── docker-compose.yml
 ├── db
 │   └── docker-compose.yml
 ├── docs
@@ -23,6 +25,7 @@ user@vm:~$ tree
 ```
 
 - **core** — содержит конфигурацию для запуска backend-сервиса.
+- **clabgate** — содержит конфигурацию для запуска clabgate proxy k8s-сервиса.
 - **db** — содержит конфигурацию для запуска базы данных MySQL.
 - **front** — содержит конфигурацию для запуска frontend-сервиса.
 - **docs** — директория для документации (опционально).
@@ -73,6 +76,41 @@ services:
       DB_MAX_IDLE_CONNECTIONS: "10"
       DB_MAX_LIFETIME_CONNECTIONS: "30"
       DB_TABLE_PREFIX: "backend_"
+
+networks:
+  cms-net:
+    external: true
+```
+
+### 2. Clabgate (`clabgate/docker-compose.yml`)
+
+```yaml
+version: '3.9'
+
+services:
+  clabgate:
+    platform: linux/x86_64
+    container_name: clabgate
+    image: registry.gitlab.com/a10869/api-modules/clabgate/stage:${VERSION}
+    networks:
+      - cms-net
+    environment:
+      STAGE_STATUS: "prod"
+      DEBUG: "false"
+      # Server settings:
+      SERVER_HOST: "0.0.0.0"
+      SERVER_PORT: "5001"
+      SERVER_READ_TIMEOUT: "60"
+
+      K8S_CONFIG: ""
+      K8S_NAMESPACE: "k8s-users"
+      K8S_KREW_CONFIG: ""
+      # Git settings
+      GITLAB_BASE_URL: "https://gitlab.com"
+      GITLAB_REPO_ID: "71495395"
+      GITLAB_ACCESS_KEY: "access_key"
+      GITLAB_TRIGGER_KEY: "trigger_key"
+      GITLAB_BRANCH: "main"
 
 networks:
   cms-net:
