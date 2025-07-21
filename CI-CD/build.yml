@@ -48,7 +48,7 @@ clabgate-build:
   artifacts:
     expose_as: 'Clabgate build'
     paths:
-      - backend/build
+      - clabgate/build
 
 clabgate-build-docker:
   stage: build
