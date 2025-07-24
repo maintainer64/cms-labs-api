@@ -12,7 +12,7 @@ import (
 // GetTopologyYAML возвращает YAML-представление конкретной топологии (CRD)
 func (k *KubernetesAdminQuery) GetTopologyYAML(ctx context.Context, namespace string) ([]byte, error) {
 	if namespace == "" {
-		return nil, fmt.Errorf("namespace is required")
+		return []byte{}, fmt.Errorf("namespace is required")
 	}
 
 	// GroupVersionResource (GVR) на основе анализа YAML
@@ -25,12 +25,12 @@ func (k *KubernetesAdminQuery) GetTopologyYAML(ctx context.Context, namespace st
 	// Получаем список объектов Topology в указанном namespace
 	list, err := k.dynamicClient.Resource(gvr).Namespace(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to list Topologies in namespace %s: %v", namespace, err)
+		return []byte{}, fmt.Errorf("failed to list Topologies in namespace %s: %v", namespace, err)
 	}
 
 	// Проверяем, есть ли элементы в списке
 	if len(list.Items) == 0 {
-		return nil, fmt.Errorf("no Topology found in namespace %s", namespace)
+		return []byte{}, fmt.Errorf("no Topology found in namespace %s", namespace)
 	}
 
 	for _, unstructuredObj := range list.Items {
@@ -40,5 +40,5 @@ func (k *KubernetesAdminQuery) GetTopologyYAML(ctx context.Context, namespace st
 			return yamlData, nil
 		}
 	}
-	return nil, fmt.Errorf("failed to marshal Topology to YAML: %v", err)
+	return []byte{}, fmt.Errorf("failed to marshal Topology to YAML: %v", err)
 }

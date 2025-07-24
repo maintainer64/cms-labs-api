@@ -357,6 +357,12 @@ func (u *LTIAttemptCreateUC) SSOUrlGenerator(
 	baseUrl string,
 	extra cms_client.SSOTokenPublicExtraParams,
 ) (string, error) {
+	if extra.PNETLabsType == cms_client.PNETLabsTypeClabgate {
+		params := url.Values{}
+		params.Add("taskId", extra.PNETTestPath)
+		encodedParams := params.Encode()
+		return "/topology?" + encodedParams, nil
+	}
 	pathUrl, err := url.JoinPath(
 		baseUrl,
 		"/pnet-lab-addon/api/v1/sso/login",

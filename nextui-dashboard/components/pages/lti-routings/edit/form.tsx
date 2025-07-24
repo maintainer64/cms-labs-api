@@ -44,11 +44,25 @@ export const LtiRoutingLabsType = () => {
     locale: { LTIRouting }
   } = useLanguageBrowser();
   return [
-    { key: 'default', label: LTIRouting.FieldPNETLabsTypeDefault },
-    { key: 'curl', label: LTIRouting.FieldPNETLabsTypeCurl },
+    {
+      key: 'default',
+      label: LTIRouting.FieldPNETLabsTypeDefault,
+      description: LTIRouting.FieldPNETLabsTypeDefaultDescription
+    },
+    {
+      key: 'curl',
+      label: LTIRouting.FieldPNETLabsTypeCurl,
+      description: LTIRouting.FieldPNETLabsTypeCurlDescription
+    },
     {
       key: 'sso',
-      label: LTIRouting.FieldPNETLabsTypeSSO
+      label: LTIRouting.FieldPNETLabsTypeSSO,
+      description: LTIRouting.FieldPNETLabsTypeSSODescription
+    },
+    {
+      key: 'clabgate',
+      label: LTIRouting.FieldPNETLabsTypeClabgate,
+      description: LTIRouting.FieldPNETLabsTypeClabgateDescription
     }
   ];
 };
@@ -178,7 +192,9 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     onSelectionChange={(keys) => setFieldValue('pnet_labs_type', keys.currentKey || 'default')}
                   >
                     {routingTypes.map((type) => (
-                      <SelectItem key={type.key}>{type.label}</SelectItem>
+                      <SelectItem key={type.key} description={type.description}>
+                        {type.label}
+                      </SelectItem>
                     ))}
                   </Select>
                   <LabsPathInput

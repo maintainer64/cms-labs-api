@@ -28,6 +28,8 @@ export const RoutesLocation = {
   ltiAttemptUser: (id = ':id') => `/lti-attempt/user/${id}`,
   ltiAttemptEdit: (id = ':id') => `/lti-attempt/edit/${id}`,
   topologyView: (namespace = ':namespace') => `/topology/${namespace}`,
+  topologyDevices: (namespace = ':namespace', device = ':device') => `/topology/${namespace}/devices/${device}`,
   topologyConnect: () => `/topology`,
+  docsTopologyKubectl: () => `/docs/kubectl`,
   home: () => '/'
 };

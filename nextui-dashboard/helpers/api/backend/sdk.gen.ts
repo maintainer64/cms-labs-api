@@ -14,6 +14,9 @@ import type {
   PostV1CurlRequestListResponse,
   PostV1CurlRequestUpsertData,
   PostV1CurlRequestUpsertResponse,
+  GetV1GlobalStoreResponse,
+  PostV1GlobalStoreData,
+  PostV1GlobalStoreResponse,
   PostV1LtiAttemptCreateData,
   PostV1LtiAttemptCreateResponse,
   PostV1LtiAttemptDeleteData,
@@ -186,6 +189,35 @@ export const postV1CurlRequestUpsert = (
   return __request(OpenAPI, {
     method: 'POST',
     url: '/v1/curl-request/upsert',
+    body: data.form
+  });
+};
+
+/**
+ * get store by user
+ * Global store of user get
+ * @returns types_UserStore OK
+ * @throws ApiError
+ */
+export const getV1GlobalStore = (): CancelablePromise<GetV1GlobalStoreResponse> => {
+  return __request(OpenAPI, {
+    method: 'GET',
+    url: '/v1/global-store'
+  });
+};
+
+/**
+ * set store by user
+ * Global store of user get
+ * @param data The data for the request.
+ * @param data.form store of create
+ * @returns types_UserStore OK
+ * @throws ApiError
+ */
+export const postV1GlobalStore = (data: PostV1GlobalStoreData): CancelablePromise<PostV1GlobalStoreResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/global-store',
     body: data.form
   });
 };

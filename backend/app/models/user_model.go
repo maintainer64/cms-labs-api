@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gitlab.com/a10869/api-modules/backend/app/models/types"
+)
 
 // UserBase struct to describe User object.
 type UserBase struct {
@@ -12,7 +16,8 @@ type UserBase struct {
 }
 
 type UserSecret struct {
-	LastLaunchID string `gorm:"type:varchar(255)" json:"last_launch_id"`
+	LastLaunchID string          `gorm:"type:varchar(255)" json:"last_launch_id"`
+	Store        types.UserStore `gorm:"type:json" json:"store"`
 }
 
 type UserListItem struct {

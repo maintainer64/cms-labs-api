@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, useDisclosure } from '@heroui/react';
 import useLanguageBrowser from '@/helpers/locale';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
+import { zIndexClassModal } from '@/components/providers/const';
 
 interface UseConfirmPopupProps {
   title?: string;
@@ -16,7 +17,14 @@ export const useConfirmPopup = (params: UseConfirmPopupProps) => {
       locale: { Sidebar }
     } = useLanguageBrowser();
     return (
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        classNames={{
+          wrapper: zIndexClassModal,
+          backdrop: zIndexClassModal
+        }}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>

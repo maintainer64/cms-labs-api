@@ -363,8 +363,13 @@ const en = {
     FieldPinnedSessionMinutes: 'Pinned session on minutes',
     FieldPNETLabsType: 'Type connection',
     FieldPNETLabsTypeDefault: 'Default',
+    FieldPNETLabsTypeDefaultDescription: 'Send params to other service no validation',
     FieldPNETLabsTypeCurl: 'API Request',
+    FieldPNETLabsTypeCurlDescription: 'Send identifier API curl request',
     FieldPNETLabsTypeSSO: 'SSO',
+    FieldPNETLabsTypeSSODescription: 'Only connect to cms system',
+    FieldPNETLabsTypeClabgate: 'Clabgate',
+    FieldPNETLabsTypeClabgateDescription: 'Deploy into CI/CD system',
     FieldPNETLabsPath: 'Connecting to laboratory work',
     FieldPNETTestPath: 'Running lab tests',
     FieldPNETServer: 'Auto connect to server',
@@ -386,6 +391,35 @@ const en = {
     Title: 'Forbidden',
     Description: 'Sorry, access to view this page is denied with your role',
     Button: 'Go back'
+  },
+  Topology: {
+    Menu: {
+      OpenLogs: 'Open logs topology',
+      RestartTopology: 'Restart topology',
+      RestartTopologyTitle: 'Restart topology',
+      RestartTopologyDescription:
+        'The initial settings for the topology are applied, all connections are reset, and the updated system configuration is raised',
+      CopyToken: 'Copy token access for kubectl',
+      CopyTokenModal: {
+        Title: 'Copied',
+        Description: 'Access token copied to clipboard'
+      },
+      ConnectToKubectl: 'Connect to kubectl',
+      ConnectToKubectlTitle: 'Manual of connection to system',
+      RemoveTopology: 'Remove topology',
+      RemoveTopologyTitle: 'Remove topology',
+      RemoveTopologyDescription: 'Delete topology and all resources associated with it?',
+      RemoveTopologyDescriptionSuccess: 'Topology success removed'
+    },
+    Connect: {
+      Error: 'Internal error',
+      ErrorModalViewTitle: 'Topology display',
+      ErrorModalConnectTitle: 'Connection to topology',
+      ErrorModalRetry: 'Try again',
+      WaitModalTitle: 'The topology is still loading',
+      WaitModalDescription: 'You can view the logs of topology loading',
+      WaitModalButtonText: 'View logs'
+    }
   }
 };
 export default en;

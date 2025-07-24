@@ -13,7 +13,6 @@ export const useCurlRequestUpsert = (
       if (values === null) return null;
       const curlParsed = curlParsedData(values.raw);
       const timeout = parseInt(`${values.timeout}`);
-      console.log(values, curlParsed, timeout);
       return postV1CurlRequestUpsert({
         form: {
           body: curlParsed.body || '',

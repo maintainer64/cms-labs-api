@@ -2,7 +2,6 @@ import React from 'react';
 import { Sidebar } from './sidebar.styles';
 import { ServicesDropdown } from './services-dropdown';
 import { HomeIcon } from '../icons/sidebar/home-icon';
-import { BalanceIcon } from '../icons/sidebar/balance-icon';
 import { AccountsIcon } from '../icons/sidebar/accounts-icon';
 import { SidebarItem } from './sidebar-item';
 import { SidebarMenu } from './sidebar-menu';

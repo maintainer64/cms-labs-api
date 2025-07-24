@@ -1,6 +1,5 @@
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@heroui/react';
 import React, { useCallback } from 'react';
-import { DarkModeSwitch } from './darkmodeswitch';
 import { userClearCookies } from '@/helpers/queries/jwt/userClearCookies';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
@@ -60,9 +59,6 @@ export const UserDropdown = () => {
         </DropdownItem>
         <DropdownItem key='logout' color='danger' className='text-danger' onPress={handleLogout}>
           {locale.UserNavBar.Logout}
-        </DropdownItem>
-        <DropdownItem key='switch'>
-          <DarkModeSwitch />
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

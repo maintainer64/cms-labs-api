@@ -5,6 +5,8 @@ import { TerminalActionFunc, TerminalClient } from './context';
 import { TerminalService } from '@/components/topology/terminal/terminalService';
 import { MockTerminalService } from './mockTerminalService';
 import { addToast } from '@heroui/react';
+import { RoutesLocation } from '@/components/routes';
+import { SmartLink } from '@/components/navbar/smartLink';
 
 interface KubernetesTerminalProps {
   isMock: boolean;
@@ -171,13 +173,13 @@ export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTermi
           >
             {client.isOpacity ? '◉' : '◎'}
           </button>
-          <button
-            onClick={() => console.log('Open in new window')}
-            className='text-slate-300 hover:text-blue-400'
+          <SmartLink
+            to={RoutesLocation.topologyDevices(client.namespace, client.id)}
+            className='text-slate-300 hover:text-blue-400 cursor-pointer'
             title='Open in new window'
           >
             ↗
-          </button>
+          </SmartLink>
           <button
             onClick={() => dispatch?.({ type: 'TOGGLE_VISIBILITY', payload: { id: client.id } })}
             className='text-slate-300 hover:text-red-400'

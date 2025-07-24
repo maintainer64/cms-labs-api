@@ -1,4 +1,5 @@
 const { heroui } = require("@heroui/react");
+const typograph = require("@tailwindcss/typography");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -13,8 +14,18 @@ module.exports = {
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        slide: 'slide 2s linear infinite',
+      },
+      keyframes: {
+        slide: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(300%)' },
+        },
+      },
+    },
   },
   darkMode: "class",
-  plugins: [heroui()],
+  plugins: [heroui(), typograph()],
 };

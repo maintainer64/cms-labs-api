@@ -1,3 +1,4 @@
+'use client';
 import { Edge, Node } from '@xyflow/react';
 import dagre from 'dagre';
 import { defaultStyleEdge, defaultStyleNodes } from '@/components/topology/objectTypes/types';

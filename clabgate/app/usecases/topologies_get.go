@@ -57,18 +57,16 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 	yamlContent, err := u.KubernetesAdminQuery.GetTopologyYAML(ctx, dto.Namespace)
 	if err != nil {
 		u.Logger.Error().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML error: %v", err))
-		return TopologiesGetOutputDTO{}, err
 	}
 	u.Logger.Debug().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML content: %v", string(yamlContent)))
-	u.Logger.Info().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML content: %v", string(yamlContent)[:100]))
+	u.Logger.Info().Msg("TopologiesGetUC: GetTopologyYAML content")
 	topologyContent, err := topology.Convert(yamlContent)
 	if err != nil {
 		u.Logger.Error().Msg(fmt.Sprintf("TopologiesGetUC: Unmarshal topology error: %v by namespace: %v", err, dto.Namespace))
-		return TopologiesGetOutputDTO{}, err
 	}
 	webUrl, _ := u.KubernetesAdminQuery.GetSecretByName(ctx, namespace, queries.GitlabWebUrlDeploy)
 	return TopologiesGetOutputDTO{
 		Topology: topologyContent,
 		WebUrl:   webUrl,
-	}, err
+	}, nil
 }

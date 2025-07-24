@@ -1,6 +1,6 @@
 import ru from './locales/ru';
 import en from './locales/en';
-import { useLocalStorage } from '@uidotdev/usehooks';
+import { useGlobalStoreGet, useGlobalStoreSet } from '@/helpers/queries/users/store';
 
 export type LanguageType = 'ru' | 'en';
 
@@ -9,19 +9,17 @@ const languageResource = (lang: LanguageType) => {
 };
 
 const useLanguageBrowser = () => {
-  try {
-    const [lang, setLang] = useLocalStorage('lang', 'ru' as LanguageType);
-    return {
-      locale: languageResource(lang),
-      setLang: (lang: LanguageType) => setLang(lang)
-    };
-  } catch (error) {
-    return {
-      locale: languageResource('ru'),
-      setLang: (lang: LanguageType) => {
-        console.debug(lang);
-      }
-    };
-  }
+  const globalStoreQuery = useGlobalStoreGet();
+  const { mutate } = useGlobalStoreSet();
+  // @ts-ignore
+  const lang = (globalStoreQuery?.data?.['lang'] || 'ru') as LanguageType;
+  console.log(lang);
+  return {
+    locale: languageResource(lang),
+    lang: lang as LanguageType,
+    setLang: (lang: LanguageType) => {
+      mutate({ ...(globalStoreQuery?.data || {}), lang: lang });
+    }
+  };
 };
 export default useLanguageBrowser;

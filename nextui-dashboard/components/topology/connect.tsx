@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { useTopologyCreate } from '@/helpers/queries/topology/get';
 import { Loading } from '@/components/scroll/loader';
@@ -5,18 +6,24 @@ import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
 import { RoutesLocation } from '@/components/routes';
 import { useParamsConnectTopology } from '@/components/topology/utils';
+import useLanguageBrowser from '@/helpers/locale';
 
 export const TopologyConnect = () => {
+  const {
+    locale: {
+      Topology: { Connect }
+    }
+  } = useLanguageBrowser();
   const params = useParamsConnectTopology();
   const queryTopologyCreate = useTopologyCreate(params.username, params.taskId, params.redeploy);
   if (queryTopologyCreate.isLoading) return <Loading size='md' />;
   if (queryTopologyCreate.error) {
     // @ts-ignore
-    const errMsg = queryTopologyCreate?.error?.body?.msg || 'Внутрянняя ошибка';
+    const errMsg = queryTopologyCreate?.error?.body?.msg || Connect.Error;
     return (
-      <ErrorModal title={'Подключение к топологии'} description={errMsg}>
+      <ErrorModal title={Connect.ErrorModalConnectTitle} description={errMsg}>
         <Button onPress={() => queryTopologyCreate.refetch()} href='#' variant='light' color='primary'>
-          Попробовать снова
+          {Connect.ErrorModalRetry}
         </Button>
       </ErrorModal>
     );

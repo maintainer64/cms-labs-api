@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"gitlab.com/a10869/api-modules/backend/app/models/types"
+
 	"github.com/rs/zerolog"
 
 	fiber "github.com/gofiber/fiber/v2"
@@ -156,4 +158,22 @@ func (q *UserQueries) listFilter(search string, ids []uint, tx *gorm.DB) *gorm.D
 		tx = tx.Or("id IN ?", ids)
 	}
 	return tx
+}
+
+func (q *UserQueries) StoreGetByUserId(id uint) (types.UserStore, error) {
+	userDB, err := q.Get(id)
+	if err != nil {
+		return types.UserStore{}, err
+	}
+	return userDB.Store, nil
+}
+
+func (q *UserQueries) StoreSetByUserId(id uint, store types.UserStore) error {
+	userDB, err := q.Get(id)
+	if err != nil {
+		return err
+	}
+	userDB.Store = store
+	err = q.Upsert(&userDB)
+	return err
 }

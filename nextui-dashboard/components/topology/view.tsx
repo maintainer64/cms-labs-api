@@ -1,34 +1,30 @@
+'use client';
 import React from 'react';
 import { Background, Controls, ReactFlow } from '@xyflow/react';
 import { edgeTypes, nodeTypes } from './objectTypes';
 import { getLayoutElements } from './autoLayout';
 import { useTopologyGet } from '@/helpers/queries/topology/get';
 import { RFEdgeTopology, RFNodeTopology } from '@/components/topology/objectTypes/types';
-import { Loading } from '@/components/scroll/loader';
+import { HorizontalInfiniteLoader } from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
-import TopologyMenu from '@/components/topology/menu/menu';
 import { useParamsConnectTopology } from '@/components/topology/utils';
 import { TerminalActionFunc } from '@/components/topology/terminal/context';
-
-interface Props {
-  children: React.ReactNode;
-}
-
-export const TopologyLayout = ({ children }: Props) => {
-  return (
-    <div className='flex flex-col h-screen'>
-      <TopologyMenu />
-      <div className='flex-1 w-full'>{children}</div>
-    </div>
-  );
-};
+import useLanguageBrowser from '@/helpers/locale';
+import { InfoModalBlock } from '@/components/layout/infoModalBlock';
+import useThemeBrowser from '@/components/navbar/useTheme';
 
 interface TopologyFlowVisualizationProps {
   dispatch?: TerminalActionFunc;
 }
 
 export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizationProps) => {
+  const { theme } = useThemeBrowser();
+  const {
+    locale: {
+      Topology: { Connect }
+    }
+  } = useLanguageBrowser();
   const { namespace } = useParamsConnectTopology();
   const queryTopology = useTopologyGet(namespace);
   const initNodes = (queryTopology.data?.result?.topology?.nodes ?? []) as RFNodeTopology[];
@@ -38,20 +34,34 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
     initEdges,
     (queryTopology.data?.result?.topology?.direction || 'TB') as 'TB' | 'LR'
   );
-  if (queryTopology.isLoading) return <Loading size='md' />;
+  if (queryTopology.isLoading) return <HorizontalInfiniteLoader />;
   if (queryTopology.error) {
     // @ts-ignore
-    const errMsg = queryTopology?.error?.body?.msg || 'Внутрянняя ошибка';
+    const errMsg = queryTopology?.error?.body?.msg || Connect.Error;
     return (
-      <ErrorModal title={'Отображение топологии'} description={errMsg}>
+      <ErrorModal title={Connect.ErrorModalViewTitle} description={errMsg}>
         <Button onPress={() => queryTopology.refetch()} href='#' variant='light' color='primary'>
-          Попробовать снова
+          {Connect.ErrorModalRetry}
         </Button>
       </ErrorModal>
     );
   }
+  if (!queryTopology.data?.result?.topology) {
+    return (
+      <>
+        <HorizontalInfiniteLoader />
+        <InfoModalBlock
+          title={Connect.WaitModalTitle}
+          href={queryTopology.data?.result?.web_url}
+          description={Connect.WaitModalDescription}
+          buttonText={Connect.WaitModalButtonText}
+        />
+      </>
+    );
+  }
   return (
     <ReactFlow
+      colorMode={theme}
       nodes={object.nodes}
       edges={object.edges}
       nodeTypes={nodeTypes}

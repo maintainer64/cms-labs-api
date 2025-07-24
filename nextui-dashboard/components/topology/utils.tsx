@@ -8,9 +8,9 @@ export function useParamsConnectTopology() {
 
   const query = new URLSearchParams(search);
   return {
-    username: query.get('username') || user.username,
-    taskId: query.get('taskId') || user.username,
+    username: query.get('username') || user.username || '',
+    taskId: query.get('taskId') || user.username || '',
     redeploy: !!query.get('redeploy'),
-    namespace: namespace
+    namespace: namespace || ''
   };
 }

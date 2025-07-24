@@ -3,6 +3,8 @@ package usecases
 import (
 	"time"
 
+	"gitlab.com/a10869/api-modules/backend/app/models/types"
+
 	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	"github.com/ory/go-convenience/stringsx"
@@ -16,13 +18,14 @@ type UserEditUC struct {
 }
 
 type UserEditInputDTO struct {
-	ID        uint   `json:"id"`
-	Name      string `json:"name" validate:"required"`
-	Email     string `json:"email" validate:"required"`
-	LTIUserID string `json:"lti_user_id"`
-	Roles     []uint `json:"roles"`
-	GroupName string `json:"group_name"`
-	IsActive  bool   `json:"is_active"`
+	ID        uint            `json:"id"`
+	Name      string          `json:"name" validate:"required"`
+	Email     string          `json:"email" validate:"required"`
+	LTIUserID string          `json:"lti_user_id"`
+	Roles     []uint          `json:"roles"`
+	GroupName string          `json:"group_name"`
+	Store     types.UserStore `json:"store"`
+	IsActive  bool            `json:"is_active"`
 }
 
 type UserEditOutputDTO struct {
@@ -42,6 +45,7 @@ func (u *UserEditUC) Execute(dto UserEditInputDTO) (UserEditOutputDTO, error) {
 	entity.GroupName = stringsx.Coalesce(dto.GroupName, userFromDB.GroupName)
 	entity.DeletedAt = userFromDB.DeletedAt
 	entity.LastLaunchID = userFromDB.LastLaunchID
+	entity.Store = dto.Store
 	if dto.IsActive {
 		entity.DeletedAt = nil
 	}

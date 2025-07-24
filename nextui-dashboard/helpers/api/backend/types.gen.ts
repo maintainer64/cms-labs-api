@@ -378,6 +378,7 @@ export type models_User = {
   last_launch_id?: string;
   lti_user_id?: string;
   name?: string;
+  store?: types_UserStore;
   updated_at: string;
 };
 
@@ -417,6 +418,8 @@ export type round_queue_pool_pnet_RoundQueuePoolPnetUpsertResponse = {
   msg: string;
   result?: round_queue_pool_pnet_RoundQueuePoolPnetUpsertOutputDTO;
 };
+
+export type types_UserStore = unknown;
 
 export type usecases_CurlRequestDeleteInputDTO = {
   id?: number;
@@ -885,6 +888,7 @@ export type usecases_UserEditInputDTO = {
   lti_user_id?: string;
   name: string;
   roles?: Array<number>;
+  store?: types_UserStore;
 };
 
 export type usecases_UserEditOutputDTO = {
@@ -983,6 +987,17 @@ export type PostV1CurlRequestUpsertData = {
 };
 
 export type PostV1CurlRequestUpsertResponse = usecases_CurlRequestEditResponse;
+
+export type GetV1GlobalStoreResponse = types_UserStore;
+
+export type PostV1GlobalStoreData = {
+  /**
+   * store of create
+   */
+  form: types_UserStore;
+};
+
+export type PostV1GlobalStoreResponse = types_UserStore;
 
 export type PostV1LtiAttemptCreateData = {
   /**

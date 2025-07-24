@@ -40,7 +40,7 @@ export const useTopologyTokenJson = () => {
   return useQuery({
     queryKey: ['getV1TokensJson'],
     queryFn: () => {
-      return getV1TokensJson({ form: {} });
+      return getV1TokensJson();
     },
     retry: 0
   });
