@@ -83,6 +83,54 @@ definitions:
           $ref: '#/definitions/topology.TopologiesNode'
         type: array
     type: object
+  usecases.ContainersGetInputDTO:
+    properties:
+      deployment:
+        type: string
+      namespace:
+        type: string
+    type: object
+  usecases.ContainersGetItem:
+    properties:
+      connect_url:
+        type: string
+      label:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      pod:
+        type: string
+      ready:
+        type: boolean
+      restart_count:
+        type: integer
+      session_id:
+        type: string
+      status:
+        description: 'Status enum: running,waiting,terminated,unknown'
+        type: string
+    type: object
+  usecases.ContainersGetOutputDTO:
+    properties:
+      containers:
+        items:
+          $ref: '#/definitions/usecases.ContainersGetItem'
+        type: array
+    type: object
+  usecases.ContainersGetResponse:
+    properties:
+      error:
+        type: boolean
+      msg:
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ContainersGetOutputDTO'
+    required:
+    - error
+    - msg
+    type: object
   usecases.TasksListInputDTO:
     type: object
   usecases.TasksListOutputDTO:
@@ -236,6 +284,30 @@ info:
   title: Clabernetes Gate API
   version: "1.0"
 paths:
+  /v1/containers/get:
+    post:
+      consumes:
+      - application/json
+      description: Describe device topology
+      parameters:
+      - description: topology namespace
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.ContainersGetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.ContainersGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: describe device topology
+      tags:
+      - Device
   /v1/tasks/list:
     post:
       consumes:

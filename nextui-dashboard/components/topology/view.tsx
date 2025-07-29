@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Background, Controls, ReactFlow } from '@xyflow/react';
 import { edgeTypes, nodeTypes } from './objectTypes';
 import { getLayoutElements } from './autoLayout';
@@ -9,7 +9,7 @@ import { HorizontalInfiniteLoader } from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
 import { useParamsConnectTopology } from '@/components/topology/utils';
-import { TerminalActionFunc } from '@/components/topology/terminal/context';
+import { TerminalActionFunc } from '@/components/topology/terminal/service/context';
 import useLanguageBrowser from '@/helpers/locale';
 import { InfoModalBlock } from '@/components/layout/infoModalBlock';
 import useThemeBrowser from '@/components/navbar/useTheme';
@@ -27,6 +27,9 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
   } = useLanguageBrowser();
   const { namespace } = useParamsConnectTopology();
   const queryTopology = useTopologyGet(namespace);
+  useEffect(() => {
+    window.document.title = namespace;
+  }, []);
   const initNodes = (queryTopology.data?.result?.topology?.nodes ?? []) as RFNodeTopology[];
   const initEdges = (queryTopology.data?.result?.topology?.edges ?? []) as RFEdgeTopology[];
   const object = getLayoutElements(
@@ -93,7 +96,7 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
           }
         });
       }}
-      fitView
+      fitView={true}
     >
       <Background />
       <Controls />

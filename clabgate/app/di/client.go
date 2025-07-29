@@ -31,3 +31,11 @@ func (di *DIContainer) KubernetesAdmin() (*queries.KubernetesAdminQuery, error) 
 	)
 	return kubeQuery, err
 }
+
+func (di *DIContainer) KubeDashboardClient() *queries.KubeDashboardClientQuery {
+	return &queries.KubeDashboardClientQuery{
+		Config: configs.AppConfig.KubeDashboardConfig,
+		Client: NewRestyClient(),
+		Logger: logs.NewZeroLogger(di.ZeroLogConf.SetName("queries.GitlabCodeRegistryQuery")),
+	}
+}

@@ -399,7 +399,6 @@ const en = {
       RestartTopologyTitle: 'Restart topology',
       RestartTopologyDescription:
         'The initial settings for the topology are applied, all connections are reset, and the updated system configuration is raised',
-      CopyToken: 'Copy token access for kubectl',
       CopyTokenModal: {
         Title: 'Copied',
         Description: 'Access token copied to clipboard'
@@ -419,6 +418,15 @@ const en = {
       WaitModalTitle: 'The topology is still loading',
       WaitModalDescription: 'You can view the logs of topology loading',
       WaitModalButtonText: 'View logs'
+    },
+    Terminal: {
+      ReadyStatus: 'Ready',
+      NotReadyStatus: 'Not ready',
+      Restarts: 'Restarts',
+      ConnectionError: 'Connection error',
+      TerminalConnected: 'Terminal connected',
+      ConnectionClosed: 'Connection closed',
+      UnknownReason: 'Unknown reason'
     }
   }
 };

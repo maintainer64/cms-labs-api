@@ -1,7 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTopologyCreate } from '@/helpers/queries/topology/get';
-import { Loading } from '@/components/scroll/loader';
+import { HorizontalInfiniteLoader } from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
 import { RoutesLocation } from '@/components/routes';
@@ -16,7 +16,10 @@ export const TopologyConnect = () => {
   } = useLanguageBrowser();
   const params = useParamsConnectTopology();
   const queryTopologyCreate = useTopologyCreate(params.username, params.taskId, params.redeploy);
-  if (queryTopologyCreate.isLoading) return <Loading size='md' />;
+  useEffect(() => {
+    window.document.title = Connect.ErrorModalConnectTitle;
+  }, []);
+  if (queryTopologyCreate.isLoading) return <HorizontalInfiniteLoader />;
   if (queryTopologyCreate.error) {
     // @ts-ignore
     const errMsg = queryTopologyCreate?.error?.body?.msg || Connect.Error;

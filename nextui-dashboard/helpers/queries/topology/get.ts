@@ -1,5 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { getV1TokensJson, postV1TopologiesCreate, postV1TopologiesGet } from '@/helpers/api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  getV1TokensJson,
+  postV1ContainersGet,
+  PostV1ContainersGetResponse,
+  PostV1RoleUpsertResponse,
+  postV1TopologiesCreate,
+  postV1TopologiesGet,
+  usecases_ContainersGetInputDTO
+} from '@/helpers/api';
+import { TMutationCustomOptions } from '@/helpers/queries/types';
 
 export const useTopologyCreate = (username?: string, taskId?: string, redeploy = false) => {
   return useQuery({
@@ -36,12 +45,17 @@ export const useTopologyGet = (namespace?: string) => {
   });
 };
 
-export const useTopologyTokenJson = () => {
-  return useQuery({
-    queryKey: ['getV1TokensJson'],
-    queryFn: () => {
-      return getV1TokensJson();
+export const useContainersGet = (
+  options: TMutationCustomOptions<PostV1ContainersGetResponse, unknown, usecases_ContainersGetInputDTO> = {}
+) => {
+  return useMutation<PostV1ContainersGetResponse, unknown, usecases_ContainersGetInputDTO>({
+    // @ts-expect-error: return nullable value
+    mutationFn: (params: usecases_ContainersGetInputDTO) => {
+      if (params === null) return null;
+      return postV1ContainersGet({
+        form: params
+      });
     },
-    retry: 0
+    ...options
   });
 };

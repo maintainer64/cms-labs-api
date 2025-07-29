@@ -400,7 +400,6 @@ const ru = {
       RestartTopologyTitle: 'Перезагрузить топологию',
       RestartTopologyDescription:
         'Происходит применение исходных настроект для топологии, сбрасываются все подключения, поднимается обновленная конфигурация системы',
-      CopyToken: 'Скопировать токен доступа в kubectl',
       CopyTokenModal: {
         Title: 'Скопировано',
         Description: 'Токен доступа скопирован в буфер обмена'
@@ -420,6 +419,15 @@ const ru = {
       WaitModalTitle: 'Топология ещё загружается',
       WaitModalDescription: 'Вы можете просмотреть логи загрузки топологии',
       WaitModalButtonText: 'Просмотреть логи'
+    },
+    Terminal: {
+      ReadyStatus: 'Готов',
+      NotReadyStatus: 'Не готов',
+      Restarts: 'Перезапусков',
+      ConnectionError: 'Ошибка подключения',
+      TerminalConnected: 'Терминал подключен',
+      ConnectionClosed: 'Подключение закрыто',
+      UnknownReason: 'Неизвестная ошибка'
     }
   }
 };

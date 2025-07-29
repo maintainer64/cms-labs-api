@@ -1,90 +1,89 @@
-# Подключение к кластерам Kubernetes
+# Connecting to Kubernetes Clusters
 
-Эта инструкция поможет вам подключиться к кластерам Kubernetes двумя основными способами: через веб-интерфейс топологии
-или с помощью утилиты `kubectl` на вашем локальном компьютере. Мы разберём каждый шаг подробно, чтобы процесс был
-простым и понятным. Перед началом убедитесь, что у вас есть доступ к лабораторной среде и необходимые учётные данные.
+This guide will help you connect to Kubernetes clusters using two main methods: via the topology web interface or using
+the `kubectl` utility on your local computer. We'll break down each step in detail to make the process simple and
+straightforward. Before you begin, ensure you have access to the lab environment and the necessary credentials.
 
-## 1. Подключение через интерфейс топологии
+## 1. Connecting via the Topology Interface
 
-Этот метод позволяет взаимодействовать с кластером напрямую в браузере без установки дополнительного ПО. Он идеален для
-быстрого доступа и не требует настройки на вашем устройстве.
+This method allows you to interact with the cluster directly in your browser without installing additional software.
+It's ideal for quick access and requires no setup on your device.
 
-### Шаги по подключению:
+### Connection Steps:
 
-1. **Выберите задание лабораторной работы**: Перейдите в раздел лабораторных заданий и выберите нужное.
-2. **Дождитесь входа в систему**: После выбора задания система автоматически авторизует вас. Это может занять несколько
-   секунд.
-3. **Дождитесь загрузки топологии**: На странице `/topology/` подождите, пока все компоненты топологии полностью
-   загрузятся. Вы увидите визуальную схему с доступными элементами.
+1. **Select a lab assignment**: Navigate to the lab assignments section and choose the desired one.
+2. **Wait for system login**: After selecting the assignment, the system will automatically log you in. This may take a
+   few seconds.
+3. **Wait for the topology to load**: On the `/topology/` page, wait until all topology components are fully loaded.
+   You'll see a visual diagram with available elements.
 
-### Отслеживание статуса загрузки:
+### Monitoring the Loading Status:
 
-Если вы хотите мониторить процесс загрузки:
+If you want to track the loading progress:
 
-1. Нажмите на кнопку меню в левом верхнем углу страницы `/topology/`.
-2. Выберите пункт **Открыть логи топологии**. Это откроет журнал, где вы сможете увидеть прогресс и возможные ошибки.
+1. Click the menu button in the top-left corner of the `/topology/` page.
+2. Select **Open Topology Logs**. This will open a log where you can view the progress and any potential errors.
 
-### Взаимодействие с компонентами:
+### Interacting with Components:
 
-- Выберите нужный компонент (например, узел кластера) в топологии.
-- Автоматически откроется веб-терминал для взаимодействия с оборудованием. Теперь вы можете выполнять команды прямо в
-  браузере.
+- Select the desired component (e.g., a cluster node) in the topology.
+- A web terminal will automatically open for interacting with the equipment. You can now execute commands directly in
+  your browser.
 
-Этот способ удобен для новичков, но для продвинутой работы рекомендуется использовать `kubectl`.
+This method is convenient for beginners, but for advanced work, using `kubectl` is recommended.
 
-## 2. Подключение с помощью утилиты kubectl
+## 2. Connecting Using the kubectl Utility
 
-`kubectl` — это мощный инструмент командной строки для управления Kubernetes-кластерами. Для его использования вам нужно
-установить утилиту на ваш компьютер, а также настроить аутентификацию с помощью плагина Krew. Мы разберём процесс шаг за
-шагом для разных операционных систем.
+`kubectl` is a powerful command-line tool for managing Kubernetes clusters. To use it, you need to install the utility
+on your computer and configure authentication using the Krew plugin. We'll go through the process step by step for
+different operating systems.
 
-### 2.1. Установка kubectl
+### 2.1. Installing kubectl
 
-Сначала скачайте и установите `kubectl`. Это базовая утилита, без которой дальнейшие шаги невозможны.
+First, download and install `kubectl`. This is the core utility, and further steps are impossible without it.
 
-#### Шаги по установке:
+#### Installation Steps:
 
-1. **Скачайте бинарный файл**:
-    - Перейдите на официальный сайт Kubernetes: [releases.kubernetes.io](https://kubernetes.io/releases/).
-    - Выберите версию, подходящую для вашей ОС (Linux, macOS или Windows). Рекомендуется стабильная версия (например,
+1. **Download the binary file**:
+    - Go to the official Kubernetes website: [releases.kubernetes.io](https://kubernetes.io/releases/).
+    - Select the version suitable for your OS (Linux, macOS, or Windows). A stable version is recommended (e.g.,
       v1.28.x).
 
-2. **Установка на Linux или macOS**:
-    - Сделайте файл исполняемым:
+2. **Installation on Linux or macOS**:
+    - Make the file executable:
       ```bash
       chmod +x ./kubectl
       ```
-    - Переместите файл в директорию из переменной окружения PATH (например, `/usr/local/bin/`):
+    - Move the file to a directory in your PATH environment variable (e.g., `/usr/local/bin/`):
       ```bash
       sudo mv ./kubectl /usr/local/bin/kubectl
       ```
 
-3. **Установка на Windows**:
-    - Скачайте файл `kubectl.exe`.
-    - Поместите его в удобную папку, например, `C:\Program Files\kubectl`.
-    - Добавьте эту папку в переменную окружения PATH:
-        - Откройте "Параметры" > "Система" > "О системе" > "Дополнительные параметры системы" > "Переменные среды".
-        - В разделе "Системные переменные" найдите PATH, отредактируйте и добавьте путь к папке.
+3. **Installation on Windows**:
+    - Download the `kubectl.exe` file.
+    - Place it in a convenient folder, such as `C:\Program Files\kubectl`.
+    - Add this folder to your PATH environment variable:
+        - Open "Settings" > "System" > "About" > "Advanced system settings" > "Environment Variables".
+        - Under "System variables", find PATH, edit it, and add the folder path.
 
-4. **Проверка установки**:
-    - Выполните команду:
+4. **Verify the installation**:
+    - Run the command:
       ```bash
       kubectl version --client
       ```
-    - Если установка успешна, вы увидите информацию о версии `kubectl` (например, Client Version: v1.28.0). Если
-      возникли ошибки, проверьте PATH и права доступа.
+    - If the installation was successful, you'll see the `kubectl` version (e.g., Client Version: v1.28.0). If errors
+      occur, check your PATH and permissions.
 
-### 2.2. Установка Krew и плагинов для аутентификации
+### 2.2. Installing Krew and Authentication Plugins
 
-Krew — это менеджер плагинов для `kubectl`, который упрощает установку расширений. Мы используем его для плагина
-OIDC-авторизации и специального плагина для доступа к учебному кластеру. Если Krew ещё не установлен, следуйте шагам
-ниже.
+Krew is a plugin manager for `kubectl` that simplifies installing extensions. We'll use it for the OIDC authorization
+plugin and a special plugin for accessing the training cluster. If Krew isn't installed yet, follow the steps below.
 
-#### Установка Krew:
+#### Installing Krew:
 
-1. **Для Linux/macOS**:
-    - Установите зависимости (если нужно): `git` и `curl`.
-    - Выполните скрипт установки:
+1. **For Linux/macOS**:
+    - Install dependencies if needed: `git` and `curl`.
+    - Run the installation script:
       ```bash
       (
         set -x; cd "$(mktemp -d)" &&
@@ -96,52 +95,52 @@ OIDC-авторизации и специального плагина для д
         ./"${KREW}" install krew
       )
       ```
-    - Добавьте Krew в PATH: добавьте в `~/.bashrc` или `~/.zshrc` строку
-      `export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"` и перезапустите терминал.
+    - Add Krew to your PATH: add the line `export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"` to `~/.bashrc` or
+      `~/.zshrc` and restart the terminal.
 
-2. **Для Windows**:
-    - Установите с помощью PowerShell или следуйте официальной
-      инструкции: [krew.sigs.k8s.io](https://krew.sigs.k8s.io/docs/user-guide/setup/install/).
+2. **For Windows**:
+    - Install using PowerShell or follow the official
+      guide: [krew.sigs.k8s.io](https://krew.sigs.k8s.io/docs/user-guide/setup/install/).
 
-3. **Проверка установки Krew**:
-    - Выполните:
+3. **Verify Krew installation**:
+    - Run:
       ```bash
       kubectl krew version
       ```
-    - Если выводится версия, Krew готов к работе.
+    - If the version is displayed, Krew is ready to use.
 
-#### Установка плагинов:
+#### Installing Plugins:
 
-1. **Установите плагин OIDC-авторизации**:
-    - Выполните:
+1. **Install the OIDC authorization plugin**:
+    - Run:
       ```bash
       kubectl krew install oidc-login
       ```
-    - Это позволит аутентифицироваться с помощью учебной учётной записи.
+    - This will enable authentication using your training account.
 
-2. **Установите плагин для доступа к кластеру**:
-    - Выполните:
+2. **Install the cluster access plugin**:
+    - Run:
       ```bash
       kubectl krew install --manifest-url https://gitlab.com/a10869/kubectl-cms/-/raw/main/krew.yaml
       ```
 
-3. **Настройка контекстов и доступа**:
-    - Выполните:
+3. **Configuring contexts and access**:
+    - Run:
       ```bash
       kubectl cmslab
       ```
-    - Это добавит необходимые контексты для вашего учебного кластера.
+    - This will add the necessary contexts for your training cluster.
 
-4. **Проверка конфигурации**:
-    - Проверьте доступные контексты:
+4. **Verify the configuration**:
+    - Check available contexts:
       ```bash
       kubectl config get-contexts
       ```
-    - Вы увидите список контекстов, включая учебный (например, с именем вроде `urfu`).
+    - You'll see a list of contexts, including the training one (e.g., named `urfu`).
 
-#### Пример работы с кластером:
+#### Example Cluster Interaction:
 
-- Чтобы получить список подов в указанном пространстве имён (namespace), используйте:
+- To list pods in a specified namespace, use:
   ```bash
   kubectl get pods -n {{namespace}} --context urfu
   ```

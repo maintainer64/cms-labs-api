@@ -1,8 +1,7 @@
 import { addToast, Navbar, NavbarContent, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
 import { useParamsConnectTopology } from '@/components/topology/utils';
 import { RoutesLocation } from '@/components/routes';
-import { useTopologyGet, useTopologyTokenJson } from '@/helpers/queries/topology/get';
-import copy from 'copy-to-clipboard';
+import { useTopologyGet } from '@/helpers/queries/topology/get';
 import { TopologyMenuItem } from '@/components/topology/menu/item';
 import useLanguageBrowser from '@/helpers/locale';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
@@ -22,7 +21,6 @@ export default function TopologyMenu() {
   const navigate = useNavigate();
   const params = useParamsConnectTopology();
   const queryTopology = useTopologyGet(params.namespace);
-  const queryTokenJson = useTopologyTokenJson();
 
   const handleNavigateKubectlDocs = useCallback(() => {
     navigate(RoutesLocation.docsTopologyKubectl() + `?namespace=${params.namespace}`);
@@ -86,17 +84,6 @@ export default function TopologyMenu() {
           <NavbarMenu>
             <TopologyMenuItem title={Menu.OpenLogs} href={queryTopology.data?.result?.web_url || '#'} target='_blank' />
             <TopologyMenuItem title={Menu.RestartTopology} color='warning' onClick={restartTopologyPopup.onOpen} />
-            <TopologyMenuItem
-              title={Menu.CopyToken}
-              onClick={() => {
-                copy(queryTokenJson.data?.result?.token || '-');
-                addToast({
-                  title: Menu.CopyTokenModal.Title,
-                  description: Menu.CopyTokenModal.Description,
-                  color: 'success'
-                });
-              }}
-            />
             <TopologyMenuItem title={Menu.ConnectToKubectl} onClick={handleNavigateKubectlDocs} />
             <TopologyMenuItem title={Menu.RemoveTopology} color='danger' onClick={removeTopologyPopup.onOpen} />
             <TopologyMenuItem title={MainChangeLanguage} onClick={handleNavigateLanguage} />

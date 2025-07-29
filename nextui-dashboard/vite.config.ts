@@ -10,6 +10,9 @@ export default defineConfig({
             '@': resolve(__dirname),
         },
     },
+    define: {
+        global: 'window'
+    },
     server: {
         port: 5183,
         cors: false,

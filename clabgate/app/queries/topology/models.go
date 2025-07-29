@@ -50,6 +50,15 @@ type Topology struct {
 	Direction string           `json:"direction"`
 }
 
+func (t *Topology) GetNodeByID(id string) *TopologiesNode {
+	for _, node := range t.Nodes {
+		if node.ID == id {
+			return &node
+		}
+	}
+	return nil
+}
+
 // ContainerLabTopology представляет структуру ContainerLab топологии
 type ContainerLabTopology struct {
 	Definition struct {

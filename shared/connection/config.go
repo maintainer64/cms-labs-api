@@ -34,3 +34,8 @@ type GitConfig struct {
 	RepoId       string
 	Branch       string
 }
+
+type KubeDashboardConfig struct {
+	BaseUrl     string
+	NoVerifySSL bool
+}
