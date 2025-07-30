@@ -11,14 +11,7 @@ interface TopologyMenuItemProps {
 export function TopologyMenuItem({ title, color, href, onClick, target }: TopologyMenuItemProps) {
   return (
     <NavbarMenuItem>
-      <Link
-        className='w-full'
-        color={color || 'foreground'}
-        href={href || '#'}
-        size='lg'
-        target={target}
-        onPress={onClick}
-      >
+      <Link className='w-full' color={color || 'foreground'} href={href} size='lg' target={target} onPress={onClick}>
         {title}
       </Link>
     </NavbarMenuItem>
