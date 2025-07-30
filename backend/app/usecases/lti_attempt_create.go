@@ -359,7 +359,7 @@ func (u *LTIAttemptCreateUC) SSOUrlGenerator(
 ) (string, error) {
 	if extra.PNETLabsType == cms_client.PNETLabsTypeClabgate {
 		params := url.Values{}
-		params.Add("taskId", extra.PNETTestPath)
+		params.Add("taskId", extra.PNETLabsPath)
 		encodedParams := params.Encode()
 		return "/topology?" + encodedParams, nil
 	}
