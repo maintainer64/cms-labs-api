@@ -154,7 +154,7 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
             radius='none'
             size='sm'
             classNames={{
-              base: 'border-none'
+              base: 'border-none text-white'
             }}
           >
             {container.label} ({container.name})
