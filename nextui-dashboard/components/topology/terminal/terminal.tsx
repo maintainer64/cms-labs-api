@@ -1,24 +1,31 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScreenSize } from 'use-screen-size';
 import '@xterm/xterm/css/xterm.css';
-import { TerminalActionFunc, TerminalClient } from './context';
-import { TerminalService } from '@/components/topology/terminal/terminalService';
-import { MockTerminalService } from './mockTerminalService';
-import { addToast } from '@heroui/react';
+import { TerminalActionFunc, TerminalClient } from './service/context';
+import { RoutesLocation } from '@/components/routes';
+import { SmartLink } from '@/components/navbar/smartLink';
+import { useTerminal } from '@/components/topology/terminal/service/hook';
+import { Chip, Tooltip } from '@heroui/react';
+import useLanguageBrowser from '@/helpers/locale';
+import { terminalStatusToColor } from '@/components/topology/terminal/types';
 
 interface KubernetesTerminalProps {
-  isMock: boolean;
-  client: TerminalClient;
+  node: TerminalClient;
   dispatch?: TerminalActionFunc;
 }
 
-export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTerminalProps) => {
+export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) => {
+  const {
+    locale: {
+      Topology: { Terminal }
+    }
+  } = useLanguageBrowser();
   const size = useScreenSize();
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState({
-    x: 100 + client.index * 20,
-    y: 100 + client.index * 20
+    x: 100 + node.index * 20,
+    y: 100 + node.index * 20
   });
   const [dimension, setDimension] = useState({
     width: 400,
@@ -27,41 +34,11 @@ export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTermi
 
   const terminalRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const terminalService = useRef<TerminalService | MockTerminalService | null>(null);
   // Инициализация терминала и подключение
-  useEffect(() => {
-    if (!terminalRef.current || !client.isVisible) return;
-
-    const initTerminal = async () => {
-      if (terminalService.current) {
-        terminalService.current.disconnect();
-      }
-
-      if (isMock) {
-        terminalService.current = new MockTerminalService(terminalRef.current!);
-      } else {
-        terminalService.current = new TerminalService(terminalRef.current!);
-      }
-
-      // Установка toast callback
-      terminalService.current.setOnToast((msg) =>
-        addToast({
-          title: `${client.name}(${client.id})`,
-          description: msg,
-          color: 'default'
-        })
-      );
-
-      await terminalService.current.connect(client.namespace || 'default', client.id, '#');
-    };
-
-    initTerminal();
-
-    return () => {
-      terminalService.current?.disconnect();
-      terminalService.current = null;
-    };
-  }, [client.isVisible, client.namespace, client.id, isMock]);
+  const { terminalService, container } = useTerminal({
+    terminalRef: terminalRef,
+    node: node
+  });
 
   // Обработчики drag
   const handleMouseDown = useCallback(
@@ -72,9 +49,9 @@ export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTermi
         x: e.clientX - position.x,
         y: e.clientY - position.y
       });
-      dispatch?.({ type: 'BRING_TO_FRONT', payload: { id: client.id } });
+      dispatch?.({ type: 'BRING_TO_FRONT', payload: { id: node.id } });
     },
-    [position, client.id, dispatch]
+    [position, node.id, dispatch]
   );
 
   const handleMouseMove = useCallback(
@@ -124,6 +101,7 @@ export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTermi
           width: Math.max(300, startWidth + (e.clientX - startX)),
           height: Math.max(200, startHeight + (e.clientY - startY))
         });
+        terminalService.current?.fit?.();
       };
 
       const onMouseUp = () => {
@@ -137,7 +115,7 @@ export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTermi
     [dimension]
   );
 
-  if (!client.isVisible) return null;
+  if (!node.isVisible) return null;
 
   return (
     <div
@@ -147,39 +125,58 @@ export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTermi
         height: `${dimension.height}px`,
         left: `${position.x}px`,
         top: `${position.y}px`,
-        zIndex: client.zIndex,
-        opacity: client.isOpacity ? 0.6 : 1,
+        zIndex: node.zIndex,
+        opacity: node.isOpacity ? 0.6 : 1,
         backdropFilter: 'blur(4px)',
         backgroundColor: 'rgba(30, 41, 59, 0.7)',
         transform: 'translate3d(0,0,0)'
       }}
-      onMouseDown={() => dispatch?.({ type: 'BRING_TO_FRONT', payload: { id: client.id } })}
+      onMouseDown={() => dispatch?.({ type: 'BRING_TO_FRONT', payload: { id: node.id } })}
     >
       <div
         ref={headerRef}
         className='flex items-center justify-between bg-slate-800 bg-opacity-70 px-3 py-2 cursor-move'
         onMouseDown={handleMouseDown}
       >
-        <div className='text-slate-200 text-sm truncate max-w-[200px]'>
-          {client.name} ({client.id})
-        </div>
+        <Tooltip
+          content={
+            <>
+              <p>{container.ready ? Terminal.ReadyStatus : Terminal.NotReadyStatus}</p>
+              <p>
+                {Terminal.Restarts}: {container.restart_count}
+              </p>
+            </>
+          }
+        >
+          <Chip
+            color={terminalStatusToColor(container.status)}
+            variant='dot'
+            radius='none'
+            size='sm'
+            classNames={{
+              base: 'border-none'
+            }}
+          >
+            {container.label} ({container.name})
+          </Chip>
+        </Tooltip>
         <div className='flex space-x-2'>
           <button
-            onClick={() => dispatch?.({ type: 'TOGGLE_OPACITY', payload: { id: client.id } })}
+            onClick={() => dispatch?.({ type: 'TOGGLE_OPACITY', payload: { id: node.id } })}
             className='text-slate-300 hover:text-blue-400'
             title='Toggle opacity'
           >
-            {client.isOpacity ? '◉' : '◎'}
+            {node.isOpacity ? '◉' : '◎'}
           </button>
-          <button
-            onClick={() => console.log('Open in new window')}
-            className='text-slate-300 hover:text-blue-400'
+          <SmartLink
+            to={RoutesLocation.topologyDevices(node.namespace, node.id)}
+            className='text-slate-300 hover:text-blue-400 cursor-pointer'
             title='Open in new window'
           >
             ↗
-          </button>
+          </SmartLink>
           <button
-            onClick={() => dispatch?.({ type: 'TOGGLE_VISIBILITY', payload: { id: client.id } })}
+            onClick={() => dispatch?.({ type: 'TOGGLE_VISIBILITY', payload: { id: node.id } })}
             className='text-slate-300 hover:text-red-400'
             title='Close'
           >
@@ -187,16 +184,14 @@ export const KubernetesTerminal = ({ isMock, client, dispatch }: KubernetesTermi
           </button>
         </div>
       </div>
-
-      <div
-        className='absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-blue-500 opacity-0 hover:opacity-100'
-        onMouseDown={handleResize}
-      />
-
       <div
         ref={terminalRef}
         className='w-full h-full'
         style={{ height: `calc(100% - 40px)`, backgroundColor: 'black' }}
+      />
+      <div
+        className='absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-blue-500 opacity-0 hover:opacity-100'
+        onMouseDown={handleResize}
       />
     </div>
   );

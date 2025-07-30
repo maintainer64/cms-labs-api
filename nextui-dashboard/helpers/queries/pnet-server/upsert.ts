@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { models_PNETServer, postV1PnetServerUpsert, PostV1PnetServerUpsertResponse } from '@/helpers/api';
+import { postV1PnetServerUpsert, PostV1PnetServerUpsertResponse } from '@/helpers/api';
 import { TFormikData, TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '../base';
 import { PnetServerItem } from '@/helpers/queries/pnet-server/model';

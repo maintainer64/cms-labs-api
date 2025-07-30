@@ -19,7 +19,8 @@ export const useUserUpsert = (
           is_active: !values.deleted_at,
           lti_user_id: values.lti_user_id,
           name: values.name ?? '',
-          roles: values.roles?.map((roleId) => parseInt(roleId.toString()))
+          roles: values.roles?.map((roleId) => parseInt(roleId.toString())),
+          store: values.store || {}
         }
       });
     },

@@ -1,10 +1,10 @@
 import { Input, Link, Navbar, NavbarContent } from '@heroui/react';
 import React from 'react';
 import { GithubIcon } from '../icons/navbar/github-icon';
-import { SupportIcon } from '../icons/navbar/support-icon';
 import { SearchIcon } from '../icons/searchicon';
 import { BurguerButton } from './burguer-button';
 import { UserDropdown } from './user-dropdown';
+import { NavbarDarkModeToggle } from '@/components/navbar/darkiconswitch';
 
 interface Props {
   children: React.ReactNode;
@@ -36,13 +36,13 @@ export const NavbarWrapper = ({ children }: Props) => {
           />
         </NavbarContent>
         <NavbarContent justify='end' className='w-fit data-[justify=end]:flex-grow-0'>
-          <div className='max-md:hidden'>
-            <SupportIcon />
-          </div>
-
           <Link href='https://gitlab.com/a10869/api-modules' target={'_blank'}>
             <GithubIcon />
           </Link>
+
+          <div className='max-md:hidden'>
+            <NavbarDarkModeToggle />
+          </div>
           <NavbarContent>
             <UserDropdown />
           </NavbarContent>

@@ -9,6 +9,7 @@ import queryClient from '@/helpers/queries/base';
 import { BrowserRouter } from 'react-router-dom';
 import RoutesDynamic from '@/app/routes';
 import { ToastProvider } from '@heroui/toast';
+import { zIndexClassToast } from '@/components/providers/const';
 
 export interface ProvidersProps {
   themeProps?: ThemeProviderProps;
@@ -17,11 +18,15 @@ export interface ProvidersProps {
 export function Providers({ themeProps }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename='/'>
         <UserProfileProvider>
           <HeroUIProvider>
             <NextThemesProvider defaultTheme='system' attribute='class' {...themeProps}>
-              <ToastProvider />
+              <ToastProvider
+                regionProps={{
+                  classNames: { base: zIndexClassToast }
+                }}
+              />
               <RoutesDynamic />
             </NextThemesProvider>
           </HeroUIProvider>

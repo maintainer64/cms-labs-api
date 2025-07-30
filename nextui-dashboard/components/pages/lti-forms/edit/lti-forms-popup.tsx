@@ -2,6 +2,7 @@ import useLanguageBrowser from '@/helpers/locale';
 import { Button, Input, useDisclosure } from '@heroui/react';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
 import React, { useState } from 'react';
+import { zIndexClassModal } from '@/components/providers/const';
 
 export const LtiFormURILTIMoodle = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

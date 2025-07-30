@@ -66,7 +66,7 @@ func PNETServerList(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
 		return err
 	}
@@ -143,7 +143,7 @@ func PNETServerGet(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
 		return err
 	}

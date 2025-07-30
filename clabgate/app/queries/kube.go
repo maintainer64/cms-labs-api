@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"k8s.io/apimachinery/pkg/api/resource"
+
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/connection"
 	"gitlab.com/a10869/api-modules/shared/logs"
@@ -27,8 +29,9 @@ type KubernetesAdminQuery struct {
 }
 
 const (
-	NamespaceListRole  = "namespace-lister"
-	GitlabWebUrlDeploy = "deploy-logs"
+	NamespaceListRole      = "namespace-lister"
+	GitlabWebUrlDeploy     = "deploy-logs"
+	NamespaceResourceQuota = "mem-cpu"
 )
 
 // NewKubernetesAdmin создает новый экземпляр администратора Kubernetes
@@ -142,6 +145,28 @@ func (k *KubernetesAdminQuery) CreateNamespace(
 		return nil, false, fmt.Errorf("failed to create namespace: %v", err)
 	}
 	k.Logger.Info().Msg(fmt.Sprintf("Namespace %s created", namespace))
+	// Накладываем органичения в ресурсах неймспейсу
+	resourceQuota := &corev1.ResourceQuota{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: NamespaceResourceQuota,
+		},
+		Spec: corev1.ResourceQuotaSpec{
+			Hard: corev1.ResourceList{
+				// 0.1 CPU
+				"requests.cpu":    resource.MustParse("10m"),
+				"requests.memory": resource.MustParse("10Mi"),
+				// 0.05 CPU
+				"limits.cpu":    resource.MustParse("50m"),
+				"limits.memory": resource.MustParse("50Mi"),
+			},
+		},
+	}
+
+	_, err = k.clientset.CoreV1().ResourceQuotas(namespace).Create(ctx, resourceQuota, metav1.CreateOptions{})
+	if err != nil {
+		k.Logger.Error().Msg(fmt.Sprintf("Error creating ResourceQuota: %v", err))
+	}
+	k.Logger.Info().Msg(fmt.Sprintf("ResourceQuota %q created in namespace %q\n", resourceQuota.Name, namespace))
 	return createdNs, true, nil
 }
 

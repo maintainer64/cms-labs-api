@@ -23,6 +23,45 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/containers/get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Describe device topology",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Device"
+                ],
+                "summary": "describe device topology",
+                "parameters": [
+                    {
+                        "description": "topology namespace",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ContainersGetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.ContainersGetResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/tasks/list": {
             "post": {
                 "security": [
@@ -356,6 +395,79 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/topology.TopologiesNode"
                     }
+                }
+            }
+        },
+        "usecases.ContainersGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "deployment": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.ContainersGetItem": {
+            "type": "object",
+            "properties": {
+                "connect_url": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "pod": {
+                    "type": "string"
+                },
+                "ready": {
+                    "type": "boolean"
+                },
+                "restart_count": {
+                    "type": "integer"
+                },
+                "session_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Status enum: running,waiting,terminated,unknown",
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.ContainersGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "containers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.ContainersGetItem"
+                    }
+                }
+            }
+        },
+        "usecases.ContainersGetResponse": {
+            "type": "object",
+            "required": [
+                "error",
+                "msg"
+            ],
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ContainersGetOutputDTO"
                 }
             }
         },

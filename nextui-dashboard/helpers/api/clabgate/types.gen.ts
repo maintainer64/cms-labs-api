@@ -55,6 +55,36 @@ export type topology_Topology = {
   nodes?: Array<topology_TopologiesNode>;
 };
 
+export type usecases_ContainersGetInputDTO = {
+  deployment?: string;
+  namespace?: string;
+};
+
+export type usecases_ContainersGetItem = {
+  connect_url?: string;
+  label?: string;
+  name?: string;
+  namespace?: string;
+  pod?: string;
+  ready?: boolean;
+  restart_count?: number;
+  session_id?: string;
+  /**
+   * Status enum: running,waiting,terminated,unknown
+   */
+  status?: string;
+};
+
+export type usecases_ContainersGetOutputDTO = {
+  containers?: Array<usecases_ContainersGetItem>;
+};
+
+export type usecases_ContainersGetResponse = {
+  error: boolean;
+  msg: string;
+  result?: usecases_ContainersGetOutputDTO;
+};
+
 export type usecases_TasksListInputDTO = unknown;
 
 export type usecases_TasksListOutputDTO = {
@@ -135,6 +165,15 @@ export type usecases_TopologiesGetResponse = {
   msg: string;
   result?: usecases_TopologiesGetOutputDTO;
 };
+
+export type PostV1ContainersGetData = {
+  /**
+   * topology namespace
+   */
+  form: usecases_ContainersGetInputDTO;
+};
+
+export type PostV1ContainersGetResponse = usecases_ContainersGetResponse;
 
 export type PostV1TasksListData = {
   /**

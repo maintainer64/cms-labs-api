@@ -650,6 +650,8 @@ definitions:
         type: string
       name:
         type: string
+      store:
+        $ref: '#/definitions/types.UserStore'
       updated_at:
         type: string
     required:
@@ -731,6 +733,9 @@ definitions:
     required:
     - error
     - msg
+    type: object
+  types.UserStore:
+    additionalProperties: true
     type: object
   usecases.CurlRequestDeleteInputDTO:
     properties:
@@ -1583,6 +1588,8 @@ definitions:
         items:
           type: integer
         type: array
+      store:
+        $ref: '#/definitions/types.UserStore'
     required:
     - email
     - name
@@ -1812,6 +1819,46 @@ paths:
       summary: create curl_request
       tags:
       - CurlRequest
+  /v1/global-store:
+    get:
+      consumes:
+      - application/json
+      description: Global store of user get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UserStore'
+      security:
+      - ApiKeyAuth: []
+      summary: get store by user
+      tags:
+      - Store
+    post:
+      consumes:
+      - application/json
+      description: Global store of user get
+      parameters:
+      - description: store of create
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/types.UserStore'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UserStore'
+      security:
+      - ApiKeyAuth: []
+      summary: set store by user
+      tags:
+      - Store
   /v1/lti-attempt/create:
     post:
       consumes:

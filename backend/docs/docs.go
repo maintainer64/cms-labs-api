@@ -218,6 +218,71 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/global-store": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Global store of user get",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Store"
+                ],
+                "summary": "get store by user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.UserStore"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Global store of user get",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Store"
+                ],
+                "summary": "set store by user",
+                "parameters": [
+                    {
+                        "description": "store of create",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UserStore"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.UserStore"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/lti-attempt/create": {
             "post": {
                 "security": [
@@ -2903,6 +2968,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "store": {
+                    "$ref": "#/definitions/types.UserStore"
+                },
                 "updated_at": {
                     "type": "string"
                 }
@@ -3019,6 +3087,10 @@ const docTemplate = `{
                     "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO"
                 }
             }
+        },
+        "types.UserStore": {
+            "type": "object",
+            "additionalProperties": true
         },
         "usecases.CurlRequestDeleteInputDTO": {
             "type": "object",
@@ -4308,6 +4380,9 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
+                },
+                "store": {
+                    "$ref": "#/definitions/types.UserStore"
                 }
             }
         },

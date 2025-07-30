@@ -1,17 +1,16 @@
-import { TerminalActionFunc, TerminalClient } from '@/components/topology/terminal/context';
+import { TerminalActionFunc, TerminalClient } from '@/components/topology/terminal/service/context';
 import { KubernetesTerminal } from '@/components/topology/terminal/terminal';
 
 interface TerminalWindows {
-  isMock: boolean;
-  clients: TerminalClient[];
+  nodes: TerminalClient[];
   dispatch?: TerminalActionFunc;
 }
 
-export const TerminalWindows = ({ isMock, clients, dispatch }: TerminalWindows) => {
+export const TerminalWindows = ({ nodes, dispatch }: TerminalWindows) => {
   return (
     <>
-      {clients.map((client) => (
-        <KubernetesTerminal isMock={isMock} key={client.id} client={client} dispatch={dispatch} />
+      {nodes.map((node) => (
+        <KubernetesTerminal key={node.id} node={node} dispatch={dispatch} />
       ))}
     </>
   );

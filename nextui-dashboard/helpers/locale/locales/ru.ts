@@ -364,8 +364,13 @@ const ru = {
     FieldPinnedSessionMinutes: 'Закрепить сессию в минутах',
     FieldPNETLabsType: 'Тип подключения',
     FieldPNETLabsTypeDefault: 'Прямое',
+    FieldPNETLabsTypeDefaultDescription: 'Отправка параметров без верификации',
     FieldPNETLabsTypeCurl: 'Запрос по API',
+    FieldPNETLabsTypeCurlDescription: 'Отправляется API-ID запроса для выполнения',
     FieldPNETLabsTypeSSO: 'SSO',
+    FieldPNETLabsTypeSSODescription: 'Только подключение к cms системе',
+    FieldPNETLabsTypeClabgate: 'Clabgate',
+    FieldPNETLabsTypeClabgateDescription: 'Развертка в CI/CD системе',
     FieldPNETLabsPath: 'Подключение к лабораторной работе',
     FieldPNETTestPath: 'Запуск тестов лабораторной работы',
     FieldPNETServer: 'Автоматическое подключение к серверу',
@@ -387,6 +392,43 @@ const ru = {
     Title: 'Доступ запрещен',
     Description: 'Извините, доступ для просмотра этой страницы запрещен с вашей ролью',
     Button: 'Вернуться назад'
+  },
+  Topology: {
+    Menu: {
+      OpenLogs: 'Открыть логи топологии',
+      RestartTopology: 'Перезагрузить топологию',
+      RestartTopologyTitle: 'Перезагрузить топологию',
+      RestartTopologyDescription:
+        'Происходит применение исходных настроект для топологии, сбрасываются все подключения, поднимается обновленная конфигурация системы',
+      CopyTokenModal: {
+        Title: 'Скопировано',
+        Description: 'Токен доступа скопирован в буфер обмена'
+      },
+      ConnectToKubectl: 'Подключиться к kubectl',
+      ConnectToKubectlTitle: 'Инструкция для подключения к kubectl',
+      RemoveTopology: 'Удалить топологию',
+      RemoveTopologyTitle: 'Удалить топологию',
+      RemoveTopologyDescription: 'Удалить топологию и все ресурсы связанные с ней?',
+      RemoveTopologyDescriptionSuccess: 'Топология успешно удалена'
+    },
+    Connect: {
+      Error: 'Внутренняя ошибка',
+      ErrorModalViewTitle: 'Отображение топологии',
+      ErrorModalConnectTitle: 'Подключение к топологии',
+      ErrorModalRetry: 'Попробовать снова',
+      WaitModalTitle: 'Топология ещё загружается',
+      WaitModalDescription: 'Вы можете просмотреть логи загрузки топологии',
+      WaitModalButtonText: 'Просмотреть логи'
+    },
+    Terminal: {
+      ReadyStatus: 'Готов',
+      NotReadyStatus: 'Не готов',
+      Restarts: 'Перезапусков',
+      ConnectionError: 'Ошибка подключения',
+      TerminalConnected: 'Терминал подключен',
+      ConnectionClosed: 'Подключение закрыто',
+      UnknownReason: 'Неизвестная ошибка'
+    }
   }
 };
 export default ru;

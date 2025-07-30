@@ -1,23 +1,8 @@
-export interface ShellFrame {
-  Op: string;
-  Data?: string;
-  SessionID?: string;
-  Cols?: number;
-  Rows?: number;
-}
+type Color = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
-export interface SJSMessageEvent {
-  data: string;
-}
-
-export interface SJSCloseEvent {
-  reason: string;
-}
-
-export interface PodContainerList {
-  containers: string[];
-}
-
-export interface TerminalResponse {
-  id: string;
+export function terminalStatusToColor(color?: string): Color {
+  if (color === 'running') return 'success';
+  if (color === 'waiting') return 'warning';
+  if (color === 'terminated') return 'danger';
+  return 'default';
 }

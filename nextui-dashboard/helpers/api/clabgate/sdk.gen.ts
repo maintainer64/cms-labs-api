@@ -4,6 +4,8 @@ import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type {
+  PostV1ContainersGetData,
+  PostV1ContainersGetResponse,
   PostV1TasksListData,
   PostV1TasksListResponse,
   GetV1TokensJsonResponse,
@@ -15,6 +17,22 @@ import type {
   PostV1TopologiesGetData,
   PostV1TopologiesGetResponse
 } from './types.gen';
+
+/**
+ * describe device topology
+ * Describe device topology
+ * @param data The data for the request.
+ * @param data.form topology namespace
+ * @returns usecases_ContainersGetResponse OK
+ * @throws ApiError
+ */
+export const postV1ContainersGet = (data: PostV1ContainersGetData): CancelablePromise<PostV1ContainersGetResponse> => {
+  return __request(OpenAPI, {
+    method: 'POST',
+    url: '/v1/containers/get',
+    body: data.form
+  });
+};
 
 /**
  * list tasks

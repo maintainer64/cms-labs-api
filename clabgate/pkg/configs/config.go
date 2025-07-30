@@ -8,10 +8,11 @@ import (
 )
 
 type AppConfigModel struct {
-	Debug        bool
-	Server       *connection.ServerConfig
-	K8S          *connection.K8SConfig
-	GitlabConfig *connection.GitConfig
+	Debug               bool
+	Server              *connection.ServerConfig
+	K8S                 *connection.K8SConfig
+	GitlabConfig        *connection.GitConfig
+	KubeDashboardConfig *connection.KubeDashboardConfig
 }
 
 func (c *AppConfigModel) Reload() {
@@ -33,6 +34,10 @@ func (c *AppConfigModel) Reload() {
 		AccessToken:  os.Getenv("GITLAB_ACCESS_KEY"),
 		TriggerToken: os.Getenv("GITLAB_TRIGGER_KEY"),
 		Branch:       os.Getenv("GITLAB_BRANCH"),
+	}
+	c.KubeDashboardConfig = &connection.KubeDashboardConfig{
+		BaseUrl:     os.Getenv("KUBE_DASHBOARD_BASE_URL"),
+		NoVerifySSL: os.Getenv("KUBE_DASHBOARD_NO_VERIFY") == "true",
 	}
 }
 
