@@ -23,7 +23,7 @@ import (
 func ServiceCardCreate(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func ServiceCardCreate(c *fiber.Ctx) error {
 func ServiceCardList(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func ServiceCardList(c *fiber.Ctx) error {
 func ServiceCardDelete(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
 		return err
 	}
@@ -131,7 +131,7 @@ func ServiceCardDelete(c *fiber.Ctx) error {
 func ServiceCardGet(c *fiber.Ctx) error {
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
 		return err
 	}
