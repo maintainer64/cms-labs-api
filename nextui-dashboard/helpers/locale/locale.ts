@@ -13,7 +13,6 @@ const useLanguageBrowser = () => {
   const { mutate } = useGlobalStoreSet();
   // @ts-ignore
   const lang = (globalStoreQuery?.data?.['lang'] || 'ru') as LanguageType;
-  console.log(lang);
   return {
     locale: languageResource(lang),
     lang: lang as LanguageType,
