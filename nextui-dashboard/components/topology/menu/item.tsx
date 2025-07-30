@@ -10,7 +10,7 @@ interface TopologyMenuItemProps {
 
 export function TopologyMenuItem({ title, color, href, onClick, target }: TopologyMenuItemProps) {
   return (
-    <NavbarMenuItem className="cursor-pointer">
+    <NavbarMenuItem className='cursor-pointer'>
       <Link className='w-full' color={color || 'foreground'} href={href} size='lg' target={target} onPress={onClick}>
         {title}
       </Link>
