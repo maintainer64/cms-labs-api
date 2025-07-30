@@ -64,7 +64,7 @@ func CurlRequestList(c *fiber.Ctx) error {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleAdmin},
+		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
 		return err
 	}
