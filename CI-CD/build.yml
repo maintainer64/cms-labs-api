@@ -3,7 +3,7 @@ core-build:
   extends:
     - .dependencies
     - .releases-branch
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   needs:
     - golang-test
   script:
@@ -28,9 +28,9 @@ core-build-docker:
     - VERSION="$(cat ./VERSION)"
     - cd backend
     - echo "Building Docker image..."
-    - docker build --no-cache -t $BACKEND_CI_IMAGE:$VERSION  .
+    - buildah bud --no-cache -t $BACKEND_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
-    - docker push $BACKEND_CI_IMAGE:$VERSION
+    - buildah push $BACKEND_CI_IMAGE:$VERSION
     - echo "Deploying application..."
 
 clabgate-build:
@@ -38,7 +38,7 @@ clabgate-build:
   extends:
     - .dependencies
     - .releases-branch
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   needs:
     - golang-test
   script:
@@ -63,9 +63,9 @@ clabgate-build-docker:
     - VERSION="$(cat ./VERSION)"
     - cd clabgate
     - echo "Building Docker image..."
-    - docker build --no-cache -t $CLABGATE_CI_IMAGE:$VERSION  .
+    - buildah bud --no-cache -t $CLABGATE_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
-    - docker push $CLABGATE_CI_IMAGE:$VERSION
+    - buildah push $CLABGATE_CI_IMAGE:$VERSION
     - echo "Deploying application..."
 
 frontend-build:
@@ -73,7 +73,7 @@ frontend-build:
   extends:
     - .dependencies
     - .releases-branch
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   needs:
     - golang-test
   script:
@@ -98,9 +98,9 @@ frontend-build-docker:
     - VERSION="$(cat ./VERSION)"
     - cd nextui-dashboard
     - echo "Building Docker image..."
-    - docker build --no-cache -t $FRONTEND_CI_IMAGE:$VERSION  .
+    - buildah bud --no-cache -t $FRONTEND_CI_IMAGE:$VERSION  .
     - echo "Pushing Docker image to GitLab Registry..."
-    - docker push $FRONTEND_CI_IMAGE:$VERSION
+    - buildah push $FRONTEND_CI_IMAGE:$VERSION
     - echo "Deploying application..."
 
 pnet-lab-addon-build:
@@ -108,7 +108,7 @@ pnet-lab-addon-build:
   extends:
     - .dependencies
     - .releases-branch
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   variables:
     PACKAGE_NAME: pnetlab-inject  # Наименование пакета
     PACKAGE_VERSION: ${CI_COMMIT_REF_SLUG}  # Версия пакета

@@ -3,45 +3,45 @@ core-deploy:
   tags:
     - ${TAG}
   extends:
-    - .deploy-base-ssh
+    - .deploy-kubectl
     - .releases-branch
-  image: ${DOCKER_IMAGE}
+  image: $KUBECTL_IMAGE
   needs:
     - core-build-docker
     - version
   environment:
     name: core-${CI_COMMIT_REF_SLUG}
   variables:
-    FOLDER: core
+    DEPLOY_NAME: core-backend
 
 clabgate-deploy:
   stage: deploy
   tags:
     - ${TAG}
   extends:
-    - .deploy-base-ssh
+    - .deploy-kubectl
     - .releases-branch
-  image: ${DOCKER_IMAGE}
+  image: $KUBECTL_IMAGE
   needs:
     - clabgate-build-docker
     - version
   environment:
     name: clabgate-${CI_COMMIT_REF_SLUG}
   variables:
-    FOLDER: clabgate
+    DEPLOY_NAME: clabgate
 
 frontend-deploy:
   stage: deploy
   tags:
     - ${TAG}
   extends:
-    - .deploy-base-ssh
+    - .deploy-kubectl
     - .releases-branch
-  image: ${DOCKER_IMAGE}
+  image: $KUBECTL_IMAGE
   needs:
     - frontend-build-docker
     - version
   environment:
     name: front-${CI_COMMIT_REF_SLUG}
   variables:
-    FOLDER: front
+    DEPLOY_NAME: front
