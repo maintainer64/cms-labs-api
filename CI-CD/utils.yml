@@ -29,7 +29,8 @@
     - cd values/$DOCKER_PATH_BRANCH
     - echo "$K8S_CONFIG" | base64 -d > kubeconfig.yaml
     - echo "Подключаемся к серверу и деплоим приложение"
-    - cat $DEPLOY_NAME* | envsubst | kubectl -n $K8S_NAMESPACE apply -f - --kubeconfig kubeconfig.yaml
+    - MANIFESTS=$(for f in $DEPLOY_NAME*; do echo "---"; cat $f; done)
+    - echo "$MANIFESTS" | envsubst | kubectl -n $K8S_NAMESPACE apply -f - --kubeconfig kubeconfig.yaml
 
 .semantic-release:
   # Функция генерации версии пакета
