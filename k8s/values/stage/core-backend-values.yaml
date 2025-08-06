@@ -1,0 +1,57 @@
+releasePrefix: "-"
+
+defaultImage: registry.gitlab.com/a10869/api-modules/core-backend/stage
+defaultImageTag: latest
+
+generic:
+  usePredefinedAffinity: false
+
+services:
+  core-backend:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+deployments:
+  core-backend:
+    replicas: 1
+    containers:
+    - name: core-backend
+      envSecrets:
+      - core-backend-env-list
+      ports:
+      - name: http
+        containerPort: 8080
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "250Mi"
+          cpu: "200m"
+      startupProbe: 
+        httpGet:
+          path: /api/docs/index.html
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 12
+      livenessProbe: 
+        httpGet:
+          path: /api/docs/index.html
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+      readinessProbe:
+        httpGet:
+          path: /api/docs/index.html
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 2
