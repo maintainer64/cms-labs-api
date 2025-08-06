@@ -2,6 +2,7 @@ core-deploy:
   stage: deploy
   tags:
     - ${TAG}
+    - k8s
   extends:
     - .deploy-kubectl
     - .releases-branch
@@ -18,6 +19,7 @@ clabgate-deploy:
   stage: deploy
   tags:
     - ${TAG}
+    - k8s
   extends:
     - .deploy-kubectl
     - .releases-branch
@@ -34,6 +36,7 @@ frontend-deploy:
   stage: deploy
   tags:
     - ${TAG}
+    - k8s
   extends:
     - .deploy-kubectl
     - .releases-branch
