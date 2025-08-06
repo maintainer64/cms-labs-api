@@ -1,6 +1,6 @@
 releasePrefix: "-"
 
-defaultImage: registry.gitlab.com/a10869/api-modules/core-backend/stage
+defaultImage: registry.gitlab.com/a10869/api-modules/backend/stage
 defaultImageTag: latest
 
 generic:
