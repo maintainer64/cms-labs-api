@@ -24,10 +24,10 @@
   # VERSION - файл с версией из артефактов
   # K8S_NAMESPACE - неймспейс для k8s
   script:
-    - cd values/$DOCKER_PATH_BRANCH
-    - echo "$K8S_CONFIG" | base64 -d > kubeconfig.yaml
     - VERSION="$(cat ./VERSION)"
     - export VERSION=$VERSION
+    - cd values/$DOCKER_PATH_BRANCH
+    - echo "$K8S_CONFIG" | base64 -d > kubeconfig.yaml
     - echo "Подключаемся к серверу и деплоим приложение"
     - cat $DEPLOY_NAME* | envsubst | kubectl -n K8S_NAMESPACE apply -f - --kubeconfig kubeconfig.yaml
     - kubectl rollout status deployment/$DEPLOY_NAME || (kubectl rollout undo deployment/$DEPLOY_NAME && exit 1)
