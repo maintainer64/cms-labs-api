@@ -39,6 +39,8 @@ type ContainersGetItem struct {
 	RestartCount int32  `json:"restart_count"`
 	SessionId    string `json:"session_id"`
 	ConnectUrl   string `json:"connect_url"`
+	// Type enum: containerlab,default
+	Type string `json:"type"`
 }
 
 type ContainersGetOutputDTO struct {
@@ -88,12 +90,14 @@ func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutpu
 			container.Name,
 		)
 		var nodeLabel string
+		typeNode := "default"
 		var node *topology.TopologiesNode
 		if topologyContent != nil {
 			node = topologyContent.GetNodeByID(dto.Deployment)
 		}
 		if node != nil {
 			nodeLabel = node.Label
+			typeNode = "containerlab"
 		}
 		output.Containers = append(
 			output.Containers,
@@ -107,6 +111,7 @@ func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutpu
 				RestartCount: container.RestartCount,
 				SessionId:    tokenWS.ID,
 				ConnectUrl:   u.KubeDashboardClientQuery.GetUrlByShell(),
+				Type:         typeNode,
 			},
 		)
 	}

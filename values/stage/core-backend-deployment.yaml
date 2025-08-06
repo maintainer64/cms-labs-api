@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-backend
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 120
+  selector:
+    matchLabels:
+      app: core-backend
+  template:
+    metadata:
+      labels:
+        app: core-backend
+    spec:
+      containers:
+        - name: app
+          image: registry.gitlab.com/a10869/api-modules/backend/stage:${VERSION}
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: core-backend-env-list
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "250Mi"
+              cpu: "200m"
+          readinessProbe:
+            httpGet:
+              path: /api/docs/index.html
+              port: http
+            periodSeconds: 10
+            initialDelaySeconds: 30

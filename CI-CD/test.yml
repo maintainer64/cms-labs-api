@@ -1,20 +1,20 @@
 check-security:
   stage: test
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   script:
     - make security
 
 check-pre-commit:
   stage: test
   extends: .dependencies
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   script:
     - make pre_commit
 
 golang-test:
   stage: test
   extends: .dependencies
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   services:
     - name: mysql:9.1
       alias: mysqldatabase
