@@ -1,49 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: clabgate
+  name: front
 spec:
   replicas: 1
   progressDeadlineSeconds: 120
   selector:
     matchLabels:
-      app: clabgate
+      app: front
   template:
     metadata:
       labels:
-        app: clabgate
+        app: front
     spec:
       containers:
         - name: app
-          image: registry.gitlab.com/a10869/api-modules/clabgate/stage:${VERSION}
+          image: registry.gitlab.com/a10869/api-modules/frontend/stage:${VERSION}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 80
           envFrom:
             - secretRef:
-                name: clabgate-env-list
+                name: front-env-list
           resources:
             requests:
-              memory: "50Mi"
-              cpu: "30m"
+              memory: "64Mi"
+              cpu: "50m"
             limits:
-              memory: "100Mi"
+              memory: "128Mi"
               cpu: "100m"
           readinessProbe:
             httpGet:
-              path: /clabgate/api/docs/index.html
+              path: /
               port: http
             periodSeconds: 10
             initialDelaySeconds: 30
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: clabgate
-spec:
-  selector:
-    app: clabgate
-  ports:
-    - name: http
-      targetPort: http
-      port: 80

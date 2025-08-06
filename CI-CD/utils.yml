@@ -20,7 +20,7 @@
 .deploy-kubectl:
   # K8S_CONFIG - контент в base64 для работы с kubectl
   # DOCKER_PATH_BRANCH - папка для values файлов
-  # DEPLOY_NAME - файл (<deployment_name>.yaml и наименование деплоймента)
+  # DEPLOY_NAME - файл (<deployment_name>*.yaml и наименование деплоймента)
   # VERSION - файл с версией из артефактов
   # K8S_NAMESPACE - неймспейс для k8s
   script:
@@ -29,7 +29,7 @@
     - VERSION="$(cat ./VERSION)"
     - export VERSION=$VERSION
     - echo "Подключаемся к серверу и деплоим приложение"
-    - cat $DEPLOY_NAME.yaml | envsubst | kubectl -n K8S_NAMESPACE apply -f - --kubeconfig kubeconfig.yaml
+    - cat $DEPLOY_NAME* | envsubst | kubectl -n K8S_NAMESPACE apply -f - --kubeconfig kubeconfig.yaml
     - kubectl rollout status deployment/$DEPLOY_NAME || (kubectl rollout undo deployment/$DEPLOY_NAME && exit 1)
 
 .semantic-release:
