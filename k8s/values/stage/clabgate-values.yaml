@@ -1,3 +1,5 @@
+releasePrefix: "-"
+
 defaultImage: registry.gitlab.com/a10869/api-modules/clabgate/stage
 defaultImageTag: latest
 
@@ -18,7 +20,7 @@ deployments:
     containers:
     - name: clabgate
       envSecrets:
-      - env-list
+      - clabgate-env-list
       ports:
       - name: http
         containerPort: 8080

@@ -1,3 +1,5 @@
+releasePrefix: "-"
+
 defaultImage: registry.gitlab.com/a10869/api-modules/front/stage
 defaultImageTag: latest
 
@@ -32,10 +34,10 @@ deployments:
     containers:
     - name: front
       envSecrets:
-      - env-list
+      - front-env-list
       ports:
       - name: http
-        containerPort: 8080
+        containerPort: 80
       resources:
         requests:
           memory: "64Mi"
