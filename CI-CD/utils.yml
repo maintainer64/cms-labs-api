@@ -28,7 +28,7 @@
     - export KUBECONFIG=$PWD/kubeconfig.yaml
     - export VERSION="$(cat ./VERSION)"
     - echo "Подключаемся к серверу и деплоим приложение"
-    - > 
+    - >
       helm upgrade $DEPLOY_NAME ./k8s/base-chart
       --install --history-max 10
       --create-namespace --wait --hide-notes
