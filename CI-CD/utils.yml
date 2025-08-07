@@ -30,7 +30,7 @@
     - export KUBECONFIG=$PWD/kubeconfig.yaml
     - cd k8s
     - echo "Подключаемся к серверу и деплоим приложение"
-    - helm upgrade --install $DEPLOY_NAME ./base-chart -n $K8S_NAMESPACE --create-namespace --wait -f ./values/$DOCKER_PATH_BRANCH/$DEPLOY_NAME-values.yaml --set defaultImageTag=$VERSION
+    - helm upgrade --history-max 10 --install $DEPLOY_NAME ./base-chart -n $K8S_NAMESPACE --create-namespace --wait -f ./values/$DOCKER_PATH_BRANCH/$DEPLOY_NAME-values.yaml --set defaultImageTag=$VERSION
 
 .semantic-release:
   # Функция генерации версии пакета
