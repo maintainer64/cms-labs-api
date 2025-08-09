@@ -80,6 +80,9 @@ initContainers:
   {{- end }}
   {{- $image := $.Values.defaultImage }}{{ with .image }}{{ $image = include "helpers.tplvalues.render" ( dict "value" . "context" $) }}{{ end }}
   {{- $imageTag := $.Values.defaultImageTag }}{{ with .imageTag }}{{ $imageTag = include "helpers.tplvalues.render" ( dict "value" . "context" $) }}{{ end }}
+  {{- if not $imageTag }}
+    {{- fail (printf "Image tag is not defined for initContainer '%s'. Please set .imageTag or defaultImageTag in values.yaml" (default "<unknown>" .name)) }}
+  {{- end }}
   image: {{ $image }}:{{ $imageTag }}
   imagePullPolicy: {{ .imagePullPolicy | default $.Values.defaultImagePullPolicy }}
   {{- with .securityContext }}
@@ -130,6 +133,9 @@ containers:
   {{- end }}
   {{- $image := $.Values.defaultImage }}{{ with .image }}{{ $image = include "helpers.tplvalues.render" ( dict "value" . "context" $) }}{{ end }}
   {{- $imageTag := $.Values.defaultImageTag }}{{ with .imageTag }}{{ $imageTag = include "helpers.tplvalues.render" ( dict "value" . "context" $) }}{{ end }}
+  {{- if not $imageTag }}
+    {{- fail (printf "Image tag is not defined for container '%s'. Please set .imageTag or defaultImageTag in values.yaml" (default "<unknown>" .name)) }}
+  {{- end }}
   image: {{ $image }}:{{ $imageTag }}
   imagePullPolicy: {{ .imagePullPolicy | default $.Values.defaultImagePullPolicy }}
   {{- with .securityContext }}

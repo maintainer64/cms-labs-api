@@ -1,7 +1,7 @@
 releasePrefix: "-"
 
 defaultImage: registry.gitlab.com/a10869/api-modules/clabgate/stage
-defaultImageTag: latest
+defaultImageTag: ""
 
 generic:
   usePredefinedAffinity: false
