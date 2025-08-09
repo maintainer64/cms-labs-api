@@ -30,8 +30,8 @@
     - echo "Подключаемся к серверу и деплоим приложение"
     - >
       helm upgrade $DEPLOY_NAME ./k8s/base-chart
-      --install --history-max 10
-      --create-namespace --wait --hide-notes
+      --install --history-max 5
+      --wait --hide-notes
       --namespace $K8S_NAMESPACE
       --values ./k8s/values/$DOCKER_PATH_BRANCH/$DEPLOY_NAME-values.yaml
       --set defaultImageTag=$VERSION
