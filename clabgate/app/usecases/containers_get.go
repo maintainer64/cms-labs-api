@@ -3,7 +3,6 @@ package usecases
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 
 	"gitlab.com/a10869/api-modules/clabgate/app/queries/topology"
@@ -77,14 +76,9 @@ func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutpu
 	if err != nil {
 		return output, errors.New("not logged in")
 	}
-	token, err := u.KubernetesAdminQuery.GetUserToken(ctx, username)
-	if err != nil {
-		u.Logger.Warn().Msg(fmt.Sprintf("shell token access get request error: %s", err))
-		return output, err
-	}
 	for _, container := range containers {
 		tokenWS, _ := u.KubeDashboardClientQuery.Shell(
-			token,
+			u.KubernetesAdminQuery.KubernetesAdminConst.AdminBearerToken,
 			container.Namespace,
 			container.Pod,
 			container.Name,

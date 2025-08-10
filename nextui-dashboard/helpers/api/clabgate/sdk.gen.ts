@@ -8,7 +8,6 @@ import type {
   PostV1ContainersGetResponse,
   PostV1TasksListData,
   PostV1TasksListResponse,
-  GetV1TokensJsonResponse,
   GetV1TokensYamlResponse,
   PostV1TopologiesCreateData,
   PostV1TopologiesCreateResponse,
@@ -51,22 +50,9 @@ export const postV1TasksList = (data: PostV1TasksListData): CancelablePromise<Po
 };
 
 /**
- * token cluster json
- * Token cluster. Roles: [student, admin, instructor]
- * @returns usecases_TokenAccessGetResponse OK
- * @throws ApiError
- */
-export const getV1TokensJson = (): CancelablePromise<GetV1TokensJsonResponse> => {
-  return __request(OpenAPI, {
-    method: 'GET',
-    url: '/v1/tokens/json'
-  });
-};
-
-/**
  * token cluster yaml
  * Token cluster. Roles: any
- * @returns usecases_TokenFileYAMLGetResponse OK
+ * @returns string OK
  * @throws ApiError
  */
 export const getV1TokensYaml = (): CancelablePromise<GetV1TokensYamlResponse> => {
