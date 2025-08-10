@@ -24,13 +24,17 @@
   # VERSION - файл с версией из артефактов
   # K8S_NAMESPACE - неймспейс для k8s
   script:
-    - VERSION="$(cat ./VERSION)"
-    - export VERSION=$VERSION
-    - cd values/$DOCKER_PATH_BRANCH
     - echo "$K8S_CONFIG" | base64 -d > kubeconfig.yaml
+    - export KUBECONFIG=$PWD/kubeconfig.yaml
+    - export VERSION="$(cat ./VERSION)"
     - echo "Подключаемся к серверу и деплоим приложение"
-    - MANIFESTS=$(for f in $DEPLOY_NAME*; do echo "---"; cat $f; done)
-    - echo "$MANIFESTS" | envsubst | kubectl -n $K8S_NAMESPACE apply -f - --kubeconfig kubeconfig.yaml
+    - >
+      helm upgrade $DEPLOY_NAME ./k8s/base-chart
+      --install --history-max 5
+      --wait --hide-notes
+      --namespace $K8S_NAMESPACE
+      --values ./k8s/values/$DOCKER_PATH_BRANCH/$DEPLOY_NAME-values.yaml
+      --set defaultImageTag=$VERSION
 
 .semantic-release:
   # Функция генерации версии пакета
