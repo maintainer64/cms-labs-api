@@ -24,6 +24,7 @@ type ServerConfig struct {
 type K8SConfig struct {
 	ConfigYaml     string
 	KrewConfigYaml string
+	IssuerOIDC     string
 	Namespace      string
 }
 

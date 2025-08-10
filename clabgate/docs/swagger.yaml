@@ -111,6 +111,9 @@ definitions:
       status:
         description: 'Status enum: running,waiting,terminated,unknown'
         type: string
+      type:
+        description: 'Type enum: containerlab,default'
+        type: string
     type: object
   usecases.ContainersGetOutputDTO:
     properties:
@@ -150,42 +153,6 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.TasksListOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.TokenAccessGetOutputDTO:
-    properties:
-      token:
-        type: string
-    type: object
-  usecases.TokenAccessGetResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.TokenAccessGetOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.TokenFileYAMLGetOutputDTO:
-    properties:
-      content:
-        type: string
-      filename:
-        type: string
-    type: object
-  usecases.TokenFileYAMLGetResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.TokenFileYAMLGetOutputDTO'
     required:
     - error
     - msg
@@ -332,23 +299,6 @@ paths:
       summary: list tasks
       tags:
       - Tasks
-  /v1/tokens/json:
-    get:
-      consumes:
-      - application/json
-      description: 'Token cluster. Roles: [student, admin, instructor]'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.TokenAccessGetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: token cluster json
-      tags:
-      - Token
   /v1/tokens/yaml:
     get:
       consumes:
@@ -360,7 +310,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.TokenFileYAMLGetResponse'
+            type: string
       summary: token cluster yaml
       tags:
       - Token

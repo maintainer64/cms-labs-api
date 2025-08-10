@@ -70,15 +70,6 @@ func (u *TopologiesCreateUC) Execute(dto TopologiesCreateInputDTO) (TopologiesCr
 	u.Logger.Info().Msg(fmt.Sprintf("TopologiesCreateUC: Namespace is: %s", namespace))
 	output.Namespace = namespace
 	ctx := context.Background()
-	_, usernameOwnerCreate, err := u.KubernetesAdminQuery.CreateUser(ctx, usernameOwner)
-	output.UserCreated = usernameOwnerCreate
-	if err != nil {
-		return output, err
-	}
-	_, _, err = u.KubernetesAdminQuery.CreateUser(ctx, usernameOwner)
-	if err != nil {
-		return output, err
-	}
 	if usernameConnected != usernameOwner {
 		_, err = u.KubernetesAdminQuery.GetNamespaceByName(ctx, namespace)
 		if err != nil {

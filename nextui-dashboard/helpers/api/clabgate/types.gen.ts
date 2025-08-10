@@ -73,6 +73,10 @@ export type usecases_ContainersGetItem = {
    * Status enum: running,waiting,terminated,unknown
    */
   status?: string;
+  /**
+   * Type enum: containerlab,default
+   */
+  type?: string;
 };
 
 export type usecases_ContainersGetOutputDTO = {
@@ -95,27 +99,6 @@ export type usecases_TasksListResponse = {
   error: boolean;
   msg: string;
   result?: usecases_TasksListOutputDTO;
-};
-
-export type usecases_TokenAccessGetOutputDTO = {
-  token?: string;
-};
-
-export type usecases_TokenAccessGetResponse = {
-  error: boolean;
-  msg: string;
-  result?: usecases_TokenAccessGetOutputDTO;
-};
-
-export type usecases_TokenFileYAMLGetOutputDTO = {
-  content?: string;
-  filename?: string;
-};
-
-export type usecases_TokenFileYAMLGetResponse = {
-  error: boolean;
-  msg: string;
-  result?: usecases_TokenFileYAMLGetOutputDTO;
 };
 
 export type usecases_TopologiesCreateInputDTO = {
@@ -184,9 +167,7 @@ export type PostV1TasksListData = {
 
 export type PostV1TasksListResponse = usecases_TasksListResponse;
 
-export type GetV1TokensJsonResponse = usecases_TokenAccessGetResponse;
-
-export type GetV1TokensYamlResponse = usecases_TokenFileYAMLGetResponse;
+export type GetV1TokensYamlResponse = string;
 
 export type PostV1TopologiesCreateData = {
   /**

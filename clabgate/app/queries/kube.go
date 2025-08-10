@@ -22,10 +22,16 @@ import (
 )
 
 type KubernetesAdminQuery struct {
-	clientset        *kubernetes.Clientset
-	dynamicClient    dynamic.Interface
-	defaultNamespace string
+	clientset     *kubernetes.Clientset
+	dynamicClient dynamic.Interface
+	*KubernetesAdminConst
 	*zerolog.Logger
+}
+
+type KubernetesAdminConst struct {
+	DefaultNamespace string
+	IssuerOIDC       string
+	AdminBearerToken string
 }
 
 const (
@@ -50,10 +56,14 @@ func NewKubernetesAdmin(settings *connection.K8SConfig, zeroLogConf *logs.ZeroLo
 		return nil, fmt.Errorf("failed to create kubernetes dynamicClient: %v", err)
 	}
 	return &KubernetesAdminQuery{
-		clientset:        clientset,
-		dynamicClient:    dynamicClient,
-		defaultNamespace: settings.Namespace,
-		Logger:           logs.NewZeroLogger(zeroLogConf),
+		clientset:     clientset,
+		dynamicClient: dynamicClient,
+		KubernetesAdminConst: &KubernetesAdminConst{
+			DefaultNamespace: settings.Namespace,
+			IssuerOIDC:       settings.IssuerOIDC,
+			AdminBearerToken: config.BearerToken,
+		},
+		Logger: logs.NewZeroLogger(zeroLogConf),
 	}, nil
 }
 
@@ -96,7 +106,7 @@ func (k *KubernetesAdminQuery) NormalizeEntityName(entityName string) string {
 // CreateUser создает ServiceAccount, если он еще не существует
 func (k *KubernetesAdminQuery) CreateUser(ctx context.Context, username string) (*corev1.ServiceAccount, bool, error) {
 	// Проверяем существование ServiceAccount
-	sa, err := k.clientset.CoreV1().ServiceAccounts(k.defaultNamespace).Get(ctx, username, metav1.GetOptions{})
+	sa, err := k.clientset.CoreV1().ServiceAccounts(k.KubernetesAdminConst.DefaultNamespace).Get(ctx, username, metav1.GetOptions{})
 	if err == nil {
 		k.Logger.Info().Msg(fmt.Sprintf("ServiceAccount %s already exists", username))
 		return sa, false, nil
@@ -109,7 +119,7 @@ func (k *KubernetesAdminQuery) CreateUser(ctx context.Context, username string) 
 		},
 	}
 
-	sa, err = k.clientset.CoreV1().ServiceAccounts(k.defaultNamespace).Create(ctx, serviceAccount, metav1.CreateOptions{})
+	sa, err = k.clientset.CoreV1().ServiceAccounts(k.KubernetesAdminConst.DefaultNamespace).Create(ctx, serviceAccount, metav1.CreateOptions{})
 	if err != nil {
 		return nil, false, fmt.Errorf("failed to create service account: %v", err)
 	}
@@ -204,9 +214,9 @@ func (k *KubernetesAdminQuery) GrantAccessNamespacesList(ctx context.Context, us
 			},
 			Subjects: []rbacv1.Subject{
 				{
-					Kind:      "ServiceAccount",
-					Name:      username,
-					Namespace: k.defaultNamespace,
+					Kind:     "User",
+					Name:     fmt.Sprintf("%s#%s", k.KubernetesAdminConst.IssuerOIDC, username),
+					APIGroup: "rbac.authorization.k8s.io",
 				},
 			},
 			RoleRef: rbacv1.RoleRef{
@@ -279,9 +289,9 @@ func (k *KubernetesAdminQuery) GrantAccessUserNamespace(
 				Namespace: namespace,
 			},
 			Subjects: []rbacv1.Subject{{
-				Kind:      "ServiceAccount",
-				Name:      username,
-				Namespace: k.defaultNamespace,
+				Kind:      "User",
+				Name:      fmt.Sprintf("%s#%s", k.KubernetesAdminConst.IssuerOIDC, username),
+				Namespace: k.KubernetesAdminConst.DefaultNamespace,
 			}},
 			RoleRef: rbacv1.RoleRef{
 				APIGroup: "rbac.authorization.k8s.io",
@@ -293,63 +303,6 @@ func (k *KubernetesAdminQuery) GrantAccessUserNamespace(
 		_, _ = k.clientset.RbacV1().RoleBindings(namespace).Create(ctx, rb, metav1.CreateOptions{})
 	}
 	return nil
-}
-
-// GetUserToken возвращает токен для ServiceAccount (улучшенная версия)
-func (k *KubernetesAdminQuery) GetUserToken(ctx context.Context, username string) (string, error) {
-
-	// 1. Проверяем существующий секрет
-	secretName := fmt.Sprintf("%s-token", username)
-
-	// Попробуем получить существующий секрет
-	if secret, err := k.clientset.CoreV1().Secrets(k.defaultNamespace).Get(ctx, secretName, metav1.GetOptions{}); err == nil {
-		if token, exists := secret.Data[corev1.ServiceAccountTokenKey]; exists {
-			k.Logger.Info().Msg(
-				fmt.Sprintf(
-					"Granting access to service account %s in namespace %s", username, k.defaultNamespace,
-				),
-			)
-			return string(token), nil
-		}
-	}
-
-	// 2. Если секрета нет, создаем новый
-	secret := &corev1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      secretName,
-			Namespace: k.defaultNamespace,
-			Annotations: map[string]string{
-				"kubernetes.io/service-account.name": username,
-			},
-		},
-		Type: corev1.SecretTypeServiceAccountToken,
-	}
-
-	createdSecret, err := k.clientset.CoreV1().Secrets(k.defaultNamespace).Create(ctx, secret, metav1.CreateOptions{})
-	if err != nil {
-		return "", fmt.Errorf("failed to create secret: %v", err)
-	}
-
-	// 3. Ждем генерации токена (с таймаутом)
-	ctxTimeout, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-
-	for {
-		select {
-		case <-ctxTimeout.Done():
-			return "", fmt.Errorf("timeout waiting for token generation")
-		default:
-			updatedSecret, err := k.clientset.CoreV1().Secrets(k.defaultNamespace).Get(ctx, createdSecret.Name, metav1.GetOptions{})
-			if err != nil {
-				return "", fmt.Errorf("failed to get secret: %v", err)
-			}
-
-			if token, exists := updatedSecret.Data[corev1.ServiceAccountTokenKey]; exists && len(token) > 0 {
-				return string(token), nil
-			}
-			time.Sleep(1 * time.Second)
-		}
-	}
 }
 
 // GetNamespaceByName - получить определенный неймспейс
