@@ -8,6 +8,14 @@ export interface TerminalClient {
   zIndex: number;
 }
 
+export interface ShellFrame {
+  Op: string;
+  SessionID?: string;
+  Data?: string;
+  Cols?: number;
+  Rows?: number;
+}
+
 type TerminalAction =
   | { type: 'ADD_CLIENT'; payload: { id: string; namespace?: string; name?: string } }
   | { type: 'REMOVE_CLIENT'; payload: { id: string } }

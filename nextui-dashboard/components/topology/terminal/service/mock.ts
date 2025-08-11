@@ -1,14 +1,7 @@
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import debounce from 'lodash/debounce';
-
-interface ShellFrame {
-  Op: string;
-  SessionID?: string;
-  Data?: string;
-  Cols?: number;
-  Rows?: number;
-}
+import { ShellFrame } from '@/components/topology/terminal/service/context';
 
 type Function = (...args: any[]) => any;
 
@@ -37,7 +30,7 @@ export class MockTerminalService {
     this.onReconnect = callback;
   }
 
-  async connect(sessionId?: string, url?: string): Promise<void> {
+  async connect(sessionId?: string, url?: string, type?: string): Promise<void> {
     this.connecting = true;
 
     // Имитация задержки подключения
