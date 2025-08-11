@@ -2,14 +2,8 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import SockJS from 'sockjs-client';
 import debounce from 'lodash/debounce';
-
-interface ShellFrame {
-  Op: string;
-  SessionID?: string;
-  Data?: string;
-  Cols?: number;
-  Rows?: number;
-}
+import { ShellFrame } from '@/components/topology/terminal/service/context';
+import { ContainerLabMiddleware } from '@/components/topology/terminal/service/middleware-containerlab';
 
 type Function = (...args: any[]) => any;
 
@@ -22,6 +16,7 @@ export class TerminalService {
   private connecting = false;
   private onToast: (message: string) => void = () => {};
   private onReconnect: () => void = () => {};
+  private middlewares = [new ContainerLabMiddleware()];
 
   constructor(
     private container: HTMLElement,
@@ -36,7 +31,7 @@ export class TerminalService {
     this.onReconnect = callback;
   }
 
-  async connect(sessionId?: string, url?: string): Promise<void> {
+  async connect(sessionId?: string, url?: string, type?: string): Promise<void> {
     if (!sessionId || !url) {
       this.onReconnect();
     }
@@ -48,11 +43,11 @@ export class TerminalService {
       });
 
       this.sock.onopen = () => {
-        this.onSockOpen(sessionId);
+        this.onSockOpen(sessionId, type);
       };
 
       this.sock.onmessage = (e) => {
-        this.onSockMessage(e.data);
+        this.onSockMessage(e.data, type);
       };
 
       this.sock.onclose = (e) => {
@@ -113,7 +108,7 @@ export class TerminalService {
     this.term.onResize(this.onTerminalResize.bind(this));
   }
 
-  private onSockOpen(sessionId?: string): void {
+  private onSockOpen(sessionId?: string, type?: string): void {
     if (!this.sock) return;
     if (!sessionId) return;
 
@@ -128,12 +123,18 @@ export class TerminalService {
     this.connected = true;
     this.connecting = false;
     this.onToast(this.locale.TerminalConnected);
+    for (const middleware of this.middlewares) {
+      middleware.onOpen(this.sock, type);
+    }
   }
 
-  private onSockMessage(data: string): void {
+  private onSockMessage(data: string, type?: string): void {
     try {
       const frame: ShellFrame = JSON.parse(data);
       this.handleFrame(frame);
+      for (const middleware of this.middlewares) {
+        middleware.onData(this.sock, frame, type);
+      }
     } catch (error) {
       console.error('Error parsing message:', error);
     }

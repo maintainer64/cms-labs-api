@@ -29,6 +29,9 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
   const queryTopology = useTopologyGet(namespace);
   useEffect(() => {
     window.document.title = namespace;
+    return () => {
+      window.document.title = 'CMS LABS';
+    };
   }, []);
   const initNodes = (queryTopology.data?.result?.topology?.nodes ?? []) as RFNodeTopology[];
   const initEdges = (queryTopology.data?.result?.topology?.edges ?? []) as RFEdgeTopology[];

@@ -68,7 +68,7 @@ export const useTerminal = ({ terminalRef, node }: UseTerminalParams) => {
       terminalService.current.setOnReconnect(() => {
         scheduleInitTerminal();
       });
-      await terminalService.current.connect(container.session_id, container.connect_url);
+      await terminalService.current.connect(container.session_id, container.connect_url, container.type);
     };
 
     // Штука для автоматического перезапроса транспорта если отвалилось подключение
