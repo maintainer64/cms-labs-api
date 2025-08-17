@@ -345,6 +345,9 @@ const docTemplate = `{
                 "label": {
                     "type": "string"
                 },
+                "startup": {
+                    "type": "string"
+                },
                 "type": {
                     "type": "string"
                 }
@@ -406,6 +409,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "session_id": {
+                    "type": "string"
+                },
+                "startup": {
                     "type": "string"
                 },
                 "status": {

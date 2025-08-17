@@ -46,6 +46,7 @@ export type topology_TopologiesNodeDataItem = {
   id?: string;
   kind?: string;
   label?: string;
+  startup?: string;
   type?: string;
 };
 
@@ -69,6 +70,7 @@ export type usecases_ContainersGetItem = {
   ready?: boolean;
   restart_count?: number;
   session_id?: string;
+  startup?: string;
   /**
    * Status enum: running,waiting,terminated,unknown
    */
