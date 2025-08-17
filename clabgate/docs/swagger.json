@@ -338,6 +338,9 @@
                 "label": {
                     "type": "string"
                 },
+                "startup": {
+                    "type": "string"
+                },
                 "type": {
                     "type": "string"
                 }
@@ -399,6 +402,9 @@
                     "type": "integer"
                 },
                 "session_id": {
+                    "type": "string"
+                },
+                "startup": {
                     "type": "string"
                 },
                 "status": {

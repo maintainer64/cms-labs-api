@@ -6,8 +6,9 @@ type TopologiesNodeDataItem struct {
 	Label string `json:"label"`
 	Type  string `json:"type"`
 	// Icon enum:cloud,router,server,switch,desktop
-	Icon string `json:"icon"`
-	Kind string `json:"kind"`
+	Icon    string `json:"icon"`
+	Kind    string `json:"kind"`
+	Startup string `json:"startup"`
 }
 
 // TopologiesNode представляет узел топологии
