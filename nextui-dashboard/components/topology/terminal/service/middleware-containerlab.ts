@@ -1,6 +1,11 @@
 import { ShellFrame } from '@/components/topology/terminal/service/context';
 import { ContainerConnectParams, IMiddleware } from '@/components/topology/terminal/service/middleware-type';
 
+const AutoDisconnectStdOut = [
+  'Error: can only create exec sessions on running containers',
+  'Container not found. Maybe the lab is still deploying'
+];
+
 export class ContainerLabMiddleware implements IMiddleware {
   onOpen(socket?: WebSocket | null, connect?: ContainerConnectParams) {
     if (connect?.type !== 'containerlab') return;
@@ -16,10 +21,11 @@ export class ContainerLabMiddleware implements IMiddleware {
   onData(socket?: WebSocket | null, shellFrame?: ShellFrame, connect?: ContainerConnectParams) {
     if (connect?.type !== 'containerlab') return;
     if (shellFrame?.Op !== 'stdout') return;
-    if (
-      !shellFrame?.Data?.includes('Container not found. Maybe the lab is still deploying. Try again in a few seconds.')
-    )
-      return;
-    socket?.close(4999, 'Container not found');
+    for (const autoDisconnectStdOut in AutoDisconnectStdOut) {
+      if (shellFrame?.Data?.includes(autoDisconnectStdOut)) {
+        socket?.close(4999, 'Container not found');
+        return;
+      }
+    }
   }
 }
