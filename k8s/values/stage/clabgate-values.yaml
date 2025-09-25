@@ -1,6 +1,6 @@
 releasePrefix: "-"
 
-defaultImage: registry.gitlab.com/a10869/api-modules/clabgate/stage
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/clabgate/stage
 defaultImageTag: ""
 
 generic:

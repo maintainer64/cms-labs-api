@@ -6,6 +6,12 @@ workflow:
         DOCKER_PATH_BRANCH: stage
         K8S_CONFIG: ${K8S_CONFIG_STAGE}
         K8S_NAMESPACE: cmslabs
+    - if: $CI_COMMIT_REF_SLUG == "pre"
+      variables:
+        TAG: prod
+        DOCKER_PATH_BRANCH: pre
+        K8S_CONFIG: ${K8S_CONFIG_PROD}
+        K8S_NAMESPACE: cmslabs-pre
     - if: $CI_COMMIT_REF_SLUG == "master"
       variables:
         TAG: prod
