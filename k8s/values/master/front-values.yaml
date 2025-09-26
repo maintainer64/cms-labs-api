@@ -10,7 +10,6 @@ ingresses:
     extraTls:
     - hosts:
       - auth.k8s.cmslabs.ru
-      secretName: "ingress-nginx/wildcard-cert-tls"
 
 deployments:
   front:
