@@ -1,0 +1,5 @@
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/backend/master
+
+deployments:
+  core-backend:
+    replicas: 2

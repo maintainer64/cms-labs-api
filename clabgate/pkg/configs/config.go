@@ -25,6 +25,7 @@ func (c *AppConfigModel) Reload() {
 	}
 	c.K8S = &connection.K8SConfig{
 		ConfigYaml:     os.Getenv("K8S_CONFIG"),
+		IssuerOIDC:     os.Getenv("K8S_OIDC_ISSUER"),
 		KrewConfigYaml: os.Getenv("K8S_KREW_CONFIG"),
 		Namespace:      os.Getenv("K8S_NAMESPACE"),
 	}

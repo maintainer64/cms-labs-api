@@ -1,0 +1,12 @@
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/frontend/pre
+
+ingresses:
+  auth-pre.k8s.cmslabs.ru:
+    ingressClassName: nginx
+    hosts:
+    - paths:
+      - serviceName: front
+        servicePort: http
+    extraTls:
+    - hosts:
+      - auth-pre.k8s.cmslabs.ru

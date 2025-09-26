@@ -4,6 +4,7 @@
     paths:
       - .cache/go-build/
       - nextui-dashboard/node_modules/
+      - ~/.cache/pre-commit
   before_script:
     - mkdir -p .cache
     - export GOPATH="$CI_PROJECT_DIR/.cache"
@@ -15,29 +16,32 @@
   # REGISTRY_LOGIN - Логин пользователя
   # REGISTRY_URL - URL хранилища (ex registry.gitlab.com)
   before_script:
-    - echo ${REGISTRY_TOKEN} | docker login -u ${REGISTRY_LOGIN} --password-stdin ${REGISTRY_URL}
+    - buildah login -u $REGISTRY_LOGIN -p $REGISTRY_TOKEN $REGISTRY_URL
 
-.deploy-base-ssh:
-  # SSH_USER - пользователь ssh
-  # SSH_HOST - хост ssh
-  # SSH_PORT - порт ssh
-  # SSH_PRIVATE_KEY - ключ пользователя приватный ssh в base64
-  # FOLDER - папка проекта пользователя
+.deploy-kubectl:
+  # K8S_CONFIG - контент в base64 для работы с kubectl
+  # DOCKER_PATH_BRANCH - папка для values файлов
+  # DEPLOY_NAME - файл (<deployment_name>*.yaml и наименование деплоймента)
   # VERSION - файл с версией из артефактов
-  before_script:
-    - echo "Настраиваем SSH $SSH_USER@$SSH_HOST:$SSH_PORT"
-    - mkdir -p ~/.ssh
-    - echo "$(echo ${SSH_PRIVATE_KEY} | base64 -d)" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - echo "SSH настроен"
+  # K8S_NAMESPACE - неймспейс для k8s
   script:
-    - VERSION="$(cat ./VERSION)"
-    - echo "Подключаемся к серверу и выполняем docker-compose"
-    - ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT "export VERSION=$VERSION && echo 'Используем версию $VERSION' && cd $FOLDER && docker compose pull && docker compose up -d"
+    - echo "$K8S_CONFIG" | base64 -d > kubeconfig.yaml
+    - export KUBECONFIG=$PWD/kubeconfig.yaml
+    - export VERSION="$(cat ./VERSION)"
+    - echo "Подключаемся к серверу и деплоим приложение"
+    - >
+      helm upgrade $DEPLOY_NAME ./k8s/base-chart
+      --install --history-max 5
+      --atomic --hide-notes
+      --namespace $K8S_NAMESPACE
+      --values ./k8s/values/_common/_common.yaml
+      --values ./k8s/values/_common/$DEPLOY_NAME-values.yaml
+      --values ./k8s/values/$DOCKER_PATH_BRANCH/$DEPLOY_NAME-values.yaml
+      --set defaultImageTag=$VERSION
 
 .semantic-release:
   # Функция генерации версии пакета
-  image: $GO_BASE_CI_IMAGE:latest
+  image: $BUILDER_GO_IMAGE
   variables:
     REPOSITORY: $CI_SERVER_PROTOCOL://gitlab-ci-token:$GITLAB_TOKEN@$CI_SERVER_HOST:$CI_SERVER_PORT/$CI_PROJECT_PATH.git
   script:

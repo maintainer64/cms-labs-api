@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { TerminalService } from '@/components/topology/terminal/service/real';
-import { MockTerminalService } from '@/components/topology/terminal/service/mock';
 import { addToast } from '@heroui/react';
 import { TerminalClient } from '@/components/topology/terminal/service/context';
 import { useContainersGet } from '@/helpers/queries/topology/get';
@@ -22,7 +21,7 @@ export const useTerminal = ({ terminalRef, node }: UseTerminalParams) => {
     }
   } = useLanguageBrowser();
   const { mutateAsync } = useContainersGet({});
-  const terminalService = useRef<TerminalService | MockTerminalService | null>(null);
+  const terminalService = useRef<TerminalService | null>(null);
   const isMock = localStorage.getItem('socketJsMock') === 'true';
   const [container, setContainer] = useState<usecases_ContainersGetItem>({
     name: node.id,
@@ -52,9 +51,7 @@ export const useTerminal = ({ terminalRef, node }: UseTerminalParams) => {
       }
       // Инициализация сервиса
       if (!terminalService.current) {
-        terminalService.current = isMock
-          ? new MockTerminalService(terminalRef.current!, Terminal)
-          : new TerminalService(terminalRef.current!, Terminal);
+        terminalService.current = new TerminalService(terminalRef.current!, Terminal);
       }
       // Настройка callback для уведомлений
       terminalService.current.setOnToast((msg) =>
@@ -68,7 +65,12 @@ export const useTerminal = ({ terminalRef, node }: UseTerminalParams) => {
       terminalService.current.setOnReconnect(() => {
         scheduleInitTerminal();
       });
-      await terminalService.current.connect(container.session_id, container.connect_url);
+      await terminalService.current.connect({
+        sessionId: container.session_id || '',
+        type: container.type || 'default',
+        url: container.connect_url || '',
+        startup: container.startup || ''
+      });
     };
 
     // Штука для автоматического перезапроса транспорта если отвалилось подключение

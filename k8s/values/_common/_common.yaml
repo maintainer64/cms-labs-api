@@ -1,0 +1,7 @@
+releasePrefix: "-"
+
+defaultImage: ""
+defaultImageTag: ""
+
+generic:
+  usePredefinedAffinity: false

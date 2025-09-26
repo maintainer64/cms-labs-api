@@ -1,8 +1,8 @@
 variables:
-  DOCKER_IMAGE: docker:27.5
-  REGISTRY_PATH: a10869/api-modules
-  GO_BASE_CI_IMAGE: ${REGISTRY_URL}/${REGISTRY_PATH}/base
-  DOCS_CI_IMAGE: ${REGISTRY_URL}/${REGISTRY_PATH}/docs
+  DOCKER_IMAGE: harbor.cmslabs.ru/proxy_quay_io/buildah/stable:v1.41.4
+  REGISTRY_PATH: cms-labs/api-modules
+  BUILDER_GO_IMAGE: ${REGISTRY_URL}/cms-labs/images/builder-go
+  KUBECTL_IMAGE: ${REGISTRY_URL}/cms-labs/images/kubectl
   BACKEND_CI_IMAGE: ${REGISTRY_URL}/${REGISTRY_PATH}/backend/${DOCKER_PATH_BRANCH}
   CLABGATE_CI_IMAGE: ${REGISTRY_URL}/${REGISTRY_PATH}/clabgate/${DOCKER_PATH_BRANCH}
   FRONTEND_CI_IMAGE: ${REGISTRY_URL}/${REGISTRY_PATH}/frontend/${DOCKER_PATH_BRANCH}

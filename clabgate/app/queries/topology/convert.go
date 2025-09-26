@@ -67,17 +67,19 @@ func Convert(yamlData []byte) (*Topology, error) {
 		if icon == "" {
 			icon = nodeData.Kind
 		}
+		startup := nodeData.Labels["flow_startup"]
 		output.Nodes = append(output.Nodes, TopologiesNode{
 			ID:    nodeName,
 			Label: label,
 			Type:  "default",
 			Icon:  icon,
 			Data: TopologiesNodeDataItem{
-				ID:    nodeName,
-				Label: label,
-				Type:  "default",
-				Kind:  nodeData.Kind,
-				Icon:  icon,
+				ID:      nodeName,
+				Label:   label,
+				Type:    "default",
+				Kind:    nodeData.Kind,
+				Icon:    icon,
+				Startup: startup,
 			},
 		})
 	}
