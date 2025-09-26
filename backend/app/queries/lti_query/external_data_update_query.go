@@ -82,17 +82,17 @@ func MapRoleCoreByLTIRoleCode(rolesLTI []string) string {
 		case "ContentDeveloper":
 			continue
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor":
-			return cms_client.SSOUsersRoleAdmin
+			return cms_client.SSOUsersRoleInstructor
 		case "Instructor":
-			return cms_client.SSOUsersRoleAdmin
+			return cms_client.SSOUsersRoleInstructor
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner":
 			continue
 		case "Learner":
 			continue
 		case "http://purl.imsglobal.org/vocab/lis/v2/membership#Mentor":
-			return cms_client.SSOUsersRoleAdmin
+			return cms_client.SSOUsersRoleInstructor
 		case "Mentor":
-			return cms_client.SSOUsersRoleAdmin
+			return cms_client.SSOUsersRoleInstructor
 		default:
 			continue
 		}

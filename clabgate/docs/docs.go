@@ -101,34 +101,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/tokens/json": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Token cluster. Roles: [student, admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Token"
-                ],
-                "summary": "token cluster json",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TokenAccessGetResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/tokens/yaml": {
             "get": {
                 "description": "Token cluster. Roles: any",
@@ -146,7 +118,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.TokenFileYAMLGetResponse"
+                            "type": "string"
                         }
                     }
                 }
@@ -373,6 +345,9 @@ const docTemplate = `{
                 "label": {
                     "type": "string"
                 },
+                "startup": {
+                    "type": "string"
+                },
                 "type": {
                     "type": "string"
                 }
@@ -436,8 +411,15 @@ const docTemplate = `{
                 "session_id": {
                     "type": "string"
                 },
+                "startup": {
+                    "type": "string"
+                },
                 "status": {
                     "description": "Status enum: running,waiting,terminated,unknown",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type enum: containerlab,default",
                     "type": "string"
                 }
             }
@@ -503,61 +485,6 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.TasksListOutputDTO"
-                }
-            }
-        },
-        "usecases.TokenAccessGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.TokenAccessGetResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.TokenAccessGetOutputDTO"
-                }
-            }
-        },
-        "usecases.TokenFileYAMLGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "filename": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.TokenFileYAMLGetResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.TokenFileYAMLGetOutputDTO"
                 }
             }
         },

@@ -1,0 +1,49 @@
+services:
+  front:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+deployments:
+  front:
+    replicas: 1
+    containers:
+    - name: front
+      envSecrets:
+      - front-env-list
+      ports:
+      - name: http
+        containerPort: 80
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "50m"
+        limits:
+          memory: "128Mi"
+          cpu: "100m"
+      startupProbe:
+        httpGet:
+          path: /
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 12
+      livenessProbe:
+        httpGet:
+          path: /
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+      readinessProbe:
+        httpGet:
+          path: /
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 2

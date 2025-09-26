@@ -36,5 +36,6 @@ repos:
 
 exclude: |
   (?x)(
-    migrations/
+    migrations/|
+    k8s/
   )

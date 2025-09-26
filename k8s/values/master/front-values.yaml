@@ -1,0 +1,16 @@
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/frontend/master
+
+ingresses:
+  auth.k8s.cmslabs.ru:
+    ingressClassName: nginx
+    hosts:
+    - paths:
+      - serviceName: front
+        servicePort: http
+    extraTls:
+    - hosts:
+      - auth.k8s.cmslabs.ru
+
+deployments:
+  front:
+    replicas: 2

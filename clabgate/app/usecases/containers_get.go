@@ -3,7 +3,6 @@ package usecases
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 
 	"gitlab.com/a10869/api-modules/clabgate/app/queries/topology"
@@ -39,6 +38,9 @@ type ContainersGetItem struct {
 	RestartCount int32  `json:"restart_count"`
 	SessionId    string `json:"session_id"`
 	ConnectUrl   string `json:"connect_url"`
+	// Type enum: containerlab,default
+	Type    string `json:"type"`
+	Startup string `json:"startup"`
 }
 
 type ContainersGetOutputDTO struct {
@@ -75,25 +77,24 @@ func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutpu
 	if err != nil {
 		return output, errors.New("not logged in")
 	}
-	token, err := u.KubernetesAdminQuery.GetUserToken(ctx, username)
-	if err != nil {
-		u.Logger.Warn().Msg(fmt.Sprintf("shell token access get request error: %s", err))
-		return output, err
-	}
 	for _, container := range containers {
 		tokenWS, _ := u.KubeDashboardClientQuery.Shell(
-			token,
+			u.KubernetesAdminQuery.KubernetesAdminConst.AdminBearerToken,
 			container.Namespace,
 			container.Pod,
 			container.Name,
 		)
 		var nodeLabel string
+		typeNode := "default"
+		startup := ""
 		var node *topology.TopologiesNode
 		if topologyContent != nil {
 			node = topologyContent.GetNodeByID(dto.Deployment)
 		}
 		if node != nil {
 			nodeLabel = node.Label
+			typeNode = "containerlab"
+			startup = node.Data.Startup
 		}
 		output.Containers = append(
 			output.Containers,
@@ -107,6 +108,8 @@ func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutpu
 				RestartCount: container.RestartCount,
 				SessionId:    tokenWS.ID,
 				ConnectUrl:   u.KubeDashboardClientQuery.GetUrlByShell(),
+				Type:         typeNode,
+				Startup:      startup,
 			},
 		)
 	}

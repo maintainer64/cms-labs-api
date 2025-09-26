@@ -149,6 +149,7 @@ spec:
           node1:
             kind: nokia_srlinux
             labels:
+              flow_startup: shellin bash
               flow_icon: switch
               flow_label: S1
         links:
@@ -166,11 +167,12 @@ spec:
 						Type:  "default",
 						Icon:  "switch",
 						Data: TopologiesNodeDataItem{
-							ID:    "node1",
-							Label: "S1",
-							Type:  "default",
-							Icon:  "switch",
-							Kind:  "nokia_srlinux",
+							ID:      "node1",
+							Label:   "S1",
+							Type:    "default",
+							Icon:    "switch",
+							Kind:    "nokia_srlinux",
+							Startup: "shellin bash",
 						},
 					},
 				},

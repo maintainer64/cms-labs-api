@@ -25,6 +25,9 @@ export const KubernetesTerminalFullScreen = ({ namespace, node }: KubernetesTerm
   useEffect(() => {
     window.document.title = `${container.label} (${container.name})`;
     terminalService.current?.fit();
+    return () => {
+      window.document.title = 'CMS LABS';
+    };
   }, [container, terminalService]);
   return (
     <div className='w-screen h-screen'>

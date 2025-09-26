@@ -1,0 +1,5 @@
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/clabgate/master
+
+deployments:
+  clabgate:
+    replicas: 2

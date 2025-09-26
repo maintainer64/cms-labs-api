@@ -2,14 +2,9 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import SockJS from 'sockjs-client';
 import debounce from 'lodash/debounce';
-
-interface ShellFrame {
-  Op: string;
-  SessionID?: string;
-  Data?: string;
-  Cols?: number;
-  Rows?: number;
-}
+import { ShellFrame } from '@/components/topology/terminal/service/context';
+import { ContainerLabMiddleware } from '@/components/topology/terminal/service/middleware-containerlab';
+import { ContainerConnectParams } from '@/components/topology/terminal/service/middleware-type';
 
 type Function = (...args: any[]) => any;
 
@@ -22,6 +17,7 @@ export class TerminalService {
   private connecting = false;
   private onToast: (message: string) => void = () => {};
   private onReconnect: () => void = () => {};
+  private middlewares = [new ContainerLabMiddleware()];
 
   constructor(
     private container: HTMLElement,
@@ -36,23 +32,23 @@ export class TerminalService {
     this.onReconnect = callback;
   }
 
-  async connect(sessionId?: string, url?: string): Promise<void> {
-    if (!sessionId || !url) {
+  async connect(connectParams?: ContainerConnectParams): Promise<void> {
+    if (!connectParams?.sessionId) {
       this.onReconnect();
     }
     this.connecting = true;
 
     try {
-      this.sock = new SockJS(url || '', null, {
-        sessionId: () => sessionId ?? ''
+      this.sock = new SockJS(connectParams?.url || '', null, {
+        sessionId: () => connectParams?.sessionId ?? ''
       });
 
       this.sock.onopen = () => {
-        this.onSockOpen(sessionId);
+        this.onSockOpen(connectParams);
       };
 
       this.sock.onmessage = (e) => {
-        this.onSockMessage(e.data);
+        this.onSockMessage(e.data, connectParams);
       };
 
       this.sock.onclose = (e) => {
@@ -113,13 +109,13 @@ export class TerminalService {
     this.term.onResize(this.onTerminalResize.bind(this));
   }
 
-  private onSockOpen(sessionId?: string): void {
+  private onSockOpen(connectParams?: ContainerConnectParams): void {
     if (!this.sock) return;
-    if (!sessionId) return;
+    if (!connectParams?.sessionId) return;
 
     const bindFrame: ShellFrame = {
       Op: 'bind',
-      SessionID: sessionId,
+      SessionID: connectParams.sessionId,
       Cols: this.term?.cols || 80,
       Rows: this.term?.rows || 24
     };
@@ -128,12 +124,18 @@ export class TerminalService {
     this.connected = true;
     this.connecting = false;
     this.onToast(this.locale.TerminalConnected);
+    for (const middleware of this.middlewares) {
+      middleware.onOpen(this.sock, connectParams);
+    }
   }
 
-  private onSockMessage(data: string): void {
+  private onSockMessage(data: string, connectParams?: ContainerConnectParams): void {
     try {
       const frame: ShellFrame = JSON.parse(data);
       this.handleFrame(frame);
+      for (const middleware of this.middlewares) {
+        middleware.onData(this.sock, frame, connectParams);
+      }
     } catch (error) {
       console.error('Error parsing message:', error);
     }
