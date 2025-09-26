@@ -1,6 +1,6 @@
 releasePrefix: "-"
 
-defaultImage: registry.gitlab.com/a10869/api-modules/frontend/stage
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/frontend/stage
 defaultImageTag: ""
 
 generic:
@@ -45,7 +45,7 @@ deployments:
         limits:
           memory: "128Mi"
           cpu: "100m"
-      startupProbe: 
+      startupProbe:
         httpGet:
           path: /
           port: http
@@ -53,7 +53,7 @@ deployments:
         periodSeconds: 10
         successThreshold: 1
         failureThreshold: 12
-      livenessProbe: 
+      livenessProbe:
         httpGet:
           path: /
           port: http

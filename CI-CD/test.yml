@@ -1,6 +1,10 @@
 check-security:
   stage: test
   image: $BUILDER_GO_IMAGE
+  variables:
+    KUBERNETES_CPU_LIMIT: 1
+    KUBERNETES_MEMORY_LIMIT: 4Gi
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: 10Gi
   script:
     - make security
 
@@ -8,6 +12,10 @@ check-pre-commit:
   stage: test
   extends: .dependencies
   image: $BUILDER_GO_IMAGE
+  variables:
+    KUBERNETES_CPU_LIMIT: 1
+    KUBERNETES_MEMORY_LIMIT: 4Gi
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: 5Gi
   script:
     - make pre_commit
 
@@ -15,8 +23,13 @@ golang-test:
   stage: test
   extends: .dependencies
   image: $BUILDER_GO_IMAGE
+  retry: 2
+  variables:
+    KUBERNETES_CPU_LIMIT: 4
+    KUBERNETES_MEMORY_LIMIT: 4Gi
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: 10Gi
   services:
-    - name: mysql:9.1
+    - name: harbor.cmslabs.ru/proxy_docker_io/mysql:9.1
       alias: mysqldatabase
       variables:
         MYSQL_HOST: 'mysqldatabase'

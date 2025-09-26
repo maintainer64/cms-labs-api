@@ -1,6 +1,6 @@
 releasePrefix: "-"
 
-defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/backend/stage
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/backend/master
 defaultImageTag: ""
 
 generic:
@@ -16,7 +16,7 @@ services:
 
 deployments:
   core-backend:
-    replicas: 1
+    replicas: 2
     containers:
     - name: core-backend
       envSecrets:

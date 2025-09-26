@@ -4,6 +4,7 @@
     paths:
       - .cache/go-build/
       - nextui-dashboard/node_modules/
+      - ~/.cache/pre-commit
   before_script:
     - mkdir -p .cache
     - export GOPATH="$CI_PROJECT_DIR/.cache"

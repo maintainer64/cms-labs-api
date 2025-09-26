@@ -1,13 +1,27 @@
 releasePrefix: "-"
 
-defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/backend/stage
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/frontend/pre
 defaultImageTag: ""
 
 generic:
   usePredefinedAffinity: false
 
+ingresses:
+  auth-pre.k8s.cmslabs.ru:
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+    - paths:
+      - serviceName: front
+        servicePort: http
+    extraTls:
+    - hosts:
+      - auth-pre.k8s.cmslabs.ru
+      secretName: "ingress-nginx/wildcard-cert-tls"
+
 services:
-  core-backend:
+  front:
     ports:
     - name: http
       protocol: TCP
@@ -15,33 +29,33 @@ services:
       targetPort: http
 
 deployments:
-  core-backend:
+  front:
     replicas: 1
     containers:
-    - name: core-backend
+    - name: front
       envSecrets:
-      - core-backend-env-list
+      - front-env-list
       ports:
       - name: http
-        containerPort: 8080
+        containerPort: 80
       resources:
         requests:
+          memory: "64Mi"
+          cpu: "50m"
+        limits:
           memory: "128Mi"
           cpu: "100m"
-        limits:
-          memory: "250Mi"
-          cpu: "200m"
-      startupProbe: 
+      startupProbe:
         httpGet:
-          path: /api/docs/index.html
+          path: /
           port: http
         timeoutSeconds: 1
         periodSeconds: 10
         successThreshold: 1
         failureThreshold: 12
-      livenessProbe: 
+      livenessProbe:
         httpGet:
-          path: /api/docs/index.html
+          path: /
           port: http
         timeoutSeconds: 1
         periodSeconds: 10
@@ -49,7 +63,7 @@ deployments:
         failureThreshold: 6
       readinessProbe:
         httpGet:
-          path: /api/docs/index.html
+          path: /
           port: http
         timeoutSeconds: 1
         periodSeconds: 10
