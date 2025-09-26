@@ -1,0 +1,57 @@
+releasePrefix: "-"
+
+defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/clabgate/pre
+defaultImageTag: ""
+
+generic:
+  usePredefinedAffinity: false
+
+services:
+  clabgate:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+deployments:
+  clabgate:
+    replicas: 1
+    containers:
+    - name: clabgate
+      envSecrets:
+      - clabgate-env-list
+      ports:
+      - name: http
+        containerPort: 8080
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "250Mi"
+          cpu: "200m"
+      startupProbe: 
+        httpGet:
+          path: /clabgate/api/docs/index.html
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 12
+      livenessProbe: 
+        httpGet:
+          path: /clabgate/api/docs/index.html
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+      readinessProbe:
+        httpGet:
+          path: /clabgate/api/docs/index.html
+          port: http
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 2
