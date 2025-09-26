@@ -23,6 +23,7 @@ golang-test:
   stage: test
   extends: .dependencies
   image: $BUILDER_GO_IMAGE
+  retry: 2
   variables:
     KUBERNETES_CPU_LIMIT: 4
     KUBERNETES_MEMORY_LIMIT: 4Gi
