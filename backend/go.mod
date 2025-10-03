@@ -4,8 +4,6 @@ go 1.24.4
 
 replace gitlab.com/a10869/api-modules/shared => ../shared
 
-replace gitlab.com/a10869/api-modules/gen => ../gen
-
 require (
 	ariga.io/atlas-provider-gorm v0.5.0
 	github.com/go-resty/resty/v2 v2.16.5
@@ -76,7 +74,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.58.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	gitlab.com/a10869/api-modules/pnetlabaddon v0.0.0-20250520184617-c2bb401ff14c // indirect
 	golang.org/x/net v0.38.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect

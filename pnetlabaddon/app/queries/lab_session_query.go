@@ -3,9 +3,7 @@ package queries
 import (
 	"errors"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
 )
 
@@ -29,10 +27,7 @@ func (q *LabSessionQuery) GetByAttemptId(attemptId string) (models.LabSession, e
 	if entityDB.LabSessionID != 0 {
 		return entityDB, nil
 	}
-	return entityDB, utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: LabSessionNotFoundError,
-	}
+	return entityDB, LabSessionNotFoundError
 }
 
 // LabSessionRunningLabs модель для активных сессий лабораторных

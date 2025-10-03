@@ -6,13 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries/topology"
-	"gitlab.com/a10869/api-modules/clabgate/app/usecases/response"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 type TopologiesGetUC struct {
@@ -25,12 +23,24 @@ type TopologiesGetInputDTO struct {
 	Namespace string `json:"namespace"`
 }
 
+type TopologiesGetRequest struct {
+	JSONRPC string                `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                `json:"method" default:"topology.get" required:"true"`
+	Params  TopologiesGetInputDTO `json:"params,omitempty"`
+	ID      string                `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type TopologiesGetOutputDTO struct {
 	Topology *topology.Topology `json:"topology"`
 	WebUrl   string             `json:"web_url"`
 }
 
-type TopologiesGetResponse = response.Response[TopologiesGetOutputDTO]
+type TopologiesGetResponse struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  TopologiesGetOutputDTO `json:"result,omitempty"`
+	Error   interface{}            `json:"error,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *TopologiesGetUC) SetContext(user *cms_client.SSOTokenPublicData) *TopologiesGetUC {
 	u.user = user
@@ -47,10 +57,7 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,
 	) && !strings.HasPrefix(namespace, username+"-") {
-		return TopologiesGetOutputDTO{}, utils.FiberValidationException{
-			Status:    fiber.StatusForbidden,
-			Exception: errors.New("User not allow current namespace"),
-		}
+		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("user_not_allow_topology", "user not allow connect topology")
 	}
 	ctx := context.Background()
 	u.Logger.Error().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML namespace: %v", dto.Namespace))

@@ -1,7 +1,6 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -10,9 +9,8 @@ import (
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gorm.io/gorm"
 )
 
@@ -22,6 +20,10 @@ type LTIAttemptQueries struct {
 }
 
 const MaxLimitCount = 5000
+
+var LTIAttemptNotFoundError = jsonrpc.NewRpcError(
+	"lti_attempt_not_found", "lti attempt has not found",
+)
 
 func (q *LTIAttemptQueries) tableName(object interface{}) string {
 	stmt := &gorm.Statement{DB: q.DB}
@@ -33,10 +35,7 @@ func (q *LTIAttemptQueries) Get(id uint) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIAttempt not found"),
-		}
+		return entity, LTIAttemptNotFoundError
 	}
 	return entity, result.Error
 }
@@ -45,10 +44,7 @@ func (q *LTIAttemptQueries) GetByAttemptID(attemptID string) (models.LTIAttempt,
 	var entity models.LTIAttempt
 	result := q.DB.Where("attempt_id = ?", attemptID).Find(&entity)
 	if entity.ID == 0 {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIAttempt not found"),
-		}
+		return entity, LTIAttemptNotFoundError
 	}
 	return entity, result.Error
 }

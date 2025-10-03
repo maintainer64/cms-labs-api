@@ -1,4 +1,4 @@
-basePath: /pnet-lab-addon/api
+basePath: /
 info:
   contact:
     email: your@mail.com
@@ -11,7 +11,7 @@ info:
   title: API
   version: "1.0"
 paths:
-  /v1/sso/login:
+  /pnet-lab-addon/api/v1/sso/login:
     get:
       consumes:
       - application/json
@@ -33,7 +33,7 @@ paths:
       summary: Отправка пользователя с параметрами на сервер аутентификации.
       tags:
       - SSO
-  /v1/sso/openid:
+  /pnet-lab-addon/api/v1/sso/openid:
     get:
       consumes:
       - application/json
@@ -67,7 +67,7 @@ paths:
       summary: Второй фактор openid.
       tags:
       - SSO
-  /v1/task/pnet-server-ping:
+  /pnet-lab-addon/api/v1/task/pnet-server-ping:
     post:
       consumes:
       - application/json

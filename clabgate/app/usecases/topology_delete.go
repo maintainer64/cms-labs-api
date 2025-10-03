@@ -5,37 +5,47 @@ import (
 	"errors"
 	"fmt"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
-	"gitlab.com/a10869/api-modules/clabgate/app/usecases/response"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
-type TopologiesDeleteUC struct {
+type TopologyDeleteUC struct {
 	*zerolog.Logger
 	KubernetesAdminQuery *queries.KubernetesAdminQuery
 	user                 *cms_client.SSOTokenPublicData
 }
 
-type TopologiesDeleteInputDTO struct {
+type TopologyDeleteInputDTO struct {
 	Namespaces []string `json:"namespaces"`
 }
 
-type TopologiesDeleteOutputDTO struct {
+type TopologyDeleteRequest struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                 `json:"method" default:"topology.delete" required:"true"`
+	Params  TopologyDeleteInputDTO `json:"params,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+}
+
+type TopologyDeleteOutputDTO struct {
 	Namespaces []string `json:"namespaces"`
 }
 
-type TopologiesDeleteResponse = response.Response[TopologiesDeleteOutputDTO]
+type TopologyDeleteResponse struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  TopologyDeleteOutputDTO `json:"result,omitempty"`
+	Error   interface{}             `json:"error,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+}
 
-func (u *TopologiesDeleteUC) SetContext(user *cms_client.SSOTokenPublicData) *TopologiesDeleteUC {
+func (u *TopologyDeleteUC) SetContext(user *cms_client.SSOTokenPublicData) *TopologyDeleteUC {
 	u.user = user
 	return u
 }
 
-func (u *TopologiesDeleteUC) Execute(dto TopologiesDeleteInputDTO) (TopologiesDeleteOutputDTO, error) {
-	output := TopologiesDeleteOutputDTO{}
+func (u *TopologyDeleteUC) Execute(dto TopologyDeleteInputDTO) (TopologyDeleteOutputDTO, error) {
+	output := TopologyDeleteOutputDTO{}
 	if u.user == nil {
 		return output, errors.New("not logged in")
 	}
@@ -44,10 +54,7 @@ func (u *TopologiesDeleteUC) Execute(dto TopologiesDeleteInputDTO) (TopologiesDe
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,
 	) {
-		return output, utils.FiberValidationException{
-			Status:    fiber.StatusForbidden,
-			Exception: errors.New("User not allow connect topology"),
-		}
+		return output, jsonrpc.NewRpcError("user_not_allow_topology", "user not allow connect topology")
 	}
 	ctx := context.Background()
 	for _, namespace := range dto.Namespaces {

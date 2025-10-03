@@ -4,7 +4,8 @@ package logs
 import (
 	"os"
 
-	fiber "github.com/gofiber/fiber/v2"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+
 	"github.com/rs/zerolog"
 )
 
@@ -28,18 +29,18 @@ func (z *ZeroLoggerConf) SetName(name string) *ZeroLoggerConf {
 }
 
 // FiberLocalsParseDefault парсит из fiber.Ctx переменные с приведением типов
-func FiberLocalsParseDefault(c *fiber.Ctx, key string) string {
+func FiberLocalsParseDefault(c *jsonrpc.Ctx, key string) string {
 	if c == nil {
 		return ""
 	}
-	if value, ok := c.Locals(key).(string); ok {
+	if value, ok := c.FiberCtx.Locals(key).(string); ok {
 		return value
 	}
 	return ""
 }
 
 // NewZeroLoggerConf создаёт контекст для zerolog.Logger
-func NewZeroLoggerConf(c *fiber.Ctx) *ZeroLoggerConf {
+func NewZeroLoggerConf(c *jsonrpc.Ctx) *ZeroLoggerConf {
 	return &ZeroLoggerConf{
 		Name:      "main",
 		RequestID: FiberLocalsParseDefault(c, "x-request-id"),

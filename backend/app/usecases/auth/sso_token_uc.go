@@ -43,11 +43,18 @@ type SwaggerSSOToken struct {
 	UserId       string `json:"user_id"`
 }
 
-// SwaggerSSOTokenResponse copy of cms_client.SSOTokenResponse
+type UserLogoutRequest struct {
+	JSONRPC string       `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string       `json:"method" default:"user.logout" required:"true"`
+	Params  *interface{} `json:"params,omitempty"`
+	ID      string       `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type SwaggerSSOTokenResponse struct {
-	Error  bool            `json:"error" validate:"required"`
-	Msg    string          `json:"msg" validate:"required"`
-	Result SwaggerSSOToken `json:"result"`
+	JSONRPC string          `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  SwaggerSSOToken `json:"result,omitempty"`
+	Error   interface{}     `json:"error,omitempty"`
+	ID      string          `json:"id,omitempty" default:"1" required:"true"`
 }
 
 // SwaggerSSOTokenPublicData copy of cms_client.SSOTokenPublicData

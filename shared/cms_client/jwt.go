@@ -1,11 +1,8 @@
 package cms_client
 
 import (
-	"errors"
-
-	fiber "github.com/gofiber/fiber/v2"
 	jwt "github.com/golang-jwt/jwt/v5"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 func SSOTokenGetStringSlice(claims map[string]interface{}, key string) []string {
@@ -26,10 +23,7 @@ func SSODecodeToken(jwtToken *jwt.Token) (*SSOTokenPublicData, error) {
 	// Setting and checking token and credentials.
 	claims, ok := jwtToken.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, utils.FiberValidationException{
-			Status:    fiber.StatusUnauthorized,
-			Exception: errors.New("token invalid"),
-		}
+		return nil, jsonrpc.NewRpcError("invalid_token", "token is invalid")
 	}
 	tokenData := SSOTokenPublicData{
 		Iss:          claims["iss"].(string),

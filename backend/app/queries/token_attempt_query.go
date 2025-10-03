@@ -1,14 +1,12 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gorm.io/gorm"
 )
 
@@ -17,15 +15,18 @@ type TokenAttemptQueries struct {
 	Logger *zerolog.Logger
 }
 
+var (
+	TokenAttemptNotFoundError = jsonrpc.NewRpcError(
+		"token_attempt_not_found",
+		"token attempt has not found",
+	)
+)
+
 func (q *TokenAttemptQueries) GetByTokenId(tokenId string) (models.TokenAttempt, error) {
 	entity := models.TokenAttempt{}
 	q.DB.Where("token = ?", tokenId).Limit(1).Find(&entity)
-	exception := utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: errors.New("TokenAttempt has not found"),
-	}
 	if entity.ID == 0 {
-		return entity, exception
+		return entity, TokenAttemptNotFoundError
 	}
 	return entity, nil
 }
@@ -33,12 +34,8 @@ func (q *TokenAttemptQueries) GetByTokenId(tokenId string) (models.TokenAttempt,
 func (q *TokenAttemptQueries) GetByAuthCode(code string) (models.TokenAttempt, error) {
 	entity := models.TokenAttempt{}
 	q.DB.Where("authorization_code = ?", code).Limit(1).Find(&entity)
-	exception := utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: errors.New("TokenAttempt code not found"),
-	}
 	if entity.ID == 0 {
-		return entity, exception
+		return entity, TokenAttemptNotFoundError
 	}
 	return entity, nil
 }
@@ -58,12 +55,8 @@ func (q *TokenAttemptQueries) GetByParams(userID uint, serverID uint) (models.To
 	entity := models.TokenAttempt{}
 	q.DB.Where("user_id = ?", userID).Where("server_id = ?", serverID).
 		Limit(1).Find(&entity)
-	exception := utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: errors.New("TokenAttempt server or user not found"),
-	}
 	if entity.ID == 0 {
-		return entity, exception
+		return entity, TokenAttemptNotFoundError
 	}
 	return entity, nil
 }

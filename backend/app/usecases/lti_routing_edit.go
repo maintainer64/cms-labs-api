@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIRoutingEditUC struct {
@@ -28,11 +27,23 @@ type LTIRoutingEditInputDTO struct {
 	IsDefault            bool   `json:"is_default"`
 }
 
+type LTIRoutingEditRequest struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                 `json:"method" default:"lti_routing.upsert" required:"true"`
+	Params  LTIRoutingEditInputDTO `json:"params,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type LTIRoutingEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LTIRoutingEditResponse = response.Response[LTIRoutingEditOutputDTO]
+type LTIRoutingEditResponse struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  LTIRoutingEditOutputDTO `json:"result,omitempty"`
+	Error   interface{}             `json:"error,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOutputDTO, error) {
 	entity := &models.LTIRouting{}

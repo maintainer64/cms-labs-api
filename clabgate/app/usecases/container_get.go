@@ -7,12 +7,10 @@ import (
 
 	"gitlab.com/a10869/api-modules/clabgate/app/queries/topology"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
-	"gitlab.com/a10869/api-modules/clabgate/app/usecases/response"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 type ContainersGetUC struct {
@@ -22,12 +20,19 @@ type ContainersGetUC struct {
 	user                     *cms_client.SSOTokenPublicData
 }
 
-type ContainersGetInputDTO struct {
+type ContainerGetInputDTO struct {
 	Namespace  string `json:"namespace"`
 	Deployment string `json:"deployment"`
 }
 
-type ContainersGetItem struct {
+type ContainerGetRequest struct {
+	JSONRPC string               `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string               `json:"method" default:"container.get" required:"true"`
+	Params  ContainerGetInputDTO `json:"params,omitempty"`
+	ID      string               `json:"id,omitempty" default:"1" required:"true"`
+}
+
+type ContainerGetItem struct {
 	Name  string `json:"name"`
 	Label string `json:"label"`
 	Pod   string `json:"pod"`
@@ -43,19 +48,24 @@ type ContainersGetItem struct {
 	Startup string `json:"startup"`
 }
 
-type ContainersGetOutputDTO struct {
-	Containers []ContainersGetItem `json:"containers"`
+type ContainerGetOutputDTO struct {
+	Containers []ContainerGetItem `json:"containers"`
 }
 
-type ContainersGetResponse = response.Response[ContainersGetOutputDTO]
+type ContainersGetResponse struct {
+	JSONRPC string                `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  ContainerGetOutputDTO `json:"result,omitempty"`
+	Error   interface{}           `json:"error,omitempty"`
+	ID      string                `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *ContainersGetUC) SetContext(user *cms_client.SSOTokenPublicData) *ContainersGetUC {
 	u.user = user
 	return u
 }
 
-func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutputDTO, error) {
-	output := ContainersGetOutputDTO{}
+func (u *ContainersGetUC) Execute(dto ContainerGetInputDTO) (ContainerGetOutputDTO, error) {
+	output := ContainerGetOutputDTO{}
 	if u.user == nil {
 		return output, errors.New("not logged in")
 	}
@@ -65,10 +75,7 @@ func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutpu
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,
 	) && !strings.HasPrefix(namespace, username+"-") {
-		return output, utils.FiberValidationException{
-			Status:    fiber.StatusForbidden,
-			Exception: errors.New("User not allow current namespace"),
-		}
+		return output, jsonrpc.NewRpcError("user_not_allow_namespace", "user not allow current namespace")
 	}
 	ctx := context.Background()
 	yamlContent, _ := u.KubernetesAdminQuery.GetTopologyYAML(ctx, namespace)
@@ -98,7 +105,7 @@ func (u *ContainersGetUC) Execute(dto ContainersGetInputDTO) (ContainersGetOutpu
 		}
 		output.Containers = append(
 			output.Containers,
-			ContainersGetItem{
+			ContainerGetItem{
 				Name:         container.Name,
 				Label:        nodeLabel,
 				Pod:          container.Pod,

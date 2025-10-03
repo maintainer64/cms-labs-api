@@ -52,3 +52,10 @@ func (di *DIContainer) SSOOpenidConfigurationUC() *auth.SSOOpenidConfiguration {
 func (di *DIContainer) SSOJwksUC() *auth.SSOJwksUC {
 	return &auth.SSOJwksUC{}
 }
+
+func (di *DIContainer) ServiceAuthorizeUC() *auth.ServiceAuthorizeUC {
+	return &auth.ServiceAuthorizeUC{
+		PNETServerQueries: di.Queries.PNETServerQueries,
+		Logger:            logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.ServiceAuthorizeUC")),
+	}
+}

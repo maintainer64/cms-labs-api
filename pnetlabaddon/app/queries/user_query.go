@@ -3,9 +3,7 @@ package queries
 import (
 	"errors"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
 )
 
@@ -23,10 +21,7 @@ func (q *UserQueries) Get(id int) (models.User, error) {
 	if entityDB.Pod != 0 {
 		return entityDB, nil
 	}
-	return entityDB, utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: UserNotFoundError,
-	}
+	return entityDB, UserNotFoundError
 }
 
 func (q *UserQueries) GetOrCreateByEmail(user models.User) (models.User, error) {
@@ -37,10 +32,7 @@ func (q *UserQueries) GetOrCreateByEmail(user models.User) (models.User, error) 
 	}
 	result := q.DB.Create(&user)
 	if result.Error != nil {
-		return user, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: result.Error,
-		}
+		return user, result.Error
 	}
 	return user, nil
 }

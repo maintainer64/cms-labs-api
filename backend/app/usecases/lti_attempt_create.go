@@ -6,12 +6,9 @@ import (
 	"net/url"
 	"time"
 
-	fiber "github.com/gofiber/fiber/v2"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
-
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	json "github.com/goccy/go-json"
 	"github.com/ory/go-convenience/mapx"
@@ -36,6 +33,13 @@ type LTIAttemptCreateInputDTO struct {
 	RoomNumber int64 `json:"room_number"`
 }
 
+type LTIAttemptCreateRequest struct {
+	JSONRPC string                   `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string                   `json:"method" default:"lti_attempt.create" validate:"required"`
+	Params  LTIAttemptCreateInputDTO `json:"params,omitempty"`
+	ID      string                   `json:"id,omitempty" default:"1" validate:"required"`
+}
+
 type LTIAttemptCreateOutputDTO struct {
 	RoomNumber    int64                 `json:"room_number"`
 	Collaboration int                   `json:"collaboration"`
@@ -44,7 +48,12 @@ type LTIAttemptCreateOutputDTO struct {
 	Members       []models.UserListItem `json:"members"`
 }
 
-type LTIAttemptCreateResponse = response.Response[LTIAttemptCreateOutputDTO]
+type LTIAttemptCreateResponse struct {
+	JSONRPC string                    `json:"jsonrpc" default:"2.0" validate:"required"`
+	Result  LTIAttemptCreateOutputDTO `json:"result,omitempty"`
+	Error   interface{}               `json:"error,omitempty"`
+	ID      string                    `json:"id,omitempty" default:"1" validate:"required"`
+}
 
 func (u *LTIAttemptCreateUC) SetContext(user *cms_client.SSOTokenPublicData) *LTIAttemptCreateUC {
 	u.user = user
@@ -63,10 +72,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 	)
 	route := u.SearchRelevantRouting()
 	if route == nil || route.ID == 0 {
-		return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("no route found for this user"),
-		}
+		return LTIAttemptCreateOutputDTO{}, queries.LTIRoutingNotFoundError
 	}
 	if route.PNETLabsType == cms_client.PNETLabsTypeSSO {
 		return LTIAttemptCreateOutputDTO{
@@ -86,17 +92,11 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		)
 		roomEntity, err := u.LTIRoomQueries.GetByRoomNumber(dto.RoomNumber)
 		if err != nil {
-			return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
-				Status:    fiber.StatusNotFound,
-				Exception: errors.New("Not found other room"),
-			}
+			return LTIAttemptCreateOutputDTO{}, jsonrpc.NewRpcError("not_found_room", "not found other room")
 		}
 		otherAttempts, _ := u.LTIAttemptQueries.GetByRoomID(roomEntity.ID)
 		if len(otherAttempts) == 0 {
-			return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
-				Status:    fiber.StatusNotFound,
-				Exception: errors.New("Not change room"),
-			}
+			return LTIAttemptCreateOutputDTO{}, jsonrpc.NewRpcError("not_found_room", "not change room")
 		}
 		otherAttempt := otherAttempts[0]
 		attempt.PNETServerID = otherAttempt.PNETServerID
@@ -135,10 +135,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 					err,
 				),
 			)
-			return LTIAttemptCreateOutputDTO{}, utils.FiberValidationException{
-				Status:    fiber.StatusNotFound,
-				Exception: errors.New("Not created room"),
-			}
+			return LTIAttemptCreateOutputDTO{}, jsonrpc.NewRpcError("not_found_room", "not created room")
 		}
 		attempt.RoomID = &roomEntity.ID
 	}

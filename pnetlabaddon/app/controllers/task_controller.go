@@ -3,8 +3,8 @@ package controllers
 import (
 	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gitlab.com/a10869/api-modules/shared/logs"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 // PNETServerPing Пинг в core-backend для синхронизации попыток.
@@ -14,15 +14,13 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /v1/task/pnet-server-ping [post]
-func PNETServerPing(c *fiber.Ctx) error {
+// @Router /pnet-lab-addon/api/v1/task/pnet-server-ping [post]
+func PNETServerPing(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return utils.FiberValidationException{
-			Status:    fiber.StatusInternalServerError,
-			Exception: err,
-		}
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	}
 	defer container.Close()
 
@@ -30,10 +28,7 @@ func PNETServerPing(c *fiber.Ctx) error {
 	err = client.Execute()
 
 	if err != nil {
-		return utils.FiberValidationException{
-			Status:    fiber.StatusInternalServerError,
-			Exception: err,
-		}
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	}
-	return c.Status(fiber.StatusNoContent).JSON(fiber.Map{})
+	return ctx.Status(fiber.StatusNoContent).JSON(fiber.Map{"result": true})
 }

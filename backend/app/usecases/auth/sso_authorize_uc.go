@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fmt"
 
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+
 	"github.com/rs/zerolog"
 
 	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type SSOAuthorizeInputDTO struct {
@@ -24,6 +25,13 @@ type SSOAuthorizeInputDTO struct {
 	Extra        string `json:"extra"`
 }
 
+type SSOAuthorizeRequest struct {
+	JSONRPC string               `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string               `json:"method" default:"sso.authorize" required:"true"`
+	Params  SSOAuthorizeInputDTO `json:"params,omitempty"`
+	ID      string               `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type SSOAuthorizeOutputDTO struct {
 	RedirectUri string `json:"redirect_uri"`
 	Code        string `json:"code"`
@@ -36,14 +44,22 @@ type SSOAuthorizeOutputDTO struct {
 	Extra       string `json:"extra"`
 }
 
-type SSOAuthorizeResponse = response.Response[SSOAuthorizeOutputDTO]
+type SSOAuthorizeResponse struct {
+	JSONRPC string                `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  SSOAuthorizeOutputDTO `json:"result,omitempty"`
+	Error   interface{}           `json:"error,omitempty"`
+	ID      string                `json:"id,omitempty" default:"1" required:"true"`
+}
 
 const (
 	SSOAuthorizeResponseType = "code"
 )
 
 var (
-	SSOAuthorizeUCRoles = errors.New("You cannot use SSO with this role")
+	SSOAuthorizeUCRoles = jsonrpc.NewRpcError(
+		"not_access_sso_with_current_role",
+		"you cannot use SSO with this role",
+	)
 )
 
 type SSOAuthorizeUC struct {

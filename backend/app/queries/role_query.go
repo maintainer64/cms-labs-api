@@ -1,14 +1,13 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
-	fiber "github.com/gofiber/fiber/v2"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
 	gorm "gorm.io/gorm"
 )
 
@@ -18,7 +17,7 @@ type RoleQueries struct {
 }
 
 var (
-	RoleNotFoundError = errors.New("Role not found")
+	RoleNotFoundError = jsonrpc.NewRpcError("role_not_found", "role not found")
 )
 
 func (q *RoleQueries) GetRolesByUserId(userId uint) ([]models.Role, error) {
@@ -123,17 +122,13 @@ func (q *RoleQueries) SetByServerId(serverId uint, roleIds []uint) error {
 
 func (q *RoleQueries) GetByCode(code string) (models.Role, error) {
 	var entity models.Role
-	err := utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: RoleNotFoundError,
-	}
 	q.Logger.Info().Msg(fmt.Sprintf("RoleQueries: get role by code=%+v", code))
 	if code == "" {
-		return entity, err
+		return entity, RoleNotFoundError
 	}
 	q.DB.Where("code = ?", code).Limit(1).Find(&entity)
 	if entity.Code != code {
-		return entity, err
+		return entity, RoleNotFoundError
 	}
 	return entity, nil
 }

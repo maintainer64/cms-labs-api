@@ -14,9 +14,9 @@
         },
         "version": "1.0"
     },
-    "basePath": "/pnet-lab-addon/api",
+    "basePath": "/",
     "paths": {
-        "/v1/sso/login": {
+        "/pnet-lab-addon/api/v1/sso/login": {
             "get": {
                 "description": "Отправка пользователя с параметрами на сервер аутентификации.",
                 "consumes": [
@@ -50,7 +50,7 @@
                 }
             }
         },
-        "/v1/sso/openid": {
+        "/pnet-lab-addon/api/v1/sso/openid": {
             "get": {
                 "description": "Дополнительные параметры:",
                 "consumes": [
@@ -102,7 +102,7 @@
                 }
             }
         },
-        "/v1/task/pnet-server-ping": {
+        "/pnet-lab-addon/api/v1/task/pnet-server-ping": {
             "post": {
                 "description": "Пинг в core-backend для синхронизации попыток.",
                 "consumes": [

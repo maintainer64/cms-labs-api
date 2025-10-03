@@ -12,7 +12,7 @@ import (
 
 func TestV1ServiceCardCreate(t *testing.T) {
 	description := "create service card"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -26,10 +26,9 @@ func TestV1ServiceCardCreate(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/service-card/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "service_card.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.ServiceCardEditResponse{}
@@ -49,7 +48,7 @@ func TestV1ServiceCardCreate(t *testing.T) {
 
 func TestV1ServiceCardList(t *testing.T) {
 	description := "list service cards"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -73,10 +72,9 @@ func TestV1ServiceCardList(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/service-card/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "service_card.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.ServiceCardListResponse{}
@@ -95,7 +93,7 @@ func TestV1ServiceCardList(t *testing.T) {
 
 func TestV1ServiceCardListPagination(t *testing.T) {
 	description := "list service cards with pagination"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -117,10 +115,9 @@ func TestV1ServiceCardListPagination(t *testing.T) {
 		Offset: 1,
 	}
 
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/service-card/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "service_card.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.ServiceCardListResponse{}
@@ -134,7 +131,7 @@ func TestV1ServiceCardListPagination(t *testing.T) {
 
 func TestV1ServiceCardListEmpty(t *testing.T) {
 	description := "list empty service cards"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
@@ -145,10 +142,9 @@ func TestV1ServiceCardListEmpty(t *testing.T) {
 		Limit:  10,
 	}
 
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/service-card/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "service_card.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.ServiceCardListResponse{}
@@ -161,7 +157,7 @@ func TestV1ServiceCardListEmpty(t *testing.T) {
 
 func TestV1ServiceCardGet(t *testing.T) {
 	description := "get service card"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
@@ -183,10 +179,9 @@ func TestV1ServiceCardGet(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/service-card/get",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "service_card.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.ServiceCardGetResponse{}
@@ -203,7 +198,7 @@ func TestV1ServiceCardGet(t *testing.T) {
 
 func TestV1ServiceCardGetNotFound(t *testing.T) {
 	description := "get non-existent service card"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
@@ -214,11 +209,10 @@ func TestV1ServiceCardGetNotFound(t *testing.T) {
 		ID: 9999,
 	}
 
-	expectedCode := 404 // Assuming 404 is returned for not found
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/service-card/get",
-		Body:          FiberRequestPayload(input),
+	expectedCode := 500 // Assuming 404 is returned for not found
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "service_card.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -228,7 +222,7 @@ func TestV1ServiceCardGetNotFound(t *testing.T) {
 
 func TestV1ServiceCardDelete(t *testing.T) {
 	description := "delete service card"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 
 	// Clear Table
@@ -250,10 +244,9 @@ func TestV1ServiceCardDelete(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/service-card/delete",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "service_card.delete",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.ServiceCardDeleteResponse{}
@@ -269,9 +262,9 @@ func TestV1ServiceCardDelete(t *testing.T) {
 
 func TestV1NotFound(t *testing.T) {
 	description := "not found route"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	expectedCode := 404
-	statusCode, body := f.Request(&FiberTestHttpRequest{
+	statusCode, body := f.Request(&TestHttpRequest{
 		Method: "POST",
 		Route:  "/api/v1/not-found-route",
 		Body:   FiberRequestPayload(""),
@@ -280,6 +273,5 @@ func TestV1NotFound(t *testing.T) {
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.True(t, bodyModel["error"].(bool), description)
-	assert.Equal(t, "sorry, endpoint is not found", bodyModel["msg"].(string), description)
+	assert.Contains(t, body, "Entrypoint is incorrect", description)
 }

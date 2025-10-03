@@ -5,8 +5,6 @@ import (
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
-
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -26,7 +24,19 @@ type UserPasswordChangeOutputDTO struct {
 	Id uint `json:"id"`
 }
 
-type UserPasswordRecoverResponse = response.Response[UserPasswordChangeOutputDTO]
+type UserPasswordChangeRequest struct {
+	JSONRPC string                     `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                     `json:"method" default:"user.password_change" required:"true"`
+	Params  UserPasswordChangeInputDTO `json:"params,omitempty"`
+	ID      string                     `json:"id,omitempty" default:"1" required:"true"`
+}
+
+type UserPasswordChangeResponse struct {
+	JSONRPC string                      `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  UserPasswordChangeOutputDTO `json:"result,omitempty"`
+	Error   interface{}                 `json:"error,omitempty"`
+	ID      string                      `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *UserPasswordRecoverUC) SetContext(user *cms_client.SSOTokenPublicData) *UserPasswordRecoverUC {
 	u.User = user

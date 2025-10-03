@@ -1,4 +1,4 @@
-basePath: /api
+basePath: /
 definitions:
   auth.JWK:
     properties:
@@ -22,10 +22,46 @@ definitions:
       password:
         type: string
     type: object
+  auth.RenewManagerCredentialsRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.login
+        type: string
+      params:
+        $ref: '#/definitions/auth.RenewManagerCredentialsInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   auth.RenewManagerInputDTO:
     properties:
       refresh_token:
         type: string
+    type: object
+  auth.RenewManagerRefreshRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.token_refresh
+        type: string
+      params:
+        $ref: '#/definitions/auth.RenewManagerInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
     type: object
   auth.SSOAuthorizeInputDTO:
     properties:
@@ -69,17 +105,31 @@ definitions:
       state:
         type: string
     type: object
+  auth.SSOAuthorizeRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: sso.authorize
+        type: string
+      params:
+        $ref: '#/definitions/auth.SSOAuthorizeInputDTO'
+    type: object
   auth.SSOAuthorizeResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/auth.SSOAuthorizeOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   auth.SSOError:
     properties:
@@ -183,15 +233,28 @@ definitions:
     type: object
   auth.SwaggerSSOTokenResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/auth.SwaggerSSOToken'
-    required:
-    - error
-    - msg
+    type: object
+  auth.UserLogoutRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.logout
+        type: string
+      params: {}
     type: object
   auth.UserPasswordChangeInputDTO:
     properties:
@@ -207,17 +270,31 @@ definitions:
       id:
         type: integer
     type: object
-  auth.UserPasswordRecoverResponse:
+  auth.UserPasswordChangeRequest:
     properties:
-      error:
-        type: boolean
-      msg:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.password_change
+        type: string
+      params:
+        $ref: '#/definitions/auth.UserPasswordChangeInputDTO'
+    type: object
+  auth.UserPasswordChangeResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/auth.UserPasswordChangeOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   external.AttemptDTO:
     properties:
@@ -253,17 +330,31 @@ definitions:
       count:
         type: integer
     type: object
+  external.PNETServerPingRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.ping
+        type: string
+      params:
+        $ref: '#/definitions/external.PNETServerPingInputDTO'
+    type: object
   external.PNETServerPingResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/external.PNETServerPingOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   models.CurlRequest:
     properties:
@@ -682,6 +773,42 @@ definitions:
     - group_name
     - updated_at
     type: object
+  queries.CurlRequestQueriesListDTO:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+    type: object
+  queries.PNETServerQueriesListDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      order_by:
+        description: |-
+          The type of orderBy
+          enum: createdAt,unitRate,lastCountUsers
+        type: string
+      search:
+        type: string
+      status:
+        description: |-
+          The type of status
+          enum: all,active
+        type: string
+      types:
+        items:
+          type: string
+        type: array
+    type: object
   queries.RoundQueuePoolPnetListItem:
     properties:
       connected_at:
@@ -708,51 +835,144 @@ definitions:
     required:
     - model
     type: object
+  round_queue_pool_pnet.RoundQueuePoolPnetListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server_queue.list
+        type: string
+      params: {}
+    type: object
   round_queue_pool_pnet.RoundQueuePoolPnetListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO:
     type: object
+  round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server_queue.upsert
+        type: string
+      params: {}
+    type: object
   round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   types.UserStore:
     additionalProperties: true
     type: object
-  usecases.CurlRequestDeleteInputDTO:
+  types.UserStoreGetRequest:
     properties:
       id:
-        type: integer
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.global_store_get
+        type: string
+      params: {}
+    type: object
+  types.UserStoreGetResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/types.UserStore'
+    type: object
+  types.UserStoreSetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.global_store_set
+        type: string
+      params:
+        $ref: '#/definitions/types.UserStore'
+    type: object
+  types.UserStoreSetResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        type: boolean
+    type: object
+  usecases.CurlRequestDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: curl_request.delete
+        type: string
+      params:
+        $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
     type: object
   usecases.CurlRequestDeleteResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
+        $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.CurlRequestEditInputDTO:
     properties:
@@ -785,17 +1005,38 @@ definitions:
       id:
         type: integer
     type: object
+  usecases.CurlRequestEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: curl_request.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.CurlRequestEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.CurlRequestEditOutputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.CurlRequestGetInputDTO:
     properties:
@@ -807,30 +1048,38 @@ definitions:
       model:
         $ref: '#/definitions/models.CurlRequest'
     type: object
+  usecases.CurlRequestGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: curl_request.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.CurlRequestGetInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.CurlRequestGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.CurlRequestGetOutputDTO'
     required:
-    - error
-    - msg
-    type: object
-  usecases.CurlRequestListInputDTO:
-    properties:
-      ids:
-        items:
-          type: integer
-        type: array
-      limit:
-        type: integer
-      offset:
-        type: integer
-      search:
-        type: string
+    - id
+    - jsonrpc
     type: object
   usecases.CurlRequestListOutputDTO:
     properties:
@@ -844,17 +1093,38 @@ definitions:
     - model
     - total_count
     type: object
+  usecases.CurlRequestListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: curl_request.list
+        type: string
+      params:
+        $ref: '#/definitions/queries.CurlRequestQueriesListDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.CurlRequestListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.CurlRequestListOutputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.LTIAttemptCreateInputDTO:
     properties:
@@ -876,34 +1146,76 @@ definitions:
       room_number:
         type: integer
     type: object
+  usecases.LTIAttemptCreateRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_attempt.create
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptCreateInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.LTIAttemptCreateResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIAttemptCreateOutputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.LTIAttemptDeleteInputDTO:
     properties:
       id:
         type: integer
     type: object
+  usecases.LTIAttemptDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_attempt.delete
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptCreateInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.LTIAttemptDeleteResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIAttemptDeleteInputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.LTIAttemptEditInputDTO:
     properties:
@@ -921,17 +1233,38 @@ definitions:
       id:
         type: integer
     type: object
+  usecases.LTIAttemptEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_attempt.update
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptEditInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.LTIAttemptEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIAttemptEditOutputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.LTIAttemptGetInputDTO:
     properties:
@@ -943,17 +1276,38 @@ definitions:
       model:
         $ref: '#/definitions/models.LTIAttempt'
     type: object
+  usecases.LTIAttemptGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_attempt.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptGetInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.LTIAttemptGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIAttemptGetOutputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.LTIAttemptListInputDTO:
     properties:
@@ -975,34 +1329,69 @@ definitions:
     required:
     - model
     type: object
+  usecases.LTIAttemptListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_attempt.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptListInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
   usecases.LTIAttemptListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIAttemptListOutputDTO'
     required:
-    - error
-    - msg
+    - id
+    - jsonrpc
     type: object
   usecases.LTIFormDeleteInputDTO:
     properties:
       id:
         type: integer
     type: object
+  usecases.LTIFormDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.delete
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptGetInputDTO'
+    type: object
   usecases.LTIFormDeleteResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIFormDeleteInputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.LTIFormEditInputDTO:
     properties:
@@ -1041,17 +1430,31 @@ definitions:
       id:
         type: integer
     type: object
+  usecases.LTIFormEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIFormEditInputDTO'
+    type: object
   usecases.LTIFormEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIFormEditOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.LTIFormGetInputDTO:
     properties:
@@ -1063,17 +1466,31 @@ definitions:
       model:
         $ref: '#/definitions/models.LTIForm'
     type: object
+  usecases.LTIFormGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIFormGetInputDTO'
+    type: object
   usecases.LTIFormGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIFormGetOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.LTIFormListInputDTO:
     properties:
@@ -1084,29 +1501,31 @@ definitions:
       search:
         type: string
     type: object
-  usecases.LTIFormListOutputDTO:
+  usecases.LTIFormListRequest:
     properties:
-      model:
-        items:
-          $ref: '#/definitions/models.LTIFormListItem'
-        type: array
-      total_count:
-        type: integer
-    required:
-    - model
-    - total_count
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIFormListInputDTO'
     type: object
   usecases.LTIFormListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.LTIFormListOutputDTO'
-    required:
-    - error
-    - msg
+        $ref: '#/definitions/usecases.LTIFormGetOutputDTO'
     type: object
   usecases.LTIFormListSSOOutputDTO:
     properties:
@@ -1117,34 +1536,61 @@ definitions:
     required:
     - model
     type: object
+  usecases.LTIFormListSSORequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.sso_list
+        type: string
+      params: {}
+    type: object
   usecases.LTIFormListSSOResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIFormListSSOOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.LTIRoutingDeleteInputDTO:
     properties:
       id:
         type: integer
     type: object
+  usecases.LTIRoutingDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_routing.delete
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIRoutingDeleteInputDTO'
+    type: object
   usecases.LTIRoutingDeleteResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIRoutingDeleteInputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.LTIRoutingEditInputDTO:
     properties:
@@ -1184,17 +1630,31 @@ definitions:
       id:
         type: integer
     type: object
+  usecases.LTIRoutingEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_routing.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIRoutingEditInputDTO'
+    type: object
   usecases.LTIRoutingEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIRoutingEditOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.LTIRoutingGetInputDTO:
     properties:
@@ -1206,17 +1666,31 @@ definitions:
       model:
         $ref: '#/definitions/models.LTIRouting'
     type: object
+  usecases.LTIRoutingGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_routing.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIRoutingGetInputDTO'
+    type: object
   usecases.LTIRoutingGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIRoutingGetOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.LTIRoutingListInputDTO:
     properties:
@@ -1239,34 +1713,62 @@ definitions:
     - model
     - total_count
     type: object
+  usecases.LTIRoutingListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_routing.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIRoutingListInputDTO'
+    type: object
   usecases.LTIRoutingListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.LTIRoutingListOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.PNETServerDeleteInputDTO:
     properties:
       id:
         type: integer
     type: object
+  usecases.PNETServerDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.PNETServerDeleteInputDTO'
+    type: object
   usecases.PNETServerDeleteResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.PNETServerDeleteInputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.PNETServerEditInputDTO:
     properties:
@@ -1302,17 +1804,31 @@ definitions:
       id:
         type: integer
     type: object
+  usecases.PNETServerEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.PNETServerEditInputDTO'
+    type: object
   usecases.PNETServerEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.PNETServerEditOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.PNETServerGetInputDTO:
     properties:
@@ -1328,40 +1844,31 @@ definitions:
           type: integer
         type: array
     type: object
+  usecases.PNETServerGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.PNETServerGetInputDTO'
+    type: object
   usecases.PNETServerGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.PNETServerGetOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.PNETServerListInputDTO:
-    properties:
-      limit:
-        type: integer
-      offset:
-        type: integer
-      order_by:
-        description: |-
-          The type of orderBy
-          enum: createdAt,unitRate,lastCountUsers
-        type: string
-      search:
-        type: string
-      status:
-        description: |-
-          The type of status
-          enum: all,active
-        type: string
-      types:
-        items:
-          type: string
-        type: array
     type: object
   usecases.PNETServerListModel:
     properties:
@@ -1386,17 +1893,31 @@ definitions:
     - model
     - total_count
     type: object
+  usecases.PNETServerListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.list
+        type: string
+      params:
+        $ref: '#/definitions/queries.PNETServerQueriesListDTO'
+    type: object
   usecases.PNETServerListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.PNETServerListOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.RoleDeleteInputDTO:
     properties:
@@ -1405,17 +1926,31 @@ definitions:
     required:
     - id
     type: object
+  usecases.RoleDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: role.delete
+        type: string
+      params:
+        $ref: '#/definitions/usecases.RoleDeleteInputDTO'
+    type: object
   usecases.RoleDeleteResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.RoleDeleteInputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.RoleEditInputDTO:
     properties:
@@ -1426,17 +1961,36 @@ definitions:
       name:
         type: string
     type: object
+  usecases.RoleEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.RoleEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: role.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.RoleEditInputDTO'
+    type: object
   usecases.RoleEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.UserEditOutputDTO'
-    required:
-    - error
-    - msg
+        $ref: '#/definitions/usecases.RoleEditOutputDTO'
     type: object
   usecases.RoleListInputDTO:
     type: object
@@ -1452,34 +2006,62 @@ definitions:
     - model
     - total_count
     type: object
+  usecases.RoleListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: role.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.RoleListInputDTO'
+    type: object
   usecases.RoleListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.RoleListOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.ServiceCardDeleteInputDTO:
     properties:
       id:
         type: integer
     type: object
+  usecases.ServiceCardDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ServiceCardDeleteInputDTO'
+    type: object
   usecases.ServiceCardDeleteResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.ServiceCardDeleteInputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.ServiceCardEditInputDTO:
     properties:
@@ -1498,22 +2080,31 @@ definitions:
       url:
         type: string
     type: object
-  usecases.ServiceCardEditOutputDTO:
+  usecases.ServiceCardEditRequest:
     properties:
       id:
-        type: integer
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ServiceCardEditInputDTO'
     type: object
   usecases.ServiceCardEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.ServiceCardEditOutputDTO'
-    required:
-    - error
-    - msg
+        $ref: '#/definitions/usecases.ServiceCardDeleteInputDTO'
     type: object
   usecases.ServiceCardGetInputDTO:
     properties:
@@ -1525,17 +2116,31 @@ definitions:
       model:
         $ref: '#/definitions/models.ServiceCard'
     type: object
+  usecases.ServiceCardGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ServiceCardGetInputDTO'
+    type: object
   usecases.ServiceCardGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.ServiceCardGetOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.ServiceCardListInputDTO:
     properties:
@@ -1558,17 +2163,31 @@ definitions:
     - model
     - total_count
     type: object
+  usecases.ServiceCardListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ServiceCardListInputDTO'
+    type: object
   usecases.ServiceCardListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.ServiceCardListOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.UserEditInputDTO:
     properties:
@@ -1599,17 +2218,31 @@ definitions:
       id:
         type: integer
     type: object
+  usecases.UserEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.UserEditInputDTO'
+    type: object
   usecases.UserEditResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.UserEditOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.UserGetInputDTO:
     properties:
@@ -1625,17 +2258,31 @@ definitions:
           type: integer
         type: array
     type: object
+  usecases.UserGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.UserGetInputDTO'
+    type: object
   usecases.UserGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.UserGetOutputDTO'
-    required:
-    - error
-    - msg
     type: object
   usecases.UserListInputDTO:
     properties:
@@ -1673,17 +2320,31 @@ definitions:
     - model
     - total_count
     type: object
+  usecases.UserListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: user.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.UserListInputDTO'
+    type: object
   usecases.UserListResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.UserListOutputDTO'
-    required:
-    - error
-    - msg
     type: object
 info:
   contact:
@@ -1697,31 +2358,7 @@ info:
   title: API
   version: "1.0"
 paths:
-  /v1/curl-request/delete:
-    post:
-      consumes:
-      - application/json
-      description: 'Delete pnet_server. Roles: [admin]'
-      parameters:
-      - description: curl_request_id
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.CurlRequestDeleteResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: delete curl_request
-      tags:
-      - CurlRequest
-  /v1/curl-request/execute:
+  /api/v1/curl-request/execute:
     post:
       consumes:
       - application/json
@@ -1745,9 +2382,33 @@ paths:
           description: OK
       summary: execute request
       tags:
-      - CurlRequest
+      - curl_request
       - EXTERNAL
-  /v1/curl-request/get:
+  /api/v1/rpc/curlRequest.delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete pnet_server. Roles: [admin]'
+      parameters:
+      - description: curl_request_id
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.CurlRequestDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.CurlRequestDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete curl_request
+      tags:
+      - curl_request
+  /api/v1/rpc/curlRequest.get:
     post:
       consumes:
       - application/json
@@ -1758,7 +2419,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.CurlRequestGetInputDTO'
+          $ref: '#/definitions/usecases.CurlRequestGetRequest'
       produces:
       - application/json
       responses:
@@ -1770,8 +2431,8 @@ paths:
       - ApiKeyAuth: []
       summary: get curl_request
       tags:
-      - CurlRequest
-  /v1/curl-request/list:
+      - curl_request
+  /api/v1/rpc/curlRequest.list:
     post:
       consumes:
       - application/json
@@ -1782,7 +2443,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.CurlRequestListInputDTO'
+          $ref: '#/definitions/usecases.CurlRequestListRequest'
       produces:
       - application/json
       responses:
@@ -1794,8 +2455,8 @@ paths:
       - ApiKeyAuth: []
       summary: list pnet_server
       tags:
-      - CurlRequest
-  /v1/curl-request/upsert:
+      - curl_request
+  /api/v1/rpc/curlRequest.upsert:
     post:
       consumes:
       - application/json
@@ -1803,10 +2464,10 @@ paths:
       parameters:
       - description: curl_request form info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
+          $ref: '#/definitions/usecases.CurlRequestEditRequest'
       produces:
       - application/json
       responses:
@@ -1818,48 +2479,8 @@ paths:
       - ApiKeyAuth: []
       summary: create curl_request
       tags:
-      - CurlRequest
-  /v1/global-store:
-    get:
-      consumes:
-      - application/json
-      description: Global store of user get
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.UserStore'
-      security:
-      - ApiKeyAuth: []
-      summary: get store by user
-      tags:
-      - Store
-    post:
-      consumes:
-      - application/json
-      description: Global store of user get
-      parameters:
-      - description: store of create
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/types.UserStore'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.UserStore'
-      security:
-      - ApiKeyAuth: []
-      summary: set store by user
-      tags:
-      - Store
-  /v1/lti-attempt/create:
+      - curl_request
+  /api/v1/rpc/lti_attempt.create:
     post:
       consumes:
       - application/json
@@ -1870,7 +2491,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIAttemptCreateInputDTO'
+          $ref: '#/definitions/usecases.LTIAttemptCreateRequest'
       produces:
       - application/json
       responses:
@@ -1882,8 +2503,8 @@ paths:
       - ApiKeyAuth: []
       summary: create lti_attempt
       tags:
-      - LTIAttempt
-  /v1/lti-attempt/delete:
+      - lti_attempt
+  /api/v1/rpc/lti_attempt.delete:
     post:
       consumes:
       - application/json
@@ -1894,7 +2515,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIAttemptDeleteInputDTO'
+          $ref: '#/definitions/usecases.LTIAttemptDeleteRequest'
       produces:
       - application/json
       responses:
@@ -1906,32 +2527,8 @@ paths:
       - ApiKeyAuth: []
       summary: delete lti_attempt
       tags:
-      - LTIAttempt
-  /v1/lti-attempt/edit:
-    post:
-      consumes:
-      - application/json
-      description: 'Edit lti_attempt. Roles: [admin, instructor]'
-      parameters:
-      - description: lti_attempt form info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.LTIAttemptEditInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.LTIAttemptEditResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: edit lti_attempt
-      tags:
-      - LTIAttempt
-  /v1/lti-attempt/get:
+      - lti_attempt
+  /api/v1/rpc/lti_attempt.get:
     post:
       consumes:
       - application/json
@@ -1942,7 +2539,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIAttemptGetInputDTO'
+          $ref: '#/definitions/usecases.LTIAttemptGetRequest'
       produces:
       - application/json
       responses:
@@ -1954,8 +2551,8 @@ paths:
       - ApiKeyAuth: []
       summary: get lti_attempt
       tags:
-      - LTIAttempt
-  /v1/lti-attempt/list:
+      - lti_attempt
+  /api/v1/rpc/lti_attempt.list:
     post:
       consumes:
       - application/json
@@ -1966,7 +2563,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIAttemptListInputDTO'
+          $ref: '#/definitions/usecases.LTIAttemptListRequest'
       produces:
       - application/json
       responses:
@@ -1978,8 +2575,32 @@ paths:
       - ApiKeyAuth: []
       summary: list lti_attempt
       tags:
-      - LTIAttempt
-  /v1/lti-form/delete:
+      - lti_attempt
+  /api/v1/rpc/lti_attempt.update:
+    post:
+      consumes:
+      - application/json
+      description: 'Edit lti_attempt. Roles: [admin, instructor]'
+      parameters:
+      - description: lti_attempt form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: edit lti_attempt
+      tags:
+      - lti_attempt
+  /api/v1/rpc/lti_form.delete:
     post:
       consumes:
       - application/json
@@ -1987,10 +2608,10 @@ paths:
       parameters:
       - description: lti_form id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormDeleteInputDTO'
+          $ref: '#/definitions/usecases.LTIFormDeleteRequest'
       produces:
       - application/json
       responses:
@@ -2002,8 +2623,8 @@ paths:
       - ApiKeyAuth: []
       summary: delete lti_form
       tags:
-      - LTIForm
-  /v1/lti-form/get:
+      - lti_form
+  /api/v1/rpc/lti_form.get:
     post:
       consumes:
       - application/json
@@ -2011,10 +2632,10 @@ paths:
       parameters:
       - description: lti_form id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormGetInputDTO'
+          $ref: '#/definitions/usecases.LTIFormGetRequest'
       produces:
       - application/json
       responses:
@@ -2026,8 +2647,8 @@ paths:
       - ApiKeyAuth: []
       summary: get lti_form
       tags:
-      - LTIForm
-  /v1/lti-form/list:
+      - lti_form
+  /api/v1/rpc/lti_form.list:
     post:
       consumes:
       - application/json
@@ -2035,10 +2656,10 @@ paths:
       parameters:
       - description: lti_form list info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormListInputDTO'
+          $ref: '#/definitions/usecases.LTIFormListRequest'
       produces:
       - application/json
       responses:
@@ -2050,12 +2671,19 @@ paths:
       - ApiKeyAuth: []
       summary: list lti_form
       tags:
-      - LTIForm
-  /v1/lti-form/sso:
-    get:
+      - lti_form
+  /api/v1/rpc/lti_form.sso_list_get:
+    post:
       consumes:
       - application/json
       description: 'List sso url. Roles: [none]'
+      parameters:
+      - description: filter
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIFormListSSORequest'
       produces:
       - application/json
       responses:
@@ -2067,8 +2695,8 @@ paths:
       - ApiKeyAuth: []
       summary: list sso url
       tags:
-      - LTIForm
-  /v1/lti-form/upsert:
+      - lti_form
+  /api/v1/rpc/lti_form.upsert:
     post:
       consumes:
       - application/json
@@ -2076,10 +2704,10 @@ paths:
       parameters:
       - description: lti_form form info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormEditInputDTO'
+          $ref: '#/definitions/usecases.LTIFormEditRequest'
       produces:
       - application/json
       responses:
@@ -2091,8 +2719,8 @@ paths:
       - ApiKeyAuth: []
       summary: create lti_form
       tags:
-      - LTIForm
-  /v1/lti-routing/delete:
+      - lti_form
+  /api/v1/rpc/lti_routing.delete:
     post:
       consumes:
       - application/json
@@ -2100,10 +2728,10 @@ paths:
       parameters:
       - description: lti_routing id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIRoutingDeleteInputDTO'
+          $ref: '#/definitions/usecases.LTIRoutingDeleteRequest'
       produces:
       - application/json
       responses:
@@ -2115,8 +2743,8 @@ paths:
       - ApiKeyAuth: []
       summary: delete lti_routing
       tags:
-      - LTIRouting
-  /v1/lti-routing/get:
+      - lti_routing
+  /api/v1/rpc/lti_routing.get:
     post:
       consumes:
       - application/json
@@ -2124,10 +2752,10 @@ paths:
       parameters:
       - description: lti_routing id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIRoutingGetInputDTO'
+          $ref: '#/definitions/usecases.LTIRoutingGetRequest'
       produces:
       - application/json
       responses:
@@ -2139,8 +2767,8 @@ paths:
       - ApiKeyAuth: []
       summary: get lti_routing
       tags:
-      - LTIRouting
-  /v1/lti-routing/list:
+      - lti_routing
+  /api/v1/rpc/lti_routing.list:
     post:
       consumes:
       - application/json
@@ -2151,7 +2779,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIRoutingListInputDTO'
+          $ref: '#/definitions/usecases.LTIRoutingListRequest'
       produces:
       - application/json
       responses:
@@ -2163,8 +2791,8 @@ paths:
       - ApiKeyAuth: []
       summary: list lti_routing
       tags:
-      - LTIRouting
-  /v1/lti-routing/upsert:
+      - lti_routing
+  /api/v1/rpc/lti_routing.upsert:
     post:
       consumes:
       - application/json
@@ -2172,10 +2800,10 @@ paths:
       parameters:
       - description: lti_routing form info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIRoutingEditInputDTO'
+          $ref: '#/definitions/usecases.LTIRoutingEditRequest'
       produces:
       - application/json
       responses:
@@ -2187,42 +2815,78 @@ paths:
       - ApiKeyAuth: []
       summary: create lti_routing
       tags:
-      - LTIRouting
-  /v1/pnet-server-queue/list:
+      - lti_routing
+  /api/v1/rpc/role.delete:
     post:
       consumes:
       - application/json
-      description: 'List pnet_server_queue. Roles: [admin, instructor]'
+      description: 'Delete role. Roles: [admin]'
+      parameters:
+      - description: pnet_server id
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.RoleDeleteRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse'
+            $ref: '#/definitions/usecases.RoleDeleteResponse'
       security:
       - ApiKeyAuth: []
-      summary: list pnet_server_queue
+      summary: delete role
       tags:
-      - PNETServerQueue
-  /v1/pnet-server-queue/upsert:
+      - role
+  /api/v1/rpc/role.list:
     post:
       consumes:
       - application/json
-      description: 'Create pnet_server_queue. Roles: [admin, instructor]'
+      description: List user. Roles[admin, instructor, student, any]
+      parameters:
+      - description: user list info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.RoleListRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse'
+            $ref: '#/definitions/usecases.RoleListResponse'
+      summary: list role
+      tags:
+      - role
+  /api/v1/rpc/role.upsert:
+    post:
+      consumes:
+      - application/json
+      description: Upset role. Roles[admin]
+      parameters:
+      - description: user form info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.RoleEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.RoleEditResponse'
       security:
       - ApiKeyAuth: []
-      summary: create pnet_server_queue
+      summary: upsert role
       tags:
-      - PNETServerQueue
-  /v1/pnet-server/delete:
+      - role
+  /api/v1/rpc/server.delete:
     post:
       consumes:
       - application/json
@@ -2230,10 +2894,10 @@ paths:
       parameters:
       - description: pnet_server id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerDeleteInputDTO'
+          $ref: '#/definitions/usecases.PNETServerDeleteRequest'
       produces:
       - application/json
       responses:
@@ -2245,8 +2909,8 @@ paths:
       - ApiKeyAuth: []
       summary: delete pnet_server
       tags:
-      - PNETServer
-  /v1/pnet-server/get:
+      - server
+  /api/v1/rpc/server.get:
     post:
       consumes:
       - application/json
@@ -2254,10 +2918,10 @@ paths:
       parameters:
       - description: pnet_server id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerGetInputDTO'
+          $ref: '#/definitions/usecases.PNETServerGetRequest'
       produces:
       - application/json
       responses:
@@ -2269,8 +2933,8 @@ paths:
       - ApiKeyAuth: []
       summary: get pnet_server
       tags:
-      - PNETServer
-  /v1/pnet-server/list:
+      - server
+  /api/v1/rpc/server.list:
     post:
       consumes:
       - application/json
@@ -2278,10 +2942,10 @@ paths:
       parameters:
       - description: pnet_server list info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerListInputDTO'
+          $ref: '#/definitions/usecases.PNETServerListRequest'
       produces:
       - application/json
       responses:
@@ -2293,8 +2957,8 @@ paths:
       - ApiKeyAuth: []
       summary: list pnet_server
       tags:
-      - PNETServer
-  /v1/pnet-server/ping:
+      - server
+  /api/v1/rpc/server.ping:
     post:
       consumes:
       - application/json
@@ -2302,10 +2966,10 @@ paths:
       parameters:
       - description: pnet_server id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/external.PNETServerPingInputDTO'
+          $ref: '#/definitions/external.PNETServerPingRequest'
       - description: Basic-токен, созданный клиентом
         in: header
         name: Authorization
@@ -2320,9 +2984,9 @@ paths:
             $ref: '#/definitions/external.PNETServerPingResponse'
       summary: ping from pnet_server
       tags:
-      - PNETServer
+      - server
       - EXTERNAL
-  /v1/pnet-server/upsert:
+  /api/v1/rpc/server.upsert:
     post:
       consumes:
       - application/json
@@ -2330,10 +2994,10 @@ paths:
       parameters:
       - description: pnet_server form info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerEditInputDTO'
+          $ref: '#/definitions/usecases.PNETServerEditRequest'
       produces:
       - application/json
       responses:
@@ -2345,78 +3009,56 @@ paths:
       - ApiKeyAuth: []
       summary: create pnet_server
       tags:
-      - PNETServer
-  /v1/role/delete:
+      - server
+  /api/v1/rpc/server_queue.list:
     post:
       consumes:
       - application/json
-      description: 'Delete role. Roles: [admin]'
+      description: 'List pnet_server_queue. Roles: [admin, instructor]'
       parameters:
-      - description: pnet_server id
+      - description: request
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.RoleDeleteInputDTO'
+          $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.RoleDeleteResponse'
+            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse'
       security:
       - ApiKeyAuth: []
-      summary: delete role
+      summary: list pnet_server_queue
       tags:
-      - Role
-  /v1/role/list:
+      - server_queue
+  /api/v1/rpc/server_queue.upsert:
     post:
       consumes:
       - application/json
-      description: List user. Roles[admin, instructor, student, any]
+      description: 'Create pnet_server_queue. Roles: [admin, instructor]'
       parameters:
-      - description: user list info
+      - description: request
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.RoleListInputDTO'
+          $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.RoleListResponse'
-      summary: list role
-      tags:
-      - Role
-  /v1/role/upsert:
-    post:
-      consumes:
-      - application/json
-      description: Upset role. Roles[admin]
-      parameters:
-      - description: user form info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.RoleEditInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.RoleEditResponse'
+            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse'
       security:
       - ApiKeyAuth: []
-      summary: upsert role
+      summary: create pnet_server_queue
       tags:
-      - Role
-  /v1/service-card/delete:
+      - server_queue
+  /api/v1/rpc/service_card.delete:
     post:
       consumes:
       - application/json
@@ -2424,10 +3066,10 @@ paths:
       parameters:
       - description: service_card id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.ServiceCardDeleteInputDTO'
+          $ref: '#/definitions/usecases.ServiceCardDeleteRequest'
       produces:
       - application/json
       responses:
@@ -2439,8 +3081,8 @@ paths:
       - ApiKeyAuth: []
       summary: delete service_card
       tags:
-      - ServiceCard
-  /v1/service-card/get:
+      - service_card
+  /api/v1/rpc/service_card.get:
     post:
       consumes:
       - application/json
@@ -2448,10 +3090,10 @@ paths:
       parameters:
       - description: service_card id
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.ServiceCardGetInputDTO'
+          $ref: '#/definitions/usecases.ServiceCardGetRequest'
       produces:
       - application/json
       responses:
@@ -2463,8 +3105,8 @@ paths:
       - ApiKeyAuth: []
       summary: get service_card
       tags:
-      - ServiceCard
-  /v1/service-card/list:
+      - service_card
+  /api/v1/rpc/service_card.list:
     post:
       consumes:
       - application/json
@@ -2475,7 +3117,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.ServiceCardListInputDTO'
+          $ref: '#/definitions/usecases.ServiceCardListRequest'
       produces:
       - application/json
       responses:
@@ -2487,8 +3129,8 @@ paths:
       - ApiKeyAuth: []
       summary: list service_card
       tags:
-      - ServiceCard
-  /v1/service-card/upsert:
+      - service_card
+  /api/v1/rpc/service_card.upsert:
     post:
       consumes:
       - application/json
@@ -2496,10 +3138,10 @@ paths:
       parameters:
       - description: service_card form info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.ServiceCardEditInputDTO'
+          $ref: '#/definitions/usecases.ServiceCardEditRequest'
       produces:
       - application/json
       responses:
@@ -2511,8 +3153,240 @@ paths:
       - ApiKeyAuth: []
       summary: create service_card
       tags:
-      - ServiceCard
-  /v1/sso/.well-known/openid-configuration:
+      - service_card
+  /api/v1/rpc/sso.authorize:
+    post:
+      consumes:
+      - application/json
+      description: Получение кода авторизации по OpenID.
+      parameters:
+      - description: renew token form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SSOAuthorizeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SSOAuthorizeResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получение кода авторизации по OpenID.
+      tags:
+      - SSO
+  /api/v1/rpc/user.get:
+    post:
+      consumes:
+      - application/json
+      description: get user. Roles[admin, instructor]
+      parameters:
+      - description: user id
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UserGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UserGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get user
+      tags:
+      - user
+  /api/v1/rpc/user.global_store_get:
+    post:
+      consumes:
+      - application/json
+      description: Global store of user get
+      parameters:
+      - description: store of get
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/types.UserStoreGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UserStoreGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get store by user
+      tags:
+      - user
+  /api/v1/rpc/user.global_store_set:
+    post:
+      consumes:
+      - application/json
+      description: Global store of user get
+      parameters:
+      - description: store of create
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/types.UserStoreSetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UserStoreSetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: set store by user
+      tags:
+      - user
+  /api/v1/rpc/user.list:
+    post:
+      consumes:
+      - application/json
+      description: List user. Roles[admin, instructor]
+      parameters:
+      - description: user list info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UserListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UserListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list user
+      tags:
+      - user
+  /api/v1/rpc/user.login:
+    post:
+      consumes:
+      - application/json
+      description: Login by email and password.
+      parameters:
+      - description: credentials form info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RenewManagerCredentialsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
+      summary: login by email and password
+      tags:
+      - user
+  /api/v1/rpc/user.logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout.
+      parameters:
+      - description: logout
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/auth.UserLogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
+      summary: logout
+      tags:
+      - user
+  /api/v1/rpc/user.password_change:
+    post:
+      consumes:
+      - application/json
+      description: Change password.
+      parameters:
+      - description: credentials form info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/auth.UserPasswordChangeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.UserPasswordChangeResponse'
+      summary: change password
+      tags:
+      - user
+  /api/v1/rpc/user.token_refresh:
+    post:
+      consumes:
+      - application/json
+      description: Renew access and refresh tokens.
+      parameters:
+      - description: renew token form info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RenewManagerRefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
+      summary: renew access and refresh tokens
+      tags:
+      - user
+  /api/v1/rpc/user.upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create user. Roles[admin, instructor]
+      parameters:
+      - description: user form info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.UserEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.UserEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create user
+      tags:
+      - user
+  /api/v1/sso/.well-known/openid-configuration:
     get:
       consumes:
       - application/json
@@ -2531,7 +3405,7 @@ paths:
       summary: Получить информацию о спецификации.
       tags:
       - SSO
-  /v1/sso/authorize:
+  /api/v1/sso/authorize:
     get:
       consumes:
       - application/json
@@ -2592,30 +3466,7 @@ paths:
       summary: Получение кода авторизации по OpenID.
       tags:
       - SSO
-    post:
-      consumes:
-      - application/json
-      description: Получение кода авторизации по OpenID.
-      parameters:
-      - description: renew token form info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/auth.SSOAuthorizeInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/auth.SSOAuthorizeResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Получение кода авторизации по OpenID.
-      tags:
-      - SSO
-  /v1/sso/introspect:
+  /api/v1/sso/introspect:
     post:
       consumes:
       - application/json
@@ -2648,7 +3499,7 @@ paths:
       tags:
       - SSO
       - EXTERNAL
-  /v1/sso/jwks:
+  /api/v1/sso/jwks:
     get:
       consumes:
       - application/json
@@ -2667,7 +3518,7 @@ paths:
       summary: Получить информацию о публичных ключах для подписи JWT токенов.
       tags:
       - SSO
-  /v1/sso/token:
+  /api/v1/sso/token:
     post:
       consumes:
       - application/json
@@ -2715,7 +3566,7 @@ paths:
       tags:
       - SSO
       - EXTERNAL
-  /v1/sso/userinfo:
+  /api/v1/sso/userinfo:
     get:
       consumes:
       - application/json
@@ -2742,160 +3593,7 @@ paths:
       summary: Получить информацию о пользователе.
       tags:
       - SSO
-  /v1/token/login:
-    post:
-      consumes:
-      - application/json
-      description: Login by email and password.
-      parameters:
-      - description: credentials form info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/auth.RenewManagerCredentialsInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
-      summary: login by email and password
-      tags:
-      - Token
-  /v1/token/logout:
-    post:
-      consumes:
-      - application/json
-      description: Logout.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
-      summary: logout
-      tags:
-      - Token
-  /v1/token/password_change:
-    post:
-      consumes:
-      - application/json
-      description: Change password.
-      parameters:
-      - description: credentials form info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/auth.UserPasswordChangeInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/auth.UserPasswordRecoverResponse'
-      summary: change password
-      tags:
-      - Token
-  /v1/token/renew:
-    post:
-      consumes:
-      - application/json
-      description: Renew access and refresh tokens.
-      parameters:
-      - description: renew token form info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/auth.RenewManagerInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/auth.SwaggerSSOTokenResponse'
-      summary: renew access and refresh tokens
-      tags:
-      - Token
-  /v1/user/get:
-    post:
-      consumes:
-      - application/json
-      description: get user. Roles[admin, instructor]
-      parameters:
-      - description: user id
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.UserGetInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.UserGetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: get user
-      tags:
-      - User
-  /v1/user/list:
-    post:
-      consumes:
-      - application/json
-      description: List user. Roles[admin, instructor]
-      parameters:
-      - description: user list info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.UserListInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.UserListResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: list user
-      tags:
-      - User
-  /v1/user/upsert:
-    post:
-      consumes:
-      - application/json
-      description: Create user. Roles[admin, instructor]
-      parameters:
-      - description: user form info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.UserEditInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.UserEditResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: create user
-      tags:
-      - User
-  /v2/lti/launch:
+  /api/v2/lti/launch:
     get:
       consumes:
       - application/json
@@ -2920,7 +3618,7 @@ paths:
       summary: инициализация подключения к LTI
       tags:
       - LTI
-  /v2/lti/login:
+  /api/v2/lti/login:
     get:
       consumes:
       - application/json

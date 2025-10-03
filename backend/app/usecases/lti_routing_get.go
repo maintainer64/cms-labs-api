@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIRoutingGetUC struct {
@@ -14,11 +13,23 @@ type LTIRoutingGetInputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
+type LTIRoutingGetRequest struct {
+	JSONRPC string                `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                `json:"method" default:"lti_routing.get" required:"true"`
+	Params  LTIRoutingGetInputDTO `json:"params,omitempty"`
+	ID      string                `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type LTIRoutingGetOutputDTO struct {
 	Model models.LTIRouting `json:"model" required:"true"`
 }
 
-type LTIRoutingGetResponse = response.Response[LTIRoutingGetOutputDTO]
+type LTIRoutingGetResponse struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  LTIRoutingGetOutputDTO `json:"result,omitempty"`
+	Error   interface{}            `json:"error,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *LTIRoutingGetUC) Execute(dto LTIRoutingGetInputDTO) (LTIRoutingGetOutputDTO, error) {
 	form, err := u.LTIRoutingQueries.Get(dto.ID)

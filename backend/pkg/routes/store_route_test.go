@@ -2,8 +2,9 @@ package routes
 
 import (
 	"encoding/json"
-	"strings"
 	"testing"
+
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,7 @@ import (
 
 func TestStoreGet(t *testing.T) {
 	description := "get user store"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	testUser := models.User{
 		UserBase: models.UserBase{
@@ -33,24 +34,23 @@ func TestStoreGet(t *testing.T) {
 	authHeader := f.AuthorizationUser(testUser.ID, 0)
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "GET",
-		Route:         "/api/v1/global-store",
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.global_store_get",
 		Authorization: authHeader,
 	})
 
-	var response types.UserStore
+	var response types.UserStoreGetResponse
 	err := json.Unmarshal([]byte(body), &response)
 	assert.NoError(t, err, description)
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Equal(t, "dark", response["theme"], description)
-	assert.True(t, response["prefs"].(map[string]interface{})["notifications"].(bool), description)
+	assert.Equal(t, "dark", response.Result["theme"], description)
+	assert.True(t, response.Result["prefs"].(map[string]interface{})["notifications"].(bool), description)
 }
 
 func TestStoreGetEmpty(t *testing.T) {
 	description := "get empty user store"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	testUser := models.User{
 		UserBase: models.UserBase{
@@ -63,23 +63,22 @@ func TestStoreGetEmpty(t *testing.T) {
 	authHeader := f.AuthorizationUser(testUser.ID, 0)
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "GET",
-		Route:         "/api/v1/global-store",
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.global_store_get",
 		Authorization: authHeader,
 	})
 
-	var response types.UserStore
+	var response types.UserStoreGetResponse
 	err := json.Unmarshal([]byte(body), &response)
 	assert.NoError(t, err, description)
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Empty(t, response, description)
+	assert.Empty(t, response.Result, description)
 }
 
 func TestStoreSet(t *testing.T) {
 	description := "set user store"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	testUser := models.User{
 		UserBase: models.UserBase{
@@ -98,18 +97,15 @@ func TestStoreSet(t *testing.T) {
 			"language":      "en",
 		},
 	}
-	jsonData, _ := json.Marshal(input)
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/global-store",
-		Body:          strings.NewReader(string(jsonData)),
+	statusCode, _ := f.Rpc(&TestRpcRequest{
+		Method:        "user.global_store_set",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Empty(t, body, description)
 
 	// Verify database record
 	var user models.User
@@ -122,61 +118,49 @@ func TestStoreSet(t *testing.T) {
 
 func TestStoreSetInvalidJSON(t *testing.T) {
 	description := "set user store with invalid JSON"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 
-	expectedCode := 400
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/global-store",
-		Body:          strings.NewReader("{invalid json}"),
+	expectedCode := 500
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.global_store_set",
+		Params:        "{invalid json}",
 		Authorization: authHeader,
 	})
 
-	var response map[string]interface{}
-	err := json.Unmarshal([]byte(body), &response)
-	assert.NoError(t, err, description)
-
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, response["msg"], "invalid", description)
+	assert.Contains(t, body, "character for map value", description)
 }
 
 func TestStoreUnauthorized(t *testing.T) {
 	tests := []struct {
 		method       string
-		route        string
 		description  string
 		expectedCode int
 	}{
 		{
-			method:       "GET",
-			route:        "/api/v1/global-store",
+			method:       "user.global_store_get",
 			description:  "get store unauthorized",
-			expectedCode: 401,
+			expectedCode: 500,
 		},
 		{
-			method:       "POST",
-			route:        "/api/v1/global-store",
+			method:       "user.global_store_set",
 			description:  "set store unauthorized",
-			expectedCode: 401,
+			expectedCode: 500,
 		},
 	}
 
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
-			statusCode, body := f.Request(&FiberTestHttpRequest{
+			statusCode, body := f.Rpc(&TestRpcRequest{
 				Method: test.method,
-				Route:  test.route,
+				Params: fiber.Map{},
 			})
 
-			var response map[string]interface{}
-			err := json.Unmarshal([]byte(body), &response)
-			assert.NoError(t, err, test.description)
-
 			assert.Equal(t, test.expectedCode, statusCode, test.description)
-			assert.Contains(t, response["msg"], "Invalid token", test.description)
+			assert.Contains(t, body, "unauthorized", test.description)
 		})
 	}
 }

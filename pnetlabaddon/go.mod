@@ -4,8 +4,6 @@ go 1.24.4
 
 replace gitlab.com/a10869/api-modules/shared => ../shared
 
-replace gitlab.com/a10869/api-modules/gen => ../gen
-
 require (
 	ariga.io/atlas-provider-gorm v0.5.0
 	github.com/go-resty/resty/v2 v2.16.5

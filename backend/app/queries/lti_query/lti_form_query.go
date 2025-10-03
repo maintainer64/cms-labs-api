@@ -5,15 +5,13 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"errors"
 	"fmt"
 	"time"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gorm.io/gorm"
 )
 
@@ -56,10 +54,7 @@ func (q *LTIFormQueries) Get(id uint) (models.LTIForm, error) {
 	var entity models.LTIForm
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIForm not found"),
-		}
+		return entity, jsonrpc.NewRpcError("lti_form_not_found", "lti form not found")
 	}
 	return entity, result.Error
 }

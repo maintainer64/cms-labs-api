@@ -5,8 +5,6 @@ import (
 
 	"gitlab.com/a10869/api-modules/backend/app/models/types"
 
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
-
 	"github.com/ory/go-convenience/stringsx"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
@@ -28,11 +26,23 @@ type UserEditInputDTO struct {
 	IsActive  bool            `json:"is_active"`
 }
 
+type UserEditRequest struct {
+	JSONRPC string           `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string           `json:"method" default:"user.upsert" required:"true"`
+	Params  UserEditInputDTO `json:"params,omitempty"`
+	ID      string           `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type UserEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type UserEditResponse = response.Response[UserEditOutputDTO]
+type UserEditResponse struct {
+	JSONRPC string            `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  UserEditOutputDTO `json:"result,omitempty"`
+	Error   interface{}       `json:"error,omitempty"`
+	ID      string            `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *UserEditUC) Execute(dto UserEditInputDTO) (UserEditOutputDTO, error) {
 	now := time.Now().UTC()

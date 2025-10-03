@@ -6,9 +6,8 @@ import (
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 type SSOIntrospectInputDTO struct {
@@ -71,14 +70,14 @@ func (u *SSOIntrospectUC) ByAccess(inputDTO SSOIntrospectInputDTO) (*SSOTokenInt
 	introspect.Scope = []string{"default"}
 	token, err := verifyToken(inputDTO.Token)
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
+		return nil, err
 	}
 	if !token.Valid {
-		return nil, utils.FiberValidationException{Status: fiber.StatusBadRequest, Exception: fmt.Errorf("invalid token")}
+		return nil, jsonrpc.NewRpcError("invalid_token", "token is invalid")
 	}
 	tokenData, err := cms_client.SSODecodeToken(token)
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
+		return nil, jsonrpc.NewRpcError("invalid_token", "token is invalid")
 	}
 	userID := tokenData.UserID()
 	introspect.ClientID = tokenData.Aud

@@ -9,7 +9,6 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type PNETServerPingUC struct {
@@ -28,11 +27,23 @@ type PNETServerPingInputDTO struct {
 	Attempts []AttemptDTO `json:"attempts"`
 }
 
+type PNETServerPingRequest struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                 `json:"method" default:"server.ping" required:"true"`
+	Params  PNETServerPingInputDTO `json:"params,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type PNETServerPingOutputDTO struct {
 	Count int `json:"count"`
 }
 
-type PNETServerPingResponse = response.Response[PNETServerPingOutputDTO]
+type PNETServerPingResponse struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  PNETServerPingOutputDTO `json:"result,omitempty"`
+	Error   interface{}             `json:"error,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *PNETServerPingUC) SetContext(xServiceId string) *PNETServerPingUC {
 	u.xServiceId = xServiceId

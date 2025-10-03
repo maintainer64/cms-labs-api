@@ -1,23 +1,22 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
+
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 
 	"gitlab.com/a10869/api-modules/backend/app/models/types"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
 )
 
 var (
-	UserNotFoundError = errors.New("User not found")
-	UserNotActive     = errors.New("User is deactivated")
+	UserNotFoundError = jsonrpc.NewRpcError("user_not_found", "user has not found")
+	UserNotActive     = jsonrpc.NewRpcError("user_is_deactivated", "user is deactivated")
 )
 
 type UserQueries struct {
@@ -29,16 +28,10 @@ func (q *UserQueries) Get(id uint) (models.User, error) {
 	var entity models.User
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: UserNotFoundError,
-		}
+		return entity, UserNotFoundError
 	}
 	if !entity.IsActive() {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusForbidden,
-			Exception: UserNotActive,
-		}
+		return entity, UserNotActive
 	}
 	return entity, result.Error
 }
@@ -72,37 +65,26 @@ func (q *UserQueries) Upsert(entity *models.User) error {
 
 func (q *UserQueries) GetByEmail(email string) (models.User, error) {
 	var entity models.User
-	err := utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: UserNotFoundError,
-	}
 	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: get user by email=%+v", email))
 	if email == "" {
-		return entity, err
+		return entity, UserNotFoundError
 	}
 	q.DB.Where("email = ?", email).Limit(1).Find(&entity)
 	if entity.Email != email {
-		return entity, err
+		return entity, UserNotFoundError
 	}
 	if !entity.IsActive() {
 		q.Logger.Info().Msg(fmt.Sprintf("UserQueries: user is not active by email=%+v", email))
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusForbidden,
-			Exception: UserNotActive,
-		}
+		return entity, UserNotActive
 	}
 	return entity, nil
 }
 
 func (q *UserQueries) GetByLaunchID(launchID string) (models.User, error) {
 	var entity models.User
-	err := utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: UserNotFoundError,
-	}
 	q.Logger.Info().Msg(fmt.Sprintf("UserQueries: get user by last_launch_id=%+v", launchID))
 	if launchID == "" {
-		return entity, err
+		return entity, UserNotFoundError
 	}
 	q.DB.Where("last_launch_id = ?", launchID).Limit(1).Find(&entity)
 	q.Logger.Info().Msg(fmt.Sprintf(
@@ -111,14 +93,11 @@ func (q *UserQueries) GetByLaunchID(launchID string) (models.User, error) {
 		entity.ID,
 	))
 	if entity.LastLaunchID != launchID {
-		return entity, err
+		return entity, UserNotFoundError
 	}
 	if !entity.IsActive() {
 		q.Logger.Info().Msg(fmt.Sprintf("UserQueries: user is not active by launchID=%+v", launchID))
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusForbidden,
-			Exception: UserNotActive,
-		}
+		return entity, UserNotFoundError
 	}
 	return entity, nil
 }

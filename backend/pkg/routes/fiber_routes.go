@@ -2,23 +2,14 @@ package routes
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 func FiberRoutes(app *fiber.App) {
 	// Routes.
 	SwaggerRoute(app)
-	V1AuthRoute(app)
 	V1SSORoute(app)
-	V1StoreRoute(app)
-	V1CurlRequestRoutes(app)
-	V1UserRoutes(app)
-	V1RoleRoutes(app)
-	V1LTIFormRoutes(app)
-	V1LTIAttemptRoutes(app)
-	V1PNETServerRoutes(app)
-	V1PNETServerQueueRoutes(app)
-	V1ServiceCardRoutes(app)
+	V1RpcRoute(app)
 	V2LTIRoutes(app)
-	V1LTIRoutingRoutes(app)
-	NotFoundRoute(app)
+	jsonrpc.EmptyRoutes(app)
 }

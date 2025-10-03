@@ -16,25 +16,25 @@ func (di *DIContainer) TopologiesGetUC() (*usecases.TopologiesGetUC, error) {
 	}, nil
 }
 
-func (di *DIContainer) TopologiesCreateUC() (*usecases.TopologiesCreateUC, error) {
+func (di *DIContainer) TopologiesCreateUC() (*usecases.TopologyCreateUC, error) {
 	kubeQuery, err := di.KubernetesAdmin()
 	if err != nil {
 		return nil, err
 	}
-	return &usecases.TopologiesCreateUC{
-		Logger:               logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TopologiesCreateUC")),
+	return &usecases.TopologyCreateUC{
+		Logger:               logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TopologyCreateUC")),
 		KubernetesAdminQuery: kubeQuery,
 		GitClient:            di.GitClient(),
 	}, nil
 }
 
-func (di *DIContainer) TopologiesDeleteUC() (*usecases.TopologiesDeleteUC, error) {
+func (di *DIContainer) TopologiesDeleteUC() (*usecases.TopologyDeleteUC, error) {
 	kubeQuery, err := di.KubernetesAdmin()
 	if err != nil {
 		return nil, err
 	}
-	return &usecases.TopologiesDeleteUC{
-		Logger:               logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TopologiesDeleteUC")),
+	return &usecases.TopologyDeleteUC{
+		Logger:               logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TopologyDeleteUC")),
 		KubernetesAdminQuery: kubeQuery,
 	}, nil
 }

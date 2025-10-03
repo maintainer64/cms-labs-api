@@ -14,7 +14,7 @@ import (
 
 func TestV1UserCreate(t *testing.T) {
 	description := "create user"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
@@ -49,10 +49,9 @@ func TestV1UserCreate(t *testing.T) {
 	authHeader := f.AuthorizationUser(0, 0)
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserEditResponse{}
@@ -79,7 +78,7 @@ func TestV1UserCreate(t *testing.T) {
 
 func TestV1UserCreateUnauthorized(t *testing.T) {
 	description := "create user unauthorized"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	// No auth header provided
 	input := usecases.UserEditInputDTO{
@@ -90,20 +89,19 @@ func TestV1UserCreateUnauthorized(t *testing.T) {
 		IsActive:  true,
 	}
 
-	expectedCode := 401 // Assuming 401 is returned for unauthorized access
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/user/upsert",
-		Body:   FiberRequestPayload(input),
+	expectedCode := 500 // Assuming 401 is returned for unauthorized access
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "user.upsert",
+		Params: input,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "token is malformed: token contains an invalid number of segments", description)
+	assert.Contains(t, body, "unauthorized", description)
 }
 
 func TestV1UserCreateDeactivated(t *testing.T) {
 	description := "create deactivated user"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
@@ -122,10 +120,9 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserEditResponse{}
@@ -143,7 +140,7 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 
 func TestV1UserGetSuccess(t *testing.T) {
 	description := "get user successfully"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	// Create a test user
 	entityDB := models.User{}
@@ -161,10 +158,9 @@ func TestV1UserGetSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/get",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserGetResponse{}
@@ -181,7 +177,7 @@ func TestV1UserGetSuccess(t *testing.T) {
 
 func TestV1UserGetNotFound(t *testing.T) {
 	description := "get non-existent user"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 	authHeader := f.AuthorizationUser(0, 0)
 
 	// Use a non-existent ID
@@ -189,11 +185,10 @@ func TestV1UserGetNotFound(t *testing.T) {
 		ID: 9999,
 	}
 
-	expectedCode := 404 // Assuming 404 is returned for not found
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/get",
-		Body:          FiberRequestPayload(input),
+	expectedCode := 500 // Assuming 404 is returned for not found
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -203,7 +198,7 @@ func TestV1UserGetNotFound(t *testing.T) {
 
 func TestV1UserGetInactiveUser(t *testing.T) {
 	description := "get inactive user"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	// Create an inactive user
 	deletedAt := time.Now()
@@ -222,10 +217,9 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 	}
 
 	expectedCode := 200 // Assuming 200 is returned even for inactive users
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/get",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserGetResponse{}
@@ -238,7 +232,7 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 
 func TestV1UserListSuccess(t *testing.T) {
 	description := "list users successfully"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -267,10 +261,9 @@ func TestV1UserListSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -282,7 +275,7 @@ func TestV1UserListSuccess(t *testing.T) {
 
 func TestV1UserListFilterBySearch(t *testing.T) {
 	description := "list users with search filter"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -311,10 +304,9 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -327,7 +319,7 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 
 func TestV1UserListFilterByIDs(t *testing.T) {
 	description := "list users with ID filter"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -357,10 +349,9 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -373,7 +364,7 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 
 func TestV1UserListPagination(t *testing.T) {
 	description := "list users with pagination"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -402,10 +393,9 @@ func TestV1UserListPagination(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -418,7 +408,7 @@ func TestV1UserListPagination(t *testing.T) {
 
 func TestV1UserListUnauthorized(t *testing.T) {
 	description := "list users unauthorized"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
 
 	input := usecases.UserListInputDTO{
 		Search:  "",
@@ -427,13 +417,12 @@ func TestV1UserListUnauthorized(t *testing.T) {
 		Offset:  0,
 	}
 
-	expectedCode := 401 // Assuming 401 is returned for unauthorized access
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/user/list",
-		Body:   FiberRequestPayload(input),
+	expectedCode := 500
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "user.list",
+		Params: input,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "token is malformed: token contains an invalid number of segments", description)
+	assert.Contains(t, body, "unauthorized", description)
 }

@@ -1,0 +1,56 @@
+package routes
+
+import (
+	fiber "github.com/gofiber/fiber/v2"
+	"gitlab.com/a10869/api-modules/backend/app/controllers"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+)
+
+// V1RpcRoute func for describe group of jsonrpc 2.0 protocol.
+func V1RpcRoute(a *fiber.App) {
+	rpc := jsonrpc.NewJsonRPCServer("/api/v1/rpc", a)
+	rpc.Method("curl_request.upsert", controllers.CurlRequestUpsert)
+	rpc.Method("curl_request.list", controllers.CurlRequestList)
+	rpc.Method("curl_request.delete", controllers.CurlRequestDelete)
+	rpc.Method("curl_request.get", controllers.CurlRequestGet)
+	a.Post("/api/v1/curl-request/execute", controllers.CurlRequestExecute)
+	rpc.Method("lti_attempt.create", controllers.LTIAttemptCreate)
+	rpc.Method("lti_attempt.update", controllers.LTIAttemptUpdate)
+	rpc.Method("lti_attempt.list", controllers.LTIAttemptList)
+	rpc.Method("lti_attempt.delete", controllers.LTIAttemptDelete)
+	rpc.Method("lti_attempt.get", controllers.LTIAttemptGet)
+	rpc.Method("lti_attempt.get", controllers.LTIAttemptGet)
+	rpc.Method("lti_form.upsert", controllers.LTIFormUpsert)
+	rpc.Method("lti_form.list", controllers.LTIFormList)
+	rpc.Method("lti_form.delete", controllers.LTIFormDelete)
+	rpc.Method("lti_form.get", controllers.LTIFormGet)
+	rpc.Method("lti_form.sso_list_get", controllers.LTIFormSSOListGet)
+	rpc.Method("lti_routing.upsert", controllers.LTIRoutingUpsert)
+	rpc.Method("lti_routing.list", controllers.LTIRoutingList)
+	rpc.Method("lti_routing.delete", controllers.LTIRoutingDelete)
+	rpc.Method("lti_routing.get", controllers.LTIRoutingGet)
+	rpc.Method("server.upsert", controllers.PNETServerUpsert)
+	rpc.Method("server.list", controllers.PNETServerList)
+	rpc.Method("server.delete", controllers.PNETServerDelete)
+	rpc.Method("server.get", controllers.PNETServerGet)
+	rpc.Method("server.ping", controllers.PNETServerPing)
+	rpc.Method("server_queue.upsert", controllers.PNETServerQueueUpsert)
+	rpc.Method("server_queue.list", controllers.PNETServerQueueList)
+	rpc.Method("role.upsert", controllers.RoleUpsert)
+	rpc.Method("role.list", controllers.RoleList)
+	rpc.Method("role.delete", controllers.RoleDelete)
+	rpc.Method("service_card.upsert", controllers.ServiceCardUpsert)
+	rpc.Method("service_card.list", controllers.ServiceCardList)
+	rpc.Method("service_card.delete", controllers.ServiceCardDelete)
+	rpc.Method("service_card.get", controllers.ServiceCardGet)
+	rpc.Method("sso.authorize", controllers.SSOAuthorizePost)
+	rpc.Method("user.global_store_get", controllers.UserGlobalStoreGet)
+	rpc.Method("user.global_store_set", controllers.UserGlobalStoreSet)
+	rpc.Method("user.token_refresh", controllers.UserTokenRefresh)
+	rpc.Method("user.login", controllers.UserLogin)
+	rpc.Method("user.logout", controllers.UserLogout)
+	rpc.Method("user.password_change", controllers.UserPasswordChange)
+	rpc.Method("user.upsert", controllers.UserUpsert)
+	rpc.Method("user.list", controllers.UserList)
+	rpc.Method("user.get", controllers.UserGet)
+}

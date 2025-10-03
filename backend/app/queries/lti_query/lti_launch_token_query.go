@@ -1,7 +1,6 @@
 package lti_query
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -9,8 +8,7 @@ import (
 
 	json "github.com/goccy/go-json"
 
-	fiber "github.com/gofiber/fiber/v2"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gorm.io/gorm"
@@ -25,10 +23,7 @@ func (q *LTILaunchDataQueries) Get(id string) (models.LTILaunchData, error) {
 	var entity models.LTILaunchData
 	result := q.DB.First(&entity, "id = ?", id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTILaunchData not found"),
-		}
+		return entity, jsonrpc.NewRpcError("user_not_found", "lti launch data has not found")
 	}
 	return entity, result.Error
 }

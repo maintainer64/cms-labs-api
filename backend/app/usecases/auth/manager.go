@@ -28,32 +28,45 @@ type RenewManagerInputDTO struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+type RenewManagerRefreshRequest struct {
+	JSONRPC string               `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string               `json:"method" default:"user.token_refresh" validate:"required"`
+	Params  RenewManagerInputDTO `json:"params,omitempty"`
+	ID      string               `json:"id,omitempty" default:"1" validate:"required"`
+}
+
 type RenewManagerCredentialsInputDTO struct {
 	Email    string `json:"email" required:"true"`
 	Password string `json:"password" required:"true"`
 }
 
+type RenewManagerCredentialsRequest struct {
+	JSONRPC string                          `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string                          `json:"method" default:"user.login" validate:"required"`
+	Params  RenewManagerCredentialsInputDTO `json:"params,omitempty"`
+	ID      string                          `json:"id,omitempty" default:"1" validate:"required"`
+}
+
 // NewJWTByCredentials генерирует новый JWT по логину/паролю
 func (m *TokenManager) NewJWTByCredentials(issID string, email string, password string) (*cms_client.SSOToken, error) {
-	invalidCreds := errors.New("username or password is incorrect")
 	if email == "" {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 	if password == "" {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 
 	entity, err := m.UserQueries.GetByEmail(email)
 	if err != nil {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 	creds, err := m.UserPasswordQueries.Get(entity.ID)
 	if err != nil {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(creds.HashPassword), []byte(password))
 	if err != nil {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 	return m.NewJWTByUserId(issID, entity.ID, 0, nil)
 }

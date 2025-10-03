@@ -3,15 +3,12 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type PNETServerListUC struct {
 	PNETServerQueries *queries.PNETServerQueries
 	RoleQueries       *queries.RoleQueries
 }
-
-type PNETServerListInputDTO = queries.PNETServerQueriesListDTO
 
 type PNETServerListModel struct {
 	Model models.PNETServerListItem `json:"model" validate:"required"`
@@ -23,9 +20,21 @@ type PNETServerListOutputDTO struct {
 	TotalCount int64                 `json:"total_count" validate:"required"`
 }
 
-type PNETServerListResponse = response.Response[PNETServerListOutputDTO]
+type PNETServerListRequest struct {
+	JSONRPC string                           `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                           `json:"method" default:"server.list" required:"true"`
+	Params  queries.PNETServerQueriesListDTO `json:"params,omitempty"`
+	ID      string                           `json:"id,omitempty" default:"1" required:"true"`
+}
 
-func (u *PNETServerListUC) Execute(dto PNETServerListInputDTO) (PNETServerListOutputDTO, error) {
+type PNETServerListResponse struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  PNETServerListOutputDTO `json:"result,omitempty"`
+	Error   interface{}             `json:"error,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+}
+
+func (u *PNETServerListUC) Execute(dto queries.PNETServerQueriesListDTO) (PNETServerListOutputDTO, error) {
 	entities, count, err := u.PNETServerQueries.List(dto)
 	if err != nil {
 		return PNETServerListOutputDTO{}, err

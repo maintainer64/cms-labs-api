@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type ServiceCardEditUC struct {
@@ -20,11 +19,23 @@ type ServiceCardEditInputDTO struct {
 	IsActive    bool   `json:"is_active"`
 }
 
+type ServiceCardEditRequest struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                  `json:"method" default:"service_card.upsert" required:"true"`
+	Params  ServiceCardEditInputDTO `json:"params,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type ServiceCardEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type ServiceCardEditResponse = response.Response[ServiceCardEditOutputDTO]
+type ServiceCardEditResponse struct {
+	JSONRPC string                    `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  ServiceCardDeleteInputDTO `json:"result,omitempty"`
+	Error   interface{}               `json:"error,omitempty"`
+	ID      string                    `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *ServiceCardEditUC) Execute(dto ServiceCardEditInputDTO) (ServiceCardEditOutputDTO, error) {
 	entity := &models.ServiceCard{}
