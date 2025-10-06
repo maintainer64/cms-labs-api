@@ -1,12 +1,12 @@
 'use client';
 import React, { useEffect } from 'react';
-import { useTopologyCreate } from '@/helpers/queries/topology/get';
 import { HorizontalInfiniteLoader } from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
 import { RoutesLocation } from '@/components/routes';
 import { useParamsConnectTopology } from '@/components/topology/utils';
 import useLanguageBrowser from '@/helpers/locale';
+import { useQueryTopologyCreate } from '@/helpers/queries/topology/use-query-topology-create';
 
 export const TopologyConnect = () => {
   const {
@@ -15,7 +15,11 @@ export const TopologyConnect = () => {
     }
   } = useLanguageBrowser();
   const params = useParamsConnectTopology();
-  const queryTopologyCreate = useTopologyCreate(params.username, params.taskId, params.redeploy);
+  const queryTopologyCreate = useQueryTopologyCreate({
+    username: params.username,
+    taskId: params.taskId,
+    redeploy: params.redeploy
+  });
   useEffect(() => {
     window.document.title = Connect.ErrorModalConnectTitle;
   }, []);
@@ -32,7 +36,7 @@ export const TopologyConnect = () => {
     );
   }
   window.location.href =
-    RoutesLocation.topologyView(queryTopologyCreate.data?.result?.namespace ?? '') +
+    RoutesLocation.topologyView(queryTopologyCreate.data?.namespace ?? '') +
     `?username=${params.username}&taskId=${params.taskId}`;
   return <></>;
 };

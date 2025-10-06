@@ -941,6 +941,11 @@ definitions:
       result:
         type: boolean
     type: object
+  usecases.CurlRequestDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
   usecases.CurlRequestDeleteRequest:
     properties:
       id:
@@ -953,7 +958,7 @@ definitions:
         default: curl_request.delete
         type: string
       params:
-        $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
+        $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
     required:
     - id
     - jsonrpc
@@ -969,7 +974,7 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
+        $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
     required:
     - id
     - jsonrpc
@@ -1196,7 +1201,7 @@ definitions:
         default: lti_attempt.delete
         type: string
       params:
-        $ref: '#/definitions/usecases.LTIAttemptCreateInputDTO'
+        $ref: '#/definitions/usecases.LTIAttemptDeleteInputDTO'
     required:
     - id
     - jsonrpc
@@ -1501,6 +1506,18 @@ definitions:
       search:
         type: string
     type: object
+  usecases.LTIFormListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.LTIFormListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
   usecases.LTIFormListRequest:
     properties:
       id:
@@ -1525,7 +1542,7 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.LTIFormGetOutputDTO'
+        $ref: '#/definitions/usecases.LTIFormListOutputDTO'
     type: object
   usecases.LTIFormListSSOOutputDTO:
     properties:
@@ -2384,7 +2401,7 @@ paths:
       tags:
       - curl_request
       - EXTERNAL
-  /api/v1/rpc/curlRequest.delete:
+  /api/v1/rpc/curl_request.delete:
     post:
       consumes:
       - application/json
@@ -2408,7 +2425,7 @@ paths:
       summary: delete curl_request
       tags:
       - curl_request
-  /api/v1/rpc/curlRequest.get:
+  /api/v1/rpc/curl_request.get:
     post:
       consumes:
       - application/json
@@ -2432,7 +2449,7 @@ paths:
       summary: get curl_request
       tags:
       - curl_request
-  /api/v1/rpc/curlRequest.list:
+  /api/v1/rpc/curl_request.list:
     post:
       consumes:
       - application/json
@@ -2456,7 +2473,7 @@ paths:
       summary: list pnet_server
       tags:
       - curl_request
-  /api/v1/rpc/curlRequest.upsert:
+  /api/v1/rpc/curl_request.upsert:
     post:
       consumes:
       - application/json

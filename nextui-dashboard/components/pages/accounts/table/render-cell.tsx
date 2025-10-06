@@ -3,7 +3,7 @@ import { EditIcon } from '../../../icons/table/edit-icon';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { RolesChip } from '@/components/base-forms/roles';
-import { UserItem } from '@/helpers/queries/users/model';
+import { UserItem } from '@/helpers/queries/user/use-infinity-user-list';
 
 interface Props {
   item: UserItem;

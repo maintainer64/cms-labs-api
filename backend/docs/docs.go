@@ -62,7 +62,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.delete": {
+        "/api/v1/rpc/curl_request.delete": {
             "post": {
                 "security": [
                     {
@@ -101,7 +101,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.get": {
+        "/api/v1/rpc/curl_request.get": {
             "post": {
                 "security": [
                     {
@@ -140,7 +140,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.list": {
+        "/api/v1/rpc/curl_request.list": {
             "post": {
                 "security": [
                     {
@@ -179,7 +179,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.upsert": {
+        "/api/v1/rpc/curl_request.upsert": {
             "post": {
                 "security": [
                     {
@@ -3429,6 +3429,14 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.CurlRequestDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "usecases.CurlRequestDeleteRequest": {
             "type": "object",
             "required": [
@@ -3450,7 +3458,7 @@ const docTemplate = `{
                     "default": "curl_request.delete"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
+                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
                 }
             }
         },
@@ -3471,7 +3479,7 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
+                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
                 }
             }
         },
@@ -3799,7 +3807,7 @@ const docTemplate = `{
                     "default": "lti_attempt.delete"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIAttemptCreateInputDTO"
+                    "$ref": "#/definitions/usecases.LTIAttemptDeleteInputDTO"
                 }
             }
         },
@@ -4236,6 +4244,24 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIFormListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LTIFormListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
         "usecases.LTIFormListRequest": {
             "type": "object",
             "properties": {
@@ -4269,7 +4295,7 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormGetOutputDTO"
+                    "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
                 }
             }
         },

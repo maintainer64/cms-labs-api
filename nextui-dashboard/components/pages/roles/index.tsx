@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 import SearchInput from '@/components/sidebar/search-input';
 import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
 import { RolesIcon } from '@/components/icons/breadcrumb/roles-icon';
-import { useRolesList } from '@/helpers/queries/roles/get';
 import { RolesTableWrapper } from '@/components/pages/roles/table/table';
+import { useQueryRoleList } from '@/helpers/queries/role/use-query-role-list';
 
 export const RolesList = () => {
   const { locale } = useLanguageBrowser();
@@ -41,9 +41,9 @@ export const RolesList = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const queryRoles = useRolesList();
-  const rows = queryRoles.data?.result?.model || [];
-  const totalCount = queryRoles.data?.result?.total_count || 0;
+  const queryRoles = useQueryRoleList({});
+  const rows = queryRoles.data?.model || [];
+  const totalCount = queryRoles.data?.totalCount || 0;
   return (
     <CrumbsLayout name={`${RoleTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

@@ -1,12 +1,13 @@
-import { auth_SSOAuthorizeInputDTO, auth_SSOAuthorizeOutputDTO } from '@/helpers/api';
+import { AuthSSOAuthorizeInputDTO, AuthSSOAuthorizeOutputDTO } from '@/helpers/api';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 export const SSOAuthorizationParams = () => {
   const currentURI = new URL(window.location.href);
-  const params: auth_SSOAuthorizeInputDTO = {
-    client_id: currentURI.searchParams.get('client_id') || '',
+  const params: CamelCasedPropertiesDeep<AuthSSOAuthorizeInputDTO> = {
+    clientId: currentURI.searchParams.get('client_id') || '',
     path: currentURI.searchParams.get('path') || '',
-    redirect_uri: currentURI.searchParams.get('redirect_uri') || '',
-    response_type: currentURI.searchParams.get('response_type') || '',
+    redirectUri: currentURI.searchParams.get('redirect_uri') || '',
+    responseType: currentURI.searchParams.get('response_type') || '',
     scope: currentURI.searchParams.get('scope') || '',
     state: currentURI.searchParams.get('state') || '',
     nonce: currentURI.searchParams.get('nonce') || '',
@@ -15,7 +16,7 @@ export const SSOAuthorizationParams = () => {
   return params;
 };
 
-export const SSOAuthorizationComplete = (params?: auth_SSOAuthorizeOutputDTO) => {
+export const SSOAuthorizationComplete = (params?: CamelCasedPropertiesDeep<AuthSSOAuthorizeOutputDTO>) => {
   if (!params) return '';
-  return `${params.redirect_uri || '/'}?state=${params.state || ''}&path=${params.path || ''}&code=${params.code || ''}&application=${params.application || ''}&extra=${params.extra || ''}&nonce=${params.nonce || ''}&client_id=${params.client_id || ''}&scope=${params.scope}`;
+  return `${params.redirectUri || '/'}?state=${params.state || ''}&path=${params.path || ''}&code=${params.code || ''}&application=${params.application || ''}&extra=${params.extra || ''}&nonce=${params.nonce || ''}&client_id=${params.clientId || ''}&scope=${params.scope}`;
 };

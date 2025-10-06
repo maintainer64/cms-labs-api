@@ -4,10 +4,10 @@ import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
-import { useLTIAttemptList } from '@/helpers/queries/lti-attempt/get';
 import { LTIAttemptTableWrapper } from '@/components/pages/lti-attempts/table/table';
 import { useParams } from 'react-router-dom';
 import { LtiAttemptIcon } from '@/components/icons/breadcrumb/lti-attempt';
+import { useQueryLtiAttemptList } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-list';
 
 export const LTIAttemptListByUser = () => {
   const { id } = useParams();
@@ -39,8 +39,8 @@ export const LTIAttemptListByUser = () => {
       href: '#'
     }
   ];
-  const response = useLTIAttemptList({ limit: 100, user_ids: [Number(id)] });
-  const items = response.data?.result?.model || [];
+  const response = useQueryLtiAttemptList({ limit: 100, userIds: [Number(id)] });
+  const items = response.data?.model || [];
   return (
     <CrumbsLayout name={`${LTIAttemptsTable.Title}`} crumbs={crumbs}>
       <>

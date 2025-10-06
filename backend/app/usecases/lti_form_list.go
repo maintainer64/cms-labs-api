@@ -28,10 +28,10 @@ type LTIFormListOutputDTO struct {
 }
 
 type LTIFormListResponse struct {
-	JSONRPC string              `json:"jsonrpc" default:"2.0" required:"true"`
-	Result  LTIFormGetOutputDTO `json:"result,omitempty"`
-	Error   interface{}         `json:"error,omitempty"`
-	ID      string              `json:"id,omitempty" default:"1" required:"true"`
+	JSONRPC string               `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  LTIFormListOutputDTO `json:"result,omitempty"`
+	Error   interface{}          `json:"error,omitempty"`
+	ID      string               `json:"id,omitempty" default:"1" required:"true"`
 }
 
 func (u *LTIFormListUC) Execute(dto LTIFormListInputDTO) (LTIFormListOutputDTO, error) {

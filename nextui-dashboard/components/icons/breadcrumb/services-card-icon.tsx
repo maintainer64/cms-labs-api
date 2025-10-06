@@ -3,7 +3,7 @@ import React from 'react';
 export const ServicesCardIcon = () => {
   return (
     <svg width='24' height='24' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <g fill='none' strokeLinecap='roundfill' stroke='#000000' strokeLinejoin='round'>
+      <g fill='none' strokeLinecap='round' stroke='#000000' strokeLinejoin='round'>
         <polygon className='a' points='24.136 7.89 43.5 18.739 35.472 40.11 14.914 40.11 24.136 7.89' />
         <polyline className='a' points='14.914 40.11 4.5 18.955 11.106 20.791' />
         <polyline className='a' points='14.914 40.11 9.707 13.694 15.945 16.02' />

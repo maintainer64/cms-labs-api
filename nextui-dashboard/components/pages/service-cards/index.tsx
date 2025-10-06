@@ -6,9 +6,9 @@ import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
-import { useServiceCardList } from '@/helpers/queries/service-cards/get';
 import { ServiceCardsTableWrapper } from '@/components/pages/service-cards/table/table';
 import { ServicesCardIcon } from '@/components/icons/breadcrumb/services-card-icon';
+import { useQueryServiceCardList } from '@/helpers/queries/service_card/use-query-service-card-list';
 
 export const ServiceCardsList = () => {
   const { locale } = useLanguageBrowser();
@@ -39,9 +39,9 @@ export const ServiceCardsList = () => {
       href: '#'
     }
   ];
-  const response = useServiceCardList();
-  const rows = response?.data?.result?.model || [];
-  const totalCount = response.data?.result?.total_count ?? 0;
+  const response = useQueryServiceCardList({});
+  const rows = response?.data?.model || [];
+  const totalCount = response.data?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${ServiceCardsTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

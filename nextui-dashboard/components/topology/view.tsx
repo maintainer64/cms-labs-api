@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { Background, Controls, ReactFlow } from '@xyflow/react';
 import { edgeTypes, nodeTypes } from './objectTypes';
 import { getLayoutElements } from './autoLayout';
-import { useTopologyGet } from '@/helpers/queries/topology/get';
 import { RFEdgeTopology, RFNodeTopology } from '@/components/topology/objectTypes/types';
 import { HorizontalInfiniteLoader } from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
@@ -13,6 +12,7 @@ import { TerminalActionFunc } from '@/components/topology/terminal/service/conte
 import useLanguageBrowser from '@/helpers/locale';
 import { InfoModalBlock } from '@/components/layout/infoModalBlock';
 import useThemeBrowser from '@/components/navbar/useTheme';
+import { useQueryTopologyGet } from '@/helpers/queries/topology/use-query-topology-get';
 
 interface TopologyFlowVisualizationProps {
   dispatch?: TerminalActionFunc;
@@ -26,19 +26,19 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
     }
   } = useLanguageBrowser();
   const { namespace } = useParamsConnectTopology();
-  const queryTopology = useTopologyGet(namespace);
+  const queryTopology = useQueryTopologyGet({ namespace });
   useEffect(() => {
     window.document.title = namespace;
     return () => {
       window.document.title = 'CMS LABS';
     };
   }, []);
-  const initNodes = (queryTopology.data?.result?.topology?.nodes ?? []) as RFNodeTopology[];
-  const initEdges = (queryTopology.data?.result?.topology?.edges ?? []) as RFEdgeTopology[];
+  const initNodes = (queryTopology.data?.topology?.nodes ?? []) as RFNodeTopology[];
+  const initEdges = (queryTopology.data?.topology?.edges ?? []) as RFEdgeTopology[];
   const object = getLayoutElements(
     initNodes,
     initEdges,
-    (queryTopology.data?.result?.topology?.direction || 'TB') as 'TB' | 'LR'
+    (queryTopology.data?.topology?.direction || 'TB') as 'TB' | 'LR'
   );
   if (queryTopology.isLoading) return <HorizontalInfiniteLoader />;
   if (queryTopology.error) {
@@ -52,13 +52,13 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
       </ErrorModal>
     );
   }
-  if (!queryTopology.data?.result?.topology) {
+  if (!queryTopology.data?.topology) {
     return (
       <>
         <HorizontalInfiniteLoader />
         <InfoModalBlock
           title={Connect.WaitModalTitle}
-          href={queryTopology.data?.result?.web_url}
+          href={queryTopology.data?.webUrl}
           description={Connect.WaitModalDescription}
           buttonText={Connect.WaitModalButtonText}
         />

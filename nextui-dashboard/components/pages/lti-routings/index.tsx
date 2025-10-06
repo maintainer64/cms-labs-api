@@ -7,8 +7,8 @@ import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import SearchInput from '@/components/sidebar/search-input';
 import { RouterIcon } from '@/components/icons/breadcrumb/router-icon';
-import { useLTIRoutingList } from '@/helpers/queries/lti-routing/get';
 import { LTIRoutingTableWrapper } from '@/components/pages/lti-routings/table/table';
+import { useInfinityLtiRoutingList } from '@/helpers/queries/lti_routing/use-infinity-lti-routing-list';
 
 export const LTIRoutingList = () => {
   const { locale } = useLanguageBrowser();
@@ -35,9 +35,9 @@ export const LTIRoutingList = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const response = useLTIRoutingList({ limit: 100, search: searchTerm });
-  const rows = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
-  const totalCount = response.data?.pages[0].result?.total_count ?? 0;
+  const response = useInfinityLtiRoutingList({ limit: 100, search: searchTerm });
+  const rows = response?.data?.pages.flatMap((p) => p?.model ?? []) || [];
+  const totalCount = response.data?.pages[0]?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${LTIRoutingTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

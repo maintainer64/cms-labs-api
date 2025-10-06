@@ -17,5 +17,4 @@ export const ServiceCardsPageEdit = () => {
       <ServiceCardsEdit />
     </Layout>
   );
-  x;
 };

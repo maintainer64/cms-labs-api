@@ -2,14 +2,15 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { models_LTIRoutingListItem } from '@/helpers/api';
+import { ModelsCurlRequest } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface CurlRequestTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: models_LTIRoutingListItem[];
+  rows?: CamelCasedPropertiesDeep<ModelsCurlRequest>[];
 }
 
 export const CurlRequestTableWrapper = ({ rows, isLoading, loadMore }: CurlRequestTableWrapperProps) => {

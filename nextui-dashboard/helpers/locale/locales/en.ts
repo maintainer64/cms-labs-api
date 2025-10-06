@@ -55,9 +55,9 @@ const en = {
   },
   Tables: {
     UsersTable: {
-      Title: 'All users',
-      TitleWidgetHome: 'Latest users',
-      SearchBar: 'Search users',
+      Title: 'All user',
+      TitleWidgetHome: 'Latest user',
+      SearchBar: 'Search user',
       ButtonAdd: 'Add user',
       ButtonEdit: 'Edit user',
       Columns: [
@@ -279,7 +279,7 @@ const en = {
     FieldUnitRate: 'Percentage of distribution',
     FieldMinutesForDisconnect: 'Minutes for auto-shutdown',
     DescriptionMinutesForDisconnect: 'Used to disable user allocation',
-    FieldMaxCountUsers: 'Max count users for auto-shutdown',
+    FieldMaxCountUsers: 'Max count user for auto-shutdown',
     DescriptionMaxCountUsers: 'Used to disable user allocation',
     FieldToken: 'Token',
     FieldLastOnlineStatus: 'Last active at',
@@ -309,7 +309,7 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
       Title: 'Deleting a Role entity',
-      Description: 'This role will be disabled for all users'
+      Description: 'This role will be disabled for all user'
     }
   },
   ServiceCards: {

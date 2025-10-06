@@ -9,7 +9,6 @@ import { CurlRequestIcon } from '@/components/icons/breadcrumb/curl-request-icon
 import { CurlRequestEditForm } from '@/components/pages/curl-requests/edit/form';
 import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
 import { UserRoleBase } from '@/helpers/queries/sso/auth';
-import { PnetServersEditForm } from '@/components/pages/pnet-servers/edit/form';
 
 export const CurlRequestEdit = () => {
   const { id } = useParams();

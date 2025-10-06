@@ -13,7 +13,7 @@ export const RoutesLocation = {
   ltiRouting: () => '/lti-routing',
   ltiRoutingEdit: (id = ':id') => `/lti-routing/edit/${id}`,
   ltiRoutingCreate: () => `/lti-routing/create`,
-  curlRequest: () => '/curl-requests',
+  curlRequest: () => '/curl_request',
   curlRequestEdit: (id = ':id') => `/curl-request/edit/${id}`,
   curlRequestCreate: () => `/curl-request/create`,
   pnetServers: () => '/pnet-servers',

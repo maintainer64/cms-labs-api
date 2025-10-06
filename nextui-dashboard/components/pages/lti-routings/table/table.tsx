@@ -2,14 +2,15 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { models_LTIRoutingListItem } from '@/helpers/api';
+import { ModelsLTIRoutingListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface LTIRoutingTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: models_LTIRoutingListItem[];
+  rows?: CamelCasedPropertiesDeep<ModelsLTIRoutingListItem>[];
 }
 
 export const LTIRoutingTableWrapper = ({ rows, isLoading, loadMore }: LTIRoutingTableWrapperProps) => {
@@ -34,7 +35,18 @@ export const LTIRoutingTableWrapper = ({ rows, isLoading, loadMore }: LTIRouting
             )}
           </TableHeader>
           <TableBody items={rows ?? []}>
-            {(item) => <TableRow>{(columnKey) => <TableCell>{RenderCell({ item, columnKey })}</TableCell>}</TableRow>}
+            {(item) => (
+              <TableRow>
+                {(columnKey) => (
+                  <TableCell>
+                    {RenderCell({
+                      item,
+                      columnKey
+                    })}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

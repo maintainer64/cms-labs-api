@@ -131,9 +131,9 @@ func (q *LTIAttemptQueries) listFilter(userIds []uint, tx *gorm.DB) *gorm.DB {
 		q.tableName(&models.LTIAttempt{}) + " AS lti_attempts",
 	).Select(
 		"lti_attempts.id, lti_attempts.user_id, lti_attempts.pnet_server_id, lti_attempts.lti_routing_id, lti_attempts.expired_at, " +
-			"users.email as user_email, users.name as user_name, pnet_servers.name as pnet_server_name, lti_routings.name as lti_routing_name",
+			"user.email as user_email, user.name as user_name, pnet_servers.name as pnet_server_name, lti_routings.name as lti_routing_name",
 	).Joins(
-		"join " + q.tableName(&models.User{}) + " users on users.id = lti_attempts.user_id",
+		"join " + q.tableName(&models.User{}) + " user on user.id = lti_attempts.user_id",
 	).Joins(
 		"join " + q.tableName(&models.PNETServer{}) + " pnet_servers on pnet_servers.id = lti_attempts.pnet_server_id",
 	).Joins(

@@ -1,11 +1,12 @@
 import React from 'react';
 import { EditIcon } from '@/components/icons/table/edit-icon';
-import { models_CurlRequest } from '@/helpers/api';
+import { ModelsCurlRequest } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface Props {
-  item: models_CurlRequest;
+  item: CamelCasedPropertiesDeep<ModelsCurlRequest>;
   columnKey: string | React.Key;
 }
 

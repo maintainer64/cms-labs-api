@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { LtiAttemptEditForm } from '@/components/pages/lti-attempts/edit/form';
 import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
 import { LtiAttemptIcon } from '@/components/icons/breadcrumb/lti-attempt';
-import { useLTIAttemptById } from '@/helpers/queries/lti-attempt/get';
+import { useQueryLtiAttemptGet } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-get';
 
 export const LtiAttemptEdit = () => {
   const { id } = useParams();
@@ -18,8 +18,8 @@ export const LtiAttemptEdit = () => {
       Tables: { LTIAttemptsTable }
     }
   } = useLanguageBrowser();
-  const response = useLTIAttemptById(Number(id));
-  const attempt = response.data?.result?.model;
+  const response = useQueryLtiAttemptGet({ id: parseInt(id ?? '') });
+  const attempt = response.data?.model;
   const crumbs = [
     {
       icon: <HouseIcon />,
@@ -29,12 +29,12 @@ export const LtiAttemptEdit = () => {
     {
       icon: <UsersIcon />,
       name: locale.Sidebar.Users,
-      href: RoutesLocation.accountsEdit(attempt?.user_id?.toString() || '0')
+      href: RoutesLocation.accountsEdit(attempt?.userId?.toString() || '0')
     },
     {
       icon: <LtiAttemptIcon />,
       name: locale.Sidebar.LTIAttempts,
-      href: RoutesLocation.ltiAttemptUser(attempt?.user_id?.toString() || '0')
+      href: RoutesLocation.ltiAttemptUser(attempt?.userId?.toString() || '0')
     },
     {
       icon: undefined,

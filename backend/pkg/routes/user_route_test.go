@@ -216,7 +216,7 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 		ID: entityDB.ID,
 	}
 
-	expectedCode := 200 // Assuming 200 is returned even for inactive users
+	expectedCode := 200 // Assuming 200 is returned even for inactive user
 	statusCode, body := f.Rpc(&TestRpcRequest{
 		Method:        "user.get",
 		Params:        input,
@@ -231,13 +231,13 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 }
 
 func TestV1UserListSuccess(t *testing.T) {
-	description := "list users successfully"
+	description := "list user successfully"
 	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -274,13 +274,13 @@ func TestV1UserListSuccess(t *testing.T) {
 }
 
 func TestV1UserListFilterBySearch(t *testing.T) {
-	description := "list users with search filter"
+	description := "list user with search filter"
 	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -318,13 +318,13 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 }
 
 func TestV1UserListFilterByIDs(t *testing.T) {
-	description := "list users with ID filter"
+	description := "list user with ID filter"
 	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -363,13 +363,13 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 }
 
 func TestV1UserListPagination(t *testing.T) {
-	description := "list users with pagination"
+	description := "list user with pagination"
 	f := NewTestHTTP()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -407,7 +407,7 @@ func TestV1UserListPagination(t *testing.T) {
 }
 
 func TestV1UserListUnauthorized(t *testing.T) {
-	description := "list users unauthorized"
+	description := "list user unauthorized"
 	f := NewTestHTTP()
 
 	input := usecases.UserListInputDTO{

@@ -6,10 +6,9 @@ import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import SearchInput from '@/components/sidebar/search-input';
-import { RouterIcon } from '@/components/icons/breadcrumb/router-icon';
-import { useCurlRequestList } from '@/helpers/queries/curl-requests/get';
 import { CurlRequestTableWrapper } from '@/components/pages/curl-requests/table/table';
 import { CurlRequestIcon } from '@/components/icons/breadcrumb/curl-request-icon';
+import { useInfinityCurlRequestList } from '@/helpers/queries/curl_request/use-infinity-curl-request-list';
 
 export const CurlRequestList = () => {
   const { locale } = useLanguageBrowser();
@@ -36,9 +35,9 @@ export const CurlRequestList = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const response = useCurlRequestList({ limit: 100, search: searchTerm });
-  const rows = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
-  const totalCount = response.data?.pages[0].result?.total_count ?? 0;
+  const response = useInfinityCurlRequestList({ limit: 100, search: searchTerm });
+  const rows = response?.data?.pages.flatMap((p) => p?.model ?? []) || [];
+  const totalCount = response.data?.pages[0]?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${CurlRequestTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

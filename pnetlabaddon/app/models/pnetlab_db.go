@@ -26,7 +26,7 @@ func (Wireshark) TableName() string {
 	return "wiresharks"
 }
 
-// User модель для таблицы users
+// User модель для таблицы user
 type User struct {
 	Pod           int     `gorm:"primary_key;column:pod;AUTO_INCREMENT"`
 	Username      string  `gorm:"column:username;type:text"`
@@ -55,7 +55,7 @@ type User struct {
 
 // TableName возвращает имя таблицы для модели User
 func (User) TableName() string {
-	return "users"
+	return "user"
 }
 
 // UserRole модель для таблицы user_roles

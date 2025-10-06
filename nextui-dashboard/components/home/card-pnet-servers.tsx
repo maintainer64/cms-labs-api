@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Select, SelectItem } from '@heroui/react';
-import { usePnetServerList } from '@/helpers/queries/pnet-server/get';
 import Chart, { Props } from 'react-apexcharts';
 import useLanguageBrowser from '@/helpers/locale';
 import { Loading } from '@/components/scroll/loader';
+import { useInfinityServerList } from '@/helpers/queries/server/use-infinity-server-list';
 
 export const CardPnetServers = () => {
   const {
@@ -13,21 +13,21 @@ export const CardPnetServers = () => {
   } = useLanguageBrowser();
   const [orderBy, setOrderBy] = useState('unitRate');
   const [status, setStatus] = useState('active');
-  const response = usePnetServerList({
+  const response = useInfinityServerList({
     limit: 100,
-    order_by: orderBy,
+    orderBy: orderBy,
     status: status
   });
 
   if (response.isLoading) return <Loading size='md' />;
 
-  const rows = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
+  const rows = response?.data?.pages.flatMap((p) => p?.model ?? []) || [];
 
   const chartData: Props = {
     type: 'pie',
     series: rows?.map((server) => {
-      if (orderBy === 'lastCountUsers') return server.model.last_count_users || 0;
-      return server.model.unit_rate || 0;
+      if (orderBy === 'lastCountUsers') return server.model.lastCountUsers || 0;
+      return server.model.unitRate || 0;
     }),
     options: {
       labels: rows?.map((server) => {

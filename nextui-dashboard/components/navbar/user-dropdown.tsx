@@ -1,6 +1,6 @@
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@heroui/react';
 import React, { useCallback } from 'react';
-import { userClearCookies } from '@/helpers/queries/jwt/userClearCookies';
+import { useMutationUserLogout } from '@/helpers/queries/user/use-mutation-user-logout';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
@@ -12,8 +12,10 @@ export const UserDropdown = () => {
   const { locale } = useLanguageBrowser();
   const user = useUserProfile();
 
+  const { mutateAsync } = useMutationUserLogout();
+
   const handleLogout = useCallback(async () => {
-    await userClearCookies();
+    await mutateAsync({});
     navigate(RoutesLocation.login());
   }, [navigate]);
 

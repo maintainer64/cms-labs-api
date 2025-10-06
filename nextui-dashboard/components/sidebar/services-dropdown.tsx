@@ -4,13 +4,13 @@ import React from 'react';
 import { CmsIcon } from '../icons/cms-icon';
 import { BottomIcon } from '../icons/sidebar/bottom-icon';
 import useLanguageBrowser from '@/helpers/locale';
-import { useServiceCardList } from '@/helpers/queries/service-cards/get';
+import { useQueryServiceCardList } from '@/helpers/queries/service_card/use-query-service-card-list';
 
 const DropdownServiceCards = () => {
-  const response = useServiceCardList();
-  const rows = response?.data?.result?.model || [];
+  const response = useQueryServiceCardList({});
+  const rows = response?.data?.model || [];
   return rows
-    .filter((service) => service.is_active)
+    .filter((service) => service.isActive)
     .map((service, index) => {
       return (
         <DropdownItem
@@ -20,7 +20,7 @@ const DropdownServiceCards = () => {
           }}
           href={service.url || '#'}
           target='_blank'
-          startContent={service.image_url && <Image src={service.image_url} width={30} alt={service.image_url} />}
+          startContent={service.imageUrl && <Image src={service.imageUrl} width={30} alt={service.imageUrl} />}
           description={service.description}
           classNames={{
             base: 'py-4',

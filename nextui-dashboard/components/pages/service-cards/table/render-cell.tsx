@@ -1,12 +1,13 @@
 import React from 'react';
 import { EditIcon } from '../../../icons/table/edit-icon';
-import { models_ServiceCardListItem } from '@/helpers/api';
+import { ModelsServiceCardListItem } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { Chip } from '@heroui/react';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface Props {
-  item: models_ServiceCardListItem;
+  item: CamelCasedPropertiesDeep<ModelsServiceCardListItem>;
   columnKey: string | React.Key;
 }
 
@@ -50,7 +51,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
       return (
         <div>
           <div>
-            {item.is_active ? (
+            {item.isActive ? (
               <Chip size='sm' color='success'>
                 {ColumnStatus.Activated}
               </Chip>

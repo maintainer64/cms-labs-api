@@ -380,7 +380,7 @@ func TestCurlRequestExecute(t *testing.T) {
 	defer gock.Off()
 	gock.New("https://api.example.com").
 		MatchHeader("Authorization", "Bearer valid_token_123").
-		Get("/users/42").
+		Get("/user/42").
 		Reply(200).
 		JSON(map[string]interface{}{"id": 42, "name": "John Doe"})
 

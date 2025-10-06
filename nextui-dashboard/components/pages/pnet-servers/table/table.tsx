@@ -2,9 +2,8 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCellWithLocale } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { models_PNETServerListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
-import { PnetServerItem } from '@/helpers/queries/pnet-server/model';
+import { PnetServerItem } from '@/helpers/queries/server/use-query-server-get';
 
 interface PnetServerTableWrapperProps {
   loadMore?: () => void;
@@ -36,7 +35,18 @@ export const PnetServerTableWrapper = ({ rows, isLoading, loadMore }: PnetServer
             )}
           </TableHeader>
           <TableBody items={rows ?? []}>
-            {(item) => <TableRow>{(columnKey) => <TableCell>{RenderCell({ item, columnKey })}</TableCell>}</TableRow>}
+            {(item) => (
+              <TableRow>
+                {(columnKey) => (
+                  <TableCell>
+                    {RenderCell({
+                      item,
+                      columnKey
+                    })}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

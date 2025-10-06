@@ -11,7 +11,7 @@ type LTIAttemptDeleteUC struct {
 type LTIAttemptDeleteRequest struct {
 	JSONRPC string                   `json:"jsonrpc" default:"2.0" validate:"required"`
 	Method  string                   `json:"method" default:"lti_attempt.delete" validate:"required"`
-	Params  LTIAttemptCreateInputDTO `json:"params,omitempty"`
+	Params  LTIAttemptDeleteInputDTO `json:"params,omitempty"`
 	ID      string                   `json:"id,omitempty" default:"1" validate:"required"`
 }
 

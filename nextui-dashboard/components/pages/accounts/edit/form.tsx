@@ -3,29 +3,29 @@ import React from 'react';
 import { addToast, Button, Checkbox, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import useLanguageBrowser from '@/helpers/locale';
-import { useUserUpsert } from '@/helpers/queries/users/upsert';
 import { Link, useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
-import { useUserByID } from '@/helpers/queries/users/get';
 import { Loading } from '@/components/scroll/loader';
 import { RolesSelector } from '@/components/base-forms/roles';
-import { MapUserItem, UserItem } from '@/helpers/queries/users/model';
+import { MapUserItem, UserItem } from '@/helpers/queries/user/use-infinity-user-list';
+import { useQueryUserGet } from '@/helpers/queries/user/use-query-user-get';
+import { useMutationUserUpsert } from '@/helpers/queries/user/use-mutation-user-upsert';
 
 interface EditFormProps {
   id?: number;
 }
 
 const defaultValues: UserItem = {
-  created_at: '',
-  deleted_at: '',
+  createdAt: '',
+  deletedAt: '',
   email: '',
-  group_name: '',
+  groupName: '',
   id: undefined,
-  last_launch_id: '',
-  lti_user_id: '',
+  lastLaunchId: '',
+  ltiUserId: '',
   name: '',
-  updated_at: '',
+  updatedAt: '',
   roles: []
 };
 
@@ -34,12 +34,12 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
     locale: { UserForm, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const queryUser = useUserByID(id);
-  const initialValues = MapUserItem(queryUser.data?.result?.model, queryUser.data?.result?.roles) ?? defaultValues;
+  const queryUser = useQueryUserGet({ id });
+  const initialValues = MapUserItem(queryUser.data?.model, queryUser.data?.roles) ?? defaultValues;
 
-  const { mutate } = useUserUpsert({
-    onSuccess: (data, { formikHelpers }) => {
-      navigate(RoutesLocation.accountsEdit(data.result?.id?.toString() || ''), { replace: true });
+  const { mutate } = useMutationUserUpsert({
+    onSuccess: (data) => {
+      navigate(RoutesLocation.accountsEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -59,7 +59,17 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
       initialValues={initialValues}
       validationSchema={undefined}
       onSubmit={(values, formikHelpers) => {
-        mutate({ values, formikHelpers });
+        if (values === null) return;
+        mutate({
+          email: values.email ?? '',
+          groupName: values.groupName,
+          id: values.id,
+          isActive: !values.deletedAt,
+          ltiUserId: values.ltiUserId,
+          name: values.name ?? '',
+          roles: values.roles?.map((roleId) => parseInt(roleId.toString())),
+          store: values.store || {}
+        });
       }}
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
@@ -95,35 +105,31 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
               variant='bordered'
               label={UserForm.FieldGroupName}
               type='text'
-              value={values.group_name ?? ''}
-              onChange={handleChange('group_name')}
+              value={values.groupName ?? ''}
+              onChange={handleChange('groupName')}
             />
             <Input
               variant='bordered'
               label={UserForm.FieldExternalLTIID}
               type='text'
-              value={values.lti_user_id ?? ''}
-              onChange={handleChange('lti_user_id')}
+              value={values.ltiUserId ?? ''}
+              onChange={handleChange('ltiUserId')}
             />
-            <Checkbox
-              type='checkbox'
-              defaultSelected={Boolean(values.deleted_at)}
-              onChange={handleChange('deleted_at')}
-            >
+            <Checkbox type='checkbox' defaultSelected={Boolean(values.deletedAt)} onChange={handleChange('deletedAt')}>
               {UserForm.FieldIsDeactivated}
             </Checkbox>
             <Input
               variant='bordered'
               label={UserForm.FieldCreatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.created_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
               label={UserForm.FieldUpdatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.updated_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>

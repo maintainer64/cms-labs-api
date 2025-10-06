@@ -25,9 +25,9 @@ type UserListItem struct {
 	UserBase
 }
 
-// TableName переопределяет название таблицы для UserListItem на `users`
+// TableName переопределяет название таблицы для UserListItem на `user`
 func (UserListItem) TableName() string {
-	return "users"
+	return "user"
 }
 
 type User struct {

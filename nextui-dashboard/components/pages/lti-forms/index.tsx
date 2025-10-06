@@ -8,9 +8,9 @@ import { Link } from 'react-router-dom';
 import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
 import SearchInput from '@/components/sidebar/search-input';
 import { LTIFormsTableWrapper } from '@/components/pages/lti-forms/table/table';
-import { useLTIFormsList } from '@/helpers/queries/lti-forms/get';
 import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
 import { UserRoleBase } from '@/helpers/queries/sso/auth';
+import { useInfinityLtiFormList } from '@/helpers/queries/lti_form/use-infinity-lti-form-list';
 
 export const LTIFormsList = () => {
   const { locale } = useLanguageBrowser();
@@ -37,9 +37,9 @@ export const LTIFormsList = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const response = useLTIFormsList({ limit: 100, search: searchTerm });
-  const rows = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
-  const totalCount = response.data?.pages[0].result?.total_count ?? 0;
+  const response = useInfinityLtiFormList({ limit: 100, search: searchTerm });
+  const rows = response?.data?.pages.flatMap((p) => p?.model ?? []) || [];
+  const totalCount = response.data?.pages[0]?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${LTIFormsTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

@@ -1,9 +1,10 @@
-import { Handle, Position } from '@xyflow/react';
+import { Handle as HandleComponent, Position } from '@xyflow/react';
 import React from 'react';
-import { topology_TopologiesNode } from '@/helpers/api';
+import { TopologyTopologiesNode } from '@/helpers/api';
 import ImageIcon from '@/components/topology/icons';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
-export const nodeTypeDefault = ({ data }: topology_TopologiesNode) => {
+export const nodeTypeDefault = ({ data }: CamelCasedPropertiesDeep<TopologyTopologiesNode>) => {
   return (
     <div
       className='
@@ -49,9 +50,10 @@ export const nodeTypeDefault = ({ data }: topology_TopologiesNode) => {
           <div className='absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-700 dark:bg-gray-200 rotate-45' />
         </div>
       )}
-
-      <Handle position={Position.Bottom} type='target' hidden={true} />
-      <Handle position={Position.Bottom} type='source' hidden={true} />
+      {/*@ts-ignore*/}
+      <HandleComponent position={Position.Bottom} type='target' hidden={true} />
+      {/*@ts-ignore*/}
+      <HandleComponent position={Position.Bottom} type='source' hidden={true} />
     </div>
   );
 };

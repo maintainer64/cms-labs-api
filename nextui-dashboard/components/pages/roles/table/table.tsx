@@ -2,14 +2,15 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { models_Role } from '@/helpers/api';
+import { ModelsRole } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface RolesTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: models_Role[];
+  rows?: CamelCasedPropertiesDeep<ModelsRole>[];
 }
 
 export const RolesTableWrapper = ({ rows, isLoading, loadMore }: RolesTableWrapperProps) => {

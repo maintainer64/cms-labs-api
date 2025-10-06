@@ -55,7 +55,7 @@
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.delete": {
+        "/api/v1/rpc/curl_request.delete": {
             "post": {
                 "security": [
                     {
@@ -94,7 +94,7 @@
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.get": {
+        "/api/v1/rpc/curl_request.get": {
             "post": {
                 "security": [
                     {
@@ -133,7 +133,7 @@
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.list": {
+        "/api/v1/rpc/curl_request.list": {
             "post": {
                 "security": [
                     {
@@ -172,7 +172,7 @@
                 }
             }
         },
-        "/api/v1/rpc/curlRequest.upsert": {
+        "/api/v1/rpc/curl_request.upsert": {
             "post": {
                 "security": [
                     {
@@ -3422,6 +3422,14 @@
                 }
             }
         },
+        "usecases.CurlRequestDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "usecases.CurlRequestDeleteRequest": {
             "type": "object",
             "required": [
@@ -3443,7 +3451,7 @@
                     "default": "curl_request.delete"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
+                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
                 }
             }
         },
@@ -3464,7 +3472,7 @@
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
+                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
                 }
             }
         },
@@ -3792,7 +3800,7 @@
                     "default": "lti_attempt.delete"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIAttemptCreateInputDTO"
+                    "$ref": "#/definitions/usecases.LTIAttemptDeleteInputDTO"
                 }
             }
         },
@@ -4229,6 +4237,24 @@
                 }
             }
         },
+        "usecases.LTIFormListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LTIFormListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
         "usecases.LTIFormListRequest": {
             "type": "object",
             "properties": {
@@ -4262,7 +4288,7 @@
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormGetOutputDTO"
+                    "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
                 }
             }
         },

@@ -1,11 +1,12 @@
 import React from 'react';
 import { EditIcon } from '../../../icons/table/edit-icon';
-import { models_LTIRoutingListItem } from '@/helpers/api';
+import { ModelsLTIRoutingListItem } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface Props {
-  item: models_LTIRoutingListItem;
+  item: CamelCasedPropertiesDeep<ModelsLTIRoutingListItem>;
   columnKey: string | React.Key;
 }
 

@@ -85,14 +85,14 @@ definitions:
           $ref: '#/definitions/topology.TopologiesNode'
         type: array
     type: object
-  usecases.ContainersGetInputDTO:
+  usecases.ContainerGetInputDTO:
     properties:
       deployment:
         type: string
       namespace:
         type: string
     type: object
-  usecases.ContainersGetItem:
+  usecases.ContainerGetItem:
     properties:
       connect_url:
         type: string
@@ -119,28 +119,42 @@ definitions:
         description: 'Type enum: containerlab,default'
         type: string
     type: object
-  usecases.ContainersGetOutputDTO:
+  usecases.ContainerGetOutputDTO:
     properties:
       containers:
         items:
-          $ref: '#/definitions/usecases.ContainersGetItem'
+          $ref: '#/definitions/usecases.ContainerGetItem'
         type: array
+    type: object
+  usecases.ContainerGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: container.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ContainerGetInputDTO'
     type: object
   usecases.ContainersGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.ContainersGetOutputDTO'
-    required:
-    - error
-    - msg
+        $ref: '#/definitions/usecases.ContainerGetOutputDTO'
     type: object
-  usecases.TasksListInputDTO:
+  usecases.TaskListInputDTO:
     type: object
-  usecases.TasksListOutputDTO:
+  usecases.TaskListOutputDTO:
     properties:
       model:
         items:
@@ -149,75 +163,31 @@ definitions:
     required:
     - model
     type: object
-  usecases.TasksListResponse:
+  usecases.TaskListRequest:
     properties:
-      error:
-        type: boolean
-      msg:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: tasks.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TaskListInputDTO'
+    type: object
+  usecases.TaskListResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.TasksListOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.TopologiesCreateInputDTO:
-    properties:
-      redeploy:
-        type: boolean
-      task_id:
-        type: string
-      username:
-        type: string
-    type: object
-  usecases.TopologiesCreateOutputDTO:
-    properties:
-      deploy_created:
-        type: boolean
-      namespace:
-        type: string
-      namespace_created:
-        type: boolean
-      user_created:
-        type: boolean
-    type: object
-  usecases.TopologiesCreateResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.TopologiesCreateOutputDTO'
-    required:
-    - error
-    - msg
-    type: object
-  usecases.TopologiesDeleteInputDTO:
-    properties:
-      namespaces:
-        items:
-          type: string
-        type: array
-    type: object
-  usecases.TopologiesDeleteOutputDTO:
-    properties:
-      namespaces:
-        items:
-          type: string
-        type: array
-    type: object
-  usecases.TopologiesDeleteResponse:
-    properties:
-      error:
-        type: boolean
-      msg:
-        type: string
-      result:
-        $ref: '#/definitions/usecases.TopologiesDeleteOutputDTO'
-    required:
-    - error
-    - msg
+        $ref: '#/definitions/usecases.TaskListOutputDTO'
     type: object
   usecases.TopologiesGetInputDTO:
     properties:
@@ -231,17 +201,117 @@ definitions:
       web_url:
         type: string
     type: object
+  usecases.TopologiesGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: topology.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TopologiesGetInputDTO'
+    type: object
   usecases.TopologiesGetResponse:
     properties:
-      error:
-        type: boolean
-      msg:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
         type: string
       result:
         $ref: '#/definitions/usecases.TopologiesGetOutputDTO'
-    required:
-    - error
-    - msg
+    type: object
+  usecases.TopologyCreateInputDTO:
+    properties:
+      redeploy:
+        type: boolean
+      task_id:
+        type: string
+      username:
+        type: string
+    type: object
+  usecases.TopologyCreateOutputDTO:
+    properties:
+      deploy_created:
+        type: boolean
+      namespace:
+        type: string
+      namespace_created:
+        type: boolean
+      user_created:
+        type: boolean
+    type: object
+  usecases.TopologyCreateRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: topology.create
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TopologyCreateInputDTO'
+    type: object
+  usecases.TopologyCreateResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TopologyCreateOutputDTO'
+    type: object
+  usecases.TopologyDeleteInputDTO:
+    properties:
+      namespaces:
+        items:
+          type: string
+        type: array
+    type: object
+  usecases.TopologyDeleteOutputDTO:
+    properties:
+      namespaces:
+        items:
+          type: string
+        type: array
+    type: object
+  usecases.TopologyDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: topology.delete
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TopologyDeleteInputDTO'
+    type: object
+  usecases.TopologyDeleteResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TopologyDeleteOutputDTO'
     type: object
 info:
   contact:
@@ -255,7 +325,7 @@ info:
   title: Clabernetes Gate API
   version: "1.0"
 paths:
-  /v1/containers/get:
+  /clabgate/api/v1/rpc/container.get:
     post:
       consumes:
       - application/json
@@ -266,7 +336,7 @@ paths:
         name: form
         required: true
         schema:
-          $ref: '#/definitions/usecases.ContainersGetInputDTO'
+          $ref: '#/definitions/usecases.ContainerGetRequest'
       produces:
       - application/json
       responses:
@@ -279,7 +349,7 @@ paths:
       summary: describe device topology
       tags:
       - Device
-  /v1/tasks/list:
+  /clabgate/api/v1/rpc/task.list:
     post:
       consumes:
       - application/json
@@ -287,23 +357,95 @@ paths:
       parameters:
       - description: tasks list info
         in: body
-        name: form
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.TasksListInputDTO'
+          $ref: '#/definitions/usecases.TaskListRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.TasksListResponse'
+            $ref: '#/definitions/usecases.TaskListResponse'
       security:
       - ApiKeyAuth: []
       summary: list tasks
       tags:
-      - Tasks
-  /v1/tokens/yaml:
+      - task
+  /clabgate/api/v1/rpc/topology.create:
+    post:
+      consumes:
+      - application/json
+      description: 'create personal topology. Roles: [student, admin, instructor]'
+      parameters:
+      - description: create params
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TopologyCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TopologyCreateResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create personal topologies
+      tags:
+      - Topology
+  /clabgate/api/v1/rpc/topology.delete:
+    post:
+      consumes:
+      - application/json
+      description: 'delete personal topology. Roles: [student, admin, instructor]'
+      parameters:
+      - description: delete params
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TopologyDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TopologyDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete personal topologies
+      tags:
+      - Topology
+  /clabgate/api/v1/rpc/topology.get:
+    post:
+      consumes:
+      - application/json
+      description: 'List tasks. Roles: [student, admin, instructor]'
+      parameters:
+      - description: topology namespace
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TopologiesGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TopologiesGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list tasks
+      tags:
+      - Topology
+  /clabgate/api/v1/tokens/yaml:
     get:
       consumes:
       - application/json
@@ -318,78 +460,6 @@ paths:
       summary: token cluster yaml
       tags:
       - Token
-  /v1/topologies/create:
-    post:
-      consumes:
-      - application/json
-      description: 'create personal topology. Roles: [student, admin, instructor]'
-      parameters:
-      - description: create params
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TopologiesCreateInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.TopologiesCreateResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: create personal topologies
-      tags:
-      - Topology
-  /v1/topologies/delete:
-    post:
-      consumes:
-      - application/json
-      description: 'delete personal topology. Roles: [student, admin, instructor]'
-      parameters:
-      - description: delete params
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TopologiesDeleteInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.TopologiesDeleteResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: delete personal topologies
-      tags:
-      - Topology
-  /v1/topologies/get:
-    post:
-      consumes:
-      - application/json
-      description: 'List tasks. Roles: [student, admin, instructor]'
-      parameters:
-      - description: topology namespace
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TopologiesGetInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.TopologiesGetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: list tasks
-      tags:
-      - Topology
 securityDefinitions:
   ApiKeyAuth:
     in: header

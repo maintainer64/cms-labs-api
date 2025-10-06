@@ -1,10 +1,11 @@
-import { models_UserListItem } from '@/helpers/api';
+import { ModelsUserListItem } from '@/helpers/api';
 import { AvatarGroup } from '@heroui/react';
 import CustomAvatar from '@/components/sidebar/avatar';
 import React from 'react';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface AvatarGroupsRoomProps {
-  members?: Array<models_UserListItem>;
+  members?: Array<CamelCasedPropertiesDeep<ModelsUserListItem>>;
   collaboration?: number;
 }
 

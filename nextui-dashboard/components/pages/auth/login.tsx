@@ -1,28 +1,27 @@
 'use client';
 
 import { LoginSchema } from '@/helpers/schemas';
-import { LoginFormType } from '@/helpers/types';
 import { Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
-import { useCallback } from 'react';
 import useLanguageBrowser from '@/helpers/locale';
-import { postV1TokenLogin } from '@/helpers/api';
-import { FormikHelpers } from 'formik/dist/types';
 import { RoutesLocation } from '@/components/routes';
-import { useLTIFormsSSOList } from '@/helpers/queries/lti-forms/sso';
 import { SSOAuthorizationGet } from '@/components/pages/auth/ssoSave';
 import { SecurityIcon } from '@/components/icons/sso';
+import { useQueryLtiFormSsoListGet } from '@/helpers/queries/lti_form/use-query-lti-form-sso-list-get';
+import { useMutationUserLogin } from '@/helpers/queries/user/use-mutation-user-login';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { AuthRenewManagerCredentialsInputDTO } from '@/helpers/api';
+
+const defaultValues: CamelCasedPropertiesDeep<AuthRenewManagerCredentialsInputDTO> = {
+  email: '',
+  password: ''
+};
 
 export const Login = () => {
   const { locale } = useLanguageBrowser();
+  const ssoLinks = useQueryLtiFormSsoListGet({});
 
-  const initialValues: LoginFormType = {
-    email: '',
-    password: ''
-  };
-  const ssoLinks = useLTIFormsSSOList();
-
-  const ssoButtons = ssoLinks.data?.result?.model.map((service, key) => (
+  const ssoButtons = ssoLinks.data?.model.map((service, key) => (
     <>
       <div className='inline-flex items-center justify-center w-full'>
         <hr className='w-32 h-px my-4 border-0 dark:bg-gray-100/10 bg-gray-700/10' />
@@ -34,7 +33,7 @@ export const Login = () => {
         className='w-full'
         key={key}
         onPress={() => {
-          window.location.href = service.sso_url || '';
+          window.location.href = service.ssoUrl || '';
         }}
         variant='flat'
         color='default'
@@ -44,26 +43,33 @@ export const Login = () => {
     </>
   ));
 
-  // Обработка внутренней авторизации
-  const handleLogin = useCallback(async (values: LoginFormType, formikHelpers: FormikHelpers<LoginFormType>) => {
-    try {
-      await postV1TokenLogin({ form: { email: values.email, password: values.password } });
+  const { mutate } = useMutationUserLogin({
+    onSuccess: (data, { formikHelpers }) => {
+      formikHelpers.resetForm();
       const params = SSOAuthorizationGet();
       if (params === null) {
         // Default redirect
         window.location.href = RoutesLocation.home();
       }
-    } catch (error: any) {
+    },
+    onError: (error: any, { formikHelpers }) => {
       formikHelpers.setErrors({});
       formikHelpers.setErrors({ password: error.body.msg });
     }
-  }, []);
+  });
 
   return (
     <>
       <div className='text-center text-[25px] font-bold mb-6'>{locale.Login.PageName}</div>
 
-      <Formik initialValues={initialValues} validationSchema={LoginSchema()} onSubmit={handleLogin}>
+      <Formik
+        initialValues={defaultValues}
+        validationSchema={LoginSchema()}
+        onSubmit={(values, formikHelpers) => {
+          // @ts-ignore
+          mutate({ values, formikHelpers });
+        }}
+      >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <>
             <div className='flex flex-col w-1/2 gap-4 mb-4'>

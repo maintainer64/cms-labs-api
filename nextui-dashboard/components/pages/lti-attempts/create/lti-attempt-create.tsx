@@ -1,6 +1,5 @@
 'use client';
 
-import { useLTIAttemptCreate } from '@/helpers/queries/lti-attempt/get';
 import useLanguageBrowser from '@/helpers/locale';
 import { InputOtp } from '@heroui/input-otp';
 import React, { useEffect, useState } from 'react';
@@ -10,11 +9,12 @@ import { ClipboardIcon } from '@/components/icons/table/clipboard';
 import copy from 'copy-to-clipboard';
 import { RollbackIcon } from '@/components/icons/table/rollback';
 import { RoutesLocation } from '@/components/routes';
-import { useLTIAttemptChange } from '@/helpers/queries/lti-attempt/change';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Loading } from '@/components/scroll/loader';
 import { Link } from 'react-router-dom';
 import { AvatarGroupsRoom } from '@/components/pages/lti-attempts/create/avatar-groups-room';
+import { useMutationLtiAttemptCreate } from '@/helpers/queries/lti_attempt/use-mutation-lti-attempt-create';
+import { useQueryLtiAttemptCreate } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-create';
 
 export const LTIAttemptCreate = () => {
   const {
@@ -24,9 +24,9 @@ export const LTIAttemptCreate = () => {
     }
   } = useLanguageBrowser();
   const [roomNumber, setRoomNumber] = useState<string>('');
-  const response = useLTIAttemptCreate();
-  const result = response.data?.result;
-  const change = useLTIAttemptChange({
+  const response = useQueryLtiAttemptCreate({});
+  const result = response?.data;
+  const change = useMutationLtiAttemptCreate({
     onSuccess: (data) => {
       addToast({
         title: LTIAttemptRoom.RoomChangeSuccess,
@@ -41,22 +41,22 @@ export const LTIAttemptCreate = () => {
       });
     }
   });
-  const defaultRoomNumber = result?.room_number?.toString() ?? '';
+  const defaultRoomNumber = result?.roomNumber?.toString() ?? '';
   useEffect(() => {
     setRoomNumber(defaultRoomNumber);
   }, [defaultRoomNumber]);
   if (response.isLoading) return <Loading size='md' />;
   if (response.error)
     return (
-      <ErrorModal title={LTIAttemptRoom.ErrorPageTitle} description={response.error.body.msg}>
+      <ErrorModal title={LTIAttemptRoom.ErrorPageTitle} description={response.error.message}>
         <Button onPress={() => response.refetch()} href='#' variant='light' color='primary'>
           {LTIAttemptRoom.ErrorPageRefresh}
         </Button>
       </ErrorModal>
     );
-  if (result?.auto_redirect === true) {
-    window.location.href = result.next_url || '/';
-    return;
+  if (result?.autoRedirect === true) {
+    window.location.href = result.nextUrl || '/';
+    return <></>;
   }
   return (
     <Modal isOpen={true} hideCloseButton={true}>
@@ -113,7 +113,7 @@ export const LTIAttemptCreate = () => {
         <ModalFooter>
           <Button
             onPress={() => {
-              change.mutate({ room_number: parseInt(roomNumber) });
+              change.mutate({ roomNumber: parseInt(roomNumber) });
             }}
             isDisabled={roomNumber === defaultRoomNumber}
             color='secondary'

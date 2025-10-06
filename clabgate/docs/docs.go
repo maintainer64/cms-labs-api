@@ -23,7 +23,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/containers/get": {
+        "/clabgate/api/v1/rpc/container.get": {
             "post": {
                 "security": [
                     {
@@ -48,7 +48,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.ContainersGetInputDTO"
+                            "$ref": "#/definitions/usecases.ContainerGetRequest"
                         }
                     }
                 ],
@@ -62,7 +62,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/tasks/list": {
+        "/clabgate/api/v1/rpc/task.list": {
             "post": {
                 "security": [
                     {
@@ -77,17 +77,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Tasks"
+                    "task"
                 ],
                 "summary": "list tasks",
                 "parameters": [
                     {
                         "description": "tasks list info",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.TasksListInputDTO"
+                            "$ref": "#/definitions/usecases.TaskListRequest"
                         }
                     }
                 ],
@@ -95,36 +95,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.TasksListResponse"
+                            "$ref": "#/definitions/usecases.TaskListResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/tokens/yaml": {
-            "get": {
-                "description": "Token cluster. Roles: any",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Token"
-                ],
-                "summary": "token cluster yaml",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/topologies/create": {
+        "/clabgate/api/v1/rpc/topology.create": {
             "post": {
                 "security": [
                     {
@@ -149,7 +126,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.TopologiesCreateInputDTO"
+                            "$ref": "#/definitions/usecases.TopologyCreateRequest"
                         }
                     }
                 ],
@@ -157,13 +134,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.TopologiesCreateResponse"
+                            "$ref": "#/definitions/usecases.TopologyCreateResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/topologies/delete": {
+        "/clabgate/api/v1/rpc/topology.delete": {
             "post": {
                 "security": [
                     {
@@ -188,7 +165,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.TopologiesDeleteInputDTO"
+                            "$ref": "#/definitions/usecases.TopologyDeleteRequest"
                         }
                     }
                 ],
@@ -196,13 +173,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.TopologiesDeleteResponse"
+                            "$ref": "#/definitions/usecases.TopologyDeleteResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/topologies/get": {
+        "/clabgate/api/v1/rpc/topology.get": {
             "post": {
                 "security": [
                     {
@@ -227,7 +204,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.TopologiesGetInputDTO"
+                            "$ref": "#/definitions/usecases.TopologiesGetRequest"
                         }
                     }
                 ],
@@ -236,6 +213,29 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/usecases.TopologiesGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/clabgate/api/v1/tokens/yaml": {
+            "get": {
+                "description": "Token cluster. Roles: any",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "token cluster yaml",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -373,7 +373,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.ContainersGetInputDTO": {
+        "usecases.ContainerGetInputDTO": {
             "type": "object",
             "properties": {
                 "deployment": {
@@ -384,7 +384,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.ContainersGetItem": {
+        "usecases.ContainerGetItem": {
             "type": "object",
             "properties": {
                 "connect_url": {
@@ -424,39 +424,58 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.ContainersGetOutputDTO": {
+        "usecases.ContainerGetOutputDTO": {
             "type": "object",
             "properties": {
                 "containers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/usecases.ContainersGetItem"
+                        "$ref": "#/definitions/usecases.ContainerGetItem"
                     }
+                }
+            }
+        },
+        "usecases.ContainerGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "container.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ContainerGetInputDTO"
                 }
             }
         },
         "usecases.ContainersGetResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.ContainersGetOutputDTO"
+                    "$ref": "#/definitions/usecases.ContainerGetOutputDTO"
                 }
             }
         },
-        "usecases.TasksListInputDTO": {
+        "usecases.TaskListInputDTO": {
             "type": "object"
         },
-        "usecases.TasksListOutputDTO": {
+        "usecases.TaskListOutputDTO": {
             "type": "object",
             "required": [
                 "model"
@@ -470,110 +489,40 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.TasksListResponse": {
+        "usecases.TaskListRequest": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "tasks.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TaskListInputDTO"
+                }
+            }
+        },
+        "usecases.TaskListResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.TasksListOutputDTO"
-                }
-            }
-        },
-        "usecases.TopologiesCreateInputDTO": {
-            "type": "object",
-            "properties": {
-                "redeploy": {
-                    "type": "boolean"
-                },
-                "task_id": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.TopologiesCreateOutputDTO": {
-            "type": "object",
-            "properties": {
-                "deploy_created": {
-                    "type": "boolean"
-                },
-                "namespace": {
-                    "type": "string"
-                },
-                "namespace_created": {
-                    "type": "boolean"
-                },
-                "user_created": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "usecases.TopologiesCreateResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.TopologiesCreateOutputDTO"
-                }
-            }
-        },
-        "usecases.TopologiesDeleteInputDTO": {
-            "type": "object",
-            "properties": {
-                "namespaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "usecases.TopologiesDeleteOutputDTO": {
-            "type": "object",
-            "properties": {
-                "namespaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "usecases.TopologiesDeleteResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.TopologiesDeleteOutputDTO"
+                    "$ref": "#/definitions/usecases.TaskListOutputDTO"
                 }
             }
         },
@@ -596,21 +545,167 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.TopologiesGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "topology.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TopologiesGetInputDTO"
+                }
+            }
+        },
         "usecases.TopologiesGetResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.TopologiesGetOutputDTO"
+                }
+            }
+        },
+        "usecases.TopologyCreateInputDTO": {
+            "type": "object",
+            "properties": {
+                "redeploy": {
+                    "type": "boolean"
+                },
+                "task_id": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TopologyCreateOutputDTO": {
+            "type": "object",
+            "properties": {
+                "deploy_created": {
+                    "type": "boolean"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "namespace_created": {
+                    "type": "boolean"
+                },
+                "user_created": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "usecases.TopologyCreateRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "topology.create"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TopologyCreateInputDTO"
+                }
+            }
+        },
+        "usecases.TopologyCreateResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TopologyCreateOutputDTO"
+                }
+            }
+        },
+        "usecases.TopologyDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "namespaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "usecases.TopologyDeleteOutputDTO": {
+            "type": "object",
+            "properties": {
+                "namespaces": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "usecases.TopologyDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "topology.delete"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TopologyDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.TopologyDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TopologyDeleteOutputDTO"
                 }
             }
         }

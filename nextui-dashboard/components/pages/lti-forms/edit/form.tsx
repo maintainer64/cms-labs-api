@@ -12,36 +12,37 @@ import {
   Input
 } from '@heroui/react';
 import { Formik } from 'formik';
-import { models_LTIForm } from '@/helpers/api';
+import { ModelsLTIForm } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
-import { useLtiFormsByID } from '@/helpers/queries/lti-forms/get';
-import { useLTIFormsUpsert } from '@/helpers/queries/lti-forms/upsert';
 import { Textarea } from '@heroui/input';
 import { LtiFormURILTIMoodle } from '@/components/pages/lti-forms/edit/lti-forms-popup';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
-import { useLTIFormsDelete } from '@/helpers/queries/lti-forms/delete';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { useQueryLtiFormGet } from '@/helpers/queries/lti_form/use-query-lti-form-get';
+import { useMutationLtiFormUpsert } from '@/helpers/queries/lti_form/use-mutation-lti-form-upsert';
+import { useMutationLtiFormDelete } from '@/helpers/queries/lti_form/use-mutation-lti-form-delete';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_LTIForm = {
-  base_uri: '',
-  created_at: '',
-  key_set_uri: '',
-  lti_auth_login_uri: '',
-  lti_auth_token_uri: '',
-  lti_client_id: '',
-  lti_deployment_id: '',
+const defaultValues: CamelCasedPropertiesDeep<ModelsLTIForm> = {
+  baseUri: '',
+  createdAt: '',
+  keySetUri: '',
+  ltiAuthLoginUri: '',
+  ltiAuthTokenUri: '',
+  ltiClientId: '',
+  ltiDeploymentId: '',
   name: '',
-  private_key: '',
-  public_key: '',
-  target_link_uri: '',
-  updated_at: ''
+  privateKey: '',
+  publicKey: '',
+  targetLinkUri: '',
+  updatedAt: ''
 };
 
 const extractUrlWithPath = (url: string, path: string) => {
@@ -57,11 +58,11 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
     locale: { LTIForm, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const response = useLtiFormsByID(id);
-  const initialValues = response.data?.result?.model ?? defaultValues;
-  const { mutate } = useLTIFormsUpsert({
-    onSuccess: (data, { formikHelpers }) => {
-      navigate(RoutesLocation.ltiFormsEdit(data.result?.id?.toString() || ''), { replace: true });
+  const response = useQueryLtiFormGet({ id });
+  const initialValues = response.data?.model ?? defaultValues;
+  const { mutate } = useMutationLtiFormUpsert({
+    onSuccess: (data) => {
+      navigate(RoutesLocation.ltiFormsEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -75,7 +76,7 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const onDeleteMutation = useLTIFormsDelete({
+  const onDeleteMutation = useMutationLtiFormDelete({
     onSuccess: () => {
       navigate(RoutesLocation.ltiForms(), { replace: true });
       addToast({
@@ -103,17 +104,28 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
       initialValues={initialValues}
       validationSchema={undefined}
       onSubmit={(values, formikHelpers) => {
-        mutate({ values, formikHelpers });
+        mutate({
+          authLoginUri: values.ltiAuthLoginUri,
+          authTokenUri: values.ltiAuthTokenUri,
+          baseUri: values.baseUri,
+          clientId: values.ltiClientId,
+          deploymentId: values.ltiDeploymentId,
+          id: values.id,
+          keySetUri: values.keySetUri,
+          name: values.name,
+          targetLinkUri: values.targetLinkUri,
+          ssoUrl: values.ssoUrl ? values.ssoUrl : undefined
+        });
       }}
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
         <>
           {ltiMoodleSettings.component((url) => {
             const baseURI = url.replace(/\/$/, '');
-            setFieldValue('base_uri', baseURI);
-            setFieldValue('lti_auth_login_uri', `${baseURI}/mod/lti/auth.php`);
-            setFieldValue('lti_auth_token_uri', `${baseURI}/mod/lti/token.php`);
-            setFieldValue('key_set_uri', `${baseURI}/mod/lti/certs.php`);
+            setFieldValue('baseUri', baseURI);
+            setFieldValue('ltiAuthLoginUri', `${baseURI}/mod/lti/auth.php`);
+            setFieldValue('ltiAuthTokenUri', `${baseURI}/mod/lti/token.php`);
+            setFieldValue('keySetUri', `${baseURI}/mod/lti/certs.php`);
           })}
           {ltiFormDeletePopup.component({})}
           <div className='flex flex-col gap-4 mb-4'>
@@ -148,54 +160,54 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
               label={LTIForm.FieldBaseURI}
               description={LTIForm.DescriptionBaseURI}
               type='url'
-              value={values.base_uri ?? ''}
-              onChange={handleChange('base_uri')}
+              value={values.baseUri ?? ''}
+              onChange={handleChange('baseUri')}
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldLTIAuthLoginUri}
               description={LTIForm.DescriptionLTIAuthLoginUri}
               type='url'
-              value={values.lti_auth_login_uri ?? ''}
-              onChange={handleChange('lti_auth_login_uri')}
+              value={values.ltiAuthLoginUri ?? ''}
+              onChange={handleChange('ltiAuthLoginUri')}
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldLTIAuthTokenUri}
               description={LTIForm.DescriptionLTIAuthTokenUri}
               type='url'
-              value={values.lti_auth_token_uri ?? ''}
-              onChange={handleChange('lti_auth_token_uri')}
+              value={values.ltiAuthTokenUri ?? ''}
+              onChange={handleChange('ltiAuthTokenUri')}
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldTargetLinkUri}
               description={LTIForm.DescriptionTargetLinkUri}
               type='url'
-              value={values.target_link_uri ?? ''}
-              onChange={handleChange('target_link_uri')}
+              value={values.targetLinkUri ?? ''}
+              onChange={handleChange('targetLinkUri')}
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldKeySetURI}
               description={LTIForm.DescriptionKeySetURI}
               type='url'
-              value={values.key_set_uri ?? ''}
-              onChange={handleChange('key_set_uri')}
+              value={values.keySetUri ?? ''}
+              onChange={handleChange('keySetUri')}
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldLTIClientID}
               type='text'
-              value={values.lti_client_id ?? ''}
-              onChange={handleChange('lti_client_id')}
+              value={values.ltiClientId ?? ''}
+              onChange={handleChange('ltiClientId')}
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldLTIDeployment}
               type='text'
-              value={values.lti_deployment_id ?? ''}
-              onChange={handleChange('lti_deployment_id')}
+              value={values.ltiDeploymentId ?? ''}
+              onChange={handleChange('ltiDeploymentId')}
             />
             <Accordion>
               <AccordionItem
@@ -208,7 +220,7 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
                     variant='bordered'
                     label={LTIForm.MoodleProviderParams.ToolURL}
                     type='text'
-                    value={extractUrlWithPath(initialValues.target_link_uri, '')}
+                    value={extractUrlWithPath(initialValues.targetLinkUri, '')}
                     readOnly
                   />
                   <Input
@@ -229,21 +241,21 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
                     variant='bordered'
                     label={LTIForm.MoodleProviderParams.PublicKey}
                     type='text'
-                    value={initialValues.public_key ?? ''}
+                    value={initialValues.publicKey ?? ''}
                     readOnly
                   />
                   <Input
                     variant='bordered'
                     label={LTIForm.MoodleProviderParams.InitiateLoginURL}
                     type='text'
-                    value={extractUrlWithPath(initialValues.target_link_uri, '/api/v2/lti/login')}
+                    value={extractUrlWithPath(initialValues.targetLinkUri, '/api/v2/lti/login')}
                     readOnly
                   />
                   <Input
                     variant='bordered'
                     label={LTIForm.MoodleProviderParams.RedirectionURI}
                     type='text'
-                    value={extractUrlWithPath(initialValues.target_link_uri, '/api/v2/lti/launch')}
+                    value={extractUrlWithPath(initialValues.targetLinkUri, '/api/v2/lti/launch')}
                     readOnly
                   />
                   <Input
@@ -303,21 +315,21 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
               label={LTIForm.FieldSSOURL}
               description={LTIForm.DescriptionSSOURL}
               type='url'
-              value={values.sso_url ?? ''}
-              onChange={handleChange('sso_url')}
+              value={values.ssoUrl ?? ''}
+              onChange={handleChange('ssoUrl')}
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldCreatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.created_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
               label={LTIForm.FieldUpdatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.updated_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>

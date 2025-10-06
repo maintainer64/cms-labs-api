@@ -1,11 +1,11 @@
 import React from 'react';
 import { Chip } from '@heroui/react';
 import dayjs from 'dayjs';
-import { PnetServerItem } from '@/helpers/queries/pnet-server/model';
 import { RolesChip } from '@/components/base-forms/roles';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { EditIcon } from '@/components/icons/table/edit-icon';
+import { PnetServerItem } from '@/helpers/queries/server/use-query-server-get';
 
 interface Props {
   item: PnetServerItem;
@@ -55,12 +55,12 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
             <>
               <div>
                 <span>
-                  {ColumnIndicator.UnitRate}: {item.unit_rate}%
+                  {ColumnIndicator.UnitRate}: {item.unitRate}%
                 </span>
               </div>
               <div>
                 <span>
-                  {ColumnIndicator.LastCountUsers}: {item.last_count_users}
+                  {ColumnIndicator.LastCountUsers}: {item.lastCountUsers}
                 </span>
               </div>
             </>
@@ -73,7 +73,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
           {item.type === 'pnet' && (
             <>
               <div>
-                {item.is_active ? (
+                {item.isActive ? (
                   <Chip size='sm' color='success'>
                     {ColumnStatus.Activated}
                   </Chip>
@@ -84,7 +84,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
                 )}
               </div>
               <div>
-                {isConnectDistribution(item.last_online_status, item.minutes_for_disconnect) ? (
+                {isConnectDistribution(item.lastOnlineStatus, item.minutesForDisconnect) ? (
                   <Chip size='sm' color='success'>
                     {ColumnStatus.ConnectDistribution}
                   </Chip>

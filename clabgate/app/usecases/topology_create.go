@@ -88,12 +88,12 @@ func (u *TopologyCreateUC) Execute(dto TopologyCreateInputDTO) (TopologyCreateOu
 		return output, err
 	}
 	users := slices.Compact([]string{usernameOwner, usernameConnected})
-	u.Logger.Info().Msg(fmt.Sprintf("TopologyCreateUC: GrantAccessNamespacesList users: %d", len(users)))
+	u.Logger.Info().Msg(fmt.Sprintf("TopologyCreateUC: GrantAccessNamespacesList user: %d", len(users)))
 	err = u.KubernetesAdminQuery.GrantAccessNamespacesList(ctx, users)
 	if err != nil {
 		return output, err
 	}
-	u.Logger.Info().Msg(fmt.Sprintf("TopologyCreateUC: GrantAccessUserNamespace users: %d", len(users)))
+	u.Logger.Info().Msg(fmt.Sprintf("TopologyCreateUC: GrantAccessUserNamespace user: %d", len(users)))
 	err = u.KubernetesAdminQuery.GrantAccessUserNamespace(ctx, namespace, users)
 	if err != nil {
 		return output, err

@@ -8,8 +8,7 @@ import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import SearchInput from '@/components/sidebar/search-input';
 import { Link } from 'react-router-dom';
-import { useUsersList } from '@/helpers/queries/users/get';
-import { MapUserItem } from '@/helpers/queries/users/model';
+import { MapUserItem, useInfinityUserList } from '@/helpers/queries/user/use-infinity-user-list';
 
 export const Accounts = () => {
   const { locale } = useLanguageBrowser();
@@ -36,11 +35,10 @@ export const Accounts = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const response = useUsersList({ limit: 100, search: searchTerm });
+  const response = useInfinityUserList({ limit: 100, search: searchTerm });
   const users =
-    response?.data?.pages.flatMap((p) => p.result?.model.map((item) => MapUserItem(item.model, item.roles)) ?? []) ||
-    [];
-  const totalCount = response.data?.pages[0].result?.total_count ?? 0;
+    response?.data?.pages.flatMap((p) => p?.model.map((item) => MapUserItem(item.model, item.roles)) ?? []) || [];
+  const totalCount = response.data?.pages[0]?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${UsersTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

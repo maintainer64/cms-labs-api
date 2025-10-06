@@ -1,12 +1,13 @@
-import { useGlobalStoreGet, useGlobalStoreSet } from '@/helpers/queries/users/store';
 import { useTheme as useThemeNext } from 'next-themes';
 import { useEffect } from 'react';
+import { useQueryUserGlobalStoreGet } from '@/helpers/queries/user/use-query-user-global-store-get';
+import { useMutationUserGlobalStoreSet } from '@/helpers/queries/user/use-mutation-user-global-store-set';
 
 export type ThemeType = 'dark' | 'light';
 
 const useThemeBrowser = () => {
-  const globalStoreQuery = useGlobalStoreGet();
-  const { mutate } = useGlobalStoreSet();
+  const globalStoreQuery = useQueryUserGlobalStoreGet({});
+  const { mutate } = useMutationUserGlobalStoreSet();
   const { setTheme } = useThemeNext();
   // @ts-ignore
   const theme = (globalStoreQuery?.data?.['theme'] || 'light') as ThemeType;
