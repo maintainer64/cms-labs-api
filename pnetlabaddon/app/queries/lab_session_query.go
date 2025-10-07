@@ -44,9 +44,9 @@ func (q *LabSessionQuery) GetRunningLabs() ([]LabSessionRunningLabs, error) {
 	query := q.DB.Table(
 		q.tableName(&models.LabSession{})+" AS lab_sessions",
 	).Select(
-		"lab_sessions.lab_session_id, lab_sessions.lab_session_path, user.name, lab_sessions.lab_session_lid, user.email",
+		"lab_sessions.lab_session_id, lab_sessions.lab_session_path, users.name, lab_sessions.lab_session_lid, users.email",
 	).Joins(
-		"left join "+q.tableName(&models.User{})+" user on user.pod = lab_sessions.lab_session_pod",
+		"left join "+q.tableName(&models.User{})+" users on users.pod = lab_sessions.lab_session_pod",
 	).Where(
 		"lab_sessions.lab_session_lid != ?",
 		"",

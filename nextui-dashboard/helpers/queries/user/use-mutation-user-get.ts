@@ -25,7 +25,7 @@ export const useMutationUserGet = (options: TMutationCustomOptions<Response, Par
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, '/api/v1/sso/userinfo'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/v1/sso/userinfo'] });
       await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'user.list'] });
       await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'user.upsert'] });
       await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'user.get'] });

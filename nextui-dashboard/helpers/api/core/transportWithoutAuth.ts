@@ -12,6 +12,10 @@ class TransportWithoutAuth {
 
   constructor() {
     this.transport = new RpcTransport();
+    this.authData = {
+      accessToken: '',
+      expiredAt: new Date(-1)
+    };
   }
 
   async userTokenRefresh(): Promise<void> {
@@ -21,7 +25,7 @@ class TransportWithoutAuth {
     });
     this.authData = {
       accessToken: response.accessToken,
-      expiredAt: new Date(response.expiresIn ?? 0)
+      expiredAt: new Date((response.expiresIn ?? 0) * 1000)
     };
   }
 

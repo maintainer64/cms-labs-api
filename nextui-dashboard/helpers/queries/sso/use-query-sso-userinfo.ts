@@ -13,11 +13,11 @@ const method = '/api/v1/sso/userinfo';
 
 export const useQuerySsoUserInfo = () => {
   return useQuery({
-    queryKey: RpcTransport.getQueryKey(CoreJsonRpcPath, method, {}),
+    queryKey: RpcTransport.getQueryKey(method, '', {}),
     queryFn: ({ signal }: { signal?: AbortSignal }) => {
       return transportWithAuth
         .getTransport()
-        .get(CoreJsonRpcPath + method, { signal })
+        .get(method, { signal })
         .then((resp) => {
           return objectToCamel(resp.data) as Response;
         });

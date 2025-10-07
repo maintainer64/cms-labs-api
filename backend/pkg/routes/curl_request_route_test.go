@@ -3,6 +3,8 @@ package routes
 import (
 	"testing"
 
+	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+
 	"github.com/gofiber/fiber/v2"
 
 	json "github.com/goccy/go-json"
@@ -380,9 +382,14 @@ func TestCurlRequestExecute(t *testing.T) {
 	defer gock.Off()
 	gock.New("https://api.example.com").
 		MatchHeader("Authorization", "Bearer valid_token_123").
-		Get("/user/42").
+		Get("/users/42").
 		Reply(200).
 		JSON(map[string]interface{}{"id": 42, "name": "John Doe"})
+
+	overrideError := "Internal Server Error"
+	if configs.AppConfig.Server.Layer == "dev" {
+		overrideError = "cannot match any request"
+	}
 
 	tests := []struct {
 		name           string
@@ -416,7 +423,7 @@ func TestCurlRequestExecute(t *testing.T) {
 				},
 			},
 			expectedBody: map[string]interface{}{
-				"error": "cannot match any request",
+				"error": overrideError,
 			},
 			expectedStatus: 500,
 		},

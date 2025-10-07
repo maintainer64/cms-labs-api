@@ -89,7 +89,7 @@ export class RpcTransport {
   }
 
   static getQueryKey(url: string, method: string, params: object): any {
-    return [...url.split('/').filter(Boolean), method, params];
+    return [url, method, params];
   }
 
   getQueryOptions<Response, Params extends object, Options extends object = object>(
@@ -109,6 +109,6 @@ export class RpcTransport {
 
   /** Получение ключа на основе url, method и params с добавлением infinite */
   static getInfiniteQueryKey(url: string, method: string, params: object): any {
-    return [...url.split('/').filter(Boolean), method, 'infinite', params];
+    return [url, method, 'infinite', params];
   }
 }

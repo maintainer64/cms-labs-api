@@ -15,6 +15,11 @@ type Response = CamelCasedPropertiesDeep<TypesUserStoreGetResponse['result']>;
 
 export const useQueryUserGlobalStoreGet = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'user.global_store_get', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'user.global_store_get', params, {
+      retry: 1,
+      gcTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false
+    })
   );
 };
