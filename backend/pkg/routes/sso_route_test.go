@@ -24,7 +24,7 @@ func TestSSOAuthorize(t *testing.T) {
 	user.Email = "test" + uuid.New().String() + "@example.com"
 	user.Name = "Name " + uuid.New().String()
 	f.DB.Create(&user)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	role := models.Role{}
 	role.Code = "student" + uuid.New().String()
@@ -80,7 +80,7 @@ func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     "invalid-client",
@@ -140,7 +140,7 @@ func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     server.ClientID,
@@ -196,7 +196,7 @@ func TestSSOAuthorizeMatchRoles(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     server.ClientID,
@@ -249,8 +249,8 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 
 	// Создаем authorization code
 	attempt := models.TokenAttempt{}
-	attempt.UserID = user.ID
-	attempt.ServerID = server.ID
+	attempt.UserID = &user.ID
+	attempt.ServerID = &server.ID
 	attempt.State = uuid.New().String()
 	attempt.AuthorizationCode = uuid.New().String()
 	f.DB.Create(&attempt)
@@ -289,7 +289,7 @@ func TestSSOIntrospectValidToken(t *testing.T) {
 	authHeaderClient, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
-	authHeader := f.AuthorizationUser(0, server.ID)
+	authHeader := f.AuthorizationUser(0, &server.ID)
 
 	input := map[string]string{
 		"token": strings.Replace(authHeader, "Bearer ", "", 1),
@@ -335,7 +335,7 @@ func TestSSOUserInfo(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, server.ID)
+	authHeader := f.AuthorizationUser(user.ID, &server.ID)
 
 	expectedCode := 200
 	statusCode, body := f.Request(
@@ -358,7 +358,7 @@ func TestSSOUserInfo(t *testing.T) {
 	assert.Equal(t, role.Code, response.UserRoleMain(), description)
 	assert.Equal(t, fmt.Sprintf("%d", user.ID), response.Sub, description)
 	assert.Equal(t, server.ClientID, response.Aud, description)
-	assert.Equal(t, server.ID, response.ServerID, description)
+	assert.Equal(t, server.ID, *response.ServerID, description)
 }
 
 func TestSSOOpenIdConfiguration(t *testing.T) {

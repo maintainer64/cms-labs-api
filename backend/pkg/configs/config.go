@@ -6,15 +6,16 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-
 	"gitlab.com/a10869/api-modules/shared/connection"
 )
 
 type AppConfigModel struct {
-	Debug  bool
-	Server *connection.ServerConfig
-	DB     *connection.DBConfig
-	JWT    *JWTConfig
+	Debug        bool
+	Server       *connection.ServerConfig
+	DB           *connection.DBConfig
+	Vault        *connection.Vault
+	JWT          *JWTConfig
+	AddonsConfig *connection.AddonsConfig
 }
 
 func (c *AppConfigModel) Reload() {
@@ -58,6 +59,14 @@ func (c *AppConfigModel) Reload() {
 		AccessKey:  jwtAccess,
 		RefreshKey: jwtRefresh,
 	}
+	c.Vault = &connection.Vault{
+		VaultAddr:      os.Getenv("VAULT_ADDR"),
+		VaultToken:     os.Getenv("VAULT_TOKEN"),
+		VaultNamespace: os.Getenv("VAULT_NAMESPACE"),
+	}
+	c.AddonsConfig = connection.GetAddonsConfig(
+		os.Getenv("ADDONS_CONFIG"),
+	)
 }
 
 func getEnvInt(name string) int {

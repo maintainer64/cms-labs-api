@@ -14,6 +14,8 @@ var (
 	SSOUsersRoleAdmin      string = "admin"
 	SSOUsersRoleInstructor string = "instructor"
 	SSOUsersRoleStudent    string = "student"
+	SSOK8STypeUser         string = "user"
+	SSOK8STypeService      string = "service"
 )
 
 type SSOToken struct {
@@ -49,11 +51,13 @@ type SSOTokenPublicData struct {
 	// Name. Полное ФИО пользователя
 	Name string `json:"name"`
 	// ServerID ID сервера аутентификации (как с Iss)
-	ServerID uint `json:"server_id"`
+	ServerID *uint `json:"server_id"`
 	// Roles. Роли пользователя
 	Roles []string `json:"roles"`
 	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
+	// K8S type
+	K8SType string `json:"k8s:access_type"`
 }
 
 func (t *SSOTokenPublicData) UserID() uint {

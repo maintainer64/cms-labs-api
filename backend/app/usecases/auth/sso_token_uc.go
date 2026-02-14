@@ -80,11 +80,13 @@ type SwaggerSSOTokenPublicData struct {
 	// Name. Полное ФИО пользователя
 	Name string `json:"name"`
 	// ServerID ID сервера аутентификации (как с Iss)
-	ServerID uint `json:"server_id"`
+	ServerID *uint `json:"server_id"`
 	// Roles. Роли пользователя
 	Roles []string `json:"roles"`
 	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
+	// K8S type
+	K8SType string `json:"k8s:access_type"`
 }
 
 func (u *SSOTokenUC) SetContext(issId string) *SSOTokenUC {
@@ -120,7 +122,10 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if err != nil {
 		return nil, err
 	}
-	server, err := u.PNETServerQueries.Get(attempt.ServerID)
+	if attempt.ServerID == nil || attempt.UserID == nil {
+		return nil, queries.PNETServerNotFoundError
+	}
+	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +136,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		return nil, errors.New("invalid redirect_uri")
 	}
-	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
+	return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
 }
 
 func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
@@ -147,16 +152,20 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	if err != nil {
 		return nil, err
 	}
-	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
-	if attempt.ServerID == 0 {
-		return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
+	if attempt.UserID == nil {
+		return nil, queries.UserNotFoundError
 	}
-	server, err := u.PNETServerQueries.Get(attempt.ServerID)
+	if attempt.ServerID == nil {
+		u.Logger.Info().Msg("Token get by refresh token by internal")
+		return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
+	}
+	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
+	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
 	if !server.IsActive {
 		return nil, errors.New("server is not active")
 	}
-	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
+	return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
 }

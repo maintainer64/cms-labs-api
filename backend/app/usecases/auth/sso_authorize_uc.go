@@ -98,8 +98,8 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 		return nil, err
 	}
 	entityCreate := &models.TokenAttempt{}
-	entityCreate.UserID = inputDTO.UserID
-	entityCreate.ServerID = server.ID
+	entityCreate.UserID = &inputDTO.UserID
+	entityCreate.ServerID = &server.ID
 	entityCreate.Token = ""
 	entityCreate.State = attemptState
 	entityCreate.Nonce = attemptNonce

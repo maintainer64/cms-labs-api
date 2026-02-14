@@ -22,7 +22,7 @@ func TestStoreGet(t *testing.T) {
 			Name:  "Test User",
 		},
 		UserSecret: models.UserSecret{
-			Store: types.UserStore{
+			Store: types.JsonStore{
 				"theme": "dark",
 				"prefs": map[string]interface{}{"notifications": true},
 				"word":  "Русские символы в БД",
@@ -31,7 +31,7 @@ func TestStoreGet(t *testing.T) {
 	}
 	f.DB.Create(&testUser)
 
-	authHeader := f.AuthorizationUser(testUser.ID, 0)
+	authHeader := f.AuthorizationUser(testUser.ID, nil)
 
 	expectedCode := 200
 	statusCode, body := f.Rpc(&TestRpcRequest{
@@ -60,7 +60,7 @@ func TestStoreGetEmpty(t *testing.T) {
 	}
 	f.DB.Create(&testUser)
 
-	authHeader := f.AuthorizationUser(testUser.ID, 0)
+	authHeader := f.AuthorizationUser(testUser.ID, nil)
 
 	expectedCode := 200
 	statusCode, body := f.Rpc(&TestRpcRequest{
@@ -88,7 +88,7 @@ func TestStoreSet(t *testing.T) {
 	}
 	f.DB.Create(&testUser)
 
-	authHeader := f.AuthorizationUser(testUser.ID, 0)
+	authHeader := f.AuthorizationUser(testUser.ID, nil)
 
 	input := map[string]interface{}{
 		"theme": "light",
@@ -119,7 +119,7 @@ func TestStoreSet(t *testing.T) {
 func TestStoreSetInvalidJSON(t *testing.T) {
 	description := "set user store with invalid JSON"
 	f := NewTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	expectedCode := 500
 	statusCode, body := f.Rpc(&TestRpcRequest{

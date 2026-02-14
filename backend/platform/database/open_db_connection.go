@@ -29,6 +29,10 @@ type Queries struct {
 	*queries.TokenAttemptQueries
 	*queries.RoleQueries
 	*queries.CurlRequestQueries
+	*queries.TargetUserQueries
+	*queries.TargetQueries
+	*queries.TargetAddonQueries
+	*queries.TargetRelationQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -57,6 +61,10 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db, Logger: l},
 		RoleQueries:           &queries.RoleQueries{DB: db, Logger: l},
 		CurlRequestQueries:    &queries.CurlRequestQueries{DB: db, Logger: l},
+		TargetUserQueries:     &queries.TargetUserQueries{DB: db, Logger: l},
+		TargetQueries:         &queries.TargetQueries{DB: db, Logger: l},
+		TargetAddonQueries:    &queries.TargetAddonQueries{DB: db, Logger: l},
+		TargetRelationQueries: &queries.TargetRelationQueries{DB: db, Logger: l},
 	}, nil
 }
 

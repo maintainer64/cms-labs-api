@@ -22,7 +22,7 @@ type UserEditInputDTO struct {
 	LTIUserID string          `json:"lti_user_id"`
 	Roles     []uint          `json:"roles"`
 	GroupName string          `json:"group_name"`
-	Store     types.UserStore `json:"store"`
+	Store     types.JsonStore `json:"store"`
 	IsActive  bool            `json:"is_active"`
 }
 

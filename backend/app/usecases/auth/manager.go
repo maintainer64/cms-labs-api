@@ -68,7 +68,7 @@ func (m *TokenManager) NewJWTByCredentials(issID string, email string, password 
 	if err != nil {
 		return nil, queries.IncorrectPassword
 	}
-	return m.NewJWTByUserId(issID, entity.ID, 0, nil)
+	return m.NewJWTByUserId(issID, entity.ID, nil, nil)
 }
 
 func (m *TokenManager) NewJWTByLaunchID(issID string, launchID string) (*cms_client.SSOToken, error) {
@@ -80,13 +80,13 @@ func (m *TokenManager) NewJWTByLaunchID(issID string, launchID string) (*cms_cli
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.NewJWTByUserId(issID, entity.ID, 0, nil)
+	return m.NewJWTByUserId(issID, entity.ID, nil, nil)
 }
 
 func (m *TokenManager) NewJWTByUserId(
 	issID string,
 	userId uint,
-	serverID uint,
+	serverID *uint,
 	attempt *models.TokenAttempt,
 ) (*cms_client.SSOToken, error) {
 	attemptState, attemptNonce := "", ""
@@ -98,8 +98,8 @@ func (m *TokenManager) NewJWTByUserId(
 		return nil, err
 	}
 	var serverModel models.PNETServer
-	if serverID != 0 {
-		serverModel, _ = m.PNETServerQueries.Get(serverID)
+	if serverID != nil {
+		serverModel, _ = m.PNETServerQueries.Get(*serverID)
 	}
 	rolesJWT, err := m.JWTRolesByUserId(userModel.ID)
 	if err != nil {
@@ -123,7 +123,7 @@ func (m *TokenManager) NewJWTByUserId(
 		return nil, err
 	}
 	refreshModel := &models.TokenAttempt{}
-	refreshModel.UserID = userId
+	refreshModel.UserID = &userId
 	refreshModel.ServerID = serverID
 	refreshModel.State = attemptState
 	refreshModel.Nonce = attemptNonce

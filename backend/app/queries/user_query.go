@@ -139,15 +139,15 @@ func (q *UserQueries) listFilter(search string, ids []uint, tx *gorm.DB) *gorm.D
 	return tx
 }
 
-func (q *UserQueries) StoreGetByUserId(id uint) (types.UserStore, error) {
+func (q *UserQueries) StoreGetByUserId(id uint) (types.JsonStore, error) {
 	userDB, err := q.Get(id)
 	if err != nil {
-		return types.UserStore{}, err
+		return types.JsonStore{}, err
 	}
 	return userDB.Store, nil
 }
 
-func (q *UserQueries) StoreSetByUserId(id uint, store types.UserStore) error {
+func (q *UserQueries) StoreSetByUserId(id uint, store types.JsonStore) error {
 	userDB, err := q.Get(id)
 	if err != nil {
 		return err

@@ -7,17 +7,17 @@ import (
 	"github.com/goccy/go-json"
 )
 
-type UserStore map[string]interface{} // Произвольное JSON-хранилище
+type JsonStore map[string]interface{} // Произвольное JSON-хранилище
 
 // Value реализует интерфейс driver.Valuer для сериализации в JSON
-func (us UserStore) Value() (driver.Value, error) {
+func (us JsonStore) Value() (driver.Value, error) {
 	return json.Marshal(us)
 }
 
 // Scan реализует интерфейс sql.Scanner для десериализации из JSON
-func (us *UserStore) Scan(value interface{}) error {
+func (us *JsonStore) Scan(value interface{}) error {
 	if value == nil {
-		*us = UserStore{}
+		*us = JsonStore{}
 		return nil
 	}
 	b, ok := value.([]byte)

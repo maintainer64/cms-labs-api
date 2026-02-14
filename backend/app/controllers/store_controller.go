@@ -50,7 +50,7 @@ func UserGlobalStoreSet(c *jsonrpc.Ctx) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	store := types.UserStore{}
+	store := types.JsonStore{}
 	err = json.Unmarshal(c.Params, &store)
 	if err != nil {
 		return nil, err

@@ -3,7 +3,7 @@ package types
 type UserStoreSetRequest struct {
 	JSONRPC string    `json:"jsonrpc" default:"2.0" required:"true"`
 	Method  string    `json:"method" default:"user.global_store_set" required:"true"`
-	Params  UserStore `json:"params,omitempty"`
+	Params  JsonStore `json:"params,omitempty"`
 	ID      string    `json:"id,omitempty" default:"1" required:"true"`
 }
 
@@ -23,7 +23,7 @@ type UserStoreGetRequest struct {
 
 type UserStoreGetResponse struct {
 	JSONRPC string      `json:"jsonrpc" default:"2.0" required:"true"`
-	Result  UserStore   `json:"result,omitempty"`
+	Result  JsonStore   `json:"result,omitempty"`
 	Error   interface{} `json:"error,omitempty"`
 	ID      string      `json:"id,omitempty" default:"1" required:"true"`
 }

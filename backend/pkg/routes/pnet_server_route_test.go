@@ -32,7 +32,7 @@ func TestV1PNETServerRouteGet(t *testing.T) {
 	entity.CreatedAt = time.Now().UTC()
 	entity.UpdatedAt = time.Now().UTC()
 	f.DB.Create(&entity)
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	expectedCode := 200
 	statusCode, body := f.Rpc(&TestRpcRequest{
 		Method: "server.get",
@@ -51,7 +51,7 @@ func TestV1PNETServerRouteGet(t *testing.T) {
 func TestV1PNETServerRouteGetNotFound(t *testing.T) {
 	description := "not found pnet"
 	f := NewTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	expectedCode := 500
 	r := &TestRpcRequest{
 		Method: "server.get",
@@ -102,7 +102,7 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 	entity2.Token = uuid.New().String()
 	entity2.ClientID = uuid.New().String()
 	f.DB.Create(&entity2)
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	tests := []struct {
 		description string
 		body        map[string]any
@@ -197,7 +197,7 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 	entity.ClientID = uuid.New().String()
 	f.DB.Create(&entity)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	tests := []struct {
 		description string
 		id          uint
@@ -241,7 +241,7 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 func TestV1PNETServerRouteCreate(t *testing.T) {
 	description := "Create new PNET server"
 	f := NewTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Тестовые данные
 	now := time.Now().UTC()

@@ -19,7 +19,7 @@ import (
 func TestCurlRequestCreate(t *testing.T) {
 	description := "Create new CurlRequest"
 	f := NewTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Тестовые данные
 	dto := usecases.CurlRequestEditInputDTO{
@@ -70,7 +70,7 @@ func TestCurlRequestGet(t *testing.T) {
 	}
 	f.DB.Create(&entity)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	statusCode, body := f.Rpc(&TestRpcRequest{
 		Method: "curl_request.get",
 		Params: fiber.Map{
@@ -91,7 +91,7 @@ func TestCurlRequestGet(t *testing.T) {
 func TestCurlRequestGetNotFound(t *testing.T) {
 	description := "not found CurlRequest"
 	f := NewTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	request := &TestRpcRequest{
 		Method: "curl_request.get",
 		Params: fiber.Map{
@@ -148,7 +148,7 @@ func TestCurlRequestList(t *testing.T) {
 	}
 	f.DB.Create(&entity3)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	tests := []struct {
 		description string
@@ -223,7 +223,7 @@ func TestCurlRequestDelete(t *testing.T) {
 	}
 	f.DB.Create(&entity)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	tests := []struct {
 		description string

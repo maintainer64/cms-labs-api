@@ -25,6 +25,15 @@ func SSODecodeToken(jwtToken *jwt.Token) (*SSOTokenPublicData, error) {
 	if !ok {
 		return nil, jsonrpc.NewRpcError("invalid_token", "token is invalid")
 	}
+	var serverID *uint = nil
+	k8sAccessType := ""
+	if val, ok := claims["server_id"].(float64); ok {
+		uintServerID := uint(val)
+		serverID = &uintServerID
+	}
+	if val, ok := claims["k8s:access_type"].(string); ok {
+		k8sAccessType = val
+	}
 	tokenData := SSOTokenPublicData{
 		Iss:          claims["iss"].(string),
 		Sub:          claims["sub"].(string),
@@ -36,9 +45,10 @@ func SSODecodeToken(jwtToken *jwt.Token) (*SSOTokenPublicData, error) {
 		Email:        claims["email"].(string),
 		Name:         claims["name"].(string),
 		Username:     claims["username"].(string),
-		ServerID:     uint(claims["server_id"].(float64)),
+		ServerID:     serverID,
 		Roles:        SSOTokenGetStringSlice(claims, "roles"),
 		LastLaunchId: claims["last_launch_id"].(string),
+		K8SType:      k8sAccessType,
 	}
 	return &tokenData, nil
 }

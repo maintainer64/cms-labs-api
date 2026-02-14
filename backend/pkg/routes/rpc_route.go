@@ -53,4 +53,16 @@ func V1RpcRoute(a *fiber.App) {
 	rpc.Method("user.upsert", controllers.UserUpsert)
 	rpc.Method("user.list", controllers.UserList)
 	rpc.Method("user.get", controllers.UserGet)
+	rpc.Method("user.get", controllers.UserGet)
+	rpc.Method("target.addon_create", controllers.TargetAddonCreate)
+	rpc.Method("target.addon_delete", controllers.TargetAddonDelete)
+	rpc.Method("target.addon_reset", controllers.TargetAddonReset)
+	rpc.Method("target.delete", controllers.TargetDelete)
+	rpc.Method("target.get", controllers.TargetGet)
+	rpc.Method("target.relation_create", controllers.TargetRelationCreate)
+	rpc.Method("target.relation_delete", controllers.TargetRelationDelete)
+	rpc.Method("target.upsert", controllers.TargetUpsert)
+	rpc.Method("target.user_delete", controllers.TargetUserDelete)
+	rpc.Method("target.user_upsert", controllers.TargetUserUpsert)
+
 }

@@ -17,7 +17,7 @@ func TestRoleUpsert(t *testing.T) {
 	description := "successful role upsert (create)"
 	f := NewTestHTTP()
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.RoleEditInputDTO{
 		Name: "Test Role " + uuid.New().String(),
@@ -48,7 +48,7 @@ func TestRoleUpsertUpdate(t *testing.T) {
 	description := "successful role upsert (update)"
 	f := NewTestHTTP()
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Create existing role to update
 	existingRole := models.Role{}
@@ -91,7 +91,7 @@ func TestRoleUpsertUnauthorized(t *testing.T) {
 	regularUser := models.User{}
 	regularUser.Email = "user" + uuid.New().String() + "@example.com"
 	f.DB.Create(&regularUser)
-	authHeader := f.AuthorizationUser(regularUser.ID, 0)
+	authHeader := f.AuthorizationUser(regularUser.ID, nil)
 
 	input := usecases.RoleEditInputDTO{
 		Name: "Test Role",
@@ -144,7 +144,7 @@ func TestRoleDelete(t *testing.T) {
 	description := "successful role delete"
 	f := NewTestHTTP()
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Create role to delete
 	roleToDelete := models.Role{}
@@ -184,7 +184,7 @@ func TestRoleDeleteUnauthorized(t *testing.T) {
 	regularUser := models.User{}
 	regularUser.Email = "user" + uuid.New().String() + "@example.com"
 	f.DB.Create(&regularUser)
-	authHeader := f.AuthorizationUser(regularUser.ID, 0)
+	authHeader := f.AuthorizationUser(regularUser.ID, nil)
 
 	// Create role that would be deleted if authorized
 	role := models.Role{}

@@ -91,7 +91,7 @@ func (f *TestHTTP) Rpc(
 	)
 }
 
-func (f *TestHTTP) AuthorizationUser(userID uint, serverID uint) string {
+func (f *TestHTTP) AuthorizationUser(userID uint, serverID *uint) string {
 	roleAdmin := models.Role{}
 	roleAdmin.Code = "admin"
 	roleAdmin.Name = "Admin"
