@@ -29,7 +29,7 @@ type TargetUserUpsertOutputDTO struct {
 	ID uint `json:"id"`
 }
 
-type TargetUserUpsert struct {
+type TargetUserUpsertRequest struct {
 	JSONRPC string                   `json:"jsonrpc" default:"2.0" required:"true"`
 	Method  string                   `json:"method" default:"service_card.upsert" required:"true"`
 	Params  TargetUserUpsertInputDTO `json:"params,omitempty"`

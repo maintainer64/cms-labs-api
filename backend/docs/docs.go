@@ -1347,6 +1347,396 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/rpc/target.addon_create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create target_addon. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_addon"
+                ],
+                "summary": "create target_addon",
+                "parameters": [
+                    {
+                        "description": "target_addon form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.addon_delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target_addon. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_addon"
+                ],
+                "summary": "delete target_addon",
+                "parameters": [
+                    {
+                        "description": "target_addon delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonDeleteOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.addon_reset": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Reset target_addon. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_addon"
+                ],
+                "summary": "reset target_addon",
+                "parameters": [
+                    {
+                        "description": "target_addon reset info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonResetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonResetOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "delete target",
+                "parameters": [
+                    {
+                        "description": "target delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetDeleteOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "get target",
+                "parameters": [
+                    {
+                        "description": "target get info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.relation_create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create target_relation. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_relation"
+                ],
+                "summary": "create target_relation",
+                "parameters": [
+                    {
+                        "description": "target_relation create info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.relation_delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target_relation. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_relation"
+                ],
+                "summary": "delete target_relation",
+                "parameters": [
+                    {
+                        "description": "target_relation delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Upsert target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "upsert target",
+                "parameters": [
+                    {
+                        "description": "target upsert info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUpsertRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUpsertResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.user_delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target_user. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_user"
+                ],
+                "summary": "delete target_user",
+                "parameters": [
+                    {
+                        "description": "target_user delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.user_upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Upsert target_user. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_user"
+                ],
+                "summary": "upsert target_user",
+                "parameters": [
+                    {
+                        "description": "target_user upsert info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserUpsertRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserUpsertResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/rpc/user.get": {
             "post": {
                 "security": [
@@ -2370,6 +2760,10 @@ const docTemplate = `{
                     "description": "Iss. Идентификатор эмитента токена",
                     "type": "string"
                 },
+                "k8s:access_type": {
+                    "description": "K8S type",
+                    "type": "string"
+                },
                 "last_launch_id": {
                     "description": "LastLaunchId. ID пользователя SSO через LMS систему",
                     "type": "string"
@@ -3119,6 +3513,57 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Target": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "internal_tags": {
+                    "description": "массив внутренних тегов",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.JsonStore"
+                        }
+                    ]
+                },
+                "links": {
+                    "description": "список ссылок",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.JsonStore"
+                        }
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tags": {
+                    "description": "массив тегов",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.JsonStore"
+                        }
+                    ]
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "required": [
@@ -3152,7 +3597,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "store": {
-                    "$ref": "#/definitions/types.UserStore"
+                    "$ref": "#/definitions/types.JsonStore"
                 },
                 "updated_at": {
                     "type": "string"
@@ -3353,7 +3798,7 @@ const docTemplate = `{
                 }
             }
         },
-        "types.UserStore": {
+        "types.JsonStore": {
             "type": "object",
             "additionalProperties": true
         },
@@ -3388,7 +3833,7 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/types.UserStore"
+                    "$ref": "#/definitions/types.JsonStore"
                 }
             }
         },
@@ -3408,7 +3853,7 @@ const docTemplate = `{
                     "default": "user.global_store_set"
                 },
                 "params": {
-                    "$ref": "#/definitions/types.UserStore"
+                    "$ref": "#/definitions/types.JsonStore"
                 }
             }
         },
@@ -5269,6 +5714,491 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.TargetAddonCreateInputDTO": {
+            "type": "object",
+            "required": [
+                "addon_id",
+                "target_id"
+            ],
+            "properties": {
+                "addon_id": {
+                    "type": "string"
+                },
+                "iss_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetAddonCreateOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetAddonCreateRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetAddonCreateInputDTO"
+                }
+            }
+        },
+        "usecases.TargetAddonCreateResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetAddonCreateOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetAddonDeleteInputDTO": {
+            "type": "object",
+            "required": [
+                "addon_id",
+                "target_id"
+            ],
+            "properties": {
+                "addon_id": {
+                    "type": "string"
+                },
+                "iss_id": {
+                    "type": "string"
+                },
+                "target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetAddonDeleteOutputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetAddonResetInputDTO": {
+            "type": "object",
+            "required": [
+                "addon_id",
+                "target_id"
+            ],
+            "properties": {
+                "addon_id": {
+                    "type": "string"
+                },
+                "iss_id": {
+                    "type": "string"
+                },
+                "target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetAddonResetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetDeleteInputDTO": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetDeleteOutputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetGetInputDTO": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetGetInputDTO"
+                }
+            }
+        },
+        "usecases.TargetGetResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/models.Target"
+                }
+            }
+        },
+        "usecases.TargetRelationCreateInputDTO": {
+            "type": "object",
+            "required": [
+                "from_target_id",
+                "relation_type",
+                "to_target_id"
+            ],
+            "properties": {
+                "from_target_id": {
+                    "type": "string"
+                },
+                "relation_type": {
+                    "type": "string"
+                },
+                "to_target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetRelationCreateOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetRelationCreateRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetRelationCreateInputDTO"
+                }
+            }
+        },
+        "usecases.TargetRelationCreateResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetRelationCreateOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetRelationDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "from_target_id": {
+                    "type": "string"
+                },
+                "relation_type": {
+                    "type": "string"
+                },
+                "to_target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetRelationDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetRelationDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.TargetRelationDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetRelationDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.TargetUpsertInputDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "nil – создание, иначе – обновление",
+                    "type": "string"
+                },
+                "links": {
+                    "$ref": "#/definitions/types.JsonStore"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tags": {
+                    "$ref": "#/definitions/types.JsonStore"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetUpsertOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetUpsertRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetUpsertInputDTO"
+                }
+            }
+        },
+        "usecases.TargetUpsertResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetUpsertOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserDeleteInputDTO": {
+            "type": "object",
+            "required": [
+                "target_id",
+                "user_id"
+            ],
+            "properties": {
+                "target_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetUserDeleteOutputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetUserDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetUserDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetUserDeleteOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertInputDTO": {
+            "type": "object",
+            "required": [
+                "roles",
+                "target_id",
+                "user_id"
+            ],
+            "properties": {
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "target_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetUserUpsertInputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetUserUpsertOutputDTO"
+                }
+            }
+        },
         "usecases.UserEditInputDTO": {
             "type": "object",
             "required": [
@@ -5301,7 +6231,7 @@ const docTemplate = `{
                     }
                 },
                 "store": {
-                    "$ref": "#/definitions/types.UserStore"
+                    "$ref": "#/definitions/types.JsonStore"
                 }
             }
         },

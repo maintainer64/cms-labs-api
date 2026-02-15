@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
 /*
@@ -133,6 +134,8 @@ export interface AuthSwaggerSSOTokenPublicData {
   iat?: number;
   /** Iss. Идентификатор эмитента токена */
   iss?: string;
+  /** K8S type */
+  "k8s:access_type"?: string;
   /** LastLaunchId. ID пользователя SSO через LMS систему */
   last_launch_id?: string;
   /** Name. Полное ФИО пользователя */
@@ -410,6 +413,21 @@ export interface ModelsServiceCardListItem {
   url: string;
 }
 
+export interface ModelsTarget {
+  created_at: string;
+  description?: string;
+  id?: string;
+  /** массив внутренних тегов */
+  internal_tags?: TypesJsonStore;
+  /** список ссылок */
+  links?: TypesJsonStore;
+  name?: string;
+  /** массив тегов */
+  tags?: TypesJsonStore;
+  type?: string;
+  updated_at: string;
+}
+
 export interface ModelsUser {
   created_at: string;
   deleted_at?: string;
@@ -419,7 +437,7 @@ export interface ModelsUser {
   last_launch_id?: string;
   lti_user_id?: string;
   name?: string;
-  store?: TypesUserStore;
+  store?: TypesJsonStore;
   updated_at: string;
 }
 
@@ -510,7 +528,7 @@ export interface RoundQueuePoolPnetRoundQueuePoolPnetUpsertResponse {
   result?: RoundQueuePoolPnetRoundQueuePoolPnetUpsertOutputDTO;
 }
 
-export type TypesUserStore = Record<string, any>;
+export type TypesJsonStore = Record<string, any>;
 
 export interface TypesUserStoreGetRequest {
   /** @default "1" */
@@ -528,7 +546,7 @@ export interface TypesUserStoreGetResponse {
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: TypesUserStore;
+  result?: TypesJsonStore;
 }
 
 export interface TypesUserStoreSetRequest {
@@ -538,7 +556,7 @@ export interface TypesUserStoreSetRequest {
   jsonrpc?: string;
   /** @default "user.global_store_set" */
   method?: string;
-  params?: TypesUserStore;
+  params?: TypesJsonStore;
 }
 
 export interface TypesUserStoreSetResponse {
@@ -1360,6 +1378,225 @@ export interface UsecasesServiceCardListResponse {
   result?: UsecasesServiceCardListOutputDTO;
 }
 
+export interface UsecasesTargetAddonCreateInputDTO {
+  addon_id: string;
+  iss_id?: string;
+  name?: string;
+  target_id: string;
+}
+
+export interface UsecasesTargetAddonCreateOutputDTO {
+  id?: number;
+}
+
+export interface UsecasesTargetAddonCreateRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetAddonCreateInputDTO;
+}
+
+export interface UsecasesTargetAddonCreateResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesTargetAddonCreateOutputDTO;
+}
+
+export interface UsecasesTargetAddonDeleteInputDTO {
+  addon_id: string;
+  iss_id?: string;
+  target_id: string;
+}
+
+export type UsecasesTargetAddonDeleteOutputDTO = object;
+
+export interface UsecasesTargetAddonResetInputDTO {
+  addon_id: string;
+  iss_id?: string;
+  target_id: string;
+}
+
+export interface UsecasesTargetAddonResetOutputDTO {
+  id?: number;
+}
+
+export interface UsecasesTargetDeleteInputDTO {
+  id: string;
+}
+
+export type UsecasesTargetDeleteOutputDTO = object;
+
+export interface UsecasesTargetGetInputDTO {
+  id: string;
+}
+
+export interface UsecasesTargetGetRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetGetInputDTO;
+}
+
+export interface UsecasesTargetGetResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: ModelsTarget;
+}
+
+export interface UsecasesTargetRelationCreateInputDTO {
+  from_target_id: string;
+  relation_type: string;
+  to_target_id: string;
+}
+
+export interface UsecasesTargetRelationCreateOutputDTO {
+  id?: number;
+}
+
+export interface UsecasesTargetRelationCreateRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetRelationCreateInputDTO;
+}
+
+export interface UsecasesTargetRelationCreateResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesTargetRelationCreateOutputDTO;
+}
+
+export interface UsecasesTargetRelationDeleteInputDTO {
+  from_target_id?: string;
+  relation_type?: string;
+  to_target_id?: string;
+}
+
+export interface UsecasesTargetRelationDeleteRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetRelationDeleteInputDTO;
+}
+
+export interface UsecasesTargetRelationDeleteResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesTargetRelationDeleteInputDTO;
+}
+
+export interface UsecasesTargetUpsertInputDTO {
+  description?: string;
+  /** nil – создание, иначе – обновление */
+  id?: string;
+  links?: TypesJsonStore;
+  name: string;
+  tags?: TypesJsonStore;
+  type: string;
+}
+
+export interface UsecasesTargetUpsertOutputDTO {
+  id?: string;
+}
+
+export interface UsecasesTargetUpsertRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetUpsertInputDTO;
+}
+
+export interface UsecasesTargetUpsertResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesTargetUpsertOutputDTO;
+}
+
+export interface UsecasesTargetUserDeleteInputDTO {
+  target_id: string;
+  user_id: number;
+}
+
+export type UsecasesTargetUserDeleteOutputDTO = object;
+
+export interface UsecasesTargetUserDeleteRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetUserDeleteInputDTO;
+}
+
+export interface UsecasesTargetUserDeleteResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesTargetUserDeleteOutputDTO;
+}
+
+export interface UsecasesTargetUserUpsertInputDTO {
+  roles: string[];
+  target_id: string;
+  user_id: number;
+}
+
+export interface UsecasesTargetUserUpsertOutputDTO {
+  id?: number;
+}
+
+export interface UsecasesTargetUserUpsertRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetUserUpsertInputDTO;
+}
+
+export interface UsecasesTargetUserUpsertResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesTargetUserUpsertOutputDTO;
+}
+
 export interface UsecasesUserEditInputDTO {
   email: string;
   group_name?: string;
@@ -1368,7 +1605,7 @@ export interface UsecasesUserEditInputDTO {
   lti_user_id?: string;
   name: string;
   roles?: number[];
-  store?: TypesUserStore;
+  store?: TypesJsonStore;
 }
 
 export interface UsecasesUserEditOutputDTO {

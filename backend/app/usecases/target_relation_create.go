@@ -26,14 +26,14 @@ type TargetRelationCreateOutputDTO struct {
 	ID uint `json:"id"`
 }
 
-type TargetRelationRequest struct {
+type TargetRelationCreateRequest struct {
 	JSONRPC string                       `json:"jsonrpc" default:"2.0" required:"true"`
 	Method  string                       `json:"method" default:"service_card.upsert" required:"true"`
 	Params  TargetRelationCreateInputDTO `json:"params,omitempty"`
 	ID      string                       `json:"id,omitempty" default:"1" required:"true"`
 }
 
-type TargetRelationResponse struct {
+type TargetRelationCreateResponse struct {
 	JSONRPC string                        `json:"jsonrpc" default:"2.0" required:"true"`
 	Result  TargetRelationCreateOutputDTO `json:"result,omitempty"`
 	Error   interface{}                   `json:"error,omitempty"`

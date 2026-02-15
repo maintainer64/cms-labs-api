@@ -205,6 +205,9 @@ definitions:
       iss:
         description: Iss. Идентификатор эмитента токена
         type: string
+      k8s:access_type:
+        description: K8S type
+        type: string
       last_launch_id:
         description: LastLaunchId. ID пользователя SSO через LMS систему
         type: string
@@ -723,6 +726,36 @@ definitions:
     - updated_at
     - url
     type: object
+  models.Target:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      internal_tags:
+        allOf:
+        - $ref: '#/definitions/types.JsonStore'
+        description: массив внутренних тегов
+      links:
+        allOf:
+        - $ref: '#/definitions/types.JsonStore'
+        description: список ссылок
+      name:
+        type: string
+      tags:
+        allOf:
+        - $ref: '#/definitions/types.JsonStore'
+        description: массив тегов
+      type:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - updated_at
+    type: object
   models.User:
     properties:
       created_at:
@@ -742,7 +775,7 @@ definitions:
       name:
         type: string
       store:
-        $ref: '#/definitions/types.UserStore'
+        $ref: '#/definitions/types.JsonStore'
       updated_at:
         type: string
     required:
@@ -887,7 +920,7 @@ definitions:
       result:
         $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO'
     type: object
-  types.UserStore:
+  types.JsonStore:
     additionalProperties: true
     type: object
   types.UserStoreGetRequest:
@@ -913,7 +946,7 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/types.UserStore'
+        $ref: '#/definitions/types.JsonStore'
     type: object
   types.UserStoreSetRequest:
     properties:
@@ -927,7 +960,7 @@ definitions:
         default: user.global_store_set
         type: string
       params:
-        $ref: '#/definitions/types.UserStore'
+        $ref: '#/definitions/types.JsonStore'
     type: object
   types.UserStoreSetResponse:
     properties:
@@ -2206,6 +2239,337 @@ definitions:
       result:
         $ref: '#/definitions/usecases.ServiceCardListOutputDTO'
     type: object
+  usecases.TargetAddonCreateInputDTO:
+    properties:
+      addon_id:
+        type: string
+      iss_id:
+        type: string
+      name:
+        type: string
+      target_id:
+        type: string
+    required:
+    - addon_id
+    - target_id
+    type: object
+  usecases.TargetAddonCreateOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.TargetAddonCreateRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetAddonCreateInputDTO'
+    type: object
+  usecases.TargetAddonCreateResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TargetAddonCreateOutputDTO'
+    type: object
+  usecases.TargetAddonDeleteInputDTO:
+    properties:
+      addon_id:
+        type: string
+      iss_id:
+        type: string
+      target_id:
+        type: string
+    required:
+    - addon_id
+    - target_id
+    type: object
+  usecases.TargetAddonDeleteOutputDTO:
+    type: object
+  usecases.TargetAddonResetInputDTO:
+    properties:
+      addon_id:
+        type: string
+      iss_id:
+        type: string
+      target_id:
+        type: string
+    required:
+    - addon_id
+    - target_id
+    type: object
+  usecases.TargetAddonResetOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.TargetDeleteInputDTO:
+    properties:
+      id:
+        type: string
+    required:
+    - id
+    type: object
+  usecases.TargetDeleteOutputDTO:
+    type: object
+  usecases.TargetGetInputDTO:
+    properties:
+      id:
+        type: string
+    required:
+    - id
+    type: object
+  usecases.TargetGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetGetInputDTO'
+    type: object
+  usecases.TargetGetResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/models.Target'
+    type: object
+  usecases.TargetRelationCreateInputDTO:
+    properties:
+      from_target_id:
+        type: string
+      relation_type:
+        type: string
+      to_target_id:
+        type: string
+    required:
+    - from_target_id
+    - relation_type
+    - to_target_id
+    type: object
+  usecases.TargetRelationCreateOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.TargetRelationCreateRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetRelationCreateInputDTO'
+    type: object
+  usecases.TargetRelationCreateResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TargetRelationCreateOutputDTO'
+    type: object
+  usecases.TargetRelationDeleteInputDTO:
+    properties:
+      from_target_id:
+        type: string
+      relation_type:
+        type: string
+      to_target_id:
+        type: string
+    type: object
+  usecases.TargetRelationDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetRelationDeleteInputDTO'
+    type: object
+  usecases.TargetRelationDeleteResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TargetRelationDeleteInputDTO'
+    type: object
+  usecases.TargetUpsertInputDTO:
+    properties:
+      description:
+        type: string
+      id:
+        description: nil – создание, иначе – обновление
+        type: string
+      links:
+        $ref: '#/definitions/types.JsonStore'
+      name:
+        type: string
+      tags:
+        $ref: '#/definitions/types.JsonStore'
+      type:
+        type: string
+    required:
+    - name
+    - type
+    type: object
+  usecases.TargetUpsertOutputDTO:
+    properties:
+      id:
+        type: string
+    type: object
+  usecases.TargetUpsertRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetUpsertInputDTO'
+    type: object
+  usecases.TargetUpsertResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TargetUpsertOutputDTO'
+    type: object
+  usecases.TargetUserDeleteInputDTO:
+    properties:
+      target_id:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - target_id
+    - user_id
+    type: object
+  usecases.TargetUserDeleteOutputDTO:
+    type: object
+  usecases.TargetUserDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetUserDeleteInputDTO'
+    type: object
+  usecases.TargetUserDeleteResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TargetUserDeleteOutputDTO'
+    type: object
+  usecases.TargetUserUpsertInputDTO:
+    properties:
+      roles:
+        items:
+          type: string
+        type: array
+      target_id:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - roles
+    - target_id
+    - user_id
+    type: object
+  usecases.TargetUserUpsertOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.TargetUserUpsertRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetUserUpsertInputDTO'
+    type: object
+  usecases.TargetUserUpsertResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TargetUserUpsertOutputDTO'
+    type: object
   usecases.UserEditInputDTO:
     properties:
       email:
@@ -2225,7 +2589,7 @@ definitions:
           type: integer
         type: array
       store:
-        $ref: '#/definitions/types.UserStore'
+        $ref: '#/definitions/types.JsonStore'
     required:
     - email
     - name
@@ -3195,6 +3559,246 @@ paths:
       summary: Получение кода авторизации по OpenID.
       tags:
       - SSO
+  /api/v1/rpc/target.addon_create:
+    post:
+      consumes:
+      - application/json
+      description: 'Create target_addon. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target_addon form info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetAddonCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetAddonCreateResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create target_addon
+      tags:
+      - target_addon
+  /api/v1/rpc/target.addon_delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete target_addon. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target_addon delete info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetAddonDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetAddonDeleteOutputDTO'
+      security:
+      - ApiKeyAuth: []
+      summary: delete target_addon
+      tags:
+      - target_addon
+  /api/v1/rpc/target.addon_reset:
+    post:
+      consumes:
+      - application/json
+      description: 'Reset target_addon. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target_addon reset info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetAddonResetInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetAddonResetOutputDTO'
+      security:
+      - ApiKeyAuth: []
+      summary: reset target_addon
+      tags:
+      - target_addon
+  /api/v1/rpc/target.delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete target. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target delete info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetDeleteInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetDeleteOutputDTO'
+      security:
+      - ApiKeyAuth: []
+      summary: delete target
+      tags:
+      - target
+  /api/v1/rpc/target.get:
+    post:
+      consumes:
+      - application/json
+      description: 'Get target. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target get info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get target
+      tags:
+      - target
+  /api/v1/rpc/target.relation_create:
+    post:
+      consumes:
+      - application/json
+      description: 'Create target_relation. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target_relation create info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetRelationCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetRelationCreateResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create target_relation
+      tags:
+      - target_relation
+  /api/v1/rpc/target.relation_delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete target_relation. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target_relation delete info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetRelationDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetRelationDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete target_relation
+      tags:
+      - target_relation
+  /api/v1/rpc/target.upsert:
+    post:
+      consumes:
+      - application/json
+      description: 'Upsert target. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target upsert info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetUpsertRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetUpsertResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: upsert target
+      tags:
+      - target
+  /api/v1/rpc/target.user_delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete target_user. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target_user delete info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetUserDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetUserDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete target_user
+      tags:
+      - target_user
+  /api/v1/rpc/target.user_upsert:
+    post:
+      consumes:
+      - application/json
+      description: 'Upsert target_user. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target_user upsert info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetUserUpsertRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetUserUpsertResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: upsert target_user
+      tags:
+      - target_user
   /api/v1/rpc/user.get:
     post:
       consumes:

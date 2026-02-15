@@ -6,7 +6,7 @@ import {
   AuthRenewManagerCredentialsRequest,
   AuthSwaggerSSOTokenResponse,
   CoreJsonRpcPath,
-  transportWithAuth
+  transportWithAuth, transportWithoutAuth
 } from '@/helpers/api';
 import { TFormikData, TMutationCustomOptions } from '@/helpers/queries/types';
 import { CamelCasedPropertiesDeep } from 'type-fest';
@@ -21,7 +21,7 @@ export const useMutationUserLogin = (options: TMutationCustomOptions<Response, F
     // @ts-expect-error: return nullable value
     mutationFn: ({ values }: FormData) => {
       if (values === null) return;
-      return transportWithAuth.rpc(CoreJsonRpcPath, {
+      return transportWithoutAuth.t.rpc(CoreJsonRpcPath, {
         method: 'user.login',
         params: values
       });

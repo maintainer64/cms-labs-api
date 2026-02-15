@@ -7,11 +7,11 @@ export const CoreJsonRpcPath = '/api/v1/rpc';
 export const ClabgateJsonRpcPath = '/clabgate/api/v1/rpc';
 
 class TransportWithoutAuth {
-  private transport: RpcTransport;
+  public t: RpcTransport;
   private authData?: AuthData;
 
   constructor() {
-    this.transport = new RpcTransport();
+    this.t = new RpcTransport();
     this.authData = {
       accessToken: '',
       expiredAt: new Date(-1)
@@ -19,7 +19,7 @@ class TransportWithoutAuth {
   }
 
   async userTokenRefresh(): Promise<void> {
-    const response = await this.transport.rpc<CamelCasedPropertiesDeep<AuthSwaggerSSOToken>>(CoreJsonRpcPath, {
+    const response = await this.t.rpc<CamelCasedPropertiesDeep<AuthSwaggerSSOToken>>(CoreJsonRpcPath, {
       method: 'user.token_refresh',
       params: {}
     });

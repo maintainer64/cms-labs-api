@@ -22,7 +22,7 @@ type TargetUserDeleteInputDTO struct {
 type TargetUserDeleteOutputDTO struct {
 }
 
-type TargetUserDelete struct {
+type TargetUserDeleteRequest struct {
 	JSONRPC string                   `json:"jsonrpc" default:"2.0" required:"true"`
 	Method  string                   `json:"method" default:"service_card.upsert" required:"true"`
 	Params  TargetUserDeleteInputDTO `json:"params,omitempty"`

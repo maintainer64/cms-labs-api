@@ -149,8 +149,8 @@ func TargetDelete(c *jsonrpc.Ctx) (interface{}, error) {
 // @Tags target
 // @Accept json
 // @Produce json
-// @Param object body usecases.TargetGetInputDTO true "target get info"
-// @Success 200 {object} usecases.TargetGetOutputDTO
+// @Param object body usecases.TargetGetRequest true "target get info"
+// @Success 200 {object} usecases.TargetGetResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/target.get [post]
 func TargetGet(c *jsonrpc.Ctx) (interface{}, error) {
@@ -179,8 +179,8 @@ func TargetGet(c *jsonrpc.Ctx) (interface{}, error) {
 // @Tags target_relation
 // @Accept json
 // @Produce json
-// @Param object body usecases.TargetRelationCreateInputDTO true "target_relation create info"
-// @Success 200 {object} usecases.TargetRelationCreateOutputDTO
+// @Param object body usecases.TargetRelationCreateRequest true "target_relation create info"
+// @Success 200 {object} usecases.TargetRelationCreateResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/target.relation_create [post]
 func TargetRelationCreate(c *jsonrpc.Ctx) (interface{}, error) {
@@ -209,8 +209,8 @@ func TargetRelationCreate(c *jsonrpc.Ctx) (interface{}, error) {
 // @Tags target_relation
 // @Accept json
 // @Produce json
-// @Param object body usecases.TargetRelationDeleteInputDTO true "target_relation delete info"
-// @Success 200 {object} usecases.TargetRelationDeleteOutputDTO
+// @Param object body usecases.TargetRelationDeleteRequest true "target_relation delete info"
+// @Success 200 {object} usecases.TargetRelationDeleteResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/target.relation_delete [post]
 func TargetRelationDelete(c *jsonrpc.Ctx) (interface{}, error) {
@@ -239,8 +239,8 @@ func TargetRelationDelete(c *jsonrpc.Ctx) (interface{}, error) {
 // @Tags target
 // @Accept json
 // @Produce json
-// @Param object body usecases.TargetUpsertInputDTO true "target upsert info"
-// @Success 200 {object} usecases.TargetUpsertOutputDTO
+// @Param object body usecases.TargetUpsertRequest true "target upsert info"
+// @Success 200 {object} usecases.TargetUpsertResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/target.upsert [post]
 func TargetUpsert(c *jsonrpc.Ctx) (interface{}, error) {
@@ -269,8 +269,8 @@ func TargetUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 // @Tags target_user
 // @Accept json
 // @Produce json
-// @Param object body usecases.TargetUserDeleteInputDTO true "target_user delete info"
-// @Success 200 {object} usecases.TargetUserDeleteOutputDTO
+// @Param object body usecases.TargetUserDeleteRequest true "target_user delete info"
+// @Success 200 {object} usecases.TargetUserDeleteResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/target.user_delete [post]
 func TargetUserDelete(c *jsonrpc.Ctx) (interface{}, error) {
@@ -299,8 +299,8 @@ func TargetUserDelete(c *jsonrpc.Ctx) (interface{}, error) {
 // @Tags target_user
 // @Accept json
 // @Produce json
-// @Param object body usecases.TargetUserUpsertInputDTO true "target_user upsert info"
-// @Success 200 {object} usecases.TargetUserUpsertOutputDTO
+// @Param object body usecases.TargetUserUpsertRequest true "target_user upsert info"
+// @Success 200 {object} usecases.TargetUserUpsertResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/target.user_upsert [post]
 func TargetUserUpsert(c *jsonrpc.Ctx) (interface{}, error) {
