@@ -16,6 +16,7 @@ import (
 func TestV1LTIRoutingCreate(t *testing.T) {
 	description := "create lti routing"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
@@ -58,6 +59,7 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 func TestV1LTIRoutingList(t *testing.T) {
 	description := "list lti routings"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
@@ -100,6 +102,7 @@ func TestV1LTIRoutingList(t *testing.T) {
 func TestV1LTIRoutingDelete(t *testing.T) {
 	description := "delete lti routing"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table
@@ -136,6 +139,7 @@ func TestV1LTIRoutingDelete(t *testing.T) {
 func TestV1LTIRoutingGet(t *testing.T) {
 	description := "get lti routing"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table

@@ -15,6 +15,7 @@ import (
 func TestV1UserCreate(t *testing.T) {
 	description := "create user"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
@@ -79,6 +80,7 @@ func TestV1UserCreate(t *testing.T) {
 func TestV1UserCreateUnauthorized(t *testing.T) {
 	description := "create user unauthorized"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// No auth header provided
 	input := usecases.UserEditInputDTO{
@@ -102,6 +104,7 @@ func TestV1UserCreateUnauthorized(t *testing.T) {
 func TestV1UserCreateDeactivated(t *testing.T) {
 	description := "create deactivated user"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
@@ -141,6 +144,7 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 func TestV1UserGetSuccess(t *testing.T) {
 	description := "get user successfully"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create a test user
 	entityDB := models.User{}
@@ -178,6 +182,7 @@ func TestV1UserGetSuccess(t *testing.T) {
 func TestV1UserGetNotFound(t *testing.T) {
 	description := "get non-existent user"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Use a non-existent ID
@@ -199,6 +204,7 @@ func TestV1UserGetNotFound(t *testing.T) {
 func TestV1UserGetInactiveUser(t *testing.T) {
 	description := "get inactive user"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create an inactive user
 	deletedAt := time.Now()
@@ -233,6 +239,7 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 func TestV1UserListSuccess(t *testing.T) {
 	description := "list user successfully"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -276,6 +283,7 @@ func TestV1UserListSuccess(t *testing.T) {
 func TestV1UserListFilterBySearch(t *testing.T) {
 	description := "list user with search filter"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -320,6 +328,7 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 func TestV1UserListFilterByIDs(t *testing.T) {
 	description := "list user with ID filter"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -365,6 +374,7 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 func TestV1UserListPagination(t *testing.T) {
 	description := "list user with pagination"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
@@ -409,6 +419,7 @@ func TestV1UserListPagination(t *testing.T) {
 func TestV1UserListUnauthorized(t *testing.T) {
 	description := "list user unauthorized"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	input := usecases.UserListInputDTO{
 		Search:  "",

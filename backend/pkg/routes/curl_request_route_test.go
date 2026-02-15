@@ -19,6 +19,7 @@ import (
 func TestCurlRequestCreate(t *testing.T) {
 	description := "Create new CurlRequest"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Тестовые данные
@@ -54,6 +55,7 @@ func TestCurlRequestCreate(t *testing.T) {
 func TestCurlRequestGet(t *testing.T) {
 	description := "get CurlRequest"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Создаем тестовый запрос
 	entity := models.CurlRequest{
@@ -91,6 +93,7 @@ func TestCurlRequestGet(t *testing.T) {
 func TestCurlRequestGetNotFound(t *testing.T) {
 	description := "not found CurlRequest"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 	request := &TestRpcRequest{
 		Method: "curl_request.get",
@@ -119,6 +122,7 @@ func TestCurlRequestGetNotFound(t *testing.T) {
 
 func TestCurlRequestList(t *testing.T) {
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.CurlRequest{})
@@ -213,6 +217,7 @@ func TestCurlRequestList(t *testing.T) {
 
 func TestCurlRequestDelete(t *testing.T) {
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Создаем тестовый запрос
 	entity := models.CurlRequest{
@@ -262,6 +267,7 @@ func TestCurlRequestDelete(t *testing.T) {
 
 func TestCurlRequestUnauthorizedAccess(t *testing.T) {
 	f := NewTestHTTP()
+	defer f.Close()
 
 	tests := []struct {
 		description  string
@@ -361,6 +367,7 @@ func TestApplyOverrides(t *testing.T) {
 func TestCurlRequestExecute(t *testing.T) {
 	// Инициализация тестового приложения
 	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeader, _ := f.AuthorizationServiceBasic()
 

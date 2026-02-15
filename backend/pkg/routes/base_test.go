@@ -145,6 +145,17 @@ func (f *TestHTTP) AuthorizationServiceBasic() (string, string) {
 	), entity.ClientID
 }
 
+func (f *TestHTTP) Close() error {
+	if f.DB != nil {
+		sqlDB, err := f.DB.DB()
+		if err != nil {
+			return err
+		}
+		return sqlDB.Close()
+	}
+	return nil
+}
+
 func NewTestHTTP() *TestHTTP {
 	// Load .env.test file from the root folder.
 	_ = godotenv.Load("../../.env")

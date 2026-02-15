@@ -13,6 +13,7 @@ import (
 func TestV1ServiceCardCreate(t *testing.T) {
 	description := "create service card"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -49,6 +50,7 @@ func TestV1ServiceCardCreate(t *testing.T) {
 func TestV1ServiceCardList(t *testing.T) {
 	description := "list service cards"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -94,6 +96,7 @@ func TestV1ServiceCardList(t *testing.T) {
 func TestV1ServiceCardListPagination(t *testing.T) {
 	description := "list service cards with pagination"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.ServiceCard{})
@@ -132,6 +135,7 @@ func TestV1ServiceCardListPagination(t *testing.T) {
 func TestV1ServiceCardListEmpty(t *testing.T) {
 	description := "list empty service cards"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table
@@ -158,6 +162,7 @@ func TestV1ServiceCardListEmpty(t *testing.T) {
 func TestV1ServiceCardGet(t *testing.T) {
 	description := "get service card"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table
@@ -199,6 +204,7 @@ func TestV1ServiceCardGet(t *testing.T) {
 func TestV1ServiceCardGetNotFound(t *testing.T) {
 	description := "get non-existent service card"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table
@@ -223,6 +229,7 @@ func TestV1ServiceCardGetNotFound(t *testing.T) {
 func TestV1ServiceCardDelete(t *testing.T) {
 	description := "delete service card"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table
@@ -263,6 +270,7 @@ func TestV1ServiceCardDelete(t *testing.T) {
 func TestV1NotFound(t *testing.T) {
 	description := "not found route"
 	f := NewTestHTTP()
+	defer f.Close()
 	expectedCode := 404
 	statusCode, body := f.Request(&TestHttpRequest{
 		Method: "POST",

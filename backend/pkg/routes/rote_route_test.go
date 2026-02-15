@@ -16,6 +16,7 @@ import (
 func TestRoleUpsert(t *testing.T) {
 	description := "successful role upsert (create)"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeader := f.AuthorizationUser(0, nil)
 
@@ -47,6 +48,7 @@ func TestRoleUpsert(t *testing.T) {
 func TestRoleUpsertUpdate(t *testing.T) {
 	description := "successful role upsert (update)"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeader := f.AuthorizationUser(0, nil)
 
@@ -86,6 +88,7 @@ func TestRoleUpsertUpdate(t *testing.T) {
 func TestRoleUpsertUnauthorized(t *testing.T) {
 	description := "role upsert without admin privileges"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create regular user (non-admin)
 	regularUser := models.User{}
@@ -112,6 +115,7 @@ func TestRoleUpsertUnauthorized(t *testing.T) {
 func TestRoleList(t *testing.T) {
 	description := "successful role list"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(models.Role{})
@@ -143,6 +147,7 @@ func TestRoleList(t *testing.T) {
 func TestRoleDelete(t *testing.T) {
 	description := "successful role delete"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeader := f.AuthorizationUser(0, nil)
 
@@ -179,6 +184,7 @@ func TestRoleDelete(t *testing.T) {
 func TestRoleDeleteUnauthorized(t *testing.T) {
 	description := "role delete without admin privileges"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create regular user (non-admin)
 	regularUser := models.User{}

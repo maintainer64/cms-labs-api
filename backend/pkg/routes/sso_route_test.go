@@ -16,6 +16,7 @@ import (
 func TestSSOAuthorize(t *testing.T) {
 	description := "successful authorization code generation"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	_, clientID := f.AuthorizationServiceBasic()
 
@@ -64,6 +65,7 @@ func TestSSOAuthorize(t *testing.T) {
 func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	description := "authorization with invalid client"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Создаем тестового пользователя
 	user := models.User{}
@@ -104,6 +106,7 @@ func TestSSOAuthorizeInvalidClient(t *testing.T) {
 func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
 	description := "authorization with not match roles"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// OpenID server
 	server := models.PNETServer{}
@@ -164,6 +167,7 @@ func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
 func TestSSOAuthorizeMatchRoles(t *testing.T) {
 	description := "authorization with match roles"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// OpenID server
 	server := models.PNETServer{}
@@ -225,6 +229,7 @@ func TestSSOAuthorizeMatchRoles(t *testing.T) {
 func TestSSOTokenByAuthCode(t *testing.T) {
 	description := "get tokens by authorization code"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeaderServer, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
@@ -285,6 +290,7 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 func TestSSOIntrospectValidToken(t *testing.T) {
 	description := "introspect valid access token"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeaderClient, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
@@ -317,6 +323,7 @@ func TestSSOIntrospectValidToken(t *testing.T) {
 func TestSSOUserInfo(t *testing.T) {
 	description := "get user info with valid token"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	_, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
@@ -364,6 +371,7 @@ func TestSSOUserInfo(t *testing.T) {
 func TestSSOOpenIdConfiguration(t *testing.T) {
 	description := "get OpenID configuration"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	expectedCode := 200
 	statusCode, body := f.Request(&TestHttpRequest{
@@ -386,6 +394,7 @@ func TestSSOOpenIdConfiguration(t *testing.T) {
 func TestSSOJwks(t *testing.T) {
 	description := "get JWKS"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	expectedCode := 200
 	statusCode, body := f.Request(&TestHttpRequest{

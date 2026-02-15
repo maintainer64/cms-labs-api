@@ -19,6 +19,7 @@ import (
 func TestV1PNETServerRouteGet(t *testing.T) {
 	description := "get server"
 	f := NewTestHTTP()
+	defer f.Close()
 	entity := models.PNETServer{}
 	entity.Name = "Server"
 	entity.Url = "https://localhost"
@@ -51,6 +52,7 @@ func TestV1PNETServerRouteGet(t *testing.T) {
 func TestV1PNETServerRouteGetNotFound(t *testing.T) {
 	description := "not found pnet"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 	expectedCode := 500
 	r := &TestRpcRequest{
@@ -80,6 +82,7 @@ func TestV1PNETServerRouteGetNotFound(t *testing.T) {
 
 func TestV1PNETServerRouteSearch(t *testing.T) {
 	f := NewTestHTTP()
+	defer f.Close()
 	now := time.Now().UTC()
 	entity := models.PNETServer{}
 	entity.Name = "Server " + uuid.New().String()
@@ -183,6 +186,7 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 
 func TestV1PNETServerRouteDelete(t *testing.T) {
 	f := NewTestHTTP()
+	defer f.Close()
 	now := time.Now().UTC()
 	entity := models.PNETServer{}
 	entity.Name = "Server " + uuid.New().String()
@@ -241,6 +245,7 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 func TestV1PNETServerRouteCreate(t *testing.T) {
 	description := "Create new PNET server"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Тестовые данные
@@ -293,6 +298,7 @@ func TestV1PNETServerRouteCreate(t *testing.T) {
 func TestV1PNETServerPingSuccess(t *testing.T) {
 	description := "ping PNET server successfully"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create a test PNET server
 	authHeader, clientID := f.AuthorizationServiceBasic()
@@ -354,6 +360,7 @@ func TestV1PNETServerPingSuccess(t *testing.T) {
 func TestV1PNETServerPingUnauthorized(t *testing.T) {
 	description := "ping PNET server unauthorized"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	input := external.PNETServerPingInputDTO{
 		Attempts: []external.AttemptDTO{
@@ -378,6 +385,7 @@ func TestV1PNETServerPingUnauthorized(t *testing.T) {
 func TestV1PNETServerPingInvalidAttempt(t *testing.T) {
 	description := "ping PNET server with invalid attempt"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeader, _ := f.AuthorizationServiceBasic()
 

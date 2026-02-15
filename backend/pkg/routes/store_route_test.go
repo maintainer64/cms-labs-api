@@ -15,6 +15,7 @@ import (
 func TestStoreGet(t *testing.T) {
 	description := "get user store"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	testUser := models.User{
 		UserBase: models.UserBase{
@@ -51,6 +52,7 @@ func TestStoreGet(t *testing.T) {
 func TestStoreGetEmpty(t *testing.T) {
 	description := "get empty user store"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	testUser := models.User{
 		UserBase: models.UserBase{
@@ -79,6 +81,7 @@ func TestStoreGetEmpty(t *testing.T) {
 func TestStoreSet(t *testing.T) {
 	description := "set user store"
 	f := NewTestHTTP()
+	defer f.Close()
 
 	testUser := models.User{
 		UserBase: models.UserBase{
@@ -119,6 +122,7 @@ func TestStoreSet(t *testing.T) {
 func TestStoreSetInvalidJSON(t *testing.T) {
 	description := "set user store with invalid JSON"
 	f := NewTestHTTP()
+	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	expectedCode := 500
@@ -151,6 +155,7 @@ func TestStoreUnauthorized(t *testing.T) {
 	}
 
 	f := NewTestHTTP()
+	defer f.Close()
 
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
