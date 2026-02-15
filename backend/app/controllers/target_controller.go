@@ -20,6 +20,9 @@ import (
 // @Router /api/v1/rpc/target.addon_create [post]
 func TargetAddonCreate(c *jsonrpc.Ctx) (interface{}, error) {
 	issuer, err := auth.IssuerURLByBaseUrl(c.FiberCtx.BaseURL())
+	if err != nil {
+		return nil, err
+	}
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
 		return nil, err
@@ -52,6 +55,9 @@ func TargetAddonCreate(c *jsonrpc.Ctx) (interface{}, error) {
 // @Router /api/v1/rpc/target.addon_delete [post]
 func TargetAddonDelete(c *jsonrpc.Ctx) (interface{}, error) {
 	issuer, err := auth.IssuerURLByBaseUrl(c.FiberCtx.BaseURL())
+	if err != nil {
+		return nil, err
+	}
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
 		return nil, err

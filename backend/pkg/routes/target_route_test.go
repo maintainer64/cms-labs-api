@@ -69,13 +69,13 @@ func TestV1TargetUpsertUpdate(t *testing.T) {
 		Links:       types.JsonStore{},
 		Tags:        types.JsonStore{},
 	}
-	code, body := f.Rpc(&TestRpcRequest{
+	_, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
 		Params:        createInput,
 		Authorization: authAdmin,
 	})
 	var createResp usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body), &createResp)
+	_ = json.Unmarshal([]byte(body), &createResp)
 	targetID := createResp.Result.ID
 
 	// Обновляем
@@ -88,7 +88,7 @@ func TestV1TargetUpsertUpdate(t *testing.T) {
 		Tags:        types.JsonStore{"env": "stage"},
 	}
 
-	code, body = f.Rpc(&TestRpcRequest{
+	code, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
 		Params:        updateInput,
 		Authorization: authAdmin,
@@ -124,13 +124,13 @@ func TestV1TargetUpsertUpdate_NotEditor(t *testing.T) {
 		Description: ptrString("desc"),
 		Type:        "service",
 	}
-	code, body := f.Rpc(&TestRpcRequest{
+	_, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
 		Params:        createInput,
 		Authorization: authAdmin,
 	})
 	var createResp usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body), &createResp)
+	_ = json.Unmarshal([]byte(body), &createResp)
 	targetID := createResp.Result.ID
 
 	// Пытаемся обновить от студента (не редактор)
@@ -140,7 +140,7 @@ func TestV1TargetUpsertUpdate_NotEditor(t *testing.T) {
 		Description: ptrString("evil"),
 		Type:        "service",
 	}
-	code, body = f.Rpc(&TestRpcRequest{
+	code, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
 		Params:        updateInput,
 		Authorization: authStudent,
@@ -155,7 +155,7 @@ func TestV1TargetUpsertUpdate_NotEditor(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 }
 
@@ -189,7 +189,7 @@ func TestV1TargetUpsertCreate_ForbiddenRole(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 }
 
@@ -287,18 +287,18 @@ func TestV1TargetDelete_NotEditor(t *testing.T) {
 		Description: ptrString("desc"),
 		Type:        "service",
 	}
-	code, body := f.Rpc(&TestRpcRequest{
+	_, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
 		Params:        createInput,
 		Authorization: authAdmin,
 	})
 	var createResp usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body), &createResp)
+	_ = json.Unmarshal([]byte(body), &createResp)
 	targetID := createResp.Result.ID
 
 	// Пытаемся удалить от студента
 	input := usecases.TargetDeleteInputDTO{ID: targetID}
-	code, body = f.Rpc(&TestRpcRequest{
+	code, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.delete",
 		Params:        input,
 		Authorization: authStudent,
@@ -313,7 +313,7 @@ func TestV1TargetDelete_NotEditor(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 }
 
@@ -336,7 +336,7 @@ func TestV1TargetRelationCreate_Success(t *testing.T) {
 		Authorization: authAdmin,
 	})
 	var resp1 usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body1), &resp1)
+	_ = json.Unmarshal([]byte(body1), &resp1)
 	assert.Equal(t, 200, code1, desc)
 	fromID := resp1.Result.ID
 
@@ -352,7 +352,7 @@ func TestV1TargetRelationCreate_Success(t *testing.T) {
 		Authorization: authAdmin,
 	})
 	var resp2 usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body2), &resp2)
+	_ = json.Unmarshal([]byte(body2), &resp2)
 	assert.Equal(t, 200, code2, desc)
 	toID := resp2.Result.ID
 
@@ -404,13 +404,13 @@ func TestV1TargetRelationCreate_NotEditor(t *testing.T) {
 		Description: ptrString("desc"),
 		Type:        "service",
 	}
-	code, body := f.Rpc(&TestRpcRequest{
+	_, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
 		Params:        createTarget,
 		Authorization: authAdmin,
 	})
 	var createResp usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body), &createResp)
+	_ = json.Unmarshal([]byte(body), &createResp)
 	fromID := createResp.Result.ID
 
 	// Вторая цель (можно создать через БД для простоты)
@@ -427,7 +427,7 @@ func TestV1TargetRelationCreate_NotEditor(t *testing.T) {
 		ToTargetID:   toTarget.ID,
 		RelationType: "depends_on",
 	}
-	code, body = f.Rpc(&TestRpcRequest{
+	code, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.relation_create",
 		Params:        input,
 		Authorization: authRegular,
@@ -442,7 +442,7 @@ func TestV1TargetRelationCreate_NotEditor(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 }
 
@@ -459,13 +459,13 @@ func TestV1TargetRelationCreate_SelfRelation(t *testing.T) {
 		Description: ptrString("desc"),
 		Type:        "service",
 	}
-	code, body := f.Rpc(&TestRpcRequest{
+	_, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
 		Params:        createTarget,
 		Authorization: authAdmin,
 	})
 	var createResp usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body), &createResp)
+	_ = json.Unmarshal([]byte(body), &createResp)
 	targetID := createResp.Result.ID
 
 	// Пытаемся создать связь саму на себя
@@ -474,7 +474,7 @@ func TestV1TargetRelationCreate_SelfRelation(t *testing.T) {
 		ToTargetID:   targetID,
 		RelationType: "depends_on",
 	}
-	code, body = f.Rpc(&TestRpcRequest{
+	code, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.relation_create",
 		Params:        input,
 		Authorization: authAdmin,
@@ -489,7 +489,7 @@ func TestV1TargetRelationCreate_SelfRelation(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "invalid_arguments", rpcError.Error.Data.Code, desc)
 }
 
@@ -512,7 +512,7 @@ func TestV1TargetRelationCreate_Duplicate(t *testing.T) {
 		Authorization: authAdmin,
 	})
 	var resp1 usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body1), &resp1)
+	_ = json.Unmarshal([]byte(body1), &resp1)
 	fromID := resp1.Result.ID
 
 	createTarget2 := usecases.TargetUpsertInputDTO{
@@ -527,7 +527,7 @@ func TestV1TargetRelationCreate_Duplicate(t *testing.T) {
 		Authorization: authAdmin,
 	})
 	var resp2 usecases.TargetUpsertResponse
-	json.Unmarshal([]byte(body2), &resp2)
+	_ = json.Unmarshal([]byte(body2), &resp2)
 	toID := resp2.Result.ID
 
 	// Создаём связь первый раз
@@ -547,7 +547,7 @@ func TestV1TargetRelationCreate_Duplicate(t *testing.T) {
 	assert.Equal(t, 200, code, desc)
 
 	// Пытаемся создать точно такую же связь (дубликат)
-	code, body = f.Rpc(&TestRpcRequest{
+	code, _ = f.Rpc(&TestRpcRequest{
 		Method:        "target.relation_create",
 		Params:        input,
 		Authorization: authAdmin,
@@ -697,7 +697,7 @@ func TestV1TargetRelationDelete_NotEditor(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 
 	// Проверяем, что связь не удалена
@@ -733,7 +733,7 @@ func TestV1TargetRelationDelete_PermissionDenied(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 }
 
@@ -891,7 +891,7 @@ func TestV1TargetUserUpsert_CreateAnotherEditor_NotEditor(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 }
 
@@ -973,7 +973,7 @@ func TestV1TargetUserUpsert_InvalidInput(t *testing.T) {
 			Message string `json:"message"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Contains(t, rpcError.Error.Message, "validation", desc)
 }
 
@@ -1103,7 +1103,7 @@ func TestV1TargetUserDelete_NotEditor(t *testing.T) {
 			} `json:"data"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Equal(t, "permission_denied", rpcError.Error.Data.Code, desc)
 
 	// Запись должна остаться
@@ -1218,7 +1218,7 @@ func TestV1TargetUserDelete_InvalidInput(t *testing.T) {
 			Message string `json:"message"`
 		} `json:"error"`
 	}
-	json.Unmarshal([]byte(body), &rpcError)
+	_ = json.Unmarshal([]byte(body), &rpcError)
 	assert.Contains(t, rpcError.Error.Message, "validation", desc)
 }
 
