@@ -14,12 +14,12 @@ import (
 // It creates, rotates, and revokes service tokens for a target service.
 type VaultAddonService struct {
 	Config      *connection.AddonConfig
-	VaultClient *vault.Client
+	VaultClient vault.ClientInterface
 	tokenTTL    string // e.g. "87600h" (10 years)
 }
 
 // NewVaultAddonService creates a new VaultAddonService.
-func NewVaultAddonService(cfg *connection.AddonConfig, vaultClient *vault.Client) AddonService {
+func NewVaultAddonService(cfg *connection.AddonConfig, vaultClient vault.ClientInterface) AddonService {
 	return &VaultAddonService{
 		Config:      cfg,
 		VaultClient: vaultClient,
@@ -124,7 +124,7 @@ func (s *VaultAddonService) Reset(ctx context.Context, targetName string, _ *Add
 func (s *VaultAddonService) getVaultURL(targetName string) string {
 	return fmt.Sprintf(
 		"%s/ui/vault/secrets/secret/kv/list/services/%s",
-		s.VaultClient.VaultAddr,
+		s.VaultClient.GetVaultAddr(),
 		targetName,
 	)
 }

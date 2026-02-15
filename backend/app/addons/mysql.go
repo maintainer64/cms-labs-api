@@ -19,10 +19,10 @@ type MySQLAddonService struct {
 	URL         string                  `json:"url"`
 	Host        string                  `json:"host"`
 	Port        string                  `json:"port"`
-	VaultClient *vault.Client
+	VaultClient vault.ClientInterface
 }
 
-func NewMySQLAddonService(cfg *connection.AddonConfig, vaultClient *vault.Client) AddonService {
+func NewMySQLAddonService(cfg *connection.AddonConfig, vaultClient vault.ClientInterface) AddonService {
 	url, _ := cfg.Params["url"].(string)
 	host, _ := cfg.Params["host"].(string)
 	port, _ := cfg.Params["port"].(string)

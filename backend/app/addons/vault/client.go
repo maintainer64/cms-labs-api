@@ -180,6 +180,10 @@ func (v *Client) RotateServiceToken(ctx context.Context, targetName string, opts
 	return v.IssueServiceToken(ctx, targetName, opts)
 }
 
+func (v *Client) GetVaultAddr() string {
+	return v.VaultAddr
+}
+
 // ---------------------------------------------------------------------
 // внутренние хелперы
 // ---------------------------------------------------------------------

@@ -18,11 +18,11 @@ type PostgreSQLAddonService struct {
 	URL         string                  `json:"url"`
 	Host        string                  `json:"host"`
 	Port        string                  `json:"port"`
-	VaultClient *vault.Client
+	VaultClient vault.ClientInterface
 }
 
 // NewPostgreSQLAddonService creates a new PostgreSQL service instance.
-func NewPostgreSQLAddonService(cfg *connection.AddonConfig, vaultClient *vault.Client) AddonService {
+func NewPostgreSQLAddonService(cfg *connection.AddonConfig, vaultClient vault.ClientInterface) AddonService {
 	url, _ := cfg.Params["url"].(string)
 	host, _ := cfg.Params["host"].(string)
 	port, _ := cfg.Params["port"].(string)

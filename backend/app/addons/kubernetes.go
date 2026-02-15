@@ -22,7 +22,7 @@ const ExpireUserDuration = time.Duration(24) * time.Hour       // 1 день
 type KubernetesAddonService struct {
 	IssId               string
 	Config              *connection.AddonConfig
-	VaultClient         *vault.Client
+	VaultClient         vault.ClientInterface
 	TokenAttemptQueries *queries.TokenAttemptQueries
 	PNETServerQueries   *queries.PNETServerQueries
 	UserQueries         *queries.UserQueries

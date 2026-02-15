@@ -26,7 +26,7 @@ type AddonService interface {
 
 type FactoryAddonService struct {
 	Config              *connection.AddonsConfig
-	VaultClient         *vault.Client
+	VaultClient         vault.ClientInterface
 	TokenAttemptQueries *queries.TokenAttemptQueries
 	PNETServerQueries   *queries.PNETServerQueries
 	UserQueries         *queries.UserQueries

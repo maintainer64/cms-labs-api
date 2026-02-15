@@ -30,12 +30,12 @@ type SeaweedFSConfig struct {
 type SeaweedFSAddonService struct {
 	Config      *connection.AddonConfig
 	Params      SeaweedFSConfig
-	VaultClient *vault.Client
+	VaultClient vault.ClientInterface
 	HTTPClient  *http.Client
 }
 
 // NewSeaweedFSAddonService creates a new SeaweedFS service instance.
-func NewSeaweedFSAddonService(cfg *connection.AddonConfig, vaultClient *vault.Client) AddonService {
+func NewSeaweedFSAddonService(cfg *connection.AddonConfig, vaultClient vault.ClientInterface) AddonService {
 	endpoint, _ := cfg.Params["endpoint"].(string)
 	serviceInVault, _ := cfg.Params["service_in_vault"].(string)
 	gitUrl, _ := cfg.Params["git_url"].(string)
@@ -127,7 +127,7 @@ func (s *SeaweedFSAddonService) generateAccessKey() string {
 	if len(key) > 20 {
 		key = key[:20]
 	}
-	return key
+	return strings.ToUpper(key)
 }
 
 // generateSecretKey creates a 40‑character secret key.

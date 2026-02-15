@@ -72,12 +72,12 @@ type HarborArtifact struct {
 type HarborAddonService struct {
 	Config      *connection.AddonConfig
 	Params      HarborConfig
-	VaultClient *vault.Client
+	VaultClient vault.ClientInterface
 	HTTPClient  *http.Client
 }
 
 // NewHarborAddonService creates a new Harbor service instance.
-func NewHarborAddonService(cfg *connection.AddonConfig, vaultClient *vault.Client) AddonService {
+func NewHarborAddonService(cfg *connection.AddonConfig, vaultClient vault.ClientInterface) AddonService {
 	apiUrl, _ := cfg.Params["api_url"].(string)
 	username, _ := cfg.Params["username"].(string)
 	password, _ := cfg.Params["password"].(string)
