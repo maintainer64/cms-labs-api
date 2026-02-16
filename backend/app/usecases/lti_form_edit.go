@@ -11,6 +11,7 @@ type AuthProviderEditUC struct {
 
 type AuthProviderEditInputDTO struct {
 	ID            uint    `json:"id"`
+	Type          string  `json:"type" validate:"required"`
 	ClientID      string  `json:"client_id" validate:"required"`
 	DeploymentID  string  `json:"deployment_id" validate:"required"`
 	BaseURI       string  `json:"base_uri" validate:"required"`
@@ -43,6 +44,7 @@ type AuthProviderEditResponse struct {
 func (u *AuthProviderEditUC) Execute(dto AuthProviderEditInputDTO) (AuthProviderEditOutputDTO, error) {
 	entity := &models.AuthProvider{}
 	entity.ID = dto.ID
+	entity.Type = dto.Type
 	entity.Name = dto.Name
 	entity.LTIClientID = dto.ClientID
 	entity.LTIDeploymentID = dto.DeploymentID
