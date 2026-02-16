@@ -1,14 +1,21 @@
 package models
 
-// LTIFormBase struct to describe LTIForm object.
-type LTIFormBase struct {
+// AuthProviderBase struct to describe AuthProvider object.
+
+const (
+	AuthProviderTypeLTI  = "lti"
+	AuthProviderTypeLDAP = "ldap"
+)
+
+type AuthProviderBase struct {
 	Name            string  `gorm:"type:varchar(255)" json:"name" validate:"required"`
+	Type            string  `gorm:"type:varchar(255)" json:"type" validate:"required"`
 	LTIClientID     string  `gorm:"type:varchar(255);column:lti_client_id" json:"lti_client_id" validate:"required"`
 	LTIDeploymentID string  `gorm:"type:varchar(255);column:lti_deployment_id" json:"lti_deployment_id" validate:"required"`
 	SSOURL          *string `gorm:"type:varchar(255);column:sso_url" json:"sso_url"`
 }
 
-type LTIFormSecret struct {
+type AuthProviderSecret struct {
 	BaseURI         string `gorm:"type:varchar(255)" json:"base_uri" validate:"required"`
 	LTIAuthTokenURI string `gorm:"type:varchar(255)" json:"lti_auth_token_uri" validate:"required"`
 	LTIAuthLoginURI string `gorm:"type:varchar(255)" json:"lti_auth_login_uri" validate:"required"`
@@ -18,18 +25,18 @@ type LTIFormSecret struct {
 	PrivateKey      string `gorm:"type:text" json:"private_key" validate:"required"`
 }
 
-type LTIFormListItem struct {
+type AuthProviderListItem struct {
 	Base
-	LTIFormBase
+	AuthProviderBase
 }
 
-// TableName переопределяет название таблицы для LTIFormListItem на `lti_forms`
-func (LTIFormListItem) TableName() string {
-	return "lti_forms"
+// TableName переопределяет название таблицы для AuthProviderListItem на `lti_forms`
+func (AuthProviderListItem) TableName() string {
+	return "auth_providers"
 }
 
-type LTIForm struct {
+type AuthProvider struct {
 	Base
-	LTIFormBase
-	LTIFormSecret
+	AuthProviderBase
+	AuthProviderSecret
 }

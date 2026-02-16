@@ -461,7 +461,7 @@ definitions:
     - expired_at
     - updated_at
     type: object
-  models.LTIForm:
+  models.AuthProvider:
     properties:
       base_uri:
         type: string
@@ -505,7 +505,7 @@ definitions:
     - target_link_uri
     - updated_at
     type: object
-  models.LTIFormListItem:
+  models.AuthProviderListItem:
     properties:
       created_at:
         type: string
@@ -1400,12 +1400,12 @@ definitions:
     - id
     - jsonrpc
     type: object
-  usecases.LTIFormDeleteInputDTO:
+  usecases.AuthProviderDeleteInputDTO:
     properties:
       id:
         type: integer
     type: object
-  usecases.LTIFormDeleteRequest:
+  usecases.AuthProviderDeleteRequest:
     properties:
       id:
         default: "1"
@@ -1419,7 +1419,7 @@ definitions:
       params:
         $ref: '#/definitions/usecases.LTIAttemptGetInputDTO'
     type: object
-  usecases.LTIFormDeleteResponse:
+  usecases.AuthProviderDeleteResponse:
     properties:
       error: {}
       id:
@@ -1429,9 +1429,9 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.LTIFormDeleteInputDTO'
+        $ref: '#/definitions/usecases.AuthProviderDeleteInputDTO'
     type: object
-  usecases.LTIFormEditInputDTO:
+  usecases.AuthProviderEditInputDTO:
     properties:
       auth_login_uri:
         type: string
@@ -1463,12 +1463,12 @@ definitions:
     - name
     - target_link_uri
     type: object
-  usecases.LTIFormEditOutputDTO:
+  usecases.AuthProviderEditOutputDTO:
     properties:
       id:
         type: integer
     type: object
-  usecases.LTIFormEditRequest:
+  usecases.AuthProviderEditRequest:
     properties:
       id:
         default: "1"
@@ -1480,9 +1480,9 @@ definitions:
         default: lti_form.upsert
         type: string
       params:
-        $ref: '#/definitions/usecases.LTIFormEditInputDTO'
+        $ref: '#/definitions/usecases.AuthProviderEditInputDTO'
     type: object
-  usecases.LTIFormEditResponse:
+  usecases.AuthProviderEditResponse:
     properties:
       error: {}
       id:
@@ -1492,19 +1492,19 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.LTIFormEditOutputDTO'
+        $ref: '#/definitions/usecases.AuthProviderEditOutputDTO'
     type: object
-  usecases.LTIFormGetInputDTO:
+  usecases.AuthProviderGetInputDTO:
     properties:
       id:
         type: integer
     type: object
-  usecases.LTIFormGetOutputDTO:
+  usecases.AuthProviderGetOutputDTO:
     properties:
       model:
-        $ref: '#/definitions/models.LTIForm'
+        $ref: '#/definitions/models.AuthProvider'
     type: object
-  usecases.LTIFormGetRequest:
+  usecases.AuthProviderGetRequest:
     properties:
       id:
         default: "1"
@@ -1516,9 +1516,9 @@ definitions:
         default: lti_form.get
         type: string
       params:
-        $ref: '#/definitions/usecases.LTIFormGetInputDTO'
+        $ref: '#/definitions/usecases.AuthProviderGetInputDTO'
     type: object
-  usecases.LTIFormGetResponse:
+  usecases.AuthProviderGetResponse:
     properties:
       error: {}
       id:
@@ -1528,9 +1528,9 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.LTIFormGetOutputDTO'
+        $ref: '#/definitions/usecases.AuthProviderGetOutputDTO'
     type: object
-  usecases.LTIFormListInputDTO:
+  usecases.AuthProviderListInputDTO:
     properties:
       limit:
         type: integer
@@ -1539,11 +1539,11 @@ definitions:
       search:
         type: string
     type: object
-  usecases.LTIFormListOutputDTO:
+  usecases.AuthProviderListOutputDTO:
     properties:
       model:
         items:
-          $ref: '#/definitions/models.LTIFormListItem'
+          $ref: '#/definitions/models.AuthProviderListItem'
         type: array
       total_count:
         type: integer
@@ -1551,7 +1551,7 @@ definitions:
     - model
     - total_count
     type: object
-  usecases.LTIFormListRequest:
+  usecases.AuthProviderListRequest:
     properties:
       id:
         default: "1"
@@ -1563,9 +1563,9 @@ definitions:
         default: lti_form.list
         type: string
       params:
-        $ref: '#/definitions/usecases.LTIFormListInputDTO'
+        $ref: '#/definitions/usecases.AuthProviderListInputDTO'
     type: object
-  usecases.LTIFormListResponse:
+  usecases.AuthProviderListResponse:
     properties:
       error: {}
       id:
@@ -1575,18 +1575,18 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.LTIFormListOutputDTO'
+        $ref: '#/definitions/usecases.AuthProviderListOutputDTO'
     type: object
-  usecases.LTIFormListSSOOutputDTO:
+  usecases.AuthProviderListSSOOutputDTO:
     properties:
       model:
         items:
-          $ref: '#/definitions/models.LTIFormListItem'
+          $ref: '#/definitions/models.AuthProviderListItem'
         type: array
     required:
     - model
     type: object
-  usecases.LTIFormListSSORequest:
+  usecases.AuthProviderListSSORequest:
     properties:
       id:
         default: "1"
@@ -1599,7 +1599,7 @@ definitions:
         type: string
       params: {}
     type: object
-  usecases.LTIFormListSSOResponse:
+  usecases.AuthProviderListSSOResponse:
     properties:
       error: {}
       id:
@@ -1609,7 +1609,7 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/usecases.LTIFormListSSOOutputDTO'
+        $ref: '#/definitions/usecases.AuthProviderListSSOOutputDTO'
     type: object
   usecases.LTIRoutingDeleteInputDTO:
     properties:
@@ -2981,7 +2981,7 @@ paths:
       summary: edit lti_attempt
       tags:
       - lti_attempt
-  /api/v1/rpc/lti_form.delete:
+  /api/v1/rpc/auth_provider.delete:
     post:
       consumes:
       - application/json
@@ -2992,20 +2992,20 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormDeleteRequest'
+          $ref: '#/definitions/usecases.AuthProviderDeleteRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LTIFormDeleteResponse'
+            $ref: '#/definitions/usecases.AuthProviderDeleteResponse'
       security:
       - ApiKeyAuth: []
       summary: delete lti_form
       tags:
       - lti_form
-  /api/v1/rpc/lti_form.get:
+  /api/v1/rpc/auth_provider.get:
     post:
       consumes:
       - application/json
@@ -3016,20 +3016,20 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormGetRequest'
+          $ref: '#/definitions/usecases.AuthProviderGetRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LTIFormGetResponse'
+            $ref: '#/definitions/usecases.AuthProviderGetResponse'
       security:
       - ApiKeyAuth: []
       summary: get lti_form
       tags:
       - lti_form
-  /api/v1/rpc/lti_form.list:
+  /api/v1/rpc/auth_provider.list:
     post:
       consumes:
       - application/json
@@ -3040,20 +3040,20 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormListRequest'
+          $ref: '#/definitions/usecases.AuthProviderListRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LTIFormListResponse'
+            $ref: '#/definitions/usecases.AuthProviderListResponse'
       security:
       - ApiKeyAuth: []
       summary: list lti_form
       tags:
       - lti_form
-  /api/v1/rpc/lti_form.sso_list_get:
+  /api/v1/rpc/auth_provider.sso_list_get:
     post:
       consumes:
       - application/json
@@ -3064,20 +3064,20 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormListSSORequest'
+          $ref: '#/definitions/usecases.AuthProviderListSSORequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LTIFormListSSOResponse'
+            $ref: '#/definitions/usecases.AuthProviderListSSOResponse'
       security:
       - ApiKeyAuth: []
       summary: list sso url
       tags:
       - lti_form
-  /api/v1/rpc/lti_form.upsert:
+  /api/v1/rpc/auth_provider.upsert:
     post:
       consumes:
       - application/json
@@ -3088,14 +3088,14 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.LTIFormEditRequest'
+          $ref: '#/definitions/usecases.AuthProviderEditRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.LTIFormEditResponse'
+            $ref: '#/definitions/usecases.AuthProviderEditResponse'
       security:
       - ApiKeyAuth: []
       summary: create lti_form

@@ -406,7 +406,7 @@
                 }
             }
         },
-        "/api/v1/rpc/lti_form.delete": {
+        "/api/v1/rpc/auth_provider.delete": {
             "post": {
                 "security": [
                     {
@@ -431,7 +431,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormDeleteRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteRequest"
                         }
                     }
                 ],
@@ -439,13 +439,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormDeleteResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.get": {
+        "/api/v1/rpc/auth_provider.get": {
             "post": {
                 "security": [
                     {
@@ -470,7 +470,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormGetRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderGetRequest"
                         }
                     }
                 ],
@@ -478,13 +478,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormGetResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderGetResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.list": {
+        "/api/v1/rpc/auth_provider.list": {
             "post": {
                 "security": [
                     {
@@ -509,7 +509,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderListRequest"
                         }
                     }
                 ],
@@ -517,13 +517,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderListResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.sso_list_get": {
+        "/api/v1/rpc/auth_provider.sso_list_get": {
             "post": {
                 "security": [
                     {
@@ -548,7 +548,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListSSORequest"
+                            "$ref": "#/definitions/usecases.AuthProviderListSSORequest"
                         }
                     }
                 ],
@@ -556,13 +556,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListSSOResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderListSSOResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.upsert": {
+        "/api/v1/rpc/auth_provider.upsert": {
             "post": {
                 "security": [
                     {
@@ -587,7 +587,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormEditRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderEditRequest"
                         }
                     }
                 ],
@@ -595,7 +595,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormEditResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderEditResponse"
                         }
                     }
                 }
@@ -3125,7 +3125,7 @@
                 }
             }
         },
-        "models.LTIForm": {
+        "models.AuthProvider": {
             "type": "object",
             "required": [
                 "base_uri",
@@ -3186,7 +3186,7 @@
                 }
             }
         },
-        "models.LTIFormListItem": {
+        "models.AuthProviderListItem": {
             "type": "object",
             "required": [
                 "created_at",
@@ -4480,7 +4480,7 @@
                 }
             }
         },
-        "usecases.LTIFormDeleteInputDTO": {
+        "usecases.AuthProviderDeleteInputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4488,7 +4488,7 @@
                 }
             }
         },
-        "usecases.LTIFormDeleteRequest": {
+        "usecases.AuthProviderDeleteRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4508,7 +4508,7 @@
                 }
             }
         },
-        "usecases.LTIFormDeleteResponse": {
+        "usecases.AuthProviderDeleteResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4521,11 +4521,11 @@
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormDeleteInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderDeleteInputDTO"
                 }
             }
         },
-        "usecases.LTIFormEditInputDTO": {
+        "usecases.AuthProviderEditInputDTO": {
             "type": "object",
             "required": [
                 "auth_login_uri",
@@ -4570,7 +4570,7 @@
                 }
             }
         },
-        "usecases.LTIFormEditOutputDTO": {
+        "usecases.AuthProviderEditOutputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4578,7 +4578,7 @@
                 }
             }
         },
-        "usecases.LTIFormEditRequest": {
+        "usecases.AuthProviderEditRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4594,11 +4594,11 @@
                     "default": "lti_form.upsert"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIFormEditInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderEditInputDTO"
                 }
             }
         },
-        "usecases.LTIFormEditResponse": {
+        "usecases.AuthProviderEditResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4611,11 +4611,11 @@
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormEditOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderEditOutputDTO"
                 }
             }
         },
-        "usecases.LTIFormGetInputDTO": {
+        "usecases.AuthProviderGetInputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4623,15 +4623,15 @@
                 }
             }
         },
-        "usecases.LTIFormGetOutputDTO": {
+        "usecases.AuthProviderGetOutputDTO": {
             "type": "object",
             "properties": {
                 "model": {
-                    "$ref": "#/definitions/models.LTIForm"
+                    "$ref": "#/definitions/models.AuthProvider"
                 }
             }
         },
-        "usecases.LTIFormGetRequest": {
+        "usecases.AuthProviderGetRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4647,11 +4647,11 @@
                     "default": "lti_form.get"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIFormGetInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderGetInputDTO"
                 }
             }
         },
-        "usecases.LTIFormGetResponse": {
+        "usecases.AuthProviderGetResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4664,11 +4664,11 @@
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormGetOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderGetOutputDTO"
                 }
             }
         },
-        "usecases.LTIFormListInputDTO": {
+        "usecases.AuthProviderListInputDTO": {
             "type": "object",
             "properties": {
                 "limit": {
@@ -4682,7 +4682,7 @@
                 }
             }
         },
-        "usecases.LTIFormListOutputDTO": {
+        "usecases.AuthProviderListOutputDTO": {
             "type": "object",
             "required": [
                 "model",
@@ -4692,7 +4692,7 @@
                 "model": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.LTIFormListItem"
+                        "$ref": "#/definitions/models.AuthProviderListItem"
                     }
                 },
                 "total_count": {
@@ -4700,7 +4700,7 @@
                 }
             }
         },
-        "usecases.LTIFormListRequest": {
+        "usecases.AuthProviderListRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4716,11 +4716,11 @@
                     "default": "lti_form.list"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIFormListInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderListInputDTO"
                 }
             }
         },
-        "usecases.LTIFormListResponse": {
+        "usecases.AuthProviderListResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4733,11 +4733,11 @@
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderListOutputDTO"
                 }
             }
         },
-        "usecases.LTIFormListSSOOutputDTO": {
+        "usecases.AuthProviderListSSOOutputDTO": {
             "type": "object",
             "required": [
                 "model"
@@ -4746,12 +4746,12 @@
                 "model": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.LTIFormListItem"
+                        "$ref": "#/definitions/models.AuthProviderListItem"
                     }
                 }
             }
         },
-        "usecases.LTIFormListSSORequest": {
+        "usecases.AuthProviderListSSORequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4769,7 +4769,7 @@
                 "params": {}
             }
         },
-        "usecases.LTIFormListSSOResponse": {
+        "usecases.AuthProviderListSSOResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4782,7 +4782,7 @@
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormListSSOOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderListSSOOutputDTO"
                 }
             }
         },

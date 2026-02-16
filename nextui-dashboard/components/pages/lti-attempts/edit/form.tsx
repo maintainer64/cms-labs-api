@@ -34,7 +34,7 @@ const defaultValues: CamelCasedPropertiesDeep<ModelsLTIAttempt> = {
 
 export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
   const {
-    locale: { LTIFormAttempt, Forms, Sidebar }
+    locale: { AuthProviderAttempt, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
   const response = useQueryLtiAttemptGet({ id });
@@ -77,8 +77,8 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
     }
   });
   const ltiAttemptDeletePopup = useConfirmPopup({
-    title: LTIFormAttempt.DeletePopup.Title,
-    description: LTIFormAttempt.DeletePopup.Description,
+    title: AuthProviderAttempt.DeletePopup.Title,
+    description: AuthProviderAttempt.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
   if (isLoading) return <Loading size='md' />;
@@ -100,19 +100,19 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
           <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldID}
+              label={AuthProviderAttempt.FieldID}
               value={(initialValues.attemptId ?? '').toString()}
               isReadOnly
             />
             <ServerInput
               variant='bordered'
-              label={LTIFormAttempt.FieldPNETServer}
+              label={AuthProviderAttempt.FieldPNETServer}
               value={(values.pnetServerId ?? '').toString()}
               onChange={handleChange('pnetServerId')}
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldExpiredAt}
+              label={AuthProviderAttempt.FieldExpiredAt}
               type='datetime-local'
               value={dayjs(values.expiredAt ?? '').format('YYYY-MM-DDTHH:mm')}
               onChange={handleChange('expiredAt')}
@@ -120,7 +120,7 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
             {initialValues.roomId && (
               <Input
                 variant='bordered'
-                label={LTIFormAttempt.FieldRoomNumber}
+                label={AuthProviderAttempt.FieldRoomNumber}
                 type='number'
                 value={(initialValues.roomId ?? 0).toString()}
                 isReadOnly
@@ -128,49 +128,49 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
             )}
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUserId}
+              label={AuthProviderAttempt.FieldUserId}
               type='number'
               value={(initialValues.userId ?? 0).toString()}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUserName}
+              label={AuthProviderAttempt.FieldUserName}
               type='text'
               value={user?.name ?? ''}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUserEmail}
+              label={AuthProviderAttempt.FieldUserEmail}
               type='text'
               value={user?.email ?? ''}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldLTIRoutingID}
+              label={AuthProviderAttempt.FieldLTIRoutingID}
               type='number'
               value={(initialValues.ltiRoutingId ?? 0).toString()}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldLTIRoutingName}
+              label={AuthProviderAttempt.FieldLTIRoutingName}
               type='text'
               value={route?.name ?? ''}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldCreatedAt}
+              label={AuthProviderAttempt.FieldCreatedAt}
               type='datetime-local'
               value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUpdatedAt}
+              label={AuthProviderAttempt.FieldUpdatedAt}
               type='datetime-local'
               value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly

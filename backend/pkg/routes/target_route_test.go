@@ -367,7 +367,7 @@ func TestV1TargetRelationCreate_Success(t *testing.T) {
 		Params:        input,
 		Authorization: authAdmin,
 	})
-	var resp usecases.TargetRelationResponse
+	var resp usecases.TargetRelationCreateResponse
 	err := json.Unmarshal([]byte(body), &resp)
 	assert.NoError(t, err, desc)
 	assert.Equal(t, 200, code, desc)
@@ -541,7 +541,7 @@ func TestV1TargetRelationCreate_Duplicate(t *testing.T) {
 		Params:        input,
 		Authorization: authAdmin,
 	})
-	var resp usecases.TargetRelationResponse
+	var resp usecases.TargetRelationCreateResponse
 	err := json.Unmarshal([]byte(body), &resp)
 	assert.NoError(t, err, desc)
 	assert.Equal(t, 200, code, desc)

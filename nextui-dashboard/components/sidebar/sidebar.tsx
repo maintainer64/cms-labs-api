@@ -41,10 +41,10 @@ export const SidebarWrapper = () => {
                 href={RoutesLocation.ltiRouting()}
               />
               <SidebarItem
-                isActive={pathname === RoutesLocation.ltiForms()}
+                isActive={pathname === RoutesLocation.AuthProviders()}
                 title={locale.Sidebar.LTIIntegrations}
                 icon={<LtiIcon />}
-                href={RoutesLocation.ltiForms()}
+                href={RoutesLocation.AuthProviders()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.accounts()}

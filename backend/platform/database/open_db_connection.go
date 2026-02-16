@@ -14,7 +14,7 @@ import (
 // Queries struct for collect all app queries.
 type Queries struct {
 	*gorm.DB
-	*lti_query.LTIFormQueries
+	*lti_query.AuthProviderQueries
 	*lti_query.LTINonceTokenQueries
 	*lti_query.LTIAccessTokenQueries
 	*lti_query.LTILaunchDataQueries
@@ -46,7 +46,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 	return &Queries{
 		// Set queries from models:
 		DB:                    db,
-		LTIFormQueries:        &lti_query.LTIFormQueries{DB: db, Logger: l},
+		AuthProviderQueries:   &lti_query.AuthProviderQueries{DB: db, Logger: l},
 		LTINonceTokenQueries:  &lti_query.LTINonceTokenQueries{DB: db, Logger: l},
 		LTIAccessTokenQueries: &lti_query.LTIAccessTokenQueries{DB: db, Logger: l},
 		LTILaunchDataQueries:  &lti_query.LTILaunchDataQueries{DB: db, Logger: l},

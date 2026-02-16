@@ -5,15 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  type UsecasesLTIFormDeleteRequest,
-  type UsecasesLTIFormDeleteResponse
+  type UsecasesAuthProviderDeleteRequest,
+  type UsecasesAuthProviderDeleteResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesLTIFormDeleteRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesLTIFormDeleteResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesAuthProviderDeleteRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderDeleteResponse['result']>;
 
-export const useQueryLtiFormDelete = (params: Params) => {
+export const useQueryAuthProviderDelete = (params: Params) => {
   return useQuery(
     transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_form.delete', params, { retry: 3 })
   );

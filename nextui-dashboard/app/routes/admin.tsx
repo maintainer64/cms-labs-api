@@ -5,7 +5,7 @@ import * as React from 'react';
 import HomePage from '@/app/(app)/home/page';
 import { AccountsPage, AccountsPageEdit, ProfilePagePasswordChange } from '@/app/(app)/accounts/page';
 import { RoutesLocation } from '@/components/routes';
-import { LTIFormsPage, LTIFormsPageEdit } from '@/app/(app)/lti-forms/page';
+import { AuthProvidersPage, AuthProvidersPageEdit } from '@/app/(app)/lti-forms/page';
 import { PnetServersPage, PnetServersPageEdit } from '@/app/(app)/pnet-servers/page';
 import { LTIRoutingPage, LTIRoutingPageEdit } from '@/app/(app)/lti-routings/page';
 import {
@@ -30,9 +30,9 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.roles()} element={<RolesListPage />} />
       <Route path={RoutesLocation.rolesEdit()} element={<RolesPageEdit />} />
       <Route path={RoutesLocation.rolesCreate()} element={<RolesPageEdit />} />
-      <Route path={RoutesLocation.ltiForms()} element={<LTIFormsPage />} />
-      <Route path={RoutesLocation.ltiFormsEdit()} element={<LTIFormsPageEdit />} />
-      <Route path={RoutesLocation.ltiFormsCreate()} element={<LTIFormsPageEdit />} />
+      <Route path={RoutesLocation.AuthProviders()} element={<AuthProvidersPage />} />
+      <Route path={RoutesLocation.AuthProvidersEdit()} element={<AuthProvidersPageEdit />} />
+      <Route path={RoutesLocation.AuthProvidersCreate()} element={<AuthProvidersPageEdit />} />
       <Route path={RoutesLocation.ltiRouting()} element={<LTIRoutingPage />} />
       <Route path={RoutesLocation.ltiRoutingEdit()} element={<LTIRoutingPageEdit />} />
       <Route path={RoutesLocation.ltiRoutingCreate()} element={<LTIRoutingPageEdit />} />

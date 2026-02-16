@@ -15,7 +15,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type LTIFormQueries struct {
+type AuthProviderQueries struct {
 	DB     *gorm.DB
 	Logger *zerolog.Logger
 }
@@ -50,8 +50,8 @@ func ltiGenerateKeys(l *zerolog.Logger) (string, string, error) {
 	})
 	return string(privateKeyPEM), string(publicKeyPEM), nil
 }
-func (q *LTIFormQueries) Get(id uint) (models.LTIForm, error) {
-	var entity models.LTIForm
+func (q *AuthProviderQueries) Get(id uint) (models.AuthProvider, error) {
+	var entity models.AuthProvider
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, jsonrpc.NewRpcError("lti_form_not_found", "lti form not found")
@@ -59,17 +59,18 @@ func (q *LTIFormQueries) Get(id uint) (models.LTIForm, error) {
 	return entity, result.Error
 }
 
-func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
+func (q *AuthProviderQueries) Upsert(entity *models.AuthProvider) error {
 	if entity == nil {
 		return nil
 	}
-	entityDB := models.LTIForm{}
+	entityDB := models.AuthProvider{}
 	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
 		// Update
-		q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: entity update: %+v", entityDB))
-		q.Logger.Info().Msg(fmt.Sprintf("LTIFormQueries: entity update id=%+v", entityDB.ID))
+		q.Logger.Debug().Msg(fmt.Sprintf("AuthProviderQueries: entity update: %+v", entityDB))
+		q.Logger.Info().Msg(fmt.Sprintf("AuthProviderQueries: entity update id=%+v", entityDB.ID))
 		entity.ID = entityDB.ID
+		entity.Type = entityDB.Type
 		entity.CreatedAt = entityDB.CreatedAt
 		entity.PublicKey = entityDB.PublicKey
 		entity.PrivateKey = entityDB.PrivateKey
@@ -78,8 +79,8 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 		return result.Error
 	}
 	// Create
-	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: entity create: %+v", entity))
-	q.Logger.Info().Msg(fmt.Sprintf("LTIFormQueries: entity create name=%+v", entity.Name))
+	q.Logger.Debug().Msg(fmt.Sprintf("AuthProviderQueries: entity create: %+v", entity))
+	q.Logger.Info().Msg(fmt.Sprintf("AuthProviderQueries: entity create name=%+v", entity.Name))
 	entity.ID = 0
 	entity.CreatedAt = time.Now().UTC()
 	entity.UpdatedAt = time.Now().UTC()
@@ -87,36 +88,38 @@ func (q *LTIFormQueries) Upsert(entity *models.LTIForm) error {
 	if err != nil {
 		return err
 	}
-	entity.PublicKey = publicKey
-	entity.PrivateKey = privateKey
+	if entity.Type == models.AuthProviderTypeLTI {
+		entity.PublicKey = publicKey
+		entity.PrivateKey = privateKey
+	}
 	result := q.DB.Create(entity)
 	return result.Error
 }
 
 const MaxLimitCount = 5000
 
-func (q *LTIFormQueries) List(
+func (q *AuthProviderQueries) List(
 	search string,
 	limit int,
 	offset int,
-) ([]models.LTIFormListItem, int64, error) {
-	var entities []models.LTIFormListItem
+) ([]models.AuthProviderListItem, int64, error) {
+	var entities []models.AuthProviderListItem
 	result := q.listFilter(
 		search,
 		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
-	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries list: count %+v", count))
+	q.Logger.Debug().Msg(fmt.Sprintf("AuthProviderQueries list: count %+v", count))
 	result = q.listFilter(
 		search,
 		q.DB.Limit(limit).Offset(offset),
 	).Find(&entities)
-	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries list: entities %+v", entities))
+	q.Logger.Debug().Msg(fmt.Sprintf("AuthProviderQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
-func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
-	tx = tx.Model(&models.LTIForm{})
+func (q *AuthProviderQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
+	tx = tx.Model(&models.AuthProvider{})
 	tx = tx.Order(`created_at desc`)
 	if search == "" {
 		return tx
@@ -126,9 +129,9 @@ func (q *LTIFormQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
 	return tx
 }
 
-func (q *LTIFormQueries) SSOURLList() ([]models.LTIFormListItem, error) {
-	var entities []models.LTIFormListItem
-	result := q.DB.Model(&models.LTIForm{}).Order(
+func (q *AuthProviderQueries) SSOURLList() ([]models.AuthProviderListItem, error) {
+	var entities []models.AuthProviderListItem
+	result := q.DB.Model(&models.AuthProvider{}).Order(
 		`created_at desc`,
 	).Where(
 		`sso_url != '' AND sso_url is not null`,
@@ -138,8 +141,8 @@ func (q *LTIFormQueries) SSOURLList() ([]models.LTIFormListItem, error) {
 	return entities, result.Error
 }
 
-func (q *LTIFormQueries) Delete(id uint) error {
-	err := q.DB.Where("id = ?", id).Delete(&models.LTIForm{}).Error
-	q.Logger.Debug().Msg(fmt.Sprintf("LTIFormQueries: delete entity by id: %+v", id))
+func (q *AuthProviderQueries) Delete(id uint) error {
+	err := q.DB.Where("id = ?", id).Delete(&models.AuthProvider{}).Error
+	q.Logger.Debug().Msg(fmt.Sprintf("AuthProviderQueries: delete entity by id: %+v", id))
 	return err
 }

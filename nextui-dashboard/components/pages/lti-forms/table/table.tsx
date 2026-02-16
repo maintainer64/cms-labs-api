@@ -2,28 +2,28 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { ModelsLTIFormListItem } from '@/helpers/api';
+import { ModelsAuthProviderListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-interface LTIFormsTableWrapperProps {
+interface AuthProvidersTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: CamelCasedPropertiesDeep<ModelsLTIFormListItem>[];
+  rows?: CamelCasedPropertiesDeep<ModelsAuthProviderListItem>[];
 }
 
-export const LTIFormsTableWrapper = ({ rows, isLoading, loadMore }: LTIFormsTableWrapperProps) => {
+export const AuthProvidersTableWrapper = ({ rows, isLoading, loadMore }: AuthProvidersTableWrapperProps) => {
   const {
     locale: {
-      Tables: { LTIFormsTable }
+      Tables: { AuthProvidersTable }
     }
   } = useLanguageBrowser();
   return (
     <InfiniteScroll loadMore={loadMore} isLoading={isLoading}>
       <div className=' w-full flex flex-col gap-4'>
         <Table aria-label='Users table'>
-          <TableHeader columns={LTIFormsTable.Columns}>
+          <TableHeader columns={AuthProvidersTable.Columns}>
             {(column) => (
               <TableColumn
                 key={column.uid}

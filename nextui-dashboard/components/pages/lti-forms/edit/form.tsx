@@ -12,25 +12,25 @@ import {
   Input
 } from '@heroui/react';
 import { Formik } from 'formik';
-import { ModelsLTIForm } from '@/helpers/api';
+import { ModelsAuthProvider } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
 import { Textarea } from '@heroui/input';
-import { LtiFormURILTIMoodle } from '@/components/pages/lti-forms/edit/lti-forms-popup';
+import { AuthProviderURILTIMoodle } from '@/components/pages/lti-forms/edit/lti-forms-popup';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { CamelCasedPropertiesDeep } from 'type-fest';
-import { useQueryLtiFormGet } from '@/helpers/queries/lti_form/use-query-lti-form-get';
-import { useMutationLtiFormUpsert } from '@/helpers/queries/lti_form/use-mutation-lti-form-upsert';
-import { useMutationLtiFormDelete } from '@/helpers/queries/lti_form/use-mutation-lti-form-delete';
+import { useQueryAuthProviderGet } from '@/helpers/queries/lti_form/use-query-lti-form-get';
+import { useMutationAuthProviderUpsert } from '@/helpers/queries/lti_form/use-mutation-lti-form-upsert';
+import { useMutationAuthProviderDelete } from '@/helpers/queries/lti_form/use-mutation-lti-form-delete';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: CamelCasedPropertiesDeep<ModelsLTIForm> = {
+const defaultValues: CamelCasedPropertiesDeep<ModelsAuthProvider> = {
   baseUri: '',
   createdAt: '',
   keySetUri: '',
@@ -55,14 +55,14 @@ const extractUrlWithPath = (url: string, path: string) => {
 
 export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
   const {
-    locale: { LTIForm, Forms, Sidebar }
+    locale: { AuthProvider, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const response = useQueryLtiFormGet({ id });
+  const response = useQueryAuthProviderGet({ id });
   const initialValues = response.data?.model ?? defaultValues;
-  const { mutate } = useMutationLtiFormUpsert({
+  const { mutate } = useMutationAuthProviderUpsert({
     onSuccess: (data) => {
-      navigate(RoutesLocation.ltiFormsEdit(data?.id?.toString() || ''), { replace: true });
+      navigate(RoutesLocation.AuthProvidersEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -76,9 +76,9 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const onDeleteMutation = useMutationLtiFormDelete({
+  const onDeleteMutation = useMutationAuthProviderDelete({
     onSuccess: () => {
-      navigate(RoutesLocation.ltiForms(), { replace: true });
+      navigate(RoutesLocation.AuthProviders(), { replace: true });
       addToast({
         title: Forms.DeleteSuccess,
         color: 'success'
@@ -92,10 +92,10 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const ltiMoodleSettings = LtiFormURILTIMoodle();
-  const ltiFormDeletePopup = useConfirmPopup({
-    title: LTIForm.DeletePopup.Title,
-    description: LTIForm.DeletePopup.Description,
+  const ltiMoodleSettings = AuthProviderURILTIMoodle();
+  const AuthProviderDeletePopup = useConfirmPopup({
+    title: AuthProvider.DeletePopup.Title,
+    description: AuthProvider.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
   if (response.isLoading) return <Loading size='md' />;
@@ -127,18 +127,18 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
             setFieldValue('ltiAuthTokenUri', `${baseURI}/mod/lti/token.php`);
             setFieldValue('keySetUri', `${baseURI}/mod/lti/certs.php`);
           })}
-          {ltiFormDeletePopup.component({})}
+          {AuthProviderDeletePopup.component({})}
           <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
-              label={LTIForm.FieldID}
+              label={AuthProvider.FieldID}
               type='number'
               value={(initialValues.id ?? 0).toString()}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldName}
+              label={AuthProvider.FieldName}
               type='text'
               value={values.name ?? ''}
               onChange={handleChange('name')}
@@ -146,65 +146,65 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
             <div>
               <Dropdown>
                 <DropdownTrigger>
-                  <Button variant='bordered'>{LTIForm.ButtonBaseURI}</Button>
+                  <Button variant='bordered'>{AuthProvider.ButtonBaseURI}</Button>
                 </DropdownTrigger>
                 <DropdownMenu aria-label='Static Actions'>
                   <DropdownItem key='ButtonBaseURIMoodle' onPress={ltiMoodleSettings.onOpen}>
-                    {LTIForm.ButtonBaseURIMoodle}
+                    {AuthProvider.ButtonBaseURIMoodle}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
             <Input
               variant='bordered'
-              label={LTIForm.FieldBaseURI}
-              description={LTIForm.DescriptionBaseURI}
+              label={AuthProvider.FieldBaseURI}
+              description={AuthProvider.DescriptionBaseURI}
               type='url'
               value={values.baseUri ?? ''}
               onChange={handleChange('baseUri')}
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldLTIAuthLoginUri}
-              description={LTIForm.DescriptionLTIAuthLoginUri}
+              label={AuthProvider.FieldLTIAuthLoginUri}
+              description={AuthProvider.DescriptionLTIAuthLoginUri}
               type='url'
               value={values.ltiAuthLoginUri ?? ''}
               onChange={handleChange('ltiAuthLoginUri')}
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldLTIAuthTokenUri}
-              description={LTIForm.DescriptionLTIAuthTokenUri}
+              label={AuthProvider.FieldLTIAuthTokenUri}
+              description={AuthProvider.DescriptionLTIAuthTokenUri}
               type='url'
               value={values.ltiAuthTokenUri ?? ''}
               onChange={handleChange('ltiAuthTokenUri')}
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldTargetLinkUri}
-              description={LTIForm.DescriptionTargetLinkUri}
+              label={AuthProvider.FieldTargetLinkUri}
+              description={AuthProvider.DescriptionTargetLinkUri}
               type='url'
               value={values.targetLinkUri ?? ''}
               onChange={handleChange('targetLinkUri')}
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldKeySetURI}
-              description={LTIForm.DescriptionKeySetURI}
+              label={AuthProvider.FieldKeySetURI}
+              description={AuthProvider.DescriptionKeySetURI}
               type='url'
               value={values.keySetUri ?? ''}
               onChange={handleChange('keySetUri')}
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldLTIClientID}
+              label={AuthProvider.FieldLTIClientID}
               type='text'
               value={values.ltiClientId ?? ''}
               onChange={handleChange('ltiClientId')}
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldLTIDeployment}
+              label={AuthProvider.FieldLTIDeployment}
               type='text'
               value={values.ltiDeploymentId ?? ''}
               onChange={handleChange('ltiDeploymentId')}
@@ -212,99 +212,99 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
             <Accordion>
               <AccordionItem
                 key='1'
-                aria-label={LTIForm.MoodleProviderParams.SectionTitle}
-                title={LTIForm.MoodleProviderParams.SectionTitle}
+                aria-label={AuthProvider.MoodleProviderParams.SectionTitle}
+                title={AuthProvider.MoodleProviderParams.SectionTitle}
               >
                 <div className='flex flex-col gap-4'>
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.ToolURL}
+                    label={AuthProvider.MoodleProviderParams.ToolURL}
                     type='text'
                     value={extractUrlWithPath(initialValues.targetLinkUri, '')}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.LTIVersion}
+                    label={AuthProvider.MoodleProviderParams.LTIVersion}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.LTIVersionValue}
+                    value={AuthProvider.MoodleProviderParams.LTIVersionValue}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.PublicKeyType}
+                    label={AuthProvider.MoodleProviderParams.PublicKeyType}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.PublicKeyTypeValue}
+                    value={AuthProvider.MoodleProviderParams.PublicKeyTypeValue}
                     readOnly
                   />
                   <Textarea
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.PublicKey}
+                    label={AuthProvider.MoodleProviderParams.PublicKey}
                     type='text'
                     value={initialValues.publicKey ?? ''}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.InitiateLoginURL}
+                    label={AuthProvider.MoodleProviderParams.InitiateLoginURL}
                     type='text'
                     value={extractUrlWithPath(initialValues.targetLinkUri, '/api/v2/lti/login')}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.RedirectionURI}
+                    label={AuthProvider.MoodleProviderParams.RedirectionURI}
                     type='text'
                     value={extractUrlWithPath(initialValues.targetLinkUri, '/api/v2/lti/launch')}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.DefaultLaunchContainer}
+                    label={AuthProvider.MoodleProviderParams.DefaultLaunchContainer}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.DefaultLaunchContainerValue}
+                    value={AuthProvider.MoodleProviderParams.DefaultLaunchContainerValue}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.IMSLTIAssignmentGradeServices}
+                    label={AuthProvider.MoodleProviderParams.IMSLTIAssignmentGradeServices}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.IMSLTIAssignmentGradeServicesValue}
+                    value={AuthProvider.MoodleProviderParams.IMSLTIAssignmentGradeServicesValue}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.IMSLTINamesRoleProvisioning}
+                    label={AuthProvider.MoodleProviderParams.IMSLTINamesRoleProvisioning}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.IMSLTINamesRoleProvisioningValue}
+                    value={AuthProvider.MoodleProviderParams.IMSLTINamesRoleProvisioningValue}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.ToolSettings}
+                    label={AuthProvider.MoodleProviderParams.ToolSettings}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.ToolSettingsValue}
+                    value={AuthProvider.MoodleProviderParams.ToolSettingsValue}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.ShareLauncherNameWithTool}
+                    label={AuthProvider.MoodleProviderParams.ShareLauncherNameWithTool}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.ShareLauncherNameWithToolValue}
+                    value={AuthProvider.MoodleProviderParams.ShareLauncherNameWithToolValue}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.ShareLauncherEmailWithTool}
+                    label={AuthProvider.MoodleProviderParams.ShareLauncherEmailWithTool}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.ShareLauncherEmailWithToolValue}
+                    value={AuthProvider.MoodleProviderParams.ShareLauncherEmailWithToolValue}
                     readOnly
                   />
                   <Input
                     variant='bordered'
-                    label={LTIForm.MoodleProviderParams.AcceptGradesTool}
+                    label={AuthProvider.MoodleProviderParams.AcceptGradesTool}
                     type='text'
-                    value={LTIForm.MoodleProviderParams.AcceptGradesToolValue}
+                    value={AuthProvider.MoodleProviderParams.AcceptGradesToolValue}
                     readOnly
                   />
                 </div>
@@ -312,22 +312,22 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
             </Accordion>
             <Input
               variant='bordered'
-              label={LTIForm.FieldSSOURL}
-              description={LTIForm.DescriptionSSOURL}
+              label={AuthProvider.FieldSSOURL}
+              description={AuthProvider.DescriptionSSOURL}
               type='url'
               value={values.ssoUrl ?? ''}
               onChange={handleChange('ssoUrl')}
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldCreatedAt}
+              label={AuthProvider.FieldCreatedAt}
               type='datetime-local'
               value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIForm.FieldUpdatedAt}
+              label={AuthProvider.FieldUpdatedAt}
               type='datetime-local'
               value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
@@ -335,7 +335,7 @@ export const LtiIntegrationsEditForm = ({ id }: EditFormProps) => {
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>
               {Sidebar.Save}
             </Button>
-            <Button onPress={ltiFormDeletePopup.onOpen} variant='flat' color='danger'>
+            <Button onPress={AuthProviderDeletePopup.onOpen} variant='flat' color='danger'>
               {Sidebar.Delete}
             </Button>
           </div>

@@ -2,16 +2,16 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  UsecasesLTIFormListRequest,
-  UsecasesLTIFormListResponse
+  UsecasesAuthProviderListRequest,
+  UsecasesAuthProviderListResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 import { RpcTransport } from '@/helpers/api/core/request';
 
-type Params = CamelCasedPropertiesDeep<UsecasesLTIFormListRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesLTIFormListResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesAuthProviderListRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderListResponse['result']>;
 
-export const useInfinityLtiFormList = (params?: Params) => {
+export const useInfinityAuthProviderList = (params?: Params) => {
   return useInfiniteQuery({
     queryKey: RpcTransport.getInfiniteQueryKey(CoreJsonRpcPath, 'lti_form.list', params ?? {}),
     queryFn: ({ pageParam }) => {

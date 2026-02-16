@@ -1,20 +1,20 @@
 import React from 'react';
 import { Layout } from '@/components/layout/layout';
-import { LtiFormsEdit } from '@/components/pages/lti-forms/edit/lti-forms-edit';
-import { LTIFormsList } from '@/components/pages/lti-forms';
+import { AuthProvidersEdit } from '@/components/pages/lti-forms/edit/lti-forms-edit';
+import { AuthProvidersList } from '@/components/pages/lti-forms';
 
-export const LTIFormsPage = () => {
+export const AuthProvidersPage = () => {
   return (
     <Layout>
-      <LTIFormsList />
+      <AuthProvidersList />
     </Layout>
   );
 };
 
-export const LTIFormsPageEdit = () => {
+export const AuthProvidersPageEdit = () => {
   return (
     <Layout>
-      <LtiFormsEdit />
+      <AuthProvidersEdit />
     </Layout>
   );
 };

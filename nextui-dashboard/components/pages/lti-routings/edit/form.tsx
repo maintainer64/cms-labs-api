@@ -108,7 +108,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const ltiFormDeletePopup = useConfirmPopup({
+  const AuthProviderDeletePopup = useConfirmPopup({
     title: LTIRouting.DeletePopup.Title,
     description: LTIRouting.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
@@ -140,7 +140,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
         <>
-          {ltiFormDeletePopup.component({})}
+          {AuthProviderDeletePopup.component({})}
           <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
@@ -255,7 +255,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>
               {Sidebar.Save}
             </Button>
-            <Button onPress={ltiFormDeletePopup.onOpen} variant='flat' color='danger'>
+            <Button onPress={AuthProviderDeletePopup.onOpen} variant='flat' color='danger'>
               {Sidebar.Delete}
             </Button>
           </div>

@@ -5,11 +5,11 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 )
 
-type LTIFormEditUC struct {
-	LTIFormQueries *lti_query.LTIFormQueries
+type AuthProviderEditUC struct {
+	AuthProviderQueries *lti_query.AuthProviderQueries
 }
 
-type LTIFormEditInputDTO struct {
+type AuthProviderEditInputDTO struct {
 	ID            uint    `json:"id"`
 	ClientID      string  `json:"client_id" validate:"required"`
 	DeploymentID  string  `json:"deployment_id" validate:"required"`
@@ -22,26 +22,26 @@ type LTIFormEditInputDTO struct {
 	SSOURL        *string `json:"sso_url"`
 }
 
-type LTIFormEditRequest struct {
-	JSONRPC string              `json:"jsonrpc" default:"2.0" required:"true"`
-	Method  string              `json:"method" default:"lti_form.upsert" required:"true"`
-	Params  LTIFormEditInputDTO `json:"params,omitempty"`
-	ID      string              `json:"id,omitempty" default:"1" required:"true"`
+type AuthProviderEditRequest struct {
+	JSONRPC string                   `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                   `json:"method" default:"lti_form.upsert" required:"true"`
+	Params  AuthProviderEditInputDTO `json:"params,omitempty"`
+	ID      string                   `json:"id,omitempty" default:"1" required:"true"`
 }
 
-type LTIFormEditOutputDTO struct {
+type AuthProviderEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LTIFormEditResponse struct {
-	JSONRPC string               `json:"jsonrpc" default:"2.0" required:"true"`
-	Result  LTIFormEditOutputDTO `json:"result,omitempty"`
-	Error   interface{}          `json:"error,omitempty"`
-	ID      string               `json:"id,omitempty" default:"1" required:"true"`
+type AuthProviderEditResponse struct {
+	JSONRPC string                    `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  AuthProviderEditOutputDTO `json:"result,omitempty"`
+	Error   interface{}               `json:"error,omitempty"`
+	ID      string                    `json:"id,omitempty" default:"1" required:"true"`
 }
 
-func (u *LTIFormEditUC) Execute(dto LTIFormEditInputDTO) (LTIFormEditOutputDTO, error) {
-	entity := &models.LTIForm{}
+func (u *AuthProviderEditUC) Execute(dto AuthProviderEditInputDTO) (AuthProviderEditOutputDTO, error) {
+	entity := &models.AuthProvider{}
 	entity.ID = dto.ID
 	entity.Name = dto.Name
 	entity.LTIClientID = dto.ClientID
@@ -52,6 +52,6 @@ func (u *LTIFormEditUC) Execute(dto LTIFormEditInputDTO) (LTIFormEditOutputDTO, 
 	entity.KeySetURI = dto.KeySetURI
 	entity.TargetLinkURI = dto.TargetLinkURI
 	entity.SSOURL = dto.SSOURL
-	err := u.LTIFormQueries.Upsert(entity)
-	return LTIFormEditOutputDTO{ID: entity.ID}, err
+	err := u.AuthProviderQueries.Upsert(entity)
+	return AuthProviderEditOutputDTO{ID: entity.ID}, err
 }

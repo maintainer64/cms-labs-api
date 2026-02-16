@@ -67,7 +67,7 @@ const ru = {
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ]
     },
-    LTIFormsTable: {
+    AuthProvidersTable: {
       Title: 'Интеграции LTI',
       ButtonAdd: 'Создать',
       SearchBar: 'Поиск интеграций',
@@ -182,7 +182,7 @@ const ru = {
     FieldUpdatedAt: 'Обновлен в',
     FieldRelationAttempts: 'Связные попытки'
   },
-  LTIForm: {
+  AuthProvider: {
     FieldID: 'ID',
     FieldName: 'Название',
     FieldBaseURI: 'Базовый URL LTI',
@@ -249,7 +249,7 @@ const ru = {
       Description: 'При удалении будет невозможно вызвать API'
     }
   },
-  LTIFormAttempt: {
+  AuthProviderAttempt: {
     FieldID: 'ID попытки',
     FieldRoomNumber: 'Номер комнаты',
     FieldUserId: 'ID пользователя',

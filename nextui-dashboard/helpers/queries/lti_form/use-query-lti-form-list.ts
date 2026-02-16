@@ -5,15 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  type UsecasesLTIFormListRequest,
-  type UsecasesLTIFormListResponse
+  type UsecasesAuthProviderListRequest,
+  type UsecasesAuthProviderListResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesLTIFormListRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesLTIFormListResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesAuthProviderListRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderListResponse['result']>;
 
-export const useQueryLtiFormList = (params: Params) => {
+export const useQueryAuthProviderList = (params: Params) => {
   return useQuery(
     transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_form.list', params, { retry: 3 })
   );

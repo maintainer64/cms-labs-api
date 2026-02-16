@@ -286,7 +286,7 @@ export interface ModelsLTIAttemptListItem {
   user_name?: string;
 }
 
-export interface ModelsLTIForm {
+export interface ModelsAuthProvider {
   base_uri: string;
   created_at: string;
   id?: number;
@@ -303,7 +303,7 @@ export interface ModelsLTIForm {
   updated_at: string;
 }
 
-export interface ModelsLTIFormListItem {
+export interface ModelsAuthProviderListItem {
   created_at: string;
   id?: number;
   lti_client_id: string;
@@ -815,11 +815,11 @@ export interface UsecasesLTIAttemptListResponse {
   result?: UsecasesLTIAttemptListOutputDTO;
 }
 
-export interface UsecasesLTIFormDeleteInputDTO {
+export interface UsecasesAuthProviderDeleteInputDTO {
   id?: number;
 }
 
-export interface UsecasesLTIFormDeleteRequest {
+export interface UsecasesAuthProviderDeleteRequest {
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
@@ -829,16 +829,16 @@ export interface UsecasesLTIFormDeleteRequest {
   params?: UsecasesLTIAttemptGetInputDTO;
 }
 
-export interface UsecasesLTIFormDeleteResponse {
+export interface UsecasesAuthProviderDeleteResponse {
   error?: any;
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: UsecasesLTIFormDeleteInputDTO;
+  result?: UsecasesAuthProviderDeleteInputDTO;
 }
 
-export interface UsecasesLTIFormEditInputDTO {
+export interface UsecasesAuthProviderEditInputDTO {
   auth_login_uri: string;
   auth_token_uri: string;
   base_uri: string;
@@ -851,91 +851,91 @@ export interface UsecasesLTIFormEditInputDTO {
   target_link_uri: string;
 }
 
-export interface UsecasesLTIFormEditOutputDTO {
+export interface UsecasesAuthProviderEditOutputDTO {
   id?: number;
 }
 
-export interface UsecasesLTIFormEditRequest {
+export interface UsecasesAuthProviderEditRequest {
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
   /** @default "lti_form.upsert" */
   method?: string;
-  params?: UsecasesLTIFormEditInputDTO;
+  params?: UsecasesAuthProviderEditInputDTO;
 }
 
-export interface UsecasesLTIFormEditResponse {
+export interface UsecasesAuthProviderEditResponse {
   error?: any;
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: UsecasesLTIFormEditOutputDTO;
+  result?: UsecasesAuthProviderEditOutputDTO;
 }
 
-export interface UsecasesLTIFormGetInputDTO {
+export interface UsecasesAuthProviderGetInputDTO {
   id?: number;
 }
 
-export interface UsecasesLTIFormGetOutputDTO {
-  model?: ModelsLTIForm;
+export interface UsecasesAuthProviderGetOutputDTO {
+  model?: ModelsAuthProvider;
 }
 
-export interface UsecasesLTIFormGetRequest {
+export interface UsecasesAuthProviderGetRequest {
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
   /** @default "lti_form.get" */
   method?: string;
-  params?: UsecasesLTIFormGetInputDTO;
+  params?: UsecasesAuthProviderGetInputDTO;
 }
 
-export interface UsecasesLTIFormGetResponse {
+export interface UsecasesAuthProviderGetResponse {
   error?: any;
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: UsecasesLTIFormGetOutputDTO;
+  result?: UsecasesAuthProviderGetOutputDTO;
 }
 
-export interface UsecasesLTIFormListInputDTO {
+export interface UsecasesAuthProviderListInputDTO {
   limit?: number;
   offset?: number;
   search?: string;
 }
 
-export interface UsecasesLTIFormListOutputDTO {
-  model: ModelsLTIFormListItem[];
+export interface UsecasesAuthProviderListOutputDTO {
+  model: ModelsAuthProviderListItem[];
   total_count: number;
 }
 
-export interface UsecasesLTIFormListRequest {
+export interface UsecasesAuthProviderListRequest {
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
   /** @default "lti_form.list" */
   method?: string;
-  params?: UsecasesLTIFormListInputDTO;
+  params?: UsecasesAuthProviderListInputDTO;
 }
 
-export interface UsecasesLTIFormListResponse {
+export interface UsecasesAuthProviderListResponse {
   error?: any;
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: UsecasesLTIFormListOutputDTO;
+  result?: UsecasesAuthProviderListOutputDTO;
 }
 
-export interface UsecasesLTIFormListSSOOutputDTO {
-  model: ModelsLTIFormListItem[];
+export interface UsecasesAuthProviderListSSOOutputDTO {
+  model: ModelsAuthProviderListItem[];
 }
 
-export interface UsecasesLTIFormListSSORequest {
+export interface UsecasesAuthProviderListSSORequest {
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
@@ -945,13 +945,13 @@ export interface UsecasesLTIFormListSSORequest {
   params?: any;
 }
 
-export interface UsecasesLTIFormListSSOResponse {
+export interface UsecasesAuthProviderListSSOResponse {
   error?: any;
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: UsecasesLTIFormListSSOOutputDTO;
+  result?: UsecasesAuthProviderListSSOOutputDTO;
 }
 
 export interface UsecasesLTIRoutingDeleteInputDTO {

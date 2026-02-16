@@ -413,7 +413,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/rpc/lti_form.delete": {
+        "/api/v1/rpc/auth_provider.delete": {
             "post": {
                 "security": [
                     {
@@ -438,7 +438,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormDeleteRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteRequest"
                         }
                     }
                 ],
@@ -446,13 +446,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormDeleteResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.get": {
+        "/api/v1/rpc/auth_provider.get": {
             "post": {
                 "security": [
                     {
@@ -477,7 +477,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormGetRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderGetRequest"
                         }
                     }
                 ],
@@ -485,13 +485,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormGetResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderGetResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.list": {
+        "/api/v1/rpc/auth_provider.list": {
             "post": {
                 "security": [
                     {
@@ -516,7 +516,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderListRequest"
                         }
                     }
                 ],
@@ -524,13 +524,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderListResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.sso_list_get": {
+        "/api/v1/rpc/auth_provider.sso_list_get": {
             "post": {
                 "security": [
                     {
@@ -555,7 +555,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListSSORequest"
+                            "$ref": "#/definitions/usecases.AuthProviderListSSORequest"
                         }
                     }
                 ],
@@ -563,13 +563,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListSSOResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderListSSOResponse"
                         }
                     }
                 }
             }
         },
-        "/api/v1/rpc/lti_form.upsert": {
+        "/api/v1/rpc/auth_provider.upsert": {
             "post": {
                 "security": [
                     {
@@ -594,7 +594,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormEditRequest"
+                            "$ref": "#/definitions/usecases.AuthProviderEditRequest"
                         }
                     }
                 ],
@@ -602,7 +602,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormEditResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderEditResponse"
                         }
                     }
                 }
@@ -3132,7 +3132,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.LTIForm": {
+        "models.AuthProvider": {
             "type": "object",
             "required": [
                 "base_uri",
@@ -3193,7 +3193,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.LTIFormListItem": {
+        "models.AuthProviderListItem": {
             "type": "object",
             "required": [
                 "created_at",
@@ -4487,7 +4487,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormDeleteInputDTO": {
+        "usecases.AuthProviderDeleteInputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4495,7 +4495,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormDeleteRequest": {
+        "usecases.AuthProviderDeleteRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4515,7 +4515,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormDeleteResponse": {
+        "usecases.AuthProviderDeleteResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4528,11 +4528,11 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormDeleteInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderDeleteInputDTO"
                 }
             }
         },
-        "usecases.LTIFormEditInputDTO": {
+        "usecases.AuthProviderEditInputDTO": {
             "type": "object",
             "required": [
                 "auth_login_uri",
@@ -4577,7 +4577,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormEditOutputDTO": {
+        "usecases.AuthProviderEditOutputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4585,7 +4585,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormEditRequest": {
+        "usecases.AuthProviderEditRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4601,11 +4601,11 @@ const docTemplate = `{
                     "default": "lti_form.upsert"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIFormEditInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderEditInputDTO"
                 }
             }
         },
-        "usecases.LTIFormEditResponse": {
+        "usecases.AuthProviderEditResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4618,11 +4618,11 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormEditOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderEditOutputDTO"
                 }
             }
         },
-        "usecases.LTIFormGetInputDTO": {
+        "usecases.AuthProviderGetInputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4630,15 +4630,15 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormGetOutputDTO": {
+        "usecases.AuthProviderGetOutputDTO": {
             "type": "object",
             "properties": {
                 "model": {
-                    "$ref": "#/definitions/models.LTIForm"
+                    "$ref": "#/definitions/models.AuthProvider"
                 }
             }
         },
-        "usecases.LTIFormGetRequest": {
+        "usecases.AuthProviderGetRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4654,11 +4654,11 @@ const docTemplate = `{
                     "default": "lti_form.get"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIFormGetInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderGetInputDTO"
                 }
             }
         },
-        "usecases.LTIFormGetResponse": {
+        "usecases.AuthProviderGetResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4671,11 +4671,11 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormGetOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderGetOutputDTO"
                 }
             }
         },
-        "usecases.LTIFormListInputDTO": {
+        "usecases.AuthProviderListInputDTO": {
             "type": "object",
             "properties": {
                 "limit": {
@@ -4689,7 +4689,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormListOutputDTO": {
+        "usecases.AuthProviderListOutputDTO": {
             "type": "object",
             "required": [
                 "model",
@@ -4699,7 +4699,7 @@ const docTemplate = `{
                 "model": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.LTIFormListItem"
+                        "$ref": "#/definitions/models.AuthProviderListItem"
                     }
                 },
                 "total_count": {
@@ -4707,7 +4707,7 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIFormListRequest": {
+        "usecases.AuthProviderListRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4723,11 +4723,11 @@ const docTemplate = `{
                     "default": "lti_form.list"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIFormListInputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderListInputDTO"
                 }
             }
         },
-        "usecases.LTIFormListResponse": {
+        "usecases.AuthProviderListResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4740,11 +4740,11 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderListOutputDTO"
                 }
             }
         },
-        "usecases.LTIFormListSSOOutputDTO": {
+        "usecases.AuthProviderListSSOOutputDTO": {
             "type": "object",
             "required": [
                 "model"
@@ -4753,12 +4753,12 @@ const docTemplate = `{
                 "model": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.LTIFormListItem"
+                        "$ref": "#/definitions/models.AuthProviderListItem"
                     }
                 }
             }
         },
-        "usecases.LTIFormListSSORequest": {
+        "usecases.AuthProviderListSSORequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -4776,7 +4776,7 @@ const docTemplate = `{
                 "params": {}
             }
         },
-        "usecases.LTIFormListSSOResponse": {
+        "usecases.AuthProviderListSSOResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -4789,7 +4789,7 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.LTIFormListSSOOutputDTO"
+                    "$ref": "#/definitions/usecases.AuthProviderListSSOOutputDTO"
                 }
             }
         },

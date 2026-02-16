@@ -3,11 +3,11 @@ import { Button, Input, useDisclosure } from '@heroui/react';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
 import React, { useState } from 'react';
 
-export const LtiFormURILTIMoodle = () => {
+export const AuthProviderURILTIMoodle = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const component = (onChange: (url: string) => void) => {
     const {
-      locale: { LTIForm, Sidebar }
+      locale: { AuthProvider, Sidebar }
     } = useLanguageBrowser();
     const [baseUrl, setBaseUrl] = useState<string>('');
     return (
@@ -15,13 +15,13 @@ export const LtiFormURILTIMoodle = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className='flex flex-col gap-1'>{LTIForm.ButtonBaseURIMoodle}</ModalHeader>
+              <ModalHeader className='flex flex-col gap-1'>{AuthProvider.ButtonBaseURIMoodle}</ModalHeader>
               <ModalBody>
-                <p>{LTIForm.ButtonBaseURIMoodleDescription}</p>
+                <p>{AuthProvider.ButtonBaseURIMoodleDescription}</p>
                 <Input
                   variant='bordered'
-                  label={LTIForm.FieldBaseURI}
-                  description={LTIForm.DescriptionBaseURI}
+                  label={AuthProvider.FieldBaseURI}
+                  description={AuthProvider.DescriptionBaseURI}
                   type='url'
                   value={baseUrl}
                   onChange={(event) => {

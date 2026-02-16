@@ -5,17 +5,17 @@ import { useMutation } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  UsecasesLTIFormListRequest,
-  UsecasesLTIFormListResponse
+  UsecasesAuthProviderListRequest,
+  UsecasesAuthProviderListResponse
 } from '@/helpers/api';
 import { TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '@/helpers/queries/base';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesLTIFormListRequest['params']>;
-type Response = CamelCasedPropertiesDeep<UsecasesLTIFormListResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesAuthProviderListRequest['params']>;
+type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderListResponse['result']>;
 
-export const useMutationLtiFormList = (options: TMutationCustomOptions<Response, Params> = {}) => {
+export const useMutationAuthProviderList = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({
     // @ts-expect-error: return nullable value
     mutationFn: (params: Params) => {

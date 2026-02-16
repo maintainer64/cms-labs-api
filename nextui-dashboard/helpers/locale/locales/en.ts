@@ -67,7 +67,7 @@ const en = {
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
-    LTIFormsTable: {
+    AuthProvidersTable: {
       Title: 'LTI Integration',
       ButtonAdd: 'Create',
       SearchBar: 'Search integrations',
@@ -182,7 +182,7 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     FieldRelationAttempts: 'Relation attempts'
   },
-  LTIForm: {
+  AuthProvider: {
     FieldID: 'ID',
     FieldName: 'Name',
     FieldBaseURI: 'Base URL LTI',
@@ -248,7 +248,7 @@ const en = {
       Description: 'It will be impossible to call the API when deleting it'
     }
   },
-  LTIFormAttempt: {
+  AuthProviderAttempt: {
     FieldID: 'ID attempt',
     FieldRoomNumber: 'Room number',
     FieldUserId: 'User id',

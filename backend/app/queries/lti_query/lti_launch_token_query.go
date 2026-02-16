@@ -62,7 +62,7 @@ func (q *LTILaunchDataQueries) StoreLaunchData(launchID string, launchData json.
 	entity := models.LTILaunchData{}
 	entity.ID = launchID
 	entity.LaunchData = string(launchData)
-	entity.LTIFormID = regUid
+	entity.AuthProviderID = regUid
 	return q.Upsert(&entity)
 }
 

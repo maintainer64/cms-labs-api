@@ -7,7 +7,7 @@ import useLanguageBrowser from '@/helpers/locale';
 import { RoutesLocation } from '@/components/routes';
 import { SSOAuthorizationGet } from '@/components/pages/auth/ssoSave';
 import { SecurityIcon } from '@/components/icons/sso';
-import { useQueryLtiFormSsoListGet } from '@/helpers/queries/lti_form/use-query-lti-form-sso-list-get';
+import { useQueryAuthProviderSsoListGet } from '@/helpers/queries/lti_form/use-query-lti-form-sso-list-get';
 import { useMutationUserLogin } from '@/helpers/queries/user/use-mutation-user-login';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 import { AuthRenewManagerCredentialsInputDTO } from '@/helpers/api';
@@ -19,7 +19,7 @@ const defaultValues: CamelCasedPropertiesDeep<AuthRenewManagerCredentialsInputDT
 
 export const Login = () => {
   const { locale } = useLanguageBrowser();
-  const ssoLinks = useQueryLtiFormSsoListGet({});
+  const ssoLinks = useQueryAuthProviderSsoListGet({});
 
   const ssoButtons = ssoLinks.data?.model.map((service, key) => (
     <>

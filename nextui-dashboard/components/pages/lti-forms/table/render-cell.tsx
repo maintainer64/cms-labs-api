@@ -1,12 +1,12 @@
 import React from 'react';
 import { EditIcon } from '../../../icons/table/edit-icon';
-import { ModelsLTIFormListItem } from '@/helpers/api';
+import { ModelsAuthProviderListItem } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface Props {
-  item: CamelCasedPropertiesDeep<ModelsLTIFormListItem>;
+  item: CamelCasedPropertiesDeep<ModelsAuthProviderListItem>;
   columnKey: string | React.Key;
 }
 
@@ -32,7 +32,7 @@ export const RenderCell = ({ item, columnKey }: Props) => {
       return (
         <div className='flex items-center gap-4 '>
           <div>
-            <Link to={RoutesLocation.ltiFormsEdit(item.id?.toString())}>
+            <Link to={RoutesLocation.AuthProvidersEdit(item.id?.toString())}>
               <EditIcon size={20} fill='#979797' />
             </Link>
           </div>

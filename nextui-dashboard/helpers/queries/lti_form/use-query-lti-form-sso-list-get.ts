@@ -5,15 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithoutAuth,
-  type UsecasesLTIFormListSSORequest,
-  type UsecasesLTIFormListSSOResponse
+  type UsecasesAuthProviderListSSORequest,
+  type UsecasesAuthProviderListSSOResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesLTIFormListSSORequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesLTIFormListSSOResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesAuthProviderListSSORequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderListSSOResponse['result']>;
 
-export const useQueryLtiFormSsoListGet = (params: Params) => {
+export const useQueryAuthProviderSsoListGet = (params: Params) => {
   return useQuery(
       transportWithoutAuth.t.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_form.sso_list_get', params, { retry: 3 })
   );
