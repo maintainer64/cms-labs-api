@@ -63,6 +63,9 @@ func (q *AuthProviderQueries) Upsert(entity *models.AuthProvider) error {
 	if entity == nil {
 		return nil
 	}
+	if entity.Type != models.AuthProviderTypeLTI && entity.Type != models.AuthProviderTypeLDAP {
+		return jsonrpc.NewRpcError("invalid auth provider type", "Invalid provider type")
+	}
 	entityDB := models.AuthProvider{}
 	q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	if entityDB.ID != 0 {
