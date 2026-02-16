@@ -9,6 +9,12 @@ ALTER TABLE `{{.DB_TABLE_PREFIX}}auth_providers`
   RENAME INDEX `idx_{{.DB_TABLE_PREFIX}}lti_forms_lti_client_id` TO `idx_{{.DB_TABLE_PREFIX}}auth_providers_lti_client_id`,
   RENAME INDEX `idx_{{.DB_TABLE_PREFIX}}lti_forms_lti_deployment_id` TO `idx_{{.DB_TABLE_PREFIX}}auth_providers_lti_deployment_id`;
 
+-- +migrate Down
+ALTER TABLE `{{.DB_TABLE_PREFIX}}auth_providers` DROP COLUMN type;
+
+-- +migrate Down
+ALTER TABLE `{{.DB_TABLE_PREFIX}}auth_providers` DROP COLUMN type;
+
 -- Revert index names to original
 -- +migrate Down
 ALTER TABLE `{{.DB_TABLE_PREFIX}}auth_providers`
