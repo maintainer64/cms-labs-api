@@ -83,34 +83,8 @@ defaultImage: nginx
 defaultImageTag: latest
 defaultImagePullPolicy: "IfNotPresent"
 
-ingresses: {}
-#  nixys.io:
-#    annotations:
-#      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-#      nginx.ingress.kubernetes.io/proxy-body-size: "128m"
-#    certManager:
-#      issuerType: cluster-issuer
-#      issuerName: letsencrypt
-#    hosts:
-#    - paths:
-#      - serviceName: nginx
-#        servicePort: http
-#  nixys.org:
-#    annotations:
-#      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-#    hosts:
-#    - paths:
-#      - path: /api
-#        servicePort: api
-#    - hostname: nixys.com
-#      paths:
-#      - path: /api
-#        servicePort: api
-#    extraTls:
-#    - hosts:
-#      - nixys.com
-#      - nixys.org
-#      secretName: "nixys-tls"
+ingressHostname: "localhost"
+ingressServiceName: front
 
 
 services: {}
