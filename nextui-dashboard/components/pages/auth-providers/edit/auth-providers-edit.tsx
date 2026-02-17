@@ -5,7 +5,7 @@ import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { useParams } from 'react-router-dom';
-import { LtiIntegrationsEditForm } from '@/components/pages/lti-forms/edit/form';
+import { AuthProvidersEditForm } from '@/components/pages/auth-providers/edit/form';
 import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
 
 export const AuthProvidersEdit = () => {
@@ -24,8 +24,8 @@ export const AuthProvidersEdit = () => {
     },
     {
       icon: <LtiIcon />,
-      name: locale.Sidebar.LTIIntegrations,
-      href: RoutesLocation.AuthProviders()
+      name: locale.Sidebar.AuthProviders,
+      href: RoutesLocation.authProviders()
     },
     {
       icon: undefined,
@@ -36,7 +36,7 @@ export const AuthProvidersEdit = () => {
   return (
     <CrumbsLayout name={AuthProvidersTable.Title} crumbs={crumbs}>
       <div className='max-w-[95rem] mx-auto w-full'>
-        <LtiIntegrationsEditForm id={parseInt(id ?? '', 10)} />
+        <AuthProvidersEditForm id={parseInt(id ?? '', 10)} />
       </div>
     </CrumbsLayout>
   );

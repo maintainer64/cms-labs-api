@@ -15,6 +15,9 @@ type Response = CamelCasedPropertiesDeep<UsecasesCurlRequestGetResponse['result'
 
 export const useQueryCurlRequestGet = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'curl_request.get', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'curl_request.get', params, {
+      retry: 3,
+      enabled: !!params.id
+    })
   );
 };

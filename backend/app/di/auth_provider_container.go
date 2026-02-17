@@ -27,9 +27,3 @@ func (di *DIContainer) AuthProviderDeleteUC() *usecases.AuthProviderDeleteUC {
 		AuthProviderQueries: di.Queries.AuthProviderQueries,
 	}
 }
-
-func (di *DIContainer) AuthProviderListSSOUC() *usecases.AuthProviderListSSOUC {
-	return &usecases.AuthProviderListSSOUC{
-		AuthProviderQueries: di.Queries.AuthProviderQueries,
-	}
-}

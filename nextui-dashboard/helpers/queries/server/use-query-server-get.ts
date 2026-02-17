@@ -27,6 +27,9 @@ export function MapServerItem(server?: CamelCasedPropertiesDeep<ModelsPNETServer
 
 export const useQueryServerGet = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'server.get', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'server.get', params, {
+      retry: 3,
+      enabled: !!params.id
+    })
   );
 };

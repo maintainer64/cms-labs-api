@@ -30,9 +30,9 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.roles()} element={<RolesListPage />} />
       <Route path={RoutesLocation.rolesEdit()} element={<RolesPageEdit />} />
       <Route path={RoutesLocation.rolesCreate()} element={<RolesPageEdit />} />
-      <Route path={RoutesLocation.AuthProviders()} element={<AuthProvidersPage />} />
-      <Route path={RoutesLocation.AuthProvidersEdit()} element={<AuthProvidersPageEdit />} />
-      <Route path={RoutesLocation.AuthProvidersCreate()} element={<AuthProvidersPageEdit />} />
+      <Route path={RoutesLocation.authProviders()} element={<AuthProvidersPage />} />
+      <Route path={RoutesLocation.authProvidersEdit()} element={<AuthProvidersPageEdit />} />
+      <Route path={RoutesLocation.authProvidersCreate()} element={<AuthProvidersPageEdit />} />
       <Route path={RoutesLocation.ltiRouting()} element={<LTIRoutingPage />} />
       <Route path={RoutesLocation.ltiRoutingEdit()} element={<LTIRoutingPageEdit />} />
       <Route path={RoutesLocation.ltiRoutingCreate()} element={<LTIRoutingPageEdit />} />

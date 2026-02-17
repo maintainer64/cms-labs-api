@@ -55,6 +55,157 @@
                 }
             }
         },
+        "/api/v1/rpc/auth_provider.delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete lti_form. Roles: [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_form"
+                ],
+                "summary": "delete lti_form",
+                "parameters": [
+                    {
+                        "description": "lti_form id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/auth_provider.get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get lti_form. Roles [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_form"
+                ],
+                "summary": "get lti_form",
+                "parameters": [
+                    {
+                        "description": "lti_form id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/auth_provider.list": {
+            "post": {
+                "description": "List lti_form. Roles: [*]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_form"
+                ],
+                "summary": "list lti_form",
+                "parameters": [
+                    {
+                        "description": "lti_form list info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/auth_provider.upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create lti_form. Roles: [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_form"
+                ],
+                "summary": "create lti_form",
+                "parameters": [
+                    {
+                        "description": "lti_form form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderEditRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.AuthProviderEditResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/rpc/curl_request.delete": {
             "post": {
                 "security": [
@@ -401,201 +552,6 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/usecases.LTIAttemptEditResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/auth_provider.delete": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete lti_form. Roles: [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lti_form"
-                ],
-                "summary": "delete lti_form",
-                "parameters": [
-                    {
-                        "description": "lti_form id",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderDeleteRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderDeleteResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/auth_provider.get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get lti_form. Roles [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lti_form"
-                ],
-                "summary": "get lti_form",
-                "parameters": [
-                    {
-                        "description": "lti_form id",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderGetRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/auth_provider.list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List lti_form. Roles: [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lti_form"
-                ],
-                "summary": "list lti_form",
-                "parameters": [
-                    {
-                        "description": "lti_form list info",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderListRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/auth_provider.sso_list_get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List sso url. Roles: [none]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lti_form"
-                ],
-                "summary": "list sso url",
-                "parameters": [
-                    {
-                        "description": "filter",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderListSSORequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderListSSOResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/auth_provider.upsert": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create lti_form. Roles: [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lti_form"
-                ],
-                "summary": "create lti_form",
-                "parameters": [
-                    {
-                        "description": "lti_form form info",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderEditRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.AuthProviderEditResponse"
                         }
                     }
                 }
@@ -2484,6 +2440,9 @@
                 },
                 "password": {
                     "type": "string"
+                },
+                "provider_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -2974,6 +2933,109 @@
                 }
             }
         },
+        "lti_query.AuthProviderListInputDTO": {
+            "type": "object",
+            "properties": {
+                "is_auth": {
+                    "type": "boolean"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AuthProvider": {
+            "type": "object",
+            "required": [
+                "base_uri",
+                "created_at",
+                "name",
+                "type",
+                "updated_at"
+            ],
+            "properties": {
+                "base_uri": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key_set_uri": {
+                    "type": "string"
+                },
+                "lti_auth_login_uri": {
+                    "type": "string"
+                },
+                "lti_auth_token_uri": {
+                    "type": "string"
+                },
+                "lti_client_id": {
+                    "type": "string"
+                },
+                "lti_deployment_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "private_key": {
+                    "type": "string"
+                },
+                "public_key": {
+                    "type": "string"
+                },
+                "sso_url": {
+                    "type": "string"
+                },
+                "target_link_uri": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AuthProviderListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "name",
+                "type",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sso_url": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.CurlRequest": {
             "type": "object",
             "required": [
@@ -3121,100 +3183,6 @@
                     "type": "integer"
                 },
                 "user_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.AuthProvider": {
-            "type": "object",
-            "required": [
-                "base_uri",
-                "created_at",
-                "key_set_uri",
-                "lti_auth_login_uri",
-                "lti_auth_token_uri",
-                "lti_client_id",
-                "lti_deployment_id",
-                "name",
-                "private_key",
-                "public_key",
-                "target_link_uri",
-                "updated_at"
-            ],
-            "properties": {
-                "base_uri": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "key_set_uri": {
-                    "type": "string"
-                },
-                "lti_auth_login_uri": {
-                    "type": "string"
-                },
-                "lti_auth_token_uri": {
-                    "type": "string"
-                },
-                "lti_client_id": {
-                    "type": "string"
-                },
-                "lti_deployment_id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "private_key": {
-                    "type": "string"
-                },
-                "public_key": {
-                    "type": "string"
-                },
-                "sso_url": {
-                    "type": "string"
-                },
-                "target_link_uri": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.AuthProviderListItem": {
-            "type": "object",
-            "required": [
-                "created_at",
-                "lti_client_id",
-                "lti_deployment_id",
-                "name",
-                "updated_at"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "lti_client_id": {
-                    "type": "string"
-                },
-                "lti_deployment_id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "sso_url": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -3867,6 +3835,247 @@
                 }
             }
         },
+        "usecases.AuthProviderDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.delete"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptGetInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderEditInputDTO": {
+            "type": "object",
+            "required": [
+                "base_uri",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "auth_login_uri": {
+                    "type": "string"
+                },
+                "auth_token_uri": {
+                    "type": "string"
+                },
+                "base_uri": {
+                    "type": "string"
+                },
+                "client_id": {
+                    "type": "string"
+                },
+                "deployment_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key_set_uri": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sso_url": {
+                    "type": "string"
+                },
+                "target_link_uri": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.AuthProviderEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderEditRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.AuthProviderEditInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderEditResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderEditOutputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.AuthProvider"
+                }
+            }
+        },
+        "usecases.AuthProviderGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.AuthProviderGetInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderGetResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderGetOutputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AuthProviderListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/lti_query.AuthProviderListInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderListResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderListOutputDTO"
+                }
+            }
+        },
         "usecases.CurlRequestDeleteInputDTO": {
             "type": "object",
             "properties": {
@@ -4477,312 +4686,6 @@
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIAttemptListOutputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderDeleteInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.AuthProviderDeleteRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "lti_form.delete"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.LTIAttemptGetInputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderDeleteResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.AuthProviderDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderEditInputDTO": {
-            "type": "object",
-            "required": [
-                "auth_login_uri",
-                "auth_token_uri",
-                "base_uri",
-                "client_id",
-                "deployment_id",
-                "key_set_uri",
-                "name",
-                "target_link_uri"
-            ],
-            "properties": {
-                "auth_login_uri": {
-                    "type": "string"
-                },
-                "auth_token_uri": {
-                    "type": "string"
-                },
-                "base_uri": {
-                    "type": "string"
-                },
-                "client_id": {
-                    "type": "string"
-                },
-                "deployment_id": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "key_set_uri": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "sso_url": {
-                    "type": "string"
-                },
-                "target_link_uri": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.AuthProviderEditOutputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.AuthProviderEditRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "lti_form.upsert"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.AuthProviderEditInputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderEditResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.AuthProviderEditOutputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderGetInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.AuthProviderGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "model": {
-                    "$ref": "#/definitions/models.AuthProvider"
-                }
-            }
-        },
-        "usecases.AuthProviderGetRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "lti_form.get"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.AuthProviderGetInputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderGetResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.AuthProviderGetOutputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderListInputDTO": {
-            "type": "object",
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "search": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.AuthProviderListOutputDTO": {
-            "type": "object",
-            "required": [
-                "model",
-                "total_count"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.AuthProviderListItem"
-                    }
-                },
-                "total_count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.AuthProviderListRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "lti_form.list"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.AuthProviderListInputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderListResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.AuthProviderListOutputDTO"
-                }
-            }
-        },
-        "usecases.AuthProviderListSSOOutputDTO": {
-            "type": "object",
-            "required": [
-                "model"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.AuthProviderListItem"
-                    }
-                }
-            }
-        },
-        "usecases.AuthProviderListSSORequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "lti_form.sso_list"
-                },
-                "params": {}
-            }
-        },
-        "usecases.AuthProviderListSSOResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.AuthProviderListSSOOutputDTO"
                 }
             }
         },

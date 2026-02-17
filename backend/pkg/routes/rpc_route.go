@@ -24,7 +24,6 @@ func V1RpcRoute(a *fiber.App) {
 	rpc.Method("auth_provider.list", controllers.AuthProviderList)
 	rpc.Method("auth_provider.delete", controllers.AuthProviderDelete)
 	rpc.Method("auth_provider.get", controllers.AuthProviderGet)
-	rpc.Method("auth_provider.sso_list_get", controllers.AuthProviderSSOListGet)
 	rpc.Method("lti_routing.upsert", controllers.LTIRoutingUpsert)
 	rpc.Method("lti_routing.list", controllers.LTIRoutingList)
 	rpc.Method("lti_routing.delete", controllers.LTIRoutingDelete)

@@ -17,11 +17,9 @@ type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderEditResponse['resul
 
 export const useMutationAuthProviderUpsert = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({
-    // @ts-expect-error: return nullable value
     mutationFn: (params: Params) => {
-      if (!params?.id) return null;
       return transportWithAuth.rpc(CoreJsonRpcPath, {
-        method: 'lti_form.upsert',
+        method: 'auth_provider.upsert',
         params: params
       });
     },
@@ -30,11 +28,10 @@ export const useMutationAuthProviderUpsert = (options: TMutationCustomOptions<Re
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.delete'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.get'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.list'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.sso_list_get'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.upsert'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.delete'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.get'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.list'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.upsert'] });
     }
   });
 };

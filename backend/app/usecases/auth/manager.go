@@ -36,8 +36,9 @@ type RenewManagerRefreshRequest struct {
 }
 
 type RenewManagerCredentialsInputDTO struct {
-	Email    string `json:"email" required:"true"`
-	Password string `json:"password" required:"true"`
+	Email      string `json:"email" required:"true"`
+	Password   string `json:"password" required:"true"`
+	ProviderId uint   `json:"provider_id"`
 }
 
 type RenewManagerCredentialsRequest struct {

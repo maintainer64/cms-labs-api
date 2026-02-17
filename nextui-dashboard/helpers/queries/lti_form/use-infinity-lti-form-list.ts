@@ -13,10 +13,10 @@ type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderListResponse['resul
 
 export const useInfinityAuthProviderList = (params?: Params) => {
   return useInfiniteQuery({
-    queryKey: RpcTransport.getInfiniteQueryKey(CoreJsonRpcPath, 'lti_form.list', params ?? {}),
+    queryKey: RpcTransport.getInfiniteQueryKey(CoreJsonRpcPath, 'auth_provider.list', params ?? {}),
     queryFn: ({ pageParam }) => {
       return transportWithAuth.rpc<Response>(CoreJsonRpcPath, {
-        method: 'lti_form.list',
+        method: 'auth_provider.list',
         params: {
           limit: params?.limit ?? 100,
           offset: pageParam,

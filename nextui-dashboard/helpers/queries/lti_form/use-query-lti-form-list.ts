@@ -4,7 +4,7 @@ Template auto generated with params from openapi.json
 import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
-  transportWithAuth,
+  transportWithoutAuth,
   type UsecasesAuthProviderListRequest,
   type UsecasesAuthProviderListResponse
 } from '@/helpers/api';
@@ -15,6 +15,8 @@ type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderListResponse['resul
 
 export const useQueryAuthProviderList = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_form.list', params, { retry: 3 })
+    transportWithoutAuth.t.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'auth_provider.list', params, {
+      retry: 3
+    })
   );
 };

@@ -9,17 +9,11 @@ type AuthProviderListUC struct {
 	AuthProviderQueries *lti_query.AuthProviderQueries
 }
 
-type AuthProviderListInputDTO struct {
-	Search string `json:"search"`
-	Limit  int    `json:"limit"`
-	Offset int    `json:"offset"`
-}
-
 type AuthProviderListRequest struct {
-	JSONRPC string                   `json:"jsonrpc" default:"2.0" required:"true"`
-	Method  string                   `json:"method" default:"lti_form.list" required:"true"`
-	Params  AuthProviderListInputDTO `json:"params,omitempty"`
-	ID      string                   `json:"id,omitempty" default:"1" required:"true"`
+	JSONRPC string                             `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                             `json:"method" default:"lti_form.list" required:"true"`
+	Params  lti_query.AuthProviderListInputDTO `json:"params,omitempty"`
+	ID      string                             `json:"id,omitempty" default:"1" required:"true"`
 }
 
 type AuthProviderListOutputDTO struct {
@@ -34,8 +28,8 @@ type AuthProviderListResponse struct {
 	ID      string                    `json:"id,omitempty" default:"1" required:"true"`
 }
 
-func (u *AuthProviderListUC) Execute(dto AuthProviderListInputDTO) (AuthProviderListOutputDTO, error) {
-	entities, count, err := u.AuthProviderQueries.List(dto.Search, dto.Limit, dto.Offset)
+func (u *AuthProviderListUC) Execute(dto lti_query.AuthProviderListInputDTO) (AuthProviderListOutputDTO, error) {
+	entities, count, err := u.AuthProviderQueries.List(&dto)
 	return AuthProviderListOutputDTO{
 		Model:      entities,
 		TotalCount: count,

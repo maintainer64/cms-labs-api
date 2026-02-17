@@ -32,7 +32,7 @@ export const RenderCell = ({ item, columnKey }: Props) => {
       return (
         <div className='flex items-center gap-4 '>
           <div>
-            <Link to={RoutesLocation.AuthProvidersEdit(item.id?.toString())}>
+            <Link to={RoutesLocation.authProvidersEdit(item.id?.toString())}>
               <EditIcon size={20} fill='#979797' />
             </Link>
           </div>

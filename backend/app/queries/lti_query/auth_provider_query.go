@@ -20,6 +20,13 @@ type AuthProviderQueries struct {
 	Logger *zerolog.Logger
 }
 
+type AuthProviderListInputDTO struct {
+	Search string `json:"search"`
+	IsAuth bool   `json:"is_auth"`
+	Limit  int    `json:"limit"`
+	Offset int    `json:"offset"`
+}
+
 func ltiGenerateKeys(l *zerolog.Logger) (string, string, error) {
 	l.Info().Msg("LTIGenerate RSA keys")
 	// Generate RSA private key
@@ -54,7 +61,7 @@ func (q *AuthProviderQueries) Get(id uint) (models.AuthProvider, error) {
 	var entity models.AuthProvider
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, jsonrpc.NewRpcError("lti_form_not_found", "lti form not found")
+		return entity, jsonrpc.NewRpcError("auth_provider_not_found", "provider not found")
 	}
 	return entity, result.Error
 }
@@ -102,46 +109,41 @@ func (q *AuthProviderQueries) Upsert(entity *models.AuthProvider) error {
 const MaxLimitCount = 5000
 
 func (q *AuthProviderQueries) List(
-	search string,
-	limit int,
-	offset int,
+	dto *AuthProviderListInputDTO,
 ) ([]models.AuthProviderListItem, int64, error) {
 	var entities []models.AuthProviderListItem
 	result := q.listFilter(
-		search,
+		dto,
 		q.DB.Limit(MaxLimitCount).Offset(0),
 	).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Debug().Msg(fmt.Sprintf("AuthProviderQueries list: count %+v", count))
 	result = q.listFilter(
-		search,
-		q.DB.Limit(limit).Offset(offset),
+		dto,
+		q.DB.Limit(dto.Limit).Offset(dto.Offset),
 	).Find(&entities)
 	q.Logger.Debug().Msg(fmt.Sprintf("AuthProviderQueries list: entities %+v", entities))
 	return entities, count, result.Error
 }
 
-func (q *AuthProviderQueries) listFilter(search string, tx *gorm.DB) *gorm.DB {
-	tx = tx.Model(&models.AuthProvider{})
-	tx = tx.Order(`created_at desc`)
-	if search == "" {
-		return tx
-	}
-	tx = tx.Where("base_uri LIKE ?", fmt.Sprintf("%%%s%%", search))
-	tx = tx.Or("id = ?", search)
-	return tx
-}
+func (q *AuthProviderQueries) listFilter(dto *AuthProviderListInputDTO, tx *gorm.DB) *gorm.DB {
+	tx = tx.Model(&models.AuthProvider{}).Order("created_at desc")
 
-func (q *AuthProviderQueries) SSOURLList() ([]models.AuthProviderListItem, error) {
-	var entities []models.AuthProviderListItem
-	result := q.DB.Model(&models.AuthProvider{}).Order(
-		`created_at desc`,
-	).Where(
-		`sso_url != '' AND sso_url is not null`,
-	).Limit(MaxLimitCount).Offset(0).Find(&entities)
-	count := result.RowsAffected
-	q.Logger.Debug().Msg(fmt.Sprintf("SSOURLList list: count %+v", count))
-	return entities, result.Error
+	if dto.IsAuth {
+		// (sso_url is not null and sso_url != '' and type = 'lti') or type = 'ldap'
+		tx = tx.Where("(sso_url IS NOT NULL AND sso_url != '' AND type = ?) OR type = ?",
+			models.AuthProviderTypeLTI, models.AuthProviderTypeLDAP)
+	}
+
+	if dto.Search != "" {
+		searchCond := tx.Where(
+			"base_uri LIKE ?",
+			fmt.Sprintf("%%%s%%", dto.Search),
+		).Or("id = ?", dto.Search)
+		tx = tx.Where(searchCond)
+	}
+
+	return tx
 }
 
 func (q *AuthProviderQueries) Delete(id uint) error {

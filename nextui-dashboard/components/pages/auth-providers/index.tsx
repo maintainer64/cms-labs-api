@@ -7,7 +7,7 @@ import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
 import SearchInput from '@/components/sidebar/search-input';
-import { AuthProvidersTableWrapper } from '@/components/pages/lti-forms/table/table';
+import { AuthProvidersTableWrapper } from '@/components/pages/auth-providers/table/table';
 import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
 import { UserRoleBase } from '@/helpers/queries/sso/auth';
 import { useInfinityAuthProviderList } from '@/helpers/queries/lti_form/use-infinity-lti-form-list';
@@ -27,8 +27,8 @@ export const AuthProvidersList = () => {
     },
     {
       icon: <LtiIcon />,
-      name: locale.Sidebar.LTIIntegrations,
-      href: RoutesLocation.AuthProviders()
+      name: locale.Sidebar.AuthProviders,
+      href: RoutesLocation.authProviders()
     },
     {
       icon: undefined,
@@ -46,7 +46,7 @@ export const AuthProvidersList = () => {
         <div className='flex justify-between flex-wrap gap-4 items-center'>
           <div className='flex items-center gap-3 flex-nowrap w-full'>
             <SearchInput placeholder={AuthProvidersTable.SearchBar} setValue={setSearchTerm} />
-            <Link to={RoutesLocation.AuthProvidersCreate()}>
+            <Link to={RoutesLocation.authProvidersCreate()}>
               <Button color='primary'>{AuthProvidersTable.ButtonAdd}</Button>
             </Link>
           </div>

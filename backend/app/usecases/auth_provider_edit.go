@@ -12,13 +12,13 @@ type AuthProviderEditUC struct {
 type AuthProviderEditInputDTO struct {
 	ID            uint    `json:"id"`
 	Type          string  `json:"type" validate:"required"`
-	ClientID      string  `json:"client_id" validate:"required"`
-	DeploymentID  string  `json:"deployment_id" validate:"required"`
+	ClientID      string  `json:"client_id"`
+	DeploymentID  string  `json:"deployment_id"`
 	BaseURI       string  `json:"base_uri" validate:"required"`
-	AuthTokenURI  string  `json:"auth_token_uri" validate:"required"`
-	AuthLoginURI  string  `json:"auth_login_uri" validate:"required"`
-	KeySetURI     string  `json:"key_set_uri" validate:"required"`
-	TargetLinkURI string  `json:"target_link_uri" validate:"required"`
+	AuthTokenURI  string  `json:"auth_token_uri"`
+	AuthLoginURI  string  `json:"auth_login_uri"`
+	KeySetURI     string  `json:"key_set_uri"`
+	TargetLinkURI string  `json:"target_link_uri"`
 	Name          string  `json:"name" validate:"required"`
 	SSOURL        *string `json:"sso_url"`
 }

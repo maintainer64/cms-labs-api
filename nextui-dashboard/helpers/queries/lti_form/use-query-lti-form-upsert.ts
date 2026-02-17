@@ -15,6 +15,6 @@ type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderEditResponse['resul
 
 export const useQueryAuthProviderUpsert = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_form.upsert', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'auth_provider.upsert', params, { retry: 3 })
   );
 };

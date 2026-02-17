@@ -41,10 +41,10 @@ export const SidebarWrapper = () => {
                 href={RoutesLocation.ltiRouting()}
               />
               <SidebarItem
-                isActive={pathname === RoutesLocation.AuthProviders()}
-                title={locale.Sidebar.LTIIntegrations}
+                isActive={pathname === RoutesLocation.authProviders()}
+                title={locale.Sidebar.AuthProviders}
                 icon={<LtiIcon />}
-                href={RoutesLocation.AuthProviders()}
+                href={RoutesLocation.authProviders()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.accounts()}
@@ -57,12 +57,6 @@ export const SidebarWrapper = () => {
                 title={locale.Sidebar.Servers}
                 icon={<ServersIcon />}
                 href={RoutesLocation.pnetServers()}
-              />
-              <SidebarItem
-                isActive={pathname === RoutesLocation.curlRequest()}
-                title={locale.Sidebar.CurlRequests}
-                icon={<CurlRequestIcon />}
-                href={RoutesLocation.curlRequest()}
               />
             </SidebarMenu>
           </div>

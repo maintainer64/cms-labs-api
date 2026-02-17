@@ -1,7 +1,10 @@
 const en = {
   Login: {
     PageName: 'Login',
+    TabSSO: 'Moodle',
+    TabInternal: 'Internal',
     FieldEmail: 'Email',
+    FieldEmailDescription: 'Enter your business email address',
     FieldPassword: 'Password',
     Submit: 'Login',
     ErrorFieldEmailNotEmpty: 'This field must be an email',
@@ -16,7 +19,7 @@ const en = {
     ErrorPageTitle: 'Authorization Error',
     ErrorPageDescription: 'Try to go to the login page or log in through the course',
     MainTitle: 'CMS LABS',
-    MainDescription: '[Admin] Control Management System labs by Hero UI',
+    MainDescription: '[Admin] Control Management System labs',
     MainChangeLanguage: 'Сменить язык'
   },
   CompaniesDropdown: {
@@ -31,7 +34,7 @@ const en = {
     Servers: 'Servers',
     CurlRequests: 'API',
     ServiceCards: 'Services',
-    LTIIntegrations: 'LTIs',
+    AuthProviders: 'Auth providers',
     LTIRouting: 'LTI Routes',
     LTIAttempts: 'LTI Attempts',
     APIRequests: 'API Requests',
@@ -68,9 +71,9 @@ const en = {
       ]
     },
     AuthProvidersTable: {
-      Title: 'LTI Integration',
+      Title: 'Auth providers',
       ButtonAdd: 'Create',
-      SearchBar: 'Search integrations',
+      SearchBar: 'Search providers',
       ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
@@ -185,11 +188,16 @@ const en = {
   AuthProvider: {
     FieldID: 'ID',
     FieldName: 'Name',
-    FieldBaseURI: 'Base URL LTI',
+    FieldType: 'Тип',
+    FieldTypeLTI: 'LTI',
+    FieldTypeLTIDescription: 'Connect to course',
+    FieldTypeLDAP: 'LDAP',
+    FieldTypeLDAPDescription: 'Connect to lightweight directory',
+    FieldBaseURI: 'Base URL',
     ButtonBaseURI: 'Settings URL',
     ButtonBaseURIMoodle: 'Moodle',
     ButtonBaseURIMoodleDescription: 'Setup URI on base URL Moodle service',
-    DescriptionBaseURI: 'URL base service provider LTI',
+    DescriptionBaseURI: 'URL base service provider',
     FieldLTIAuthLoginUri: 'URL authorization LTI',
     DescriptionLTIAuthLoginUri: 'Address suffix /mod/lti/auth.php',
     FieldLTIAuthTokenUri: 'URL token LTI',
@@ -199,6 +207,7 @@ const en = {
     FieldLTIClientID: 'ClientID LTI',
     FieldLTIDeployment: 'DeploymentID LTI',
     FieldKeySetURI: 'URL certificates LTI',
+    FieldDN: 'DN',
     DescriptionKeySetURI: 'Address suffix /mod/lti/certs.php',
     FieldSSOURL: 'SSO LTI URL',
     DescriptionSSOURL: 'Link to the course element in the LTI tool',
@@ -261,7 +270,7 @@ const en = {
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
-      Title: 'Deleting an LTI-Attempt entity',
+      Title: 'Deleting an Auth provider entity',
       Description:
         'When you delete it, the other systems will not be able to interact with the user. It is safe if the user has completed the work'
     }

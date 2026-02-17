@@ -19,6 +19,7 @@ type UserPasswordQueries struct {
 }
 
 var IncorrectPassword = jsonrpc.NewRpcError("incorrect_password", "Incorrect password")
+var IncorrectLogin = jsonrpc.NewRpcError("incorrect_login", "Incorrect login")
 
 func (q *UserPasswordQueries) Get(userID uint) (models.UserPassword, error) {
 	var entity models.UserPassword

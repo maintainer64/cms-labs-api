@@ -15,6 +15,9 @@ type Response = CamelCasedPropertiesDeep<UsecasesServiceCardGetResponse['result'
 
 export const useQueryServiceCardGet = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'service_card.get', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'service_card.get', params, {
+      retry: 3,
+      enabled: !!params.id
+    })
   );
 };

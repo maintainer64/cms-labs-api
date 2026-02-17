@@ -14,6 +14,11 @@ export const UserDropdown = () => {
 
   const { mutateAsync } = useMutationUserLogout();
 
+  const handleUser = useCallback(async () => {
+    await mutateAsync({});
+    navigate(RoutesLocation.accountsEdit(user.sub));
+  }, [navigate]);
+
   const handleLogout = useCallback(async () => {
     await mutateAsync({});
     navigate(RoutesLocation.login());
@@ -46,7 +51,7 @@ export const UserDropdown = () => {
         </DropdownTrigger>
       </NavbarItem>
       <DropdownMenu aria-label='User menu actions'>
-        <DropdownItem key='profile' className='flex flex-col justify-start w-full items-start'>
+        <DropdownItem key='profile' className='flex flex-col justify-start w-full items-start' onPress={handleUser}>
           <p>{locale.UserNavBar.SignedAs}</p>
           <p>{user.email}</p>
         </DropdownItem>

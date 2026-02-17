@@ -15,6 +15,9 @@ type Response = CamelCasedPropertiesDeep<UsecasesLTIRoutingGetResponse['result']
 
 export const useQueryLtiRoutingGet = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_routing.get', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_routing.get', params, {
+      retry: 3,
+      enabled: !!params.id
+    })
   );
 };

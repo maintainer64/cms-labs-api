@@ -21,6 +21,8 @@ definitions:
         type: string
       password:
         type: string
+      provider_id:
+        type: integer
     type: object
   auth.RenewManagerCredentialsRequest:
     properties:
@@ -359,6 +361,76 @@ definitions:
       result:
         $ref: '#/definitions/external.PNETServerPingOutputDTO'
     type: object
+  lti_query.AuthProviderListInputDTO:
+    properties:
+      is_auth:
+        type: boolean
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+    type: object
+  models.AuthProvider:
+    properties:
+      base_uri:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      key_set_uri:
+        type: string
+      lti_auth_login_uri:
+        type: string
+      lti_auth_token_uri:
+        type: string
+      lti_client_id:
+        type: string
+      lti_deployment_id:
+        type: string
+      name:
+        type: string
+      private_key:
+        type: string
+      public_key:
+        type: string
+      sso_url:
+        type: string
+      target_link_uri:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - base_uri
+    - created_at
+    - name
+    - type
+    - updated_at
+    type: object
+  models.AuthProviderListItem:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      sso_url:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - name
+    - type
+    - updated_at
+    type: object
   models.CurlRequest:
     properties:
       body:
@@ -459,73 +531,6 @@ definitions:
     - attempt_id
     - created_at
     - expired_at
-    - updated_at
-    type: object
-  models.AuthProvider:
-    properties:
-      base_uri:
-        type: string
-      created_at:
-        type: string
-      id:
-        type: integer
-      key_set_uri:
-        type: string
-      lti_auth_login_uri:
-        type: string
-      lti_auth_token_uri:
-        type: string
-      lti_client_id:
-        type: string
-      lti_deployment_id:
-        type: string
-      name:
-        type: string
-      private_key:
-        type: string
-      public_key:
-        type: string
-      sso_url:
-        type: string
-      target_link_uri:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - base_uri
-    - created_at
-    - key_set_uri
-    - lti_auth_login_uri
-    - lti_auth_token_uri
-    - lti_client_id
-    - lti_deployment_id
-    - name
-    - private_key
-    - public_key
-    - target_link_uri
-    - updated_at
-    type: object
-  models.AuthProviderListItem:
-    properties:
-      created_at:
-        type: string
-      id:
-        type: integer
-      lti_client_id:
-        type: string
-      lti_deployment_id:
-        type: string
-      name:
-        type: string
-      sso_url:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - created_at
-    - lti_client_id
-    - lti_deployment_id
-    - name
     - updated_at
     type: object
   models.LTIRouting:
@@ -974,6 +979,171 @@ definitions:
       result:
         type: boolean
     type: object
+  usecases.AuthProviderDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.AuthProviderDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.delete
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptGetInputDTO'
+    type: object
+  usecases.AuthProviderDeleteResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.AuthProviderDeleteInputDTO'
+    type: object
+  usecases.AuthProviderEditInputDTO:
+    properties:
+      auth_login_uri:
+        type: string
+      auth_token_uri:
+        type: string
+      base_uri:
+        type: string
+      client_id:
+        type: string
+      deployment_id:
+        type: string
+      id:
+        type: integer
+      key_set_uri:
+        type: string
+      name:
+        type: string
+      sso_url:
+        type: string
+      target_link_uri:
+        type: string
+      type:
+        type: string
+    required:
+    - base_uri
+    - name
+    - type
+    type: object
+  usecases.AuthProviderEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.AuthProviderEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.AuthProviderEditInputDTO'
+    type: object
+  usecases.AuthProviderEditResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.AuthProviderEditOutputDTO'
+    type: object
+  usecases.AuthProviderGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.AuthProviderGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.AuthProvider'
+    type: object
+  usecases.AuthProviderGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.AuthProviderGetInputDTO'
+    type: object
+  usecases.AuthProviderGetResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.AuthProviderGetOutputDTO'
+    type: object
+  usecases.AuthProviderListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/models.AuthProviderListItem'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.AuthProviderListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_form.list
+        type: string
+      params:
+        $ref: '#/definitions/lti_query.AuthProviderListInputDTO'
+    type: object
+  usecases.AuthProviderListResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.AuthProviderListOutputDTO'
+    type: object
   usecases.CurlRequestDeleteInputDTO:
     properties:
       id:
@@ -1399,217 +1569,6 @@ definitions:
     required:
     - id
     - jsonrpc
-    type: object
-  usecases.AuthProviderDeleteInputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.AuthProviderDeleteRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: lti_form.delete
-        type: string
-      params:
-        $ref: '#/definitions/usecases.LTIAttemptGetInputDTO'
-    type: object
-  usecases.AuthProviderDeleteResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.AuthProviderDeleteInputDTO'
-    type: object
-  usecases.AuthProviderEditInputDTO:
-    properties:
-      auth_login_uri:
-        type: string
-      auth_token_uri:
-        type: string
-      base_uri:
-        type: string
-      client_id:
-        type: string
-      deployment_id:
-        type: string
-      id:
-        type: integer
-      key_set_uri:
-        type: string
-      name:
-        type: string
-      sso_url:
-        type: string
-      target_link_uri:
-        type: string
-    required:
-    - auth_login_uri
-    - auth_token_uri
-    - base_uri
-    - client_id
-    - deployment_id
-    - key_set_uri
-    - name
-    - target_link_uri
-    type: object
-  usecases.AuthProviderEditOutputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.AuthProviderEditRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: lti_form.upsert
-        type: string
-      params:
-        $ref: '#/definitions/usecases.AuthProviderEditInputDTO'
-    type: object
-  usecases.AuthProviderEditResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.AuthProviderEditOutputDTO'
-    type: object
-  usecases.AuthProviderGetInputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.AuthProviderGetOutputDTO:
-    properties:
-      model:
-        $ref: '#/definitions/models.AuthProvider'
-    type: object
-  usecases.AuthProviderGetRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: lti_form.get
-        type: string
-      params:
-        $ref: '#/definitions/usecases.AuthProviderGetInputDTO'
-    type: object
-  usecases.AuthProviderGetResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.AuthProviderGetOutputDTO'
-    type: object
-  usecases.AuthProviderListInputDTO:
-    properties:
-      limit:
-        type: integer
-      offset:
-        type: integer
-      search:
-        type: string
-    type: object
-  usecases.AuthProviderListOutputDTO:
-    properties:
-      model:
-        items:
-          $ref: '#/definitions/models.AuthProviderListItem'
-        type: array
-      total_count:
-        type: integer
-    required:
-    - model
-    - total_count
-    type: object
-  usecases.AuthProviderListRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: lti_form.list
-        type: string
-      params:
-        $ref: '#/definitions/usecases.AuthProviderListInputDTO'
-    type: object
-  usecases.AuthProviderListResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.AuthProviderListOutputDTO'
-    type: object
-  usecases.AuthProviderListSSOOutputDTO:
-    properties:
-      model:
-        items:
-          $ref: '#/definitions/models.AuthProviderListItem'
-        type: array
-    required:
-    - model
-    type: object
-  usecases.AuthProviderListSSORequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: lti_form.sso_list
-        type: string
-      params: {}
-    type: object
-  usecases.AuthProviderListSSOResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.AuthProviderListSSOOutputDTO'
     type: object
   usecases.LTIRoutingDeleteInputDTO:
     properties:
@@ -2765,6 +2724,100 @@ paths:
       tags:
       - curl_request
       - EXTERNAL
+  /api/v1/rpc/auth_provider.delete:
+    post:
+      consumes:
+      - application/json
+      description: 'Delete lti_form. Roles: [admin]'
+      parameters:
+      - description: lti_form id
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.AuthProviderDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.AuthProviderDeleteResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete lti_form
+      tags:
+      - lti_form
+  /api/v1/rpc/auth_provider.get:
+    post:
+      consumes:
+      - application/json
+      description: get lti_form. Roles [admin]
+      parameters:
+      - description: lti_form id
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.AuthProviderGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.AuthProviderGetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get lti_form
+      tags:
+      - lti_form
+  /api/v1/rpc/auth_provider.list:
+    post:
+      consumes:
+      - application/json
+      description: 'List lti_form. Roles: [*]'
+      parameters:
+      - description: lti_form list info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.AuthProviderListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.AuthProviderListResponse'
+      summary: list lti_form
+      tags:
+      - lti_form
+  /api/v1/rpc/auth_provider.upsert:
+    post:
+      consumes:
+      - application/json
+      description: 'Create lti_form. Roles: [admin]'
+      parameters:
+      - description: lti_form form info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.AuthProviderEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.AuthProviderEditResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create lti_form
+      tags:
+      - lti_form
   /api/v1/rpc/curl_request.delete:
     post:
       consumes:
@@ -2981,126 +3034,6 @@ paths:
       summary: edit lti_attempt
       tags:
       - lti_attempt
-  /api/v1/rpc/auth_provider.delete:
-    post:
-      consumes:
-      - application/json
-      description: 'Delete lti_form. Roles: [admin]'
-      parameters:
-      - description: lti_form id
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.AuthProviderDeleteRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.AuthProviderDeleteResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: delete lti_form
-      tags:
-      - lti_form
-  /api/v1/rpc/auth_provider.get:
-    post:
-      consumes:
-      - application/json
-      description: get lti_form. Roles [admin]
-      parameters:
-      - description: lti_form id
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.AuthProviderGetRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.AuthProviderGetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: get lti_form
-      tags:
-      - lti_form
-  /api/v1/rpc/auth_provider.list:
-    post:
-      consumes:
-      - application/json
-      description: 'List lti_form. Roles: [admin]'
-      parameters:
-      - description: lti_form list info
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.AuthProviderListRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.AuthProviderListResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: list lti_form
-      tags:
-      - lti_form
-  /api/v1/rpc/auth_provider.sso_list_get:
-    post:
-      consumes:
-      - application/json
-      description: 'List sso url. Roles: [none]'
-      parameters:
-      - description: filter
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.AuthProviderListSSORequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.AuthProviderListSSOResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: list sso url
-      tags:
-      - lti_form
-  /api/v1/rpc/auth_provider.upsert:
-    post:
-      consumes:
-      - application/json
-      description: 'Create lti_form. Roles: [admin]'
-      parameters:
-      - description: lti_form form info
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.AuthProviderEditRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.AuthProviderEditResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: create lti_form
-      tags:
-      - lti_form
   /api/v1/rpc/lti_routing.delete:
     post:
       consumes:

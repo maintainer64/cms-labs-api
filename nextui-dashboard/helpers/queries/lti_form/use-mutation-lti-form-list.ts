@@ -21,7 +21,7 @@ export const useMutationAuthProviderList = (options: TMutationCustomOptions<Resp
     mutationFn: (params: Params) => {
       if (!params) return null;
       return transportWithAuth.rpc(CoreJsonRpcPath, {
-        method: 'lti_form.list',
+        method: 'auth_provider.list',
         params: params
       });
     },
@@ -30,11 +30,10 @@ export const useMutationAuthProviderList = (options: TMutationCustomOptions<Resp
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.delete'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.get'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.list'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.sso_list_get'] });
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'lti_form.upsert'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.delete'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.get'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.list'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'auth_provider.upsert'] });
     }
   });
 };

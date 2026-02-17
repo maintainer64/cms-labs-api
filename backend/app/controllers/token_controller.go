@@ -84,8 +84,8 @@ func UserLogin(c *jsonrpc.Ctx) (interface{}, error) {
 		return nil, err
 	}
 	defer container.Close()
-	uc := container.AuthTokenManager()
-	token, err := uc.NewJWTByCredentials(issuer, dto.Email, dto.Password)
+	uc := container.UserLoginUC()
+	token, err := uc.SetContext(issuer).Execute(dto)
 	if err != nil {
 		return nil, err
 	}

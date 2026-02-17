@@ -15,6 +15,9 @@ type Response = CamelCasedPropertiesDeep<UsecasesTopologiesGetResponse['result']
 
 export const useQueryTopologyGet = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'topology.get', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'topology.get', params, {
+      retry: 3,
+      enabled: !!params.namespace
+    })
   );
 };

@@ -21,7 +21,7 @@ export const useMutationAuthProviderGet = (options: TMutationCustomOptions<Respo
     mutationFn: (params: Params) => {
       if (!params?.id) return null;
       return transportWithAuth.rpc(CoreJsonRpcPath, {
-        method: 'lti_form.get',
+        method: 'auth_provider.get',
         params: params
       });
     },

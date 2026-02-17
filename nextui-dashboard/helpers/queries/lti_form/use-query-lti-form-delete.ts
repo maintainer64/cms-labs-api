@@ -15,6 +15,6 @@ type Response = CamelCasedPropertiesDeep<UsecasesAuthProviderDeleteResponse['res
 
 export const useQueryAuthProviderDelete = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'lti_form.delete', params, { retry: 3 })
+    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'auth_provider.delete', params, { retry: 3 })
   );
 };
