@@ -173,6 +173,36 @@ func TargetGet(c *jsonrpc.Ctx) (interface{}, error) {
 	return output, err
 }
 
+// TargetList list of target.
+// @Description list target. Roles: [admin, instructor, student]
+// @Summary list target
+// @Tags target
+// @Accept json
+// @Produce json
+// @Param object body usecases.TargetListRequest true "target list info"
+// @Success 200 {object} usecases.TargetListResponse
+// @Security ApiKeyAuth
+// @Router /api/v1/rpc/target.list [post]
+func TargetList(c *jsonrpc.Ctx) (interface{}, error) {
+	claims, err := auth.ExtractTokenMetadata(c, []string{})
+	if err != nil {
+		return nil, err
+	}
+	loggerConf := logs.NewZeroLoggerConf(c)
+	dto := usecases.TargetListInputDTO{}
+	if err := jsonrpc.ValidatorBase(c, &dto); err != nil {
+		return nil, err
+	}
+	container, err := di.NewDIContainer(loggerConf)
+	if err != nil {
+		return nil, err
+	}
+	defer container.Close()
+	uc := container.TargetListUC()
+	output, err := uc.SetContext(claims).Execute(dto)
+	return output, err
+}
+
 // TargetRelationCreate creates a target relation.
 // @Description Create target_relation. Roles: [admin, instructor, student]
 // @Summary create target_relation

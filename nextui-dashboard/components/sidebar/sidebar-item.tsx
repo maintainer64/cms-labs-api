@@ -8,27 +8,23 @@ interface Props {
   icon: React.ReactNode;
   isActive?: boolean;
   href?: string;
+  onPress?: () => void;
 }
 
-export const SidebarItem = ({ icon, title, isActive, href = '' }: Props) => {
-  const { collapsed, setCollapsed } = useSidebarContext();
+export const SidebarItem = ({ icon, title, isActive, href = '', onPress }: Props) => {
+  const { collapsed } = useSidebarContext();
 
-  const handleClick = () => {
-    if (window.innerWidth < 768) {
-      setCollapsed();
-    }
-  };
   return (
-    <Link to={href} className='text-default-900 active:bg-none max-w-full'>
+    <Link to={href} onClick={onPress} className='text-default-900 active:bg-none max-w-full'>
       <div
         className={clsx(
-          isActive ? 'bg-primary-100 [&_svg_*]:fill-primary-500' : 'hover:bg-default-100',
-          'flex gap-2 w-full min-h-[44px] h-full items-center px-3.5 rounded-xl cursor-pointer transition-all duration-150 active:scale-[0.98]'
+          isActive ? 'bg-primary-100 [&_svg_*]:stroke-primary-500' : 'hover:bg-default-100',
+          'flex gap-2 w-full min-h-[44px] h-full items-center rounded-xl cursor-pointer transition-all duration-150 active:scale-[0.98]',
+          collapsed ? 'px-5' : 'px-3.5'
         )}
-        onClick={handleClick}
       >
         {icon}
-        <span className='text-default-900'>{title}</span>
+        {collapsed ? null : <span className='text-default-900'>{title}</span>}
       </div>
     </Link>
   );

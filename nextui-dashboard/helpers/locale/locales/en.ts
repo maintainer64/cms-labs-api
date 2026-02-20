@@ -32,6 +32,8 @@ const en = {
     Users: 'Users',
     Roles: 'Roles',
     Servers: 'Servers',
+    Targets: 'Map',
+    Collapse: 'Collapse',
     CurlRequests: 'API',
     ServiceCards: 'Services',
     AuthProviders: 'Auth providers',
@@ -400,6 +402,12 @@ const en = {
     Title: 'Forbidden',
     Description: 'Sorry, access to view this page is denied with your role',
     Button: 'Go back'
+  },
+  Target: {
+    Title: 'Map services',
+    ButtonAdd: 'Create',
+    SearchBar: 'Search',
+    ButtonEdit: 'Edit'
   },
   Topology: {
     Menu: {

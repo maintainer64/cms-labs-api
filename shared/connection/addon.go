@@ -31,7 +31,7 @@ func GetAddonsConfig(rawConfig string) *AddonsConfig {
 	}
 	var cfg AddonsConfig
 	if err := json.Unmarshal([]byte(rawConfig), &cfg); err != nil {
-		return &AddonsConfig{}
+		panic(err)
 	}
 	return &cfg
 }

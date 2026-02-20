@@ -1,7 +1,6 @@
 package connection
 
 type Vault struct {
-	VaultAddr      string
-	VaultToken     string
-	VaultNamespace string
+	VaultAddr  string
+	VaultToken string
 }

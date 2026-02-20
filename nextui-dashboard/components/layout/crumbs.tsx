@@ -27,7 +27,7 @@ export const CrumbsLayout = ({ children, name, crumbs }: CrumbsLayoutProps) => {
     </li>
   ));
   return (
-    <div className='my-10 px-4 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4'>
+    <div className='mb-5 px-4 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4 flex-1'>
       <ul className='flex'>{crumbsBlock}</ul>
       {pageTitle}
       {children}

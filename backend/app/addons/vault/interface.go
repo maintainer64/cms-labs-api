@@ -22,4 +22,7 @@ type ClientInterface interface {
 	RotateServiceToken(ctx context.Context, targetName string, opts ServiceTokenOptions) (*ServiceTokenInfo, error)
 
 	GetVaultAddr() string
+
+	CreateKubernetesRole(ctx context.Context, targetName string) error
+	RevokeKubernetesRole(ctx context.Context, targetName string) error
 }

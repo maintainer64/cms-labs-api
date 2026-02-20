@@ -29,6 +29,18 @@ func (q *TargetUserQueries) GetByTargetAndUser(targetID string, userID uint) (mo
 	return entity, err
 }
 
+// GetByUserId ищет записи все где есть user_id
+func (q *TargetUserQueries) GetByUserId(userID uint) ([]string, error) {
+	var targetIDs []string
+	err := q.DB.Model(&models.TargetUser{}).
+		Where("user_id = ?", userID).
+		Pluck("target_id", &targetIDs).Error
+	if err != nil {
+		return nil, err
+	}
+	return targetIDs, err
+}
+
 // HasEditor проверяет наличие редактора, загружая всех пользователей цели в память.
 func (q *TargetUserQueries) HasEditor(targetID string) (bool, error) {
 	var users []models.TargetUser

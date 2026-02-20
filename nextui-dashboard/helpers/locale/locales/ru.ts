@@ -32,6 +32,8 @@ const ru = {
     Users: 'Пользователи',
     Roles: 'Роли',
     Servers: 'Серверы',
+    Targets: 'Карта',
+    Collapse: 'Свернуть',
     CurlRequests: 'API',
     ServiceCards: 'Сервисы',
     AuthProviders: 'Идентификации',
@@ -401,6 +403,12 @@ const ru = {
     Title: 'Доступ запрещен',
     Description: 'Извините, доступ для просмотра этой страницы запрещен с вашей ролью',
     Button: 'Вернуться назад'
+  },
+  Target: {
+    Title: 'Карта сервисов',
+    ButtonAdd: 'Создать',
+    SearchBar: 'Поиск',
+    ButtonEdit: 'Редактировать'
   },
   Topology: {
     Menu: {

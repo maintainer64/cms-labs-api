@@ -46,7 +46,7 @@ func TestVaultAddonService_Create_Success(t *testing.T) {
 			assert.Equal(t, targetName, tn)
 			assert.Equal(t, "87600h", opts.TTL)
 			assert.False(t, *opts.Renewable)
-			assert.Equal(t, "write", opts.Permission)
+			assert.Equal(t, "read", opts.Permission)
 			return &vault.ServiceTokenInfo{
 				Token:       "s.abc123",
 				Accessor:    "accessor123",
@@ -195,7 +195,7 @@ func TestVaultAddonService_Reset_Success(t *testing.T) {
 			assert.Equal(t, targetName, tn)
 			assert.Equal(t, "87600h", opts.TTL)
 			assert.False(t, *opts.Renewable)
-			assert.Equal(t, "write", opts.Permission)
+			assert.Equal(t, "read", opts.Permission)
 			return &vault.ServiceTokenInfo{
 				Token:       "s.newtoken",
 				Accessor:    "newaccessor",

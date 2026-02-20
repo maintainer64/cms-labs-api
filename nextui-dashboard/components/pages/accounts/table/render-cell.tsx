@@ -1,9 +1,9 @@
 import React from 'react';
-import { EditIcon } from '../../../icons/table/edit-icon';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { RolesChip } from '@/components/base-forms/roles';
 import { UserItem } from '@/helpers/queries/user/use-infinity-user-list';
+import { SquarePen } from 'lucide-react';
 
 interface Props {
   item: UserItem;
@@ -42,7 +42,7 @@ export const RenderCell = ({ item, columnKey }: Props) => {
         <div className='flex items-center gap-4'>
           <div>
             <Link to={RoutesLocation.accountsEdit(item.id?.toString())}>
-              <EditIcon size={20} fill='#979797' />
+              <SquarePen className='w-4 p-4 stroke-[#979797]' />
             </Link>
           </div>
         </div>

@@ -1,13 +1,11 @@
 'use client';
 import React from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { BookPlus, House, UsersRound } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { useParams } from 'react-router-dom';
 import { LtiAttemptEditForm } from '@/components/pages/lti-attempts/edit/form';
-import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
-import { LtiAttemptIcon } from '@/components/icons/breadcrumb/lti-attempt';
 import { useQueryLtiAttemptGet } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-get';
 
 export const LtiAttemptEdit = () => {
@@ -22,17 +20,17 @@ export const LtiAttemptEdit = () => {
   const attempt = response.data?.model;
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <UsersIcon />,
+      icon: <UsersRound className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Users,
       href: RoutesLocation.accountsEdit(attempt?.userId?.toString() || '0')
     },
     {
-      icon: <LtiAttemptIcon />,
+      icon: <BookPlus className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.LTIAttempts,
       href: RoutesLocation.ltiAttemptUser(attempt?.userId?.toString() || '0')
     },

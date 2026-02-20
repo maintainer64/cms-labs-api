@@ -424,14 +424,31 @@ export interface ModelsTarget {
   created_at: string;
   description?: string;
   id?: string;
-  /** массив внутренних тегов */
-  internal_tags?: TypesJsonStore;
   /** список ссылок */
-  links?: TypesJsonStore;
+  internal_links?: object[];
+  /** массив внутренних тегов */
+  internal_tags?: string[];
+  /** список ссылок */
+  links?: object[];
   name?: string;
+  synchronized_at: string;
   /** массив тегов */
-  tags?: TypesJsonStore;
+  tags?: string[];
   type?: string;
+  updated_at: string;
+}
+
+export interface ModelsTargetLink {
+  type?: string;
+  value?: string;
+}
+
+export interface ModelsTargetRelation {
+  created_at: string;
+  from_target_id?: string;
+  id?: number;
+  relation_type?: string;
+  to_target_id?: string;
   updated_at: string;
 }
 
@@ -1434,6 +1451,41 @@ export interface UsecasesTargetGetResponse {
   result?: ModelsTarget;
 }
 
+export interface UsecasesTargetItem {
+  is_mine: boolean;
+  taget: ModelsTarget;
+}
+
+export type UsecasesTargetListInputDTO = object;
+
+export interface UsecasesTargetListOutputDTO {
+  model?: UsecasesTargetModel;
+}
+
+export interface UsecasesTargetListRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "service_card.upsert" */
+  method?: string;
+  params?: UsecasesTargetListInputDTO;
+}
+
+export interface UsecasesTargetListResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesTargetListOutputDTO;
+}
+
+export interface UsecasesTargetModel {
+  relations?: UsecasesTargetRelationItem[];
+  targets?: UsecasesTargetItem[];
+}
+
 export interface UsecasesTargetRelationCreateInputDTO {
   from_target_id: string;
   relation_type: string;
@@ -1488,13 +1540,17 @@ export interface UsecasesTargetRelationDeleteResponse {
   result?: UsecasesTargetRelationDeleteInputDTO;
 }
 
+export interface UsecasesTargetRelationItem {
+  relation?: ModelsTargetRelation;
+}
+
 export interface UsecasesTargetUpsertInputDTO {
   description?: string;
   /** nil – создание, иначе – обновление */
   id?: string;
-  links?: TypesJsonStore;
+  links?: ModelsTargetLink[];
   name: string;
-  tags?: TypesJsonStore;
+  tags?: string[];
   type: string;
 }
 

@@ -59,6 +59,14 @@ func (di *DIContainer) TargetGetUC() *usecases.TargetGetUC {
 	}
 }
 
+func (di *DIContainer) TargetListUC() *usecases.TargetListUC {
+	return &usecases.TargetListUC{
+		TargetQueries:         di.Queries.TargetQueries,
+		TargetUserQueries:     di.Queries.TargetUserQueries,
+		TargetRelationQueries: di.Queries.TargetRelationQueries,
+	}
+}
+
 func (di *DIContainer) TargetRelationCreateUC() *usecases.TargetRelationCreateUC {
 	return &usecases.TargetRelationCreateUC{
 		TargetRelationQueries: di.Queries.TargetRelationQueries,

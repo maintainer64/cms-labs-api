@@ -2,6 +2,7 @@ package routes
 
 import (
 	"testing"
+	"time"
 
 	json "github.com/goccy/go-json"
 	"github.com/google/uuid"
@@ -17,14 +18,22 @@ func TestV1TargetUpsertCreate(t *testing.T) {
 	f := NewTestHTTP()
 	defer f.Close()
 	authAdmin := f.AuthorizationUser(0, nil)
+	links := []models.TargetLink{
+		{
+			Value: "https://google.com",
+			Type:  "doc",
+		},
+	}
+
+	tags := []string{"prod"}
 
 	input := usecases.TargetUpsertInputDTO{
 		ID:          nil, // создание
 		Name:        "Test Target " + uuid.New().String(),
 		Description: ptrString("Test Description"),
 		Type:        "service",
-		Links:       types.JsonStore{"doc": "https://example.com"},
-		Tags:        types.JsonStore{"env": "prod"},
+		Links:       &links,
+		Tags:        &tags,
 	}
 
 	code, body := f.Rpc(&TestRpcRequest{
@@ -44,6 +53,8 @@ func TestV1TargetUpsertCreate(t *testing.T) {
 	assert.NoError(t, err, desc)
 	assert.Equal(t, input.Name, target.Name, desc)
 	assert.Equal(t, *input.Description, *target.Description, desc)
+	assert.Equal(t, (*input.Links)[0].Value, (*target.Links)[0].Value, desc)
+	assert.Equal(t, (*input.Tags)[0], (*target.Tags)[0], desc)
 
 	// Проверка, что создатель стал редактором
 	var tu models.TargetUser
@@ -66,8 +77,8 @@ func TestV1TargetUpsertUpdate(t *testing.T) {
 		Name:        "Original" + uuid.New().String(),
 		Description: ptrString("Original desc"),
 		Type:        "service",
-		Links:       types.JsonStore{},
-		Tags:        types.JsonStore{},
+		Links:       nil,
+		Tags:        nil,
 	}
 	_, body := f.Rpc(&TestRpcRequest{
 		Method:        "target.upsert",
@@ -78,14 +89,23 @@ func TestV1TargetUpsertUpdate(t *testing.T) {
 	_ = json.Unmarshal([]byte(body), &createResp)
 	targetID := createResp.Result.ID
 
+	links := []models.TargetLink{
+		{
+			Value: "https://google.com",
+			Type:  "doc",
+		},
+	}
+
+	tags := []string{"prod"}
+
 	// Обновляем
 	updateInput := usecases.TargetUpsertInputDTO{
 		ID:          &targetID,
 		Name:        "Updated" + uuid.New().String(),
 		Description: ptrString("Updated desc"),
 		Type:        "server",
-		Links:       types.JsonStore{"new": "link"},
-		Tags:        types.JsonStore{"env": "stage"},
+		Links:       &links,
+		Tags:        &tags,
 	}
 
 	code, body := f.Rpc(&TestRpcRequest{
@@ -200,14 +220,18 @@ func TestV1TargetGet(t *testing.T) {
 	auth := f.AuthorizationUser(0, nil)
 
 	target := models.Target{
-		ID:          uuid.New().String(),
-		Name:        "Test Target" + uuid.New().String(),
-		Description: ptrString("Test Description"),
-		Type:        "service",
-		Links:       types.JsonStore{},
-		Tags:        types.JsonStore{},
+		ID:             uuid.New().String(),
+		Name:           "Test Target" + uuid.New().String(),
+		Description:    ptrString("Test Description"),
+		Type:           "service",
+		Links:          nil,
+		Tags:           nil,
+		SynchronizedAt: time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
 	}
-	f.DB.Create(&target)
+	err := f.DB.Create(&target).Error
+	assert.NoError(t, err, desc)
 
 	input := usecases.TargetGetInputDTO{ID: target.ID}
 	code, body := f.Rpc(&TestRpcRequest{
@@ -216,7 +240,7 @@ func TestV1TargetGet(t *testing.T) {
 		Authorization: auth,
 	})
 	var resp usecases.TargetGetResponse
-	err := json.Unmarshal([]byte(body), &resp)
+	err = json.Unmarshal([]byte(body), &resp)
 	assert.NoError(t, err, desc)
 	assert.Equal(t, 200, code, desc)
 	assert.Equal(t, target.ID, resp.Result.ID, desc)
@@ -235,10 +259,13 @@ func TestV1TargetDelete(t *testing.T) {
 
 	// Создаём цель
 	target := models.Target{
-		ID:          uuid.New().String(),
-		Name:        "ToDelete" + uuid.New().String(),
-		Description: ptrString("desc"),
-		Type:        "service",
+		ID:             uuid.New().String(),
+		Name:           "ToDelete" + uuid.New().String(),
+		Description:    ptrString("desc"),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 
@@ -571,15 +598,21 @@ func TestV1TargetRelationDelete_Success(t *testing.T) {
 	// Создаём две цели и связь
 	// Для упрощения создадим цели через БД, но добавим пользователя как редактора
 	fromTarget := models.Target{
-		ID:   uuid.New().String(),
-		Name: "FromTarget " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "FromTarget " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&fromTarget)
 	toTarget := models.Target{
-		ID:   uuid.New().String(),
-		Name: "ToTarget " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "ToTarget " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&toTarget)
 
@@ -644,15 +677,21 @@ func TestV1TargetRelationDelete_NotEditor(t *testing.T) {
 
 	// Создаём цели через БД
 	fromTarget := models.Target{
-		ID:   uuid.New().String(),
-		Name: "FromTarget " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "FromTarget " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&fromTarget)
 	toTarget := models.Target{
-		ID:   uuid.New().String(),
-		Name: "ToTarget " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "ToTarget " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&toTarget)
 
@@ -752,9 +791,12 @@ func TestV1TargetUserUpsert_CreateFirstEditor(t *testing.T) {
 
 	// Создаём цель (через БД, чтобы не создавать редактора автоматически)
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 
@@ -794,9 +836,12 @@ func TestV1TargetUserUpsert_CreateAnotherEditor_AsEditor(t *testing.T) {
 
 	// Создаём цель
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 
@@ -851,9 +896,12 @@ func TestV1TargetUserUpsert_CreateAnotherEditor_NotEditor(t *testing.T) {
 
 	// Создаём цель
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 
@@ -906,9 +954,12 @@ func TestV1TargetUserUpsert_UpdateOwnRoles_AsEditor(t *testing.T) {
 
 	// Создаём цель
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 
@@ -992,9 +1043,12 @@ func TestV1TargetUserDelete_Success(t *testing.T) {
 
 	// Создаём цель
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 
@@ -1054,9 +1108,12 @@ func TestV1TargetUserDelete_NotEditor(t *testing.T) {
 
 	// Создаём цель
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 
@@ -1123,9 +1180,12 @@ func TestV1TargetUserDelete_NonExistent(t *testing.T) {
 
 	// Создаём цель и делаем текущего пользователя редактором
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 	editor := models.TargetUser{
@@ -1165,9 +1225,12 @@ func TestV1TargetUserDelete_DeleteLastEditor(t *testing.T) {
 
 	// Создаём цель и единственного редактора (текущий пользователь)
 	target := models.Target{
-		ID:   uuid.New().String(),
-		Name: "Target " + uuid.New().String(),
-		Type: "service",
+		ID:             uuid.New().String(),
+		Name:           "Target " + uuid.New().String(),
+		Type:           "service",
+		SynchronizedAt: time.Now().UTC(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 	f.DB.Create(&target)
 	editor := models.TargetUser{

@@ -1,7 +1,6 @@
 import { Button } from '@heroui/react';
 import React, { useState } from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
-import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
+import { House, UsersRound } from 'lucide-react';
 import { UsersTableWrapper } from '@/components/pages/accounts/table/table';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
@@ -19,12 +18,12 @@ export const Accounts = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <UsersIcon />,
+      icon: <UsersRound className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Users,
       href: RoutesLocation.accounts()
     },

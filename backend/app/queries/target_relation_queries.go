@@ -51,3 +51,16 @@ func (q *TargetRelationQueries) DeleteByFromToType(fromTargetID, toTargetID, rel
 	return q.DB.Where("from_target_id = ? AND to_target_id = ? AND relation_type = ?",
 		fromTargetID, toTargetID, relationType).Delete(&models.TargetRelation{}).Error
 }
+
+func (q *TargetRelationQueries) tableName(object interface{}) string {
+	stmt := &gorm.Statement{DB: q.DB}
+	_ = stmt.Parse(object)
+	return stmt.Schema.Table
+}
+
+func (q *TargetRelationQueries) List() ([]models.TargetRelation, error) {
+	var entities []models.TargetRelation
+	result := q.DB.Table(q.tableName(&models.TargetRelation{}) + " AS target_relations").Order(`created_at desc`).Find(&entities)
+	q.Logger.Debug().Msg(fmt.Sprintf("TargetRelationQueries list: entities %+v", entities))
+	return entities, result.Error
+}

@@ -104,6 +104,13 @@ func (s *KubernetesAddonService) CreateByService(ctx context.Context, targetName
 	if err != nil {
 		return err
 	}
+	err = s.VaultClient.CreateKubernetesRole(
+		ctx,
+		targetName,
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -188,6 +195,10 @@ func (s *KubernetesAddonService) Delete(ctx context.Context, emailOrTargetName s
 	if err != nil {
 		return nil, err
 	}
+	err = s.VaultClient.RevokeKubernetesRole(
+		ctx,
+		emailOrTargetName,
+	)
 	return &AddonOperationConfig{}, nil
 }
 

@@ -9,6 +9,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"gorm.io/datatypes"
 )
 
 // TargetUpsertUC – создание или обновление цели (Target)
@@ -20,12 +21,12 @@ type TargetUpsertUC struct {
 
 // TargetUpsertInputDTO – входные данные для создания/обновления
 type TargetUpsertInputDTO struct {
-	ID          *string         `json:"id"` // nil – создание, иначе – обновление
-	Name        string          `json:"name" validate:"required"`
-	Description *string         `json:"description"`
-	Type        string          `json:"type" validate:"required"`
-	Links       types.JsonStore `json:"links"`
-	Tags        types.JsonStore `json:"tags"`
+	ID          *string              `json:"id"` // nil – создание, иначе – обновление
+	Name        string               `json:"name" validate:"required"`
+	Description *string              `json:"description"`
+	Type        string               `json:"type" validate:"required"`
+	Links       *[]models.TargetLink `json:"links"`
+	Tags        *[]string            `json:"tags"`
 }
 
 // TargetUpsertOutputDTO – результат
@@ -62,8 +63,15 @@ func (uc *TargetUpsertUC) Execute(dto TargetUpsertInputDTO) (*TargetUpsertOutput
 		Name:        dto.Name,
 		Description: dto.Description,
 		Type:        dto.Type,
-		Links:       dto.Links,
-		Tags:        dto.Tags,
+	}
+	if dto.Links != nil {
+		links := datatypes.NewJSONSlice(*dto.Links)
+		entity.Links = &links
+	}
+
+	if dto.Tags != nil {
+		tags := datatypes.NewJSONSlice(*dto.Tags)
+		entity.Tags = &tags
 	}
 
 	// Обновление существующей цели
@@ -83,7 +91,9 @@ func (uc *TargetUpsertUC) Execute(dto TargetUpsertInputDTO) (*TargetUpsertOutput
 
 		entity.Name = existing.Name
 		entity.InternalTags = existing.InternalTags
+		entity.InternalLinks = existing.InternalLinks
 		entity.CreatedAt = existing.CreatedAt
+		entity.SynchronizedAt = existing.SynchronizedAt
 		entity.Type = existing.Type
 		entity.UpdatedAt = time.Now().UTC()
 
@@ -107,6 +117,7 @@ func (uc *TargetUpsertUC) Execute(dto TargetUpsertInputDTO) (*TargetUpsertOutput
 	entity.ID = uuid.New().String()
 	entity.CreatedAt = time.Now().UTC()
 	entity.UpdatedAt = time.Now().UTC()
+	entity.SynchronizedAt = time.Now().UTC()
 
 	if err := uc.TargetQueries.Upsert(entity); err != nil {
 		return nil, err

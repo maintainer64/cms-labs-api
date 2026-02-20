@@ -19,8 +19,7 @@ export const useQueryUserGlobalStoreGet = (params: Params) => {
       retry: 1,
       gcTime: Infinity,
       staleTime: Infinity,
-      refetchOnMount: false,
-      enabled: !!params.params
+      refetchOnMount: false
     })
   );
 };

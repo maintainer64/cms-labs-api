@@ -739,21 +739,57 @@ definitions:
         type: string
       id:
         type: string
-      internal_tags:
-        allOf:
-        - $ref: '#/definitions/types.JsonStore'
-        description: массив внутренних тегов
-      links:
-        allOf:
-        - $ref: '#/definitions/types.JsonStore'
+      internal_links:
         description: список ссылок
+        items:
+          type: object
+        type: array
+      internal_tags:
+        description: массив внутренних тегов
+        items:
+          type: string
+        type: array
+      links:
+        description: список ссылок
+        items:
+          type: object
+        type: array
       name:
         type: string
+      synchronized_at:
+        type: string
       tags:
-        allOf:
-        - $ref: '#/definitions/types.JsonStore'
         description: массив тегов
+        items:
+          type: string
+        type: array
       type:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - synchronized_at
+    - updated_at
+    type: object
+  models.TargetLink:
+    properties:
+      type:
+        type: string
+      value:
+        type: string
+    type: object
+  models.TargetRelation:
+    properties:
+      created_at:
+        type: string
+      from_target_id:
+        type: string
+      id:
+        type: integer
+      relation_type:
+        type: string
+      to_target_id:
         type: string
       updated_at:
         type: string
@@ -2316,6 +2352,60 @@ definitions:
       result:
         $ref: '#/definitions/models.Target'
     type: object
+  usecases.TargetItem:
+    properties:
+      is_mine:
+        type: boolean
+      taget:
+        $ref: '#/definitions/models.Target'
+    required:
+    - is_mine
+    - taget
+    type: object
+  usecases.TargetListInputDTO:
+    type: object
+  usecases.TargetListOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/usecases.TargetModel'
+    type: object
+  usecases.TargetListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: service_card.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.TargetListInputDTO'
+    type: object
+  usecases.TargetListResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.TargetListOutputDTO'
+    type: object
+  usecases.TargetModel:
+    properties:
+      relations:
+        items:
+          $ref: '#/definitions/usecases.TargetRelationItem'
+        type: array
+      targets:
+        items:
+          $ref: '#/definitions/usecases.TargetItem'
+        type: array
+    type: object
   usecases.TargetRelationCreateInputDTO:
     properties:
       from_target_id:
@@ -2395,6 +2485,11 @@ definitions:
       result:
         $ref: '#/definitions/usecases.TargetRelationDeleteInputDTO'
     type: object
+  usecases.TargetRelationItem:
+    properties:
+      relation:
+        $ref: '#/definitions/models.TargetRelation'
+    type: object
   usecases.TargetUpsertInputDTO:
     properties:
       description:
@@ -2403,11 +2498,15 @@ definitions:
         description: nil – создание, иначе – обновление
         type: string
       links:
-        $ref: '#/definitions/types.JsonStore'
+        items:
+          $ref: '#/definitions/models.TargetLink'
+        type: array
       name:
         type: string
       tags:
-        $ref: '#/definitions/types.JsonStore'
+        items:
+          type: string
+        type: array
       type:
         type: string
     required:
@@ -3610,6 +3709,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: get target
+      tags:
+      - target
+  /api/v1/rpc/target.list:
+    post:
+      consumes:
+      - application/json
+      description: 'list target. Roles: [admin, instructor, student]'
+      parameters:
+      - description: target list info
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.TargetListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.TargetListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list target
       tags:
       - target
   /api/v1/rpc/target.relation_create:

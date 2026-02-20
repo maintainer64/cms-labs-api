@@ -1,6 +1,8 @@
 package vault
 
-import "context"
+import (
+	"context"
+)
 
 // MockVaultClient — простая заглушка для VaultClientInterface.
 // Позволяет задавать функции-обработчики для каждого метода.
@@ -10,6 +12,8 @@ type MockVaultClient struct {
 	IssueServiceTokenFunc       func(ctx context.Context, targetName string, opts ServiceTokenOptions) (*ServiceTokenInfo, error)
 	RevokeServiceTokenFunc      func(ctx context.Context, targetName string) error
 	RotateServiceTokenFunc      func(ctx context.Context, targetName string, opts ServiceTokenOptions) (*ServiceTokenInfo, error)
+	CreateKubernetesRoleFunc    func(ctx context.Context, targetName string) error
+	RevokeKubernetesRoleFunc    func(ctx context.Context, targetName string) error
 	GetVaultAddrFunc            func() string
 }
 
@@ -58,4 +62,18 @@ func (m *MockVaultClient) GetVaultAddr() string {
 		return m.GetVaultAddrFunc()
 	}
 	return ""
+}
+
+func (m *MockVaultClient) CreateKubernetesRole(ctx context.Context, targetName string) error {
+	if m.CreateKubernetesRoleFunc != nil {
+		return m.CreateKubernetesRoleFunc(ctx, targetName)
+	}
+	return nil
+}
+
+func (m *MockVaultClient) RevokeKubernetesRole(ctx context.Context, targetName string) error {
+	if m.RevokeKubernetesRoleFunc != nil {
+		return m.RevokeKubernetesRoleFunc(ctx, targetName)
+	}
+	return nil
 }

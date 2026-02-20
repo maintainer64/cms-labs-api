@@ -6,12 +6,12 @@ import { Formik } from 'formik';
 import useLanguageBrowser from '@/helpers/locale';
 import { RoutesLocation } from '@/components/routes';
 import { SSOAuthorizationGet } from '@/components/pages/auth/ssoSave';
-import { SecurityIcon } from '@/components/icons/sso';
 import { useMutationUserLogin } from '@/helpers/queries/user/use-mutation-user-login';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 import { AuthRenewManagerCredentialsInputDTO } from '@/helpers/api';
 import { useSearchParams } from 'react-router-dom';
 import { useMemo } from 'react';
+import { KeyRound } from 'lucide-react';
 import { useQueryAuthProviderList } from '@/helpers/queries/lti_form/use-query-lti-form-list';
 
 const defaultValues: CamelCasedPropertiesDeep<AuthRenewManagerCredentialsInputDTO> = {
@@ -103,7 +103,7 @@ export const Login = () => {
                   {ltiProviders.map((service) => (
                     <Button
                       key={service.id}
-                      startContent={<SecurityIcon />}
+                      startContent={<KeyRound className='h-5 w-5 stroke-[#969696]' />}
                       className='w-full'
                       onPress={() => {
                         window.location.href = service.ssoUrl || '';

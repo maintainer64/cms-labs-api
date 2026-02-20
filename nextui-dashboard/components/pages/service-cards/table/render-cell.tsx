@@ -1,10 +1,10 @@
 import React from 'react';
-import { EditIcon } from '../../../icons/table/edit-icon';
 import { ModelsServiceCardListItem } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { Chip } from '@heroui/react';
 import { CamelCasedPropertiesDeep } from 'type-fest';
+import { SquarePen } from 'lucide-react';
 
 interface Props {
   item: CamelCasedPropertiesDeep<ModelsServiceCardListItem>;
@@ -68,7 +68,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
         <div className='flex items-center gap-4 '>
           <div>
             <Link to={RoutesLocation.serviceCardsEdit(item.id?.toString())}>
-              <EditIcon size={20} fill='#979797' />
+              <SquarePen className='w-4 p-4 stroke-[#979797]' />
             </Link>
           </div>
         </div>

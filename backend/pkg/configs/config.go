@@ -10,12 +10,13 @@ import (
 )
 
 type AppConfigModel struct {
-	Debug        bool
-	Server       *connection.ServerConfig
-	DB           *connection.DBConfig
-	Vault        *connection.Vault
-	JWT          *JWTConfig
-	AddonsConfig *connection.AddonsConfig
+	Debug             bool
+	Server            *connection.ServerConfig
+	DB                *connection.DBConfig
+	Vault             *connection.Vault
+	JWT               *JWTConfig
+	AddonsConfig      *connection.AddonsConfig
+	ProxmoxSyncConfig *connection.ProxmoxSyncConfig
 }
 
 func (c *AppConfigModel) Reload() {
@@ -60,12 +61,14 @@ func (c *AppConfigModel) Reload() {
 		RefreshKey: jwtRefresh,
 	}
 	c.Vault = &connection.Vault{
-		VaultAddr:      os.Getenv("VAULT_ADDR"),
-		VaultToken:     os.Getenv("VAULT_TOKEN"),
-		VaultNamespace: os.Getenv("VAULT_NAMESPACE"),
+		VaultAddr:  os.Getenv("VAULT_ADDR"),
+		VaultToken: os.Getenv("VAULT_TOKEN"),
 	}
 	c.AddonsConfig = connection.GetAddonsConfig(
 		os.Getenv("ADDONS_CONFIG"),
+	)
+	c.ProxmoxSyncConfig = connection.GetProxmoxConfig(
+		os.Getenv("PROXIMOX_CONFIG"),
 	)
 }
 

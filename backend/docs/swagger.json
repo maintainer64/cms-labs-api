@@ -1491,6 +1491,45 @@
                 }
             }
         },
+        "/api/v1/rpc/target.list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "list target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "list target",
+                "parameters": [
+                    {
+                        "description": "target list info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetListResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/rpc/target.relation_create": {
             "post": {
                 "security": [
@@ -3478,6 +3517,7 @@
             "type": "object",
             "required": [
                 "created_at",
+                "synchronized_at",
                 "updated_at"
             ],
             "properties": {
@@ -3490,34 +3530,79 @@
                 "id": {
                     "type": "string"
                 },
+                "internal_links": {
+                    "description": "список ссылок",
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
                 "internal_tags": {
                     "description": "массив внутренних тегов",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/types.JsonStore"
-                        }
-                    ]
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "links": {
                     "description": "список ссылок",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/types.JsonStore"
-                        }
-                    ]
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
                 },
                 "name": {
                     "type": "string"
                 },
+                "synchronized_at": {
+                    "type": "string"
+                },
                 "tags": {
                     "description": "массив тегов",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/types.JsonStore"
-                        }
-                    ]
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TargetLink": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TargetRelation": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "from_target_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "relation_type": {
+                    "type": "string"
+                },
+                "to_target_id": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -5785,6 +5870,86 @@
                 }
             }
         },
+        "usecases.TargetItem": {
+            "type": "object",
+            "required": [
+                "is_mine",
+                "taget"
+            ],
+            "properties": {
+                "is_mine": {
+                    "type": "boolean"
+                },
+                "taget": {
+                    "$ref": "#/definitions/models.Target"
+                }
+            }
+        },
+        "usecases.TargetListInputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetListOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/usecases.TargetModel"
+                }
+            }
+        },
+        "usecases.TargetListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetListInputDTO"
+                }
+            }
+        },
+        "usecases.TargetListResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetListOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetModel": {
+            "type": "object",
+            "properties": {
+                "relations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.TargetRelationItem"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.TargetItem"
+                    }
+                }
+            }
+        },
         "usecases.TargetRelationCreateInputDTO": {
             "type": "object",
             "required": [
@@ -5900,6 +6065,14 @@
                 }
             }
         },
+        "usecases.TargetRelationItem": {
+            "type": "object",
+            "properties": {
+                "relation": {
+                    "$ref": "#/definitions/models.TargetRelation"
+                }
+            }
+        },
         "usecases.TargetUpsertInputDTO": {
             "type": "object",
             "required": [
@@ -5915,13 +6088,19 @@
                     "type": "string"
                 },
                 "links": {
-                    "$ref": "#/definitions/types.JsonStore"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.TargetLink"
+                    }
                 },
                 "name": {
                     "type": "string"
                 },
                 "tags": {
-                    "$ref": "#/definitions/types.JsonStore"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "type": {
                     "type": "string"

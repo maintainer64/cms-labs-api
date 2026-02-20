@@ -5,9 +5,7 @@ import { InputOtp } from '@heroui/input-otp';
 import React, { useEffect, useState } from 'react';
 import { addToast, Button, Progress, Tooltip } from '@heroui/react';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
-import { ClipboardIcon } from '@/components/icons/table/clipboard';
 import copy from 'copy-to-clipboard';
-import { RollbackIcon } from '@/components/icons/table/rollback';
 import { RoutesLocation } from '@/components/routes';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Loading } from '@/components/scroll/loader';
@@ -15,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { AvatarGroupsRoom } from '@/components/pages/lti-attempts/create/avatar-groups-room';
 import { useMutationLtiAttemptCreate } from '@/helpers/queries/lti_attempt/use-mutation-lti-attempt-create';
 import { useQueryLtiAttemptCreate } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-create';
+import { ClipboardCopy, Undo2 } from 'lucide-react';
 
 export const LTIAttemptCreate = () => {
   const {
@@ -84,7 +83,7 @@ export const LTIAttemptCreate = () => {
                     disableRipple={true}
                     className='cursor-pointer'
                   >
-                    <ClipboardIcon />
+                    <ClipboardCopy className='w-4 h-4 stroke-[#969696]' />
                   </Button>
                 </Tooltip>
               )}
@@ -100,7 +99,7 @@ export const LTIAttemptCreate = () => {
                     disableRipple={true}
                     className='cursor-pointer'
                   >
-                    <RollbackIcon />
+                    <Undo2 className='w-4 h-4 stroke-[#969696]' />
                   </Button>
                 </Tooltip>
               )}

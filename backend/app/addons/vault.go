@@ -42,7 +42,7 @@ func (s *VaultAddonService) Create(ctx context.Context, targetName string, _ *st
 	tokenInfo, err := s.VaultClient.IssueServiceToken(ctx, targetName, vault.ServiceTokenOptions{
 		TTL:        s.tokenTTL,
 		Renewable:  &renewable,
-		Permission: "write",
+		Permission: "read",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("issue service token: %w", err)
@@ -91,7 +91,7 @@ func (s *VaultAddonService) Reset(ctx context.Context, targetName string, _ *Add
 	tokenInfo, err := s.VaultClient.RotateServiceToken(ctx, targetName, vault.ServiceTokenOptions{
 		TTL:        s.tokenTTL,
 		Renewable:  &renewable,
-		Permission: "write",
+		Permission: "read",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("rotate service token: %w", err)

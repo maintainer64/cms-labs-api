@@ -6,6 +6,7 @@ import { RoutesLocation } from '@/components/routes';
 import { LTIAttemptsPageCreate } from '@/app/(app)/lti-attempts/page';
 import { TopologyDevicePageView, TopologyPageConnect, TopologyPageView } from '@/app/(app)/topology/page';
 import { DocsKubectlTopology } from '@/app/(docs)/page';
+import { TargetsPage, TargetsPageEdit } from '@/app/(app)/targets/page';
 
 const RoutesStudent = () => {
   return (
@@ -13,6 +14,9 @@ const RoutesStudent = () => {
       <Route path={RoutesLocation.language()} element={<LanguagePage />} />
       <Route path={RoutesLocation.login()} element={<LoginPage />} />
       <Route path={RoutesLocation.home()} element={<LoginError />} />
+      <Route path={RoutesLocation.targets()} element={<TargetsPage />} />
+      <Route path={RoutesLocation.targetsEdit()} element={<TargetsPageEdit />} />
+      <Route path={RoutesLocation.targetsCreate()} element={<TargetsPageEdit />} />
       <Route path={RoutesLocation.ltiRedirect()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.ltiRedirectCreate()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.topologyView()} element={<TopologyPageView />} />

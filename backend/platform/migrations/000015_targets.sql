@@ -1,17 +1,19 @@
 -- +migrate Up
 CREATE TABLE `{{.DB_TABLE_PREFIX}}targets`
 (
-  `id`            varchar(255) NOT NULL,
-  `type`          varchar(50)  NOT NULL,
-  `name`          varchar(255) NOT NULL,
-  `description`   text,
-  `links`         json,
-  `tags`          json,
-  `internal_tags` json,
-  `created_at`    datetime(3),
-  `updated_at`    datetime(3),
+  `id`              varchar(255) NOT NULL,
+  `type`            varchar(50)  NOT NULL,
+  `name`            varchar(255) NOT NULL,
+  `description`     text,
+  `links`           json,
+  `internal_links`  json,
+  `tags`            json,
+  `internal_tags`   json,
+  `synchronized_at` datetime(3),
+  `created_at`      datetime(3),
+  `updated_at`      datetime(3),
   PRIMARY KEY (`id`),
-  INDEX           `idx_targets_type` (`type`),
+  INDEX             `idx_targets_type` (`type`),
   UNIQUE INDEX `idx_targets_name` (`name`)
 );
 

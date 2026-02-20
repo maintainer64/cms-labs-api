@@ -1,12 +1,11 @@
 'use client';
 import React from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { House, Split } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { useParams } from 'react-router-dom';
 import { LtiRoutingEditForm } from '@/components/pages/lti-routings/edit/form';
-import { RouterIcon } from '@/components/icons/breadcrumb/router-icon';
 
 export const LTIRoutingEdit = () => {
   const { id } = useParams();
@@ -18,12 +17,12 @@ export const LTIRoutingEdit = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <RouterIcon />,
+      icon: <Split className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.LTIRouting,
       href: RoutesLocation.ltiRouting()
     },

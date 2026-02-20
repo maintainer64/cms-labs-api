@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
-import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
+import { House, UsersRound } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
@@ -18,12 +17,12 @@ export const AccountsEdit = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <UsersIcon />,
+      icon: <UsersRound className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Users,
       href: RoutesLocation.accounts()
     },

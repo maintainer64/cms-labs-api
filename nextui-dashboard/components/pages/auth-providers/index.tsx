@@ -1,11 +1,10 @@
 import { Button } from '@heroui/react';
 import React, { useState } from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { House, KeyRound } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
-import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
 import SearchInput from '@/components/sidebar/search-input';
 import { AuthProvidersTableWrapper } from '@/components/pages/auth-providers/table/table';
 import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
@@ -21,12 +20,12 @@ export const AuthProvidersList = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <LtiIcon />,
+      icon: <KeyRound className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.AuthProviders,
       href: RoutesLocation.authProviders()
     },

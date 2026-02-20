@@ -1,13 +1,11 @@
 import { Button } from '@heroui/react';
 import React from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { House, ScrollText, Server } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
-import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
 import { ServiceCardsTableWrapper } from '@/components/pages/service-cards/table/table';
-import { ServicesCardIcon } from '@/components/icons/breadcrumb/services-card-icon';
 import { useQueryServiceCardList } from '@/helpers/queries/service_card/use-query-service-card-list';
 
 export const ServiceCardsList = () => {
@@ -19,17 +17,17 @@ export const ServiceCardsList = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <ServersIcon />,
+      icon: <Server className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Servers,
       href: RoutesLocation.pnetServers()
     },
     {
-      icon: <ServicesCardIcon />,
+      icon: <ScrollText className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.ServiceCards,
       href: RoutesLocation.serviceCards()
     },

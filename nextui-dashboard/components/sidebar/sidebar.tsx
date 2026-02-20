@@ -1,18 +1,14 @@
 import React from 'react';
 import { Sidebar } from './sidebar.styles';
 import { ServicesDropdown } from './services-dropdown';
-import { HomeIcon } from '../icons/sidebar/home-icon';
-import { AccountsIcon } from '../icons/sidebar/accounts-icon';
 import { SidebarItem } from './sidebar-item';
 import { SidebarMenu } from './sidebar-menu';
 import { useSidebarContext } from '../layout/layout-context';
 import { useLocation } from 'react-router-dom';
 import useLanguageBrowser from '@/helpers/locale';
 import { RoutesLocation } from '@/components/routes';
-import { LtiIcon } from '@/components/icons/breadcrumb/lti-icon';
-import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
-import { RouterIcon } from '@/components/icons/breadcrumb/router-icon';
-import { CurlRequestIcon } from '@/components/icons/breadcrumb/curl-request-icon';
+import { ChevronLeft, ChevronRight, House, KeyRound, Map, Server, Split, Users } from 'lucide-react';
+import { UserDropdown } from '@/components/navbar/user-dropdown';
 
 export const SidebarWrapper = () => {
   const { pathname } = useLocation();
@@ -21,42 +17,57 @@ export const SidebarWrapper = () => {
 
   return (
     <aside className='h-screen z-[20] sticky top-0'>
-      {collapsed ? <div className={Sidebar.Overlay()} onClick={setCollapsed} /> : null}
-      <div
-        className={Sidebar({
-          collapsed: collapsed
-        })}
-      >
-        <div className={Sidebar.Header()}>
+      <div>
+        <div className={Sidebar.Header({ collapsed })}>
           <ServicesDropdown />
         </div>
         <div className='flex flex-col justify-between h-full'>
           <div className={Sidebar.Body()}>
-            <SidebarItem title={locale.Sidebar.Home} icon={<HomeIcon />} isActive={pathname === '/'} href='/' />
+            <SidebarItem
+              title={locale.Sidebar.Home}
+              icon={<House className='w-5 h-5 stroke-[#969696]' />}
+              isActive={pathname === '/'}
+              href='/'
+            />
             <SidebarMenu title={locale.Sidebar.MainMenu}>
               <SidebarItem
                 isActive={pathname === RoutesLocation.ltiRouting()}
                 title={locale.Sidebar.LTIRouting}
-                icon={<RouterIcon />}
+                icon={<Split className='w-5 h-5 stroke-[#969696]' />}
                 href={RoutesLocation.ltiRouting()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.authProviders()}
                 title={locale.Sidebar.AuthProviders}
-                icon={<LtiIcon />}
+                icon={<KeyRound className='w-5 h-5 stroke-[#969696]' />}
                 href={RoutesLocation.authProviders()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.accounts()}
                 title={locale.Sidebar.Users}
-                icon={<AccountsIcon />}
+                icon={<Users className='w-5 h-5 stroke-[#969696]' />}
                 href={RoutesLocation.accounts()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.pnetServers()}
                 title={locale.Sidebar.Servers}
-                icon={<ServersIcon />}
+                icon={<Server className='w-5 h-5 stroke-[#969696]' />}
                 href={RoutesLocation.pnetServers()}
+              />
+              <SidebarItem
+                isActive={pathname === RoutesLocation.targets()}
+                title={locale.Sidebar.Targets}
+                icon={<Map className='w-5 h-5 stroke-[#969696]' />}
+                href={RoutesLocation.targets()}
+              />
+            </SidebarMenu>
+            <SidebarMenu title={locale.Sidebar.Profile}>
+              <UserDropdown />
+              <SidebarItem
+                isActive={false}
+                title={locale.Sidebar.Collapse}
+                icon={collapsed ? <ChevronRight className='w-4 h-4' /> : <ChevronLeft className='w-4 h-4' />}
+                onPress={() => setCollapsed(!collapsed)}
               />
             </SidebarMenu>
           </div>

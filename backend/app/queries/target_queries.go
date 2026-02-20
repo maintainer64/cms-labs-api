@@ -29,6 +29,19 @@ func (q *TargetQueries) Get(id string) (models.Target, error) {
 	return entity, err
 }
 
+func (q *TargetQueries) tableName(object interface{}) string {
+	stmt := &gorm.Statement{DB: q.DB}
+	_ = stmt.Parse(object)
+	return stmt.Schema.Table
+}
+
+func (q *TargetQueries) List() ([]models.Target, error) {
+	var entities []models.Target
+	result := q.DB.Table(q.tableName(&models.Target{}) + " AS targets").Order(`created_at desc`).Find(&entities)
+	q.Logger.Debug().Msg(fmt.Sprintf("TargetQueries list: entities %+v", entities))
+	return entities, result.Error
+}
+
 // GetByName возвращает полную запись Target по name
 func (q *TargetQueries) GetByName(name string) (models.Target, error) {
 	var entity models.Target
