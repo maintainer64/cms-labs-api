@@ -19,10 +19,10 @@ const (
 
 // TargetType — тип целевого объекта (сервис, сервер, модуль, виртуальный)
 const (
-	TargetTypeService = "SERVICE"
-	TargetTypeServer  = "SERVER"
-	TargetTypeModule  = "MODULE"
-	TargetTypeVirtual = "VIRTUAL"
+	TargetTypeService = "service"
+	TargetTypeServer  = "server"
+	TargetTypeModule  = "module"
+	TargetTypeVirtual = "virtual"
 )
 
 // Target представляет собой сервис, сервер, модуль или виртуальный объект

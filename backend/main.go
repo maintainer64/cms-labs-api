@@ -2,6 +2,8 @@
 package main
 
 import (
+	"flag"
+
 	fiber "github.com/gofiber/fiber/v2"
 	_ "github.com/joho/godotenv/autoload" // load .env file automatically
 	"gitlab.com/a10869/api-modules/backend/app/di"
@@ -27,6 +29,8 @@ import (
 // @name Authorization
 func main() {
 	// Define Fiber config.
+	task := flag.String("task", "", "Task name")
+	flag.Parse()
 	config := configs.FiberConfig()
 	logs.ZeroLogInit(configs.AppConfig.Debug)
 
@@ -36,8 +40,13 @@ func main() {
 	}
 
 	startup := container.TaskStartup()
-	if err = startup.Startup(); err != nil {
+	taskCompleted, err := startup.Startup(task)
+	if err != nil {
 		panic(err)
+		return
+	}
+	if taskCompleted {
+		return
 	}
 
 	// Define a new Fiber app with config.

@@ -68,7 +68,7 @@ func (c *AppConfigModel) Reload() {
 		os.Getenv("ADDONS_CONFIG"),
 	)
 	c.ProxmoxSyncConfig = connection.GetProxmoxConfig(
-		os.Getenv("PROXIMOX_CONFIG"),
+		os.Getenv("PROXMOX_CONFIG"),
 	)
 }
 

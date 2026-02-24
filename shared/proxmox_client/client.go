@@ -3,8 +3,8 @@ package proxmox_client
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net"
+	"strings"
 
 	"github.com/Telmate/proxmox-api-go/proxmox"
 )
@@ -96,25 +96,10 @@ func (p *ProxmoxAPI) GetQEMUVMs(ctx context.Context, node string) ([]QEMUVM, err
 				vm.MaxDisk = int64(f)
 			}
 		}
-
-		// --- Ключевое изменение: получаем полную конфигурацию ВМ для извлечения тегов ---
-		vmr := proxmox.NewVmRef(proxmox.GuestID(vm.VMID))
-		vmr.SetNode(node)
-		vmr.SetVmType(proxmox.GuestQemu)
-
-		// Получаем конфигурацию ВМ. Она вернет структуру proxmox.ConfigQemu.
-		config, err := proxmox.NewConfigQemuFromApi(ctx, vmr, p.Client)
-		if err != nil {
-			vms = append(vms, vm)
-			continue
-		}
-		vm.Tags = []string{}
-		if config.Tags == nil {
-			vms = append(vms, vm)
-			continue
-		}
-		for _, tag := range vm.Tags {
-			vm.Tags = append(vm.Tags, tag)
+		if v, ok := vmMap["tags"]; ok {
+			if f, ok := v.(string); ok {
+				vm.Tags = strings.Split(f, ";")
+			}
 		}
 		vms = append(vms, vm)
 	}
@@ -160,11 +145,36 @@ func (p *ProxmoxAPI) GetVMNetworkInterfaces(ctx context.Context, node string, vm
 	return ifaces, nil
 }
 
+func parseTokenString(s string) (token proxmox.ApiTokenID, secret proxmox.ApiTokenSecret, err error) {
+	// 1. Делим по '@'
+	beforeAt, afterAt, found := strings.Cut(s, "@")
+	if !found {
+		return token, secret, errors.New("missing '@' separator")
+	}
+	token.User.Name = beforeAt
+
+	// 2. Делим оставшуюся часть по '!'
+	beforeBang, afterBang, found := strings.Cut(afterAt, "!")
+	if !found {
+		return token, secret, errors.New("missing '!' separator")
+	}
+	token.User.Realm = beforeBang
+
+	// 3. Делим оставшуюся часть по '='
+	name, secretValue, found := strings.Cut(afterBang, "=")
+	if !found {
+		return token, secret, errors.New("missing '=' separator")
+	}
+	token.TokenName = proxmox.ApiTokenName(name)
+	secret = proxmox.ApiTokenSecret(secretValue)
+	return token, secret, nil
+}
+
 func NewProxmoxAPI(debug bool, url string, token string) (*ProxmoxAPI, error) {
 	client, err := proxmox.NewClient(
 		url,
 		nil,
-		fmt.Sprintf("Authorization,%s", token),
+		"",
 		nil,
 		"",
 		0,
@@ -173,5 +183,10 @@ func NewProxmoxAPI(debug bool, url string, token string) (*ProxmoxAPI, error) {
 	if err != nil {
 		return nil, err
 	}
+	tokenAPI, secretAPI, err := parseTokenString(token)
+	if err != nil {
+		return nil, err
+	}
+	client.SetAPIToken(tokenAPI, secretAPI)
 	return &ProxmoxAPI{client}, nil
 }

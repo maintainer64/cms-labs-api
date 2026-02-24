@@ -1,37 +1,53 @@
-import { CamelCasedPropertiesDeep } from 'type-fest';
-import { UsecasesTargetItem, UsecasesTargetRelationItem } from '@/helpers/api';
+import {CamelCasedPropertiesDeep} from 'type-fest';
+import {UsecasesTargetItem, UsecasesTargetRelationItem} from '@/helpers/api';
 
 export type TargetNodeType = CamelCasedPropertiesDeep<UsecasesTargetItem>;
 export type TargetRelationType = CamelCasedPropertiesDeep<UsecasesTargetRelationItem>;
 
+export interface TargetMapFilter {
+    tags?: string[];
+    layers?: string[];
+    mine?: boolean;
+    search?: string;
+}
+
+function createTagFilter(filterTags: string[]) {
+    return (target: TargetNodeType) => {
+        const targetTags = target?.taget?.tags ?? [];
+        const targetInternalTags = target?.taget?.internalTags ?? [];
+        const hasIntersectionWithTags = filterTags.some(tag => targetTags.includes(tag));
+        const hasIntersectionWithInternal = filterTags.some(tag => targetInternalTags.includes(tag));
+        return hasIntersectionWithTags || hasIntersectionWithInternal;
+    };
+}
+
 export const filterTargets = (
-  targets: TargetNodeType[],
-  searchQuery: string = '',
-  filter: string = 'all'
+    targets: TargetNodeType[],
+    {tags, layers, mine, search}: TargetMapFilter,
 ): TargetNodeType[] => {
-  if (!targets) return [];
+    if (!targets) return [];
+    const searchQuery = search || '';
 
-  // Фильтрация по поисковому запросу
-  const searchFiltered = searchQuery.trim()
-    ? targets.filter((target) =>
-        [
-          target.taget.name?.toLowerCase(),
-          target.taget.id?.toLowerCase(),
-          target.taget.description?.toLowerCase() || ''
-        ].some((field) => field?.includes(searchQuery.toLowerCase()))
-      )
-    : targets;
+    // Фильтрация по поисковому запросу
+    let searchFiltered = searchQuery.trim()
+        ? targets.filter((target) =>
+            [
+                target.taget.name?.toLowerCase(),
+                target.taget.id?.toLowerCase(),
+                target.taget.description?.toLowerCase() || ''
+            ].some((field) => field?.includes(searchQuery?.toLowerCase()))
+        )
+        : targets;
 
-  if (filter === 'my') {
-    return searchFiltered.filter((target) => target?.isMine);
-  }
-  if (filter === 'all') {
-    return searchFiltered;
-  }
+    if (mine) {
+        searchFiltered = searchFiltered.filter((target) => target?.isMine);
+    }
+    if (layers?.length) {
+        searchFiltered = searchFiltered.filter(createTagFilter(layers));
+    }
 
-  return searchFiltered.filter(
-    (target) =>
-      (target?.taget?.tags as any)?.['tags'].include(filter) ||
-      (target?.taget?.internalTags as any)?.['tags']?.include(filter)
-  );
+    if (tags?.length) {
+        searchFiltered = searchFiltered.filter(createTagFilter(tags));
+    }
+    return searchFiltered
 };

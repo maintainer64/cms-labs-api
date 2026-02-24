@@ -33,18 +33,6 @@ type IPAddress struct {
 	IPAddress     string
 }
 
-// managedLinkTypes определяет типы ссылок, управляемых процессом синхронизации.
-var managedLinkTypes = map[string]bool{
-	"cpu":  true,
-	"ram":  true,
-	"disk": true,
-	"ip":   true,
-}
-
-func IsManagedLinkType(typ string) bool {
-	return managedLinkTypes[typ]
-}
-
 // ProxmoxAPI адаптирует *proxmox.Client к интерфейсу ProxmoxClient.
 type ProxmoxAPI struct {
 	*proxmox.Client
