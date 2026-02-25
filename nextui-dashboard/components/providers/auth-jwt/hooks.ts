@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import { UserProfileContext } from './context';
-import { auth_SwaggerSSOTokenPublicData } from '@/helpers/api';
+import { AuthSwaggerSSOTokenPublicData } from '@/helpers/api';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
-export const useUserProfile = (): auth_SwaggerSSOTokenPublicData => {
+export const useUserProfile = (): CamelCasedPropertiesDeep<AuthSwaggerSSOTokenPublicData> => {
   const context = useContext(UserProfileContext);
   if (!context || !context.profile) {
     console.error('useUserProfile must be used within a UserProfileProvider');

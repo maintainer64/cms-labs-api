@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useDocs } from '@/helpers/queries/sso/docs';
 import { Loading } from '@/components/scroll/loader';
+import { useQueryStaticDocsGet } from '@/helpers/queries/docs/static-docs';
 
 interface Props {
   path: string;
@@ -10,7 +10,7 @@ interface Props {
 
 const MarkdownViewer = ({ path, variables = {} }: Props) => {
   // Функция замены переменных в контенте
-  const queryUseDocs = useDocs({ path });
+  const queryUseDocs = useQueryStaticDocsGet({ path });
   const replaceVariables = (text: string) => {
     let result = text;
     for (const [key, value] of Object.entries(variables)) {
@@ -26,7 +26,7 @@ const MarkdownViewer = ({ path, variables = {} }: Props) => {
   prose-h1:font-bold prose-h1:text-xl
   prose-a:text-blue-600 prose-p:text-justify prose-img:rounded-xl prose-lg max-w-none'
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{replaceVariables(queryUseDocs.data)}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{replaceVariables(queryUseDocs.data ?? '')}</ReactMarkdown>
     </div>
   );
 };

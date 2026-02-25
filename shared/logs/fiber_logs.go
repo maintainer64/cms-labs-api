@@ -4,15 +4,17 @@ package logs
 import (
 	"github.com/gofiber/contrib/fiberzerolog"
 	fiber "github.com/gofiber/fiber/v2"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 func NewFiberZerologLogger() fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
+		c := &jsonrpc.Ctx{FiberCtx: ctx}
 		logger := NewZeroLogger(NewZeroLoggerConf(c))
 		return fiberzerolog.New(
 			fiberzerolog.Config{
 				Logger: logger,
 			},
-		)(c)
+		)(c.FiberCtx)
 	}
 }

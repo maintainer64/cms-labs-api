@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type PNETServerEditUC struct {
@@ -24,11 +23,23 @@ type PNETServerEditInputDTO struct {
 	Roles                []uint `json:"roles"`
 }
 
+type PNETServerEditRequest struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                 `json:"method" default:"server.upsert" required:"true"`
+	Params  PNETServerEditInputDTO `json:"params,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type PNETServerEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type PNETServerEditResponse = response.Response[PNETServerEditOutputDTO]
+type PNETServerEditResponse struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  PNETServerEditOutputDTO `json:"result,omitempty"`
+	Error   interface{}             `json:"error,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *PNETServerEditUC) Execute(dto PNETServerEditInputDTO) (PNETServerEditOutputDTO, error) {
 	entity := &models.PNETServer{}

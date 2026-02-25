@@ -1,8 +1,8 @@
 import React from 'react';
-import { useLTIAttemptList } from '@/helpers/queries/lti-attempt/get';
 import { LTIAttemptTableWrapper } from '@/components/pages/lti-attempts/table/table';
 import useLanguageBrowser from '@/helpers/locale';
 import { ContentCardWrapperMain } from '@/components/home/card-wrapper';
+import { useQueryLtiAttemptList } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-list';
 
 export const CardLastAttempt = () => {
   const {
@@ -10,8 +10,8 @@ export const CardLastAttempt = () => {
       Tables: { LTIAttemptsTable }
     }
   } = useLanguageBrowser();
-  const response = useLTIAttemptList({ limit: 10 });
-  const items = response.data?.result?.model || [];
+  const response = useQueryLtiAttemptList({ limit: 10 });
+  const items = response.data?.model || [];
   return (
     <ContentCardWrapperMain title={LTIAttemptsTable.TitleWidgetHome} wrapChildren={false}>
       <LTIAttemptTableWrapper isLoading={response.isLoading} rows={items} />

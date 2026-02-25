@@ -2,50 +2,51 @@
 import React from 'react';
 import { addToast, Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
-import { models_LTIAttempt } from '@/helpers/api';
+import { ModelsLTIAttempt } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
-import { useLTIAttemptById } from '@/helpers/queries/lti-attempt/get';
-import { useLTIAttemptDelete } from '@/helpers/queries/lti-attempt/delete';
-import { useLTIAttemptUpsert } from '@/helpers/queries/lti-attempt/upsert';
-import { useUserByID } from '@/helpers/queries/users/get';
-import { useLTIRoutingByID } from '@/helpers/queries/lti-routing/get';
 import { ServerInput } from '@/components/pages/lti-attempts/edit/autoCompleteServer';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { useQueryLtiAttemptGet } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-get';
+import { useQueryUserGet } from '@/helpers/queries/user/use-query-user-get';
+import { useQueryLtiRoutingGet } from '@/helpers/queries/lti_routing/use-query-lti-routing-get';
+import { useMutationLtiAttemptUpdate } from '@/helpers/queries/lti_attempt/use-mutation-lti-attempt-update';
+import { useMutationLtiAttemptDelete } from '@/helpers/queries/lti_attempt/use-mutation-lti-attempt-delete';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_LTIAttempt = {
-  attempt_id: '',
-  created_at: '',
-  expired_at: '',
-  lti_routing_id: 0,
-  pnet_server_id: 0,
-  room_id: 0,
-  user_id: 0,
-  updated_at: ''
+const defaultValues: CamelCasedPropertiesDeep<ModelsLTIAttempt> = {
+  attemptId: '',
+  createdAt: '',
+  expiredAt: '',
+  ltiRoutingId: 0,
+  pnetServerId: 0,
+  roomId: 0,
+  userId: 0,
+  updatedAt: ''
 };
 
 export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
   const {
-    locale: { LTIFormAttempt, Forms, Sidebar }
+    locale: { AuthProviderAttempt, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const response = useLTIAttemptById(id);
-  const initialValues = response.data?.result?.model ?? defaultValues;
-  const responseUser = useUserByID(initialValues.user_id);
-  const user = responseUser.data?.result?.model;
-  const responseRoute = useLTIRoutingByID(initialValues.lti_routing_id);
-  const route = responseRoute.data?.result?.model;
+  const response = useQueryLtiAttemptGet({ id });
+  const initialValues = response.data?.model ?? defaultValues;
+  const responseUser = useQueryUserGet({ id: initialValues.userId });
+  const user = responseUser.data?.model;
+  const responseRoute = useQueryLtiRoutingGet({ id: initialValues.ltiRoutingId });
+  const route = responseRoute.data?.model;
   const isLoading = response.isLoading || responseUser.isLoading || responseRoute.isLoading;
-  const { mutate } = useLTIAttemptUpsert({
-    onSuccess: (data, { formikHelpers }) => {
-      navigate(RoutesLocation.ltiAttemptEdit(data.result?.id?.toString() || ''), { replace: true });
+  const { mutate } = useMutationLtiAttemptUpdate({
+    onSuccess: (data) => {
+      navigate(RoutesLocation.ltiAttemptEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -59,9 +60,9 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const onDeleteMutation = useLTIAttemptDelete({
+  const onDeleteMutation = useMutationLtiAttemptDelete({
     onSuccess: () => {
-      navigate(RoutesLocation.ltiAttemptUser(initialValues.user_id?.toString()), { replace: true });
+      navigate(RoutesLocation.ltiAttemptUser(initialValues.userId?.toString()), { replace: true });
       addToast({
         title: Forms.DeleteSuccess,
         color: 'success'
@@ -76,8 +77,8 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
     }
   });
   const ltiAttemptDeletePopup = useConfirmPopup({
-    title: LTIFormAttempt.DeletePopup.Title,
-    description: LTIFormAttempt.DeletePopup.Description,
+    title: AuthProviderAttempt.DeletePopup.Title,
+    description: AuthProviderAttempt.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
   if (isLoading) return <Loading size='md' />;
@@ -86,7 +87,11 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
       initialValues={initialValues}
       validationSchema={undefined}
       onSubmit={(values, formikHelpers) => {
-        mutate({ values, formikHelpers });
+        mutate({
+          expiredAt: dayjs(values.expiredAt).format(),
+          id: values.id,
+          pnetServerId: parseInt(values.pnetServerId?.toString() || '')
+        });
       }}
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
@@ -95,79 +100,79 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
           <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldID}
-              value={(initialValues.attempt_id ?? '').toString()}
+              label={AuthProviderAttempt.FieldID}
+              value={(initialValues.attemptId ?? '').toString()}
               isReadOnly
             />
             <ServerInput
               variant='bordered'
-              label={LTIFormAttempt.FieldPNETServer}
-              value={(values.pnet_server_id ?? '').toString()}
-              onChange={handleChange('pnet_server_id')}
+              label={AuthProviderAttempt.FieldPNETServer}
+              value={(values.pnetServerId ?? '').toString()}
+              onChange={handleChange('pnetServerId')}
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldExpiredAt}
+              label={AuthProviderAttempt.FieldExpiredAt}
               type='datetime-local'
-              value={dayjs(values.expired_at ?? '').format('YYYY-MM-DDTHH:mm')}
-              onChange={handleChange('expired_at')}
+              value={dayjs(values.expiredAt ?? '').format('YYYY-MM-DDTHH:mm')}
+              onChange={handleChange('expiredAt')}
             />
-            {initialValues.room_id && (
+            {initialValues.roomId && (
               <Input
                 variant='bordered'
-                label={LTIFormAttempt.FieldRoomNumber}
+                label={AuthProviderAttempt.FieldRoomNumber}
                 type='number'
-                value={(initialValues.room_id ?? 0).toString()}
+                value={(initialValues.roomId ?? 0).toString()}
                 isReadOnly
               />
             )}
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUserId}
+              label={AuthProviderAttempt.FieldUserId}
               type='number'
-              value={(initialValues.user_id ?? 0).toString()}
+              value={(initialValues.userId ?? 0).toString()}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUserName}
+              label={AuthProviderAttempt.FieldUserName}
               type='text'
               value={user?.name ?? ''}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUserEmail}
+              label={AuthProviderAttempt.FieldUserEmail}
               type='text'
               value={user?.email ?? ''}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldLTIRoutingID}
+              label={AuthProviderAttempt.FieldLTIRoutingID}
               type='number'
-              value={(initialValues.lti_routing_id ?? 0).toString()}
+              value={(initialValues.ltiRoutingId ?? 0).toString()}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldLTIRoutingName}
+              label={AuthProviderAttempt.FieldLTIRoutingName}
               type='text'
               value={route?.name ?? ''}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldCreatedAt}
+              label={AuthProviderAttempt.FieldCreatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.created_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={LTIFormAttempt.FieldUpdatedAt}
+              label={AuthProviderAttempt.FieldUpdatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.updated_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>

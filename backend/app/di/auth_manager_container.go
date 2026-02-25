@@ -1,6 +1,7 @@
 package di
 
 import (
+	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/backend/platform/database"
 	"gitlab.com/a10869/api-modules/shared/logs"
@@ -51,4 +52,21 @@ func (di *DIContainer) SSOOpenidConfigurationUC() *auth.SSOOpenidConfiguration {
 
 func (di *DIContainer) SSOJwksUC() *auth.SSOJwksUC {
 	return &auth.SSOJwksUC{}
+}
+
+func (di *DIContainer) ServiceAuthorizeUC() *auth.ServiceAuthorizeUC {
+	return &auth.ServiceAuthorizeUC{
+		PNETServerQueries: di.Queries.PNETServerQueries,
+		Logger:            logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.ServiceAuthorizeUC")),
+	}
+}
+
+func (di *DIContainer) UserLoginUC() *usecases.UserLoginUC {
+	return &usecases.UserLoginUC{
+		TokenManager:        di.AuthTokenManager(),
+		AuthProviderQueries: di.Queries.AuthProviderQueries,
+		UserQueries:         di.Queries.UserQueries,
+		IssId:               "",
+		Logger:              logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.UserLoginUC")),
+	}
 }

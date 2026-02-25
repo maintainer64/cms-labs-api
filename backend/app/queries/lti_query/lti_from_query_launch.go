@@ -15,17 +15,17 @@ import (
 )
 
 // FindRegistrationByIssuerAndClientID retrieves a registration from the SQL database.
-func (q *LTIFormQueries) FindRegistrationByIssuerAndClientID(issuer, clientID string) (Registration, error) {
+func (q *AuthProviderQueries) FindRegistrationByIssuerAndClientID(issuer, clientID string) (Registration, error) {
 	q.Logger.Info().Msg(fmt.Sprintf(
-		"LTIFormQueries: find registration by issuer: %+v and clientID: %+v",
+		"AuthProviderQueries: find registration by issuer: %+v and clientID: %+v",
 		issuer,
 		clientID,
 	))
 	if issuer == "" {
 		return Registration{}, errors.New("received empty issuer argument")
 	}
-	entityDB := models.LTIForm{}
-	query := q.DB.Where("base_uri = ?", issuer)
+	entityDB := models.AuthProvider{}
+	query := q.DB.Where("base_uri = ?", issuer).Where("type = ?", models.AuthProviderTypeLTI)
 	if clientID != "" {
 		// Use the client ID to disambiguate multiple registrations for an issuer.  The (optional) client ID
 		// parameter can disambiguate between multiple registrations from a single issuer.
@@ -63,9 +63,9 @@ func (q *LTIFormQueries) FindRegistrationByIssuerAndClientID(issuer, clientID st
 
 // FindDeployment looks up and returns either a Deployment by the issuer and deployment ID or the datastore error
 // ErrDeploymentNotFound.
-func (q *LTIFormQueries) FindDeployment(issuer, deploymentID string) (Deployment, error) {
+func (q *AuthProviderQueries) FindDeployment(issuer, deploymentID string) (Deployment, error) {
 	q.Logger.Info().Msg(fmt.Sprintf(
-		"LTIFormQueries: find deployment by issuer: %+v and deploymentID: %+v",
+		"AuthProviderQueries: find deployment by issuer: %+v and deploymentID: %+v",
 		issuer,
 		deploymentID,
 	))
@@ -75,8 +75,14 @@ func (q *LTIFormQueries) FindDeployment(issuer, deploymentID string) (Deployment
 	if err := ValidateDeploymentID(deploymentID); err != nil {
 		return Deployment{}, fmt.Errorf("received invalid deployment ID: %v", err)
 	}
-	entityDB := models.LTIForm{}
-	result := q.DB.Where("base_uri = ?", issuer).Where("lti_deployment_id = ?", deploymentID).Find(&entityDB)
+	entityDB := models.AuthProvider{}
+	result := q.DB.Where(
+		"base_uri = ?", issuer,
+	).Where(
+		"lti_deployment_id = ?", deploymentID,
+	).Where(
+		"type = ?", models.AuthProviderTypeLTI,
+	).Find(&entityDB)
 	if result.Error != nil {
 		return Deployment{}, ErrRegistrationNotFound
 	}

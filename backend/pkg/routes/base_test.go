@@ -28,12 +28,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type FiberTestHTTP struct {
+type TestHTTP struct {
 	App *fiber.App
 	DB  *gorm.DB
 }
 
-type FiberTestHttpRequest struct {
+type TestHttpRequest struct {
 	Method        string
 	Route         string
 	Body          io.Reader
@@ -41,8 +41,8 @@ type FiberTestHttpRequest struct {
 	ContentType   string
 }
 
-func (f *FiberTestHTTP) Request(
-	r *FiberTestHttpRequest,
+func (f *TestHTTP) Request(
+	r *TestHttpRequest,
 ) (int, string) {
 	req := httptest.NewRequest(r.Method, r.Route, r.Body)
 	if r.ContentType == "" {
@@ -60,7 +60,38 @@ func (f *FiberTestHTTP) Request(
 	return resp.StatusCode, responseString
 }
 
-func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint) string {
+type TestRpcRequest struct {
+	Method        string
+	Params        interface{}
+	Authorization string
+	ID            string
+}
+
+func (f *TestHTTP) Rpc(
+	r *TestRpcRequest,
+) (int, string) {
+	if r.ID == "" {
+		r.ID = uuid.New().String()
+	}
+	return f.Request(
+		&TestHttpRequest{
+			Method: "POST",
+			Route:  "/api/v1/rpc",
+			Body: FiberRequestPayload(
+				fiber.Map{
+					"jsonrpc": "2.0",
+					"method":  r.Method,
+					"params":  r.Params,
+					"id":      r.ID,
+				},
+			),
+			Authorization: r.Authorization,
+			ContentType:   "application/json",
+		},
+	)
+}
+
+func (f *TestHTTP) AuthorizationUser(userID uint, serverID *uint) string {
 	roleAdmin := models.Role{}
 	roleAdmin.Code = "admin"
 	roleAdmin.Name = "Admin"
@@ -100,7 +131,7 @@ func (f *FiberTestHTTP) AuthorizationUser(userID uint, serverID uint) string {
 	return "Bearer " + token.AccessToken
 }
 
-func (f *FiberTestHTTP) AuthorizationServiceBasic() (string, string) {
+func (f *TestHTTP) AuthorizationServiceBasic() (string, string) {
 	entity := models.PNETServer{}
 	entity.Type = models.ServerTypeOpenID
 	entity.Name = uuid.New().String() + "_server"
@@ -114,7 +145,18 @@ func (f *FiberTestHTTP) AuthorizationServiceBasic() (string, string) {
 	), entity.ClientID
 }
 
-func NewFiberTestHTTP() *FiberTestHTTP {
+func (f *TestHTTP) Close() error {
+	if f.DB != nil {
+		sqlDB, err := f.DB.DB()
+		if err != nil {
+			return err
+		}
+		return sqlDB.Close()
+	}
+	return nil
+}
+
+func NewTestHTTP() *TestHTTP {
 	// Load .env.test file from the root folder.
 	_ = godotenv.Load("../../.env")
 	if err := godotenv.Load("../../.env.test"); err != nil {
@@ -135,18 +177,18 @@ func NewFiberTestHTTP() *FiberTestHTTP {
 	middleware.FiberMiddleware(app)
 	FiberRoutes(app)
 	db, _ := database.MysqlConnection(logs.NewZeroLogger(&logs.ZeroLoggerConf{}))
-	return &FiberTestHTTP{
+	return &TestHTTP{
 		App: app,
 		DB:  db,
 	}
 }
 
-func FiberJSON(data any) string {
+func FiberJSON(data interface{}) string {
 	jsonByte, _ := json.Marshal(data)
 	return string(jsonByte)
 }
 
-func FiberRequestPayload(data any) io.Reader {
+func FiberRequestPayload(data interface{}) io.Reader {
 	return strings.NewReader(fmt.Sprint(FiberJSON(data)))
 }
 

@@ -6,9 +6,8 @@ import (
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 type SSOIntrospectInputDTO struct {
@@ -49,10 +48,10 @@ func (u *SSOIntrospectUC) ByRefresh(inputDTO SSOIntrospectInputDTO) (*SSOTokenIn
 	}
 	introspect.Sub = fmt.Sprintf("%v", attempt.UserID)
 	introspect.Iat = attempt.CreatedAt.Unix()
-	if attempt.ServerID == 0 {
+	if attempt.ServerID == nil {
 		return introspect, nil
 	}
-	server, err := u.PNETServerQueries.Get(attempt.ServerID)
+	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
@@ -71,29 +70,29 @@ func (u *SSOIntrospectUC) ByAccess(inputDTO SSOIntrospectInputDTO) (*SSOTokenInt
 	introspect.Scope = []string{"default"}
 	token, err := verifyToken(inputDTO.Token)
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
+		return nil, err
 	}
 	if !token.Valid {
-		return nil, utils.FiberValidationException{Status: fiber.StatusBadRequest, Exception: fmt.Errorf("invalid token")}
+		return nil, jsonrpc.NewRpcError("invalid_token", "token is invalid")
 	}
 	tokenData, err := cms_client.SSODecodeToken(token)
 	if err != nil {
-		return nil, utils.FiberValidationException{Status: fiber.StatusUnauthorized, Exception: err}
+		return nil, jsonrpc.NewRpcError("invalid_token", "token is invalid")
 	}
 	userID := tokenData.UserID()
 	introspect.ClientID = tokenData.Aud
 	introspect.Sub = tokenData.Sub
 	introspect.Exp = tokenData.Exp
-	attempt, err := u.TokenAttemptQueries.GetByParams(userID, tokenData.ServerID)
+	attempt, err := u.TokenAttemptQueries.GetByParams(&userID, tokenData.ServerID, nil)
 	if err != nil {
 		introspect.Active = false
 		return introspect, nil
 	}
 	introspect.Iat = tokenData.Iat
-	if attempt.ServerID == 0 {
+	if attempt.ServerID == nil {
 		return introspect, nil
 	}
-	server, err := u.PNETServerQueries.Get(attempt.ServerID)
+	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return introspect, nil
 	}

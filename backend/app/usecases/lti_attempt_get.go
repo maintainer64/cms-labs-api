@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIAttemptGetUC struct {
@@ -14,11 +13,23 @@ type LTIAttemptGetInputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
+type LTIAttemptGetRequest struct {
+	JSONRPC string                `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string                `json:"method" default:"lti_attempt.get" validate:"required"`
+	Params  LTIAttemptGetInputDTO `json:"params,omitempty"`
+	ID      string                `json:"id,omitempty" default:"1" validate:"required"`
+}
+
 type LTIAttemptGetOutputDTO struct {
 	Model models.LTIAttempt `json:"model" required:"true"`
 }
 
-type LTIAttemptGetResponse = response.Response[LTIAttemptGetOutputDTO]
+type LTIAttemptGetResponse struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" validate:"required"`
+	Result  LTIAttemptGetOutputDTO `json:"result,omitempty"`
+	Error   interface{}            `json:"error,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" validate:"required"`
+}
 
 func (u *LTIAttemptGetUC) Execute(dto LTIAttemptGetInputDTO) (LTIAttemptGetOutputDTO, error) {
 	form, err := u.LTIAttemptQueries.Get(dto.ID)

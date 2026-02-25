@@ -2,21 +2,22 @@
 import React from 'react';
 import { addToast, Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
-import { auth_UserPasswordChangeInputDTO } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
-import { useUserPasswordChange } from '@/helpers/queries/users/passwordChange';
+import { useMutationUserPasswordChange } from '@/helpers/queries/user/use-mutation-user-password-change';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { AuthUserPasswordChangeRequest } from '@/helpers/api';
 
-const defaultValues: auth_UserPasswordChangeInputDTO = {
-  old_password: '',
-  new_password: '',
-  again_password: ''
+const defaultValues: CamelCasedPropertiesDeep<AuthUserPasswordChangeRequest['params']> = {
+  oldPassword: '',
+  newPassword: '',
+  againPassword: ''
 };
 
 export const ProfilePasswordChangeForm = () => {
   const {
     locale: { UserFormPasswordChange, Forms, Sidebar }
   } = useLanguageBrowser();
-  const { mutate } = useUserPasswordChange({
+  const { mutate } = useMutationUserPasswordChange({
     onSuccess: (data, { formikHelpers }) => {
       formikHelpers.resetForm();
       addToast({
@@ -38,6 +39,7 @@ export const ProfilePasswordChangeForm = () => {
       initialValues={defaultValues}
       validationSchema={undefined}
       onSubmit={(values, formikHelpers) => {
+        // @ts-ignore
         mutate({ values, formikHelpers });
       }}
     >
@@ -49,24 +51,24 @@ export const ProfilePasswordChangeForm = () => {
               variant='bordered'
               label={UserFormPasswordChange.FieldOldPassword}
               type='password'
-              value={values.old_password ?? ''}
-              onChange={handleChange('old_password')}
+              value={values.oldPassword ?? ''}
+              onChange={handleChange('oldPassword')}
             />
             <Input
               autoComplete='off'
               variant='bordered'
               label={UserFormPasswordChange.FieldNewPassword}
               type='password'
-              value={values.new_password ?? ''}
-              onChange={handleChange('new_password')}
+              value={values.newPassword ?? ''}
+              onChange={handleChange('newPassword')}
             />
             <Input
               autoComplete='off'
               variant='bordered'
               label={UserFormPasswordChange.FieldAgainPassword}
               type='password'
-              value={values.again_password ?? ''}
-              onChange={handleChange('again_password')}
+              value={values.againPassword ?? ''}
+              onChange={handleChange('againPassword')}
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>
               {Sidebar.Save}

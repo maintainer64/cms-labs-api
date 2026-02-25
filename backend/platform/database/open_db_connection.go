@@ -14,7 +14,7 @@ import (
 // Queries struct for collect all app queries.
 type Queries struct {
 	*gorm.DB
-	*lti_query.LTIFormQueries
+	*lti_query.AuthProviderQueries
 	*lti_query.LTINonceTokenQueries
 	*lti_query.LTIAccessTokenQueries
 	*lti_query.LTILaunchDataQueries
@@ -29,6 +29,10 @@ type Queries struct {
 	*queries.TokenAttemptQueries
 	*queries.RoleQueries
 	*queries.CurlRequestQueries
+	*queries.TargetUserQueries
+	*queries.TargetQueries
+	*queries.TargetAddonQueries
+	*queries.TargetRelationQueries
 }
 
 // OpenDBConnection func for opening database connection.
@@ -42,7 +46,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 	return &Queries{
 		// Set queries from models:
 		DB:                    db,
-		LTIFormQueries:        &lti_query.LTIFormQueries{DB: db, Logger: l},
+		AuthProviderQueries:   &lti_query.AuthProviderQueries{DB: db, Logger: l},
 		LTINonceTokenQueries:  &lti_query.LTINonceTokenQueries{DB: db, Logger: l},
 		LTIAccessTokenQueries: &lti_query.LTIAccessTokenQueries{DB: db, Logger: l},
 		LTILaunchDataQueries:  &lti_query.LTILaunchDataQueries{DB: db, Logger: l},
@@ -57,6 +61,10 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		TokenAttemptQueries:   &queries.TokenAttemptQueries{DB: db, Logger: l},
 		RoleQueries:           &queries.RoleQueries{DB: db, Logger: l},
 		CurlRequestQueries:    &queries.CurlRequestQueries{DB: db, Logger: l},
+		TargetUserQueries:     &queries.TargetUserQueries{DB: db, Logger: l},
+		TargetQueries:         &queries.TargetQueries{DB: db, Logger: l},
+		TargetAddonQueries:    &queries.TargetAddonQueries{DB: db, Logger: l},
+		TargetRelationQueries: &queries.TargetRelationQueries{DB: db, Logger: l},
 	}, nil
 }
 

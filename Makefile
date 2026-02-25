@@ -1,6 +1,6 @@
 .PHONY: clean security pre_commit test generate dev
 
-GO_PACKAGES = ./backend/... ./gen/... ./shared/... ./pnetlabaddon/... ./clabgate/...
+GO_PACKAGES = ./backend/... ./shared/... ./pnetlabaddon/... ./clabgate/...
 
 clean:
 	rm -rf ./build
@@ -15,7 +15,6 @@ pre_commit: clean
 
 generate:
 	make -C backend generate
-	make -C gen generate
 	make -C clabgate generate
 	make -C pnetlabaddon generate
 	make -C shared generate

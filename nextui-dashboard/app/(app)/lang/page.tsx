@@ -1,5 +1,5 @@
 import React from 'react';
-import LanguageSwitcher from '@/components/pages/lti-forms/languages/switcher';
+import LanguageSwitcher from '@/components/pages/auth-providers/languages/switcher';
 
 const LanguagePage = () => {
   return <LanguageSwitcher />;

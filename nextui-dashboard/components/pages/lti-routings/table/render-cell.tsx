@@ -1,11 +1,12 @@
 import React from 'react';
-import { EditIcon } from '../../../icons/table/edit-icon';
-import { models_LTIRoutingListItem } from '@/helpers/api';
+import { ModelsLTIRoutingListItem } from '@/helpers/api';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { SquarePen } from 'lucide-react';
 
 interface Props {
-  item: models_LTIRoutingListItem;
+  item: CamelCasedPropertiesDeep<ModelsLTIRoutingListItem>;
   columnKey: string | React.Key;
 }
 
@@ -32,7 +33,7 @@ export const RenderCell = ({ item, columnKey }: Props) => {
         <div className='flex items-center gap-4 '>
           <div>
             <Link to={RoutesLocation.ltiRoutingEdit(item.id?.toString())}>
-              <EditIcon size={20} fill='#979797' />
+              <SquarePen className='w-4 p-4 stroke-[#979797]' />
             </Link>
           </div>
         </div>

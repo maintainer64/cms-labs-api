@@ -1,7 +1,10 @@
 const en = {
   Login: {
     PageName: 'Login',
+    TabSSO: 'Moodle',
+    TabInternal: 'Internal',
     FieldEmail: 'Email',
+    FieldEmailDescription: 'Enter your business email address',
     FieldPassword: 'Password',
     Submit: 'Login',
     ErrorFieldEmailNotEmpty: 'This field must be an email',
@@ -16,7 +19,7 @@ const en = {
     ErrorPageTitle: 'Authorization Error',
     ErrorPageDescription: 'Try to go to the login page or log in through the course',
     MainTitle: 'CMS LABS',
-    MainDescription: '[Admin] Control Management System labs by Hero UI',
+    MainDescription: '[Admin] Control Management System labs',
     MainChangeLanguage: 'Сменить язык'
   },
   CompaniesDropdown: {
@@ -29,9 +32,11 @@ const en = {
     Users: 'Users',
     Roles: 'Roles',
     Servers: 'Servers',
+    Targets: 'Map',
+    Collapse: 'Collapse',
     CurlRequests: 'API',
     ServiceCards: 'Services',
-    LTIIntegrations: 'LTIs',
+    AuthProviders: 'Auth providers',
     LTIRouting: 'LTI Routes',
     LTIAttempts: 'LTI Attempts',
     APIRequests: 'API Requests',
@@ -55,9 +60,9 @@ const en = {
   },
   Tables: {
     UsersTable: {
-      Title: 'All users',
-      TitleWidgetHome: 'Latest users',
-      SearchBar: 'Search users',
+      Title: 'All user',
+      TitleWidgetHome: 'Latest user',
+      SearchBar: 'Search user',
       ButtonAdd: 'Add user',
       ButtonEdit: 'Edit user',
       Columns: [
@@ -67,10 +72,10 @@ const en = {
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
-    LTIFormsTable: {
-      Title: 'LTI Integration',
+    AuthProvidersTable: {
+      Title: 'Auth providers',
       ButtonAdd: 'Create',
-      SearchBar: 'Search integrations',
+      SearchBar: 'Search providers',
       ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
@@ -182,14 +187,19 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     FieldRelationAttempts: 'Relation attempts'
   },
-  LTIForm: {
+  AuthProvider: {
     FieldID: 'ID',
     FieldName: 'Name',
-    FieldBaseURI: 'Base URL LTI',
+    FieldType: 'Тип',
+    FieldTypeLTI: 'LTI',
+    FieldTypeLTIDescription: 'Connect to course',
+    FieldTypeLDAP: 'LDAP',
+    FieldTypeLDAPDescription: 'Connect to lightweight directory',
+    FieldBaseURI: 'Base URL',
     ButtonBaseURI: 'Settings URL',
     ButtonBaseURIMoodle: 'Moodle',
     ButtonBaseURIMoodleDescription: 'Setup URI on base URL Moodle service',
-    DescriptionBaseURI: 'URL base service provider LTI',
+    DescriptionBaseURI: 'URL base service provider',
     FieldLTIAuthLoginUri: 'URL authorization LTI',
     DescriptionLTIAuthLoginUri: 'Address suffix /mod/lti/auth.php',
     FieldLTIAuthTokenUri: 'URL token LTI',
@@ -199,6 +209,7 @@ const en = {
     FieldLTIClientID: 'ClientID LTI',
     FieldLTIDeployment: 'DeploymentID LTI',
     FieldKeySetURI: 'URL certificates LTI',
+    FieldDN: 'DN',
     DescriptionKeySetURI: 'Address suffix /mod/lti/certs.php',
     FieldSSOURL: 'SSO LTI URL',
     DescriptionSSOURL: 'Link to the course element in the LTI tool',
@@ -248,7 +259,7 @@ const en = {
       Description: 'It will be impossible to call the API when deleting it'
     }
   },
-  LTIFormAttempt: {
+  AuthProviderAttempt: {
     FieldID: 'ID attempt',
     FieldRoomNumber: 'Room number',
     FieldUserId: 'User id',
@@ -261,7 +272,7 @@ const en = {
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
-      Title: 'Deleting an LTI-Attempt entity',
+      Title: 'Deleting an Auth provider entity',
       Description:
         'When you delete it, the other systems will not be able to interact with the user. It is safe if the user has completed the work'
     }
@@ -279,7 +290,7 @@ const en = {
     FieldUnitRate: 'Percentage of distribution',
     FieldMinutesForDisconnect: 'Minutes for auto-shutdown',
     DescriptionMinutesForDisconnect: 'Used to disable user allocation',
-    FieldMaxCountUsers: 'Max count users for auto-shutdown',
+    FieldMaxCountUsers: 'Max count user for auto-shutdown',
     DescriptionMaxCountUsers: 'Used to disable user allocation',
     FieldToken: 'Token',
     FieldLastOnlineStatus: 'Last active at',
@@ -309,7 +320,7 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
       Title: 'Deleting a Role entity',
-      Description: 'This role will be disabled for all users'
+      Description: 'This role will be disabled for all user'
     }
   },
   ServiceCards: {
@@ -391,6 +402,12 @@ const en = {
     Title: 'Forbidden',
     Description: 'Sorry, access to view this page is denied with your role',
     Button: 'Go back'
+  },
+  Target: {
+    Title: 'Map services',
+    ButtonAdd: 'Create',
+    SearchBar: 'Search',
+    ButtonEdit: 'Edit'
   },
   Topology: {
     Menu: {

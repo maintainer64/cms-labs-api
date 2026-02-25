@@ -1,15 +1,13 @@
 import { Button } from '@heroui/react';
 import React, { useState } from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import SearchInput from '@/components/sidebar/search-input';
-import { RouterIcon } from '@/components/icons/breadcrumb/router-icon';
-import { useCurlRequestList } from '@/helpers/queries/curl-requests/get';
 import { CurlRequestTableWrapper } from '@/components/pages/curl-requests/table/table';
-import { CurlRequestIcon } from '@/components/icons/breadcrumb/curl-request-icon';
+import { useInfinityCurlRequestList } from '@/helpers/queries/curl_request/use-infinity-curl-request-list';
+import { House, Unplug } from 'lucide-react';
 
 export const CurlRequestList = () => {
   const { locale } = useLanguageBrowser();
@@ -20,12 +18,12 @@ export const CurlRequestList = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <CurlRequestIcon />,
+      icon: <Unplug className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.APIRequests,
       href: RoutesLocation.curlRequest()
     },
@@ -36,9 +34,9 @@ export const CurlRequestList = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const response = useCurlRequestList({ limit: 100, search: searchTerm });
-  const rows = response?.data?.pages.flatMap((p) => p.result?.model ?? []) || [];
-  const totalCount = response.data?.pages[0].result?.total_count ?? 0;
+  const response = useInfinityCurlRequestList({ limit: 100, search: searchTerm });
+  const rows = response?.data?.pages.flatMap((p) => p?.model ?? []) || [];
+  const totalCount = response.data?.pages[0]?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${CurlRequestTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

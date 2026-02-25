@@ -3,7 +3,6 @@ package queries
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"time"
 
@@ -13,9 +12,8 @@ import (
 	"github.com/ory/go-convenience/stringsx"
 	"golang.org/x/crypto/bcrypt"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gorm.io/gorm"
 )
 
@@ -48,6 +46,8 @@ const (
 	PNETServerListInputDTOOrderByLastCountUsers = "lastCountUsers"
 )
 
+var PNETServerNotFoundError = jsonrpc.NewRpcError("server_not_found", "Server has not found")
+
 func (q *PNETServerQueries) tableName(object interface{}) string {
 	stmt := &gorm.Statement{DB: q.DB}
 	_ = stmt.Parse(object)
@@ -58,10 +58,7 @@ func (q *PNETServerQueries) Get(id uint) (models.PNETServer, error) {
 	var entity models.PNETServer
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("PNETServer not found"),
-		}
+		return entity, PNETServerNotFoundError
 	}
 	return entity, result.Error
 }
@@ -162,10 +159,7 @@ func (q *PNETServerQueries) GetByClientId(clientID string) (models.PNETServer, e
 	var entity models.PNETServer
 	result := q.DB.Where("client_id = ?", clientID).Limit(1).Find(&entity)
 	if entity.ID == 0 {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("PNETServer not found"),
-		}
+		return entity, PNETServerNotFoundError
 	}
 	return entity, result.Error
 }

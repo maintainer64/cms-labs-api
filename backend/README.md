@@ -132,6 +132,87 @@ JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT
 
 Смотри пример в файле [.env.test](.env.test)
 
+Для аддонов используй
+
+```shell
+# Addons Configuration
+ADDONS_CONFIG='{
+  "addons": [
+    {
+      "id": "87b54eea-edc8-411a-ba2d-d1ab4beb8255",
+      "tag": "PROD",
+      "name": "База данных postgresql",
+      "type": "postgresql",
+      "params": {
+        "url": "postgresql://postgres:postgres@localhost:5432",
+        "host": "localhost",
+        "port": 5432
+      }
+    },
+    {
+      "id": "69929a64-ceaa-4997-931e-e800b2a36094",
+      "tag": "PROD",
+      "name": "База данных mysql",
+      "type": "mysql",
+      "params": {
+        "url": "mysql://root:mysql@localhost:3306",
+        "host": "localhost",
+        "port": 3306
+      }
+    },
+    {
+      "id": "vault",
+      "tag": "PROD",
+      "name": "Vault",
+      "type": "vault"
+    },
+    {
+      "id": "0be90f65-16aa-49dd-952b-4c493c77ba01",
+      "tag": "PROD",
+      "name": "S3",
+      "type": "s3",
+      "params": {
+        "endpoint": "http://localhost:8333",
+        "serviceInVault": "seaweedfs",
+        "webHookReload": "http://localhost:8333"
+      }
+    },
+    {
+        "id": "harbor",
+        "tag": "PROD",
+        "name": "Registry",
+        "type": "harbor",
+        "params": {
+            "apiUrl": "https://localhost:44444",
+            "adminUsername": "robot$admin",
+            "adminPassword": "password-harbor",
+            "baseUrl": "https://localhost:44444"
+        }
+    },
+    {
+        "id": "6b126898-2629-4477-89b4-9ae40b06b5de",
+        "tag": "PROD",
+        "name": "Kubernetes",
+        "type": "kubernetes",
+        "params": {
+            "kubeconfig": "base64 secret"
+        }
+    }
+  ]
+}'
+```
+
+```shell
+# Подключение к серверам proxmox
+PROXMOX_CONFIG='{
+  "servers": [
+    {
+      "url": "http://localhost:443/api2/json",
+      "token": "username@pam!username=guid"
+    }
+  ]
+}'
+```
 ## ⚙️ Тесты & Линтер
 
 ```bash

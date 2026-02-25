@@ -143,7 +143,7 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
             <>
               <p>{container.ready ? Terminal.ReadyStatus : Terminal.NotReadyStatus}</p>
               <p>
-                {Terminal.Restarts}: {container.restart_count}
+                {Terminal.Restarts}: {container.restartCount}
               </p>
             </>
           }

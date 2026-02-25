@@ -2,41 +2,42 @@
 import React from 'react';
 import { Accordion, AccordionItem, addToast, Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
 import { Formik } from 'formik';
-import { models_LTIRouting } from '@/helpers/api';
+import { ModelsLTIRouting } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
-import { useLTIRoutingDelete } from '@/helpers/queries/lti-routing/delete';
-import { useLTIRoutingByID } from '@/helpers/queries/lti-routing/get';
-import { useLTIRoutingUpsert } from '@/helpers/queries/lti-routing/upsert';
 import { LabsPathInput, TestsPathInput } from './autoCompletePath';
 import { ServerInput } from '@/components/pages/lti-attempts/edit/autoCompleteServer';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { useMutationLtiRoutingUpsert } from '@/helpers/queries/lti_routing/use-mutation-lti-routing-upsert';
+import { useQueryLtiRoutingGet } from '@/helpers/queries/lti_routing/use-query-lti-routing-get';
+import { useMutationLtiRoutingDelete } from '@/helpers/queries/lti_routing/use-mutation-lti-routing-delete';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_LTIRouting = {
+const defaultValues: CamelCasedPropertiesDeep<ModelsLTIRouting> = {
   collaboration: 0,
-  created_at: '',
+  createdAt: '',
   id: undefined,
-  lti_description: '',
-  lti_params_task: '',
-  lti_title: '',
+  ltiDescription: '',
+  ltiParamsTask: '',
+  ltiTitle: '',
   name: '',
-  pinned_session_minutes: 0,
-  pnet_labs_type: 'default',
-  pnet_labs_path: '',
-  pnet_test_path: '',
-  pnet_server_id: 0,
-  is_default: false,
-  updated_at: '',
-  lti_task_id: '',
-  lti_course_id: '',
-  lti_sub_id: ''
+  pinnedSessionMinutes: 0,
+  pnetLabsType: 'default',
+  pnetLabsPath: '',
+  pnetTestPath: '',
+  pnetServerId: 0,
+  isDefault: false,
+  updatedAt: '',
+  ltiTaskId: '',
+  ltiCourseId: '',
+  ltiSubId: ''
 };
 
 export const LtiRoutingLabsType = () => {
@@ -72,12 +73,12 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
     locale: { LTIRouting, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const response = useLTIRoutingByID(id);
+  const response = useQueryLtiRoutingGet({ id });
   const routingTypes = LtiRoutingLabsType();
-  const initialValues = response.data?.result?.model ?? defaultValues;
-  const { mutate } = useLTIRoutingUpsert({
-    onSuccess: (data, { formikHelpers }) => {
-      navigate(RoutesLocation.ltiRoutingEdit(data.result?.id?.toString() || ''), { replace: true });
+  const initialValues = response.data?.model ?? defaultValues;
+  const { mutate } = useMutationLtiRoutingUpsert({
+    onSuccess: (data) => {
+      navigate(RoutesLocation.ltiRoutingEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -91,7 +92,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const onDeleteMutation = useLTIRoutingDelete({
+  const onDeleteMutation = useMutationLtiRoutingDelete({
     onSuccess: () => {
       navigate(RoutesLocation.ltiRouting(), { replace: true });
       addToast({
@@ -107,7 +108,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const ltiFormDeletePopup = useConfirmPopup({
+  const AuthProviderDeletePopup = useConfirmPopup({
     title: LTIRouting.DeletePopup.Title,
     description: LTIRouting.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
@@ -117,13 +118,29 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
     <Formik
       initialValues={initialValues}
       validationSchema={undefined}
-      onSubmit={(values, formikHelpers) => {
-        mutate({ values, formikHelpers });
+      onSubmit={(values) => {
+        mutate({
+          collaboration: values.collaboration || 0,
+          id: values.id,
+          ltiDescription: values.ltiDescription,
+          ltiParamsTask: values.ltiParamsTask,
+          ltiTaskId: values.ltiTaskId,
+          ltiCourseId: values.ltiCourseId,
+          ltiSubId: values.ltiSubId,
+          ltiTitle: values.ltiTitle,
+          name: values.name,
+          pinnedSessionMinutes: values.pinnedSessionMinutes || 0,
+          pnetLabsType: values.pnetLabsType,
+          pnetLabsPath: values.pnetLabsPath,
+          pnetTestPath: values.pnetTestPath,
+          pnetServerId: parseInt(values.pnetServerId?.toString() || '0'),
+          isDefault: values.isDefault
+        });
       }}
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
         <>
-          {ltiFormDeletePopup.component({})}
+          {AuthProviderDeletePopup.component({})}
           <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
@@ -139,7 +156,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
               value={values.name ?? ''}
               onChange={handleChange('name')}
             />
-            <Checkbox type='checkbox' defaultSelected={values.is_default} onChange={handleChange('is_default')}>
+            <Checkbox type='checkbox' defaultSelected={values.isDefault} onChange={handleChange('isDefault')}>
               {LTIRouting.FieldIsDefault}
             </Checkbox>
             <Accordion>
@@ -150,22 +167,22 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     variant='bordered'
                     label={LTIRouting.FieldLTITitle}
                     type='text'
-                    value={values.lti_title ?? ''}
-                    onChange={handleChange('lti_title')}
+                    value={values.ltiTitle ?? ''}
+                    onChange={handleChange('ltiTitle')}
                   />
                   <Input
                     variant='bordered'
                     label={LTIRouting.FieldLTIDescription}
                     type='text'
-                    value={values.lti_description ?? ''}
-                    onChange={handleChange('lti_description')}
+                    value={values.ltiDescription ?? ''}
+                    onChange={handleChange('ltiDescription')}
                   />
                   <Input
                     variant='bordered'
                     label={LTIRouting.FieldLTIParamsTask}
                     type='text'
-                    value={values.lti_params_task ?? ''}
-                    onChange={handleChange('lti_params_task')}
+                    value={values.ltiParamsTask ?? ''}
+                    onChange={handleChange('ltiParamsTask')}
                   />
                 </div>
               </AccordionItem>
@@ -182,13 +199,13 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     variant='bordered'
                     label={LTIRouting.FieldPinnedSessionMinutes}
                     type='number'
-                    value={(values.pinned_session_minutes || 0).toString()}
-                    onChange={handleChange('pinned_session_minutes')}
+                    value={(values.pinnedSessionMinutes || 0).toString()}
+                    onChange={handleChange('pinnedSessionMinutes')}
                   />
                   <Select
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsType}
-                    selectedKeys={[values.pnet_labs_type ?? '']}
+                    selectedKeys={[values.pnetLabsType ?? '']}
                     onSelectionChange={(keys) => setFieldValue('pnet_labs_type', keys.currentKey || 'default')}
                   >
                     {routingTypes.map((type) => (
@@ -198,25 +215,25 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     ))}
                   </Select>
                   <LabsPathInput
-                    labsTypeUnl={values.pnet_labs_type ?? 'default'}
+                    labsTypeUnl={values.pnetLabsType ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsPath}
-                    value={values.pnet_labs_path ?? ''}
-                    onChange={handleChange('pnet_labs_path')}
+                    value={values.pnetLabsPath ?? ''}
+                    onChange={handleChange('pnetLabsPath')}
                   />
                   <TestsPathInput
-                    labsTypeUnl={values.pnet_labs_type ?? 'default'}
+                    labsTypeUnl={values.pnetLabsType ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETTestPath}
-                    value={values.pnet_test_path ?? ''}
-                    onChange={handleChange('pnet_test_path')}
+                    value={values.pnetTestPath ?? ''}
+                    onChange={handleChange('pnetTestPath')}
                   />
                   <ServerInput
                     variant='bordered'
                     defaultItems={[{ key: 0, value: LTIRouting.FieldPNETServerDefault }]}
                     label={LTIRouting.FieldPNETServer}
-                    value={values.pnet_server_id?.toString() ?? ''}
-                    onChange={handleChange('pnet_server_id')}
+                    value={values.pnetServerId?.toString() ?? ''}
+                    onChange={handleChange('pnetServerId')}
                   />
                 </div>
               </AccordionItem>
@@ -225,20 +242,20 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
               variant='bordered'
               label={LTIRouting.FieldCreatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.created_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
               label={LTIRouting.FieldUpdatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.updated_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>
               {Sidebar.Save}
             </Button>
-            <Button onPress={ltiFormDeletePopup.onOpen} variant='flat' color='danger'>
+            <Button onPress={AuthProviderDeletePopup.onOpen} variant='flat' color='danger'>
               {Sidebar.Delete}
             </Button>
           </div>

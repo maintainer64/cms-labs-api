@@ -1,121 +1,111 @@
 package controllers
 
 import (
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/clabgate/app/di"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases"
 	"gitlab.com/a10869/api-modules/clabgate/app/usecases/auth"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gitlab.com/a10869/api-modules/shared/logs"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-// TopologiesGet func for view of list tasks.
+// TopologyGet func for view of list tasks.
 // @Description List tasks. Roles: [student, admin, instructor]
 // @Summary list tasks
 // @Tags Topology
 // @Accept json
 // @Produce json
-// @Param form body usecases.TopologiesGetInputDTO true "topology namespace"
+// @Param form body usecases.TopologiesGetRequest true "topology namespace"
 // @Success 200 {object} usecases.TopologiesGetResponse
 // @Security ApiKeyAuth
-// @Router /v1/topologies/get [post]
-func TopologiesGet(c *fiber.Ctx) error {
+// @Router /clabgate/api/v1/rpc/topology.get [post]
+func TopologyGet(c *jsonrpc.Ctx) (interface{}, error) {
 	user, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := usecases.TopologiesGetInputDTO{}
-	err = utils.FiberValidatorBase(c, &dto)
+	err = jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc, err := container.TopologiesGetUC()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	output, err := uc.SetContext(user).Execute(dto)
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return output, err
 }
 
-// TopologiesCreate func for create personal topologies.
+// TopologyCreate func for create personal topologies.
 // @Description create personal topology. Roles: [student, admin, instructor]
 // @Summary create personal topologies
 // @Tags Topology
 // @Accept json
 // @Produce json
-// @Param form body usecases.TopologiesCreateInputDTO true "create params"
-// @Success 200 {object} usecases.TopologiesCreateResponse
+// @Param form body usecases.TopologyCreateRequest true "create params"
+// @Success 200 {object} usecases.TopologyCreateResponse
 // @Security ApiKeyAuth
-// @Router /v1/topologies/create [post]
-func TopologiesCreate(c *fiber.Ctx) error {
+// @Router /clabgate/api/v1/rpc/topology.create [post]
+func TopologyCreate(c *jsonrpc.Ctx) (interface{}, error) {
 	user, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
-	dto := usecases.TopologiesCreateInputDTO{}
-	err = utils.FiberValidatorBase(c, &dto)
+	dto := usecases.TopologyCreateInputDTO{}
+	err = jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc, err := container.TopologiesCreateUC()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	output, err := uc.SetContext(user).Execute(dto)
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return output, err
 }
 
-// TopologiesDelete func for delete personal topologies.
+// TopologyDelete func for delete personal topologies.
 // @Description delete personal topology. Roles: [student, admin, instructor]
 // @Summary delete personal topologies
 // @Tags Topology
 // @Accept json
 // @Produce json
-// @Param form body usecases.TopologiesDeleteInputDTO true "delete params"
-// @Success 200 {object} usecases.TopologiesDeleteResponse
+// @Param form body usecases.TopologyDeleteRequest true "delete params"
+// @Success 200 {object} usecases.TopologyDeleteResponse
 // @Security ApiKeyAuth
-// @Router /v1/topologies/delete [post]
-func TopologiesDelete(c *fiber.Ctx) error {
+// @Router /clabgate/api/v1/rpc/topology.delete [post]
+func TopologyDelete(c *jsonrpc.Ctx) (interface{}, error) {
 	user, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
-	dto := usecases.TopologiesDeleteInputDTO{}
-	err = utils.FiberValidatorBase(c, &dto)
+	dto := usecases.TopologyDeleteInputDTO{}
+	err = jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc, err := container.TopologiesDeleteUC()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	output, err := uc.SetContext(user).Execute(dto)
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return output, err
 }

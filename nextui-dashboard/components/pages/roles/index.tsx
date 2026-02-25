@@ -1,15 +1,13 @@
 import { Button } from '@heroui/react';
 import React, { useState } from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { House, UserRoundKey, UsersRound } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import SearchInput from '@/components/sidebar/search-input';
-import { UsersIcon } from '@/components/icons/breadcrumb/users-icon';
-import { RolesIcon } from '@/components/icons/breadcrumb/roles-icon';
-import { useRolesList } from '@/helpers/queries/roles/get';
 import { RolesTableWrapper } from '@/components/pages/roles/table/table';
+import { useQueryRoleList } from '@/helpers/queries/role/use-query-role-list';
 
 export const RolesList = () => {
   const { locale } = useLanguageBrowser();
@@ -20,17 +18,17 @@ export const RolesList = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <UsersIcon />,
+      icon: <UsersRound className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Users,
       href: RoutesLocation.accounts()
     },
     {
-      icon: <RolesIcon />,
+      icon: <UserRoundKey className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Roles,
       href: RoutesLocation.roles()
     },
@@ -41,9 +39,9 @@ export const RolesList = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const queryRoles = useRolesList();
-  const rows = queryRoles.data?.result?.model || [];
-  const totalCount = queryRoles.data?.result?.total_count || 0;
+  const queryRoles = useQueryRoleList({});
+  const rows = queryRoles.data?.model || [];
+  const totalCount = queryRoles.data?.totalCount || 0;
   return (
     <CrumbsLayout name={`${RoleTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

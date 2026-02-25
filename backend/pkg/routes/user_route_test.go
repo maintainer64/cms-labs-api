@@ -14,7 +14,8 @@ import (
 
 func TestV1UserCreate(t *testing.T) {
 	description := "create user"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
@@ -46,13 +47,12 @@ func TestV1UserCreate(t *testing.T) {
 		IsActive:  true,
 	}
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserEditResponse{}
@@ -79,7 +79,8 @@ func TestV1UserCreate(t *testing.T) {
 
 func TestV1UserCreateUnauthorized(t *testing.T) {
 	description := "create user unauthorized"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// No auth header provided
 	input := usecases.UserEditInputDTO{
@@ -90,27 +91,27 @@ func TestV1UserCreateUnauthorized(t *testing.T) {
 		IsActive:  true,
 	}
 
-	expectedCode := 401 // Assuming 401 is returned for unauthorized access
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/user/upsert",
-		Body:   FiberRequestPayload(input),
+	expectedCode := 500 // Assuming 401 is returned for unauthorized access
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "user.upsert",
+		Params: input,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "token is malformed: token contains an invalid number of segments", description)
+	assert.Contains(t, body, "unauthorized", description)
 }
 
 func TestV1UserCreateDeactivated(t *testing.T) {
 	description := "create deactivated user"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	entityDB := models.User{}
 	entityDB.Email = uuid.New().String() + "@example.com"
 	entityDB.DeletedAt = nil
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.UserEditInputDTO{
 		ID:        entityDB.ID,
@@ -122,10 +123,9 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserEditResponse{}
@@ -143,7 +143,8 @@ func TestV1UserCreateDeactivated(t *testing.T) {
 
 func TestV1UserGetSuccess(t *testing.T) {
 	description := "get user successfully"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create a test user
 	entityDB := models.User{}
@@ -154,17 +155,16 @@ func TestV1UserGetSuccess(t *testing.T) {
 	entityDB.DeletedAt = nil
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.UserGetInputDTO{
 		ID: entityDB.ID,
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/get",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserGetResponse{}
@@ -181,19 +181,19 @@ func TestV1UserGetSuccess(t *testing.T) {
 
 func TestV1UserGetNotFound(t *testing.T) {
 	description := "get non-existent user"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Use a non-existent ID
 	input := usecases.UserGetInputDTO{
 		ID: 9999,
 	}
 
-	expectedCode := 404 // Assuming 404 is returned for not found
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/get",
-		Body:          FiberRequestPayload(input),
+	expectedCode := 500 // Assuming 404 is returned for not found
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -203,7 +203,8 @@ func TestV1UserGetNotFound(t *testing.T) {
 
 func TestV1UserGetInactiveUser(t *testing.T) {
 	description := "get inactive user"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create an inactive user
 	deletedAt := time.Now()
@@ -215,17 +216,16 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 	entityDB.DeletedAt = &deletedAt
 	f.DB.Create(&entityDB)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.UserGetInputDTO{
 		ID: entityDB.ID,
 	}
 
-	expectedCode := 200 // Assuming 200 is returned even for inactive users
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/get",
-		Body:          FiberRequestPayload(input),
+	expectedCode := 200 // Assuming 200 is returned even for inactive user
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserGetResponse{}
@@ -237,13 +237,14 @@ func TestV1UserGetInactiveUser(t *testing.T) {
 }
 
 func TestV1UserListSuccess(t *testing.T) {
-	description := "list users successfully"
-	f := NewFiberTestHTTP()
+	description := "list user successfully"
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -258,7 +259,7 @@ func TestV1UserListSuccess(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.UserListInputDTO{
 		Search: "",
@@ -267,10 +268,9 @@ func TestV1UserListSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -281,13 +281,14 @@ func TestV1UserListSuccess(t *testing.T) {
 }
 
 func TestV1UserListFilterBySearch(t *testing.T) {
-	description := "list users with search filter"
-	f := NewFiberTestHTTP()
+	description := "list user with search filter"
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -302,7 +303,7 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.UserListInputDTO{
 		Search: "John",
@@ -311,10 +312,9 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -326,13 +326,14 @@ func TestV1UserListFilterBySearch(t *testing.T) {
 }
 
 func TestV1UserListFilterByIDs(t *testing.T) {
-	description := "list users with ID filter"
-	f := NewFiberTestHTTP()
+	description := "list user with ID filter"
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -347,7 +348,7 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.UserListInputDTO{
 		Search:  "",
@@ -357,10 +358,9 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -372,13 +372,14 @@ func TestV1UserListFilterByIDs(t *testing.T) {
 }
 
 func TestV1UserListPagination(t *testing.T) {
-	description := "list users with pagination"
-	f := NewFiberTestHTTP()
+	description := "list user with pagination"
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 
-	// Create test users
+	// Create test user
 	entityDB1 := models.User{}
 	entityDB1.Email = uuid.New().String() + "@example.com"
 	entityDB1.Name = "John Doe"
@@ -393,7 +394,7 @@ func TestV1UserListPagination(t *testing.T) {
 	entityDB2.LTIUserID = "lti456"
 	f.DB.Create(&entityDB2)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.UserListInputDTO{
 		Search: "",
@@ -402,10 +403,9 @@ func TestV1UserListPagination(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/user/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "user.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.UserListResponse{}
@@ -417,8 +417,9 @@ func TestV1UserListPagination(t *testing.T) {
 }
 
 func TestV1UserListUnauthorized(t *testing.T) {
-	description := "list users unauthorized"
-	f := NewFiberTestHTTP()
+	description := "list user unauthorized"
+	f := NewTestHTTP()
+	defer f.Close()
 
 	input := usecases.UserListInputDTO{
 		Search:  "",
@@ -427,13 +428,12 @@ func TestV1UserListUnauthorized(t *testing.T) {
 		Offset:  0,
 	}
 
-	expectedCode := 401 // Assuming 401 is returned for unauthorized access
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/user/list",
-		Body:   FiberRequestPayload(input),
+	expectedCode := 500
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "user.list",
+		Params: input,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "token is malformed: token contains an invalid number of segments", description)
+	assert.Contains(t, body, "unauthorized", description)
 }

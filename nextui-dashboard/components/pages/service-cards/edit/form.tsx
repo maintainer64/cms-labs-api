@@ -2,30 +2,31 @@
 import React from 'react';
 import { addToast, Button, Checkbox, Input } from '@heroui/react';
 import { Formik } from 'formik';
-import { models_ServiceCard } from '@/helpers/api';
+import { ModelsServiceCard } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
-import { useServiceCardDelete } from '@/helpers/queries/service-cards/delete';
-import { useServiceCardById } from '@/helpers/queries/service-cards/get';
-import { useServiceCardUpsert } from '@/helpers/queries/service-cards/upsert';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { useQueryServiceCardGet } from '@/helpers/queries/service_card/use-query-service-card-get';
+import { useMutationServiceCardUpsert } from '@/helpers/queries/service_card/use-mutation-service-card-upsert';
+import { useMutationServiceCardDelete } from '@/helpers/queries/service_card/use-mutation-service-card-delete';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_ServiceCard = {
-  created_at: '',
+const defaultValues: CamelCasedPropertiesDeep<ModelsServiceCard> = {
+  createdAt: '',
   description: '',
-  image_url: '',
+  imageUrl: '',
   url: '',
-  is_active: true,
+  isActive: true,
   name: '',
   order: 0,
-  updated_at: ''
+  updatedAt: ''
 };
 
 export const ServiceCardEditForm = ({ id }: EditFormProps) => {
@@ -33,11 +34,11 @@ export const ServiceCardEditForm = ({ id }: EditFormProps) => {
     locale: { ServiceCards, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const response = useServiceCardById(id);
-  const initialValues = response.data?.result?.model ?? defaultValues;
-  const { mutate } = useServiceCardUpsert({
+  const response = useQueryServiceCardGet({ id });
+  const initialValues = response.data?.model ?? defaultValues;
+  const { mutate } = useMutationServiceCardUpsert({
     onSuccess: (data) => {
-      navigate(RoutesLocation.serviceCardsEdit(data.result?.id?.toString() || ''), { replace: true });
+      navigate(RoutesLocation.serviceCardsEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -51,7 +52,7 @@ export const ServiceCardEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const onDeleteMutation = useServiceCardDelete({
+  const onDeleteMutation = useMutationServiceCardDelete({
     onSuccess: () => {
       navigate(RoutesLocation.serviceCards(), { replace: true });
       addToast({
@@ -78,7 +79,15 @@ export const ServiceCardEditForm = ({ id }: EditFormProps) => {
       initialValues={initialValues}
       validationSchema={undefined}
       onSubmit={(values, formikHelpers) => {
-        mutate({ values, formikHelpers });
+        mutate({
+          id: values.id,
+          isActive: values.isActive ?? true,
+          name: values.name || '',
+          description: values.description || '',
+          order: values.order || 0,
+          url: values.url || '',
+          imageUrl: values.imageUrl || ''
+        });
       }}
     >
       {({ values, handleChange, handleSubmit }) => (
@@ -117,10 +126,10 @@ export const ServiceCardEditForm = ({ id }: EditFormProps) => {
               variant='bordered'
               label={ServiceCards.FieldImageURL}
               type='url'
-              value={values.image_url ?? ''}
-              onChange={handleChange('image_url')}
+              value={values.imageUrl ?? ''}
+              onChange={handleChange('imageUrl')}
             />
-            <Checkbox type='checkbox' defaultSelected={!!values.is_active} onChange={handleChange('is_active')}>
+            <Checkbox type='checkbox' defaultSelected={!!values.isActive} onChange={handleChange('isActive')}>
               {ServiceCards.FieldIsActive}
             </Checkbox>
             <Input
@@ -134,14 +143,14 @@ export const ServiceCardEditForm = ({ id }: EditFormProps) => {
               variant='bordered'
               label={ServiceCards.FieldCreatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.created_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
               label={ServiceCards.FieldUpdatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.updated_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>

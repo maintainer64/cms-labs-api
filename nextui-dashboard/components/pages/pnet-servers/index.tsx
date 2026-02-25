@@ -1,15 +1,14 @@
 import { Button } from '@heroui/react';
 import React, { useState } from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { House, Server } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import SearchInput from '@/components/sidebar/search-input';
-import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
-import { usePnetServerList } from '@/helpers/queries/pnet-server/get';
 import { PnetServerTableWrapper } from '@/components/pages/pnet-servers/table/table';
-import { MapServerItem } from '@/helpers/queries/pnet-server/model';
+import { MapServerItem } from '@/helpers/queries/server/use-query-server-get';
+import { useInfinityServerList } from '@/helpers/queries/server/use-infinity-server-list';
 
 export const PnetServersList = () => {
   const { locale } = useLanguageBrowser();
@@ -20,12 +19,12 @@ export const PnetServersList = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <ServersIcon />,
+      icon: <Server className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Servers,
       href: RoutesLocation.pnetServers()
     },
@@ -36,11 +35,10 @@ export const PnetServersList = () => {
     }
   ];
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const response = usePnetServerList({ limit: 100, search: searchTerm });
+  const response = useInfinityServerList({ limit: 100, search: searchTerm });
   const rows =
-    response?.data?.pages.flatMap((p) => p.result?.model?.map((item) => MapServerItem(item.model, item.roles)) ?? []) ||
-    [];
-  const totalCount = response.data?.pages[0].result?.total_count ?? 0;
+    response?.data?.pages.flatMap((p) => p?.model?.map((item) => MapServerItem(item.model, item.roles)) ?? []) || [];
+  const totalCount = response.data?.pages[0]?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${PnetServersTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

@@ -1,16 +1,15 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"github.com/ory/go-convenience/stringsx"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
 )
 
@@ -19,16 +18,14 @@ type UserPasswordQueries struct {
 	Logger *zerolog.Logger
 }
 
-var IncorrectPassword = errors.New("Incorrect password")
+var IncorrectPassword = jsonrpc.NewRpcError("incorrect_password", "Incorrect password")
+var IncorrectLogin = jsonrpc.NewRpcError("incorrect_login", "Incorrect login")
 
 func (q *UserPasswordQueries) Get(userID uint) (models.UserPassword, error) {
 	var entity models.UserPassword
 	q.DB.Where("`user_id` = ?", userID).Find(&entity)
 	if entity.UserID != userID {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: IncorrectPassword,
-		}
+		return entity, IncorrectPassword
 	}
 	return entity, nil
 }

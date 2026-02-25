@@ -23,12 +23,12 @@ export default defineConfig({
 function setupProxy(): CommonServerOptions["proxy"] {
     return {
         "/api": {
-            target: "https://cms-lab.gubanov.site",
+            target: "http://localhost:5000",
             secure: false,
             changeOrigin: true,
         },
         "/clabgate/api/": {
-            target: "https://cms-lab.gubanov.site",
+            target: "http://localhost:5000",
             secure: false,
             changeOrigin: true,
         }

@@ -2,14 +2,15 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCellWithLocale } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { models_ServiceCardListItem } from '@/helpers/api';
+import { ModelsServiceCardListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface Props {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: models_ServiceCardListItem[];
+  rows?: CamelCasedPropertiesDeep<ModelsServiceCardListItem>[];
 }
 
 export const ServiceCardsTableWrapper = ({ rows, isLoading, loadMore }: Props) => {

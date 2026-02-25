@@ -1,8 +1,8 @@
 import { UseMutationOptions } from '@tanstack/react-query';
 import { FormikHelpers } from 'formik';
 
-export type TMutationCustomOptions<TData = unknown, TError = unknown, TVariables = void, TContext = unknown> = Omit<
-  UseMutationOptions<TData, TError, TVariables, TContext>,
+export type TMutationCustomOptions<Response, Params> = Omit<
+  UseMutationOptions<Response, unknown, Params>,
   'mutationFn'
 >;
 

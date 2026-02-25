@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIRoutingDeleteUC struct {
@@ -13,7 +12,19 @@ type LTIRoutingDeleteInputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type LTIRoutingDeleteResponse = response.Response[LTIRoutingDeleteInputDTO]
+type LTIRoutingDeleteRequest struct {
+	JSONRPC string                   `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                   `json:"method" default:"lti_routing.delete" required:"true"`
+	Params  LTIRoutingDeleteInputDTO `json:"params,omitempty"`
+	ID      string                   `json:"id,omitempty" default:"1" required:"true"`
+}
+
+type LTIRoutingDeleteResponse struct {
+	JSONRPC string                   `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  LTIRoutingDeleteInputDTO `json:"result,omitempty"`
+	Error   interface{}              `json:"error,omitempty"`
+	ID      string                   `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *LTIRoutingDeleteUC) Execute(dto LTIRoutingDeleteInputDTO) (LTIRoutingDeleteInputDTO, error) {
 	err := u.LTIRoutingQueries.Delete(dto.ID)

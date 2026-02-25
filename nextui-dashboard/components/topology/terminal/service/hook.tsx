@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { TerminalService } from '@/components/topology/terminal/service/real';
 import { addToast } from '@heroui/react';
 import { TerminalClient } from '@/components/topology/terminal/service/context';
-import { useContainersGet } from '@/helpers/queries/topology/get';
-import { usecases_ContainersGetItem } from '@/helpers/api';
+import { UsecasesContainerGetItem } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { useMutationContainerGet } from '@/helpers/queries/container/use-mutation-container-get';
 
 interface UseTerminalParams {
   terminalRef: React.RefObject<any>;
@@ -20,10 +21,10 @@ export const useTerminal = ({ terminalRef, node }: UseTerminalParams) => {
       Topology: { Terminal }
     }
   } = useLanguageBrowser();
-  const { mutateAsync } = useContainersGet({});
+  const { mutateAsync } = useMutationContainerGet({});
   const terminalService = useRef<TerminalService | null>(null);
   const isMock = localStorage.getItem('socketJsMock') === 'true';
-  const [container, setContainer] = useState<usecases_ContainersGetItem>({
+  const [container, setContainer] = useState<CamelCasedPropertiesDeep<UsecasesContainerGetItem>>({
     name: node.id,
     namespace: node.namespace,
     status: 'unknown'
@@ -39,7 +40,7 @@ export const useTerminal = ({ terminalRef, node }: UseTerminalParams) => {
       // Очистка предыдущего подключения
       terminalService.current?.disconnect();
       const responseContainers = await mutateAsync({ namespace: node.namespace, deployment: node.id });
-      const container = responseContainers.result?.containers?.[0];
+      const container = responseContainers?.containers?.[0];
       if (!container) {
         scheduleInitTerminal();
         return;
@@ -66,9 +67,9 @@ export const useTerminal = ({ terminalRef, node }: UseTerminalParams) => {
         scheduleInitTerminal();
       });
       await terminalService.current.connect({
-        sessionId: container.session_id || '',
+        sessionId: container.sessionId || '',
         type: container.type || 'default',
-        url: container.connect_url || '',
+        url: container.connectUrl || '',
         startup: container.startup || ''
       });
     };

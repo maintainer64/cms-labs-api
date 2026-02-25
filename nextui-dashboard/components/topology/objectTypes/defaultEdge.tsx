@@ -2,7 +2,8 @@ import React from 'react';
 import { Edge, EdgeProps, getStraightPath, useInternalNode } from '@xyflow/react';
 import { calculateDimensionsLabel } from '@/components/topology/objectTypes/lineObjectUtils';
 import { getEdgeParams, getLabelPosition, getReverseLabelPosition } from '@/components/topology/objectTypes/edgeUtils';
-import { topology_TopologiesEdgeData } from '@/helpers/api';
+import { TopologyTopologiesEdgeData } from '@/helpers/api';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 const EdgeLabel = ({ x, y, label }: { x: number; y: number; label?: string }) => {
   if (!label) return null;
@@ -58,7 +59,7 @@ export const edgeTypeDefault = ({
   markerEnd,
   style,
   data
-}: EdgeProps<Edge<topology_TopologiesEdgeData>>) => {
+}: EdgeProps<Edge<CamelCasedPropertiesDeep<TopologyTopologiesEdgeData>>>) => {
   const targetNode = useInternalNode(target);
   const sourceNode = useInternalNode(source);
 

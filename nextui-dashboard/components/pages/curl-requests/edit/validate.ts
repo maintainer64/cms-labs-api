@@ -11,7 +11,7 @@ export const curlParsedData = (raw?: string) => {
 
 export const curlParsedDataValidator = (raw?: string) => {
   try {
-    const curlParsed = curlParsedData(raw);
+    curlParsedData(raw);
     return null;
   } catch (e) {
     return e?.toString() || 'Curl not parsed';

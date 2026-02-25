@@ -2,15 +2,16 @@
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Image } from '@heroui/react';
 import React from 'react';
 import { CmsIcon } from '../icons/cms-icon';
-import { BottomIcon } from '../icons/sidebar/bottom-icon';
 import useLanguageBrowser from '@/helpers/locale';
-import { useServiceCardList } from '@/helpers/queries/service-cards/get';
+import { useQueryServiceCardList } from '@/helpers/queries/service_card/use-query-service-card-list';
+import { ChevronDown } from 'lucide-react';
+import { useSidebarContext } from '@/components/layout/layout-context';
 
 const DropdownServiceCards = () => {
-  const response = useServiceCardList();
-  const rows = response?.data?.result?.model || [];
+  const response = useQueryServiceCardList({});
+  const rows = response?.data?.model || [];
   return rows
-    .filter((service) => service.is_active)
+    .filter((service) => service.isActive)
     .map((service, index) => {
       return (
         <DropdownItem
@@ -20,7 +21,7 @@ const DropdownServiceCards = () => {
           }}
           href={service.url || '#'}
           target='_blank'
-          startContent={service.image_url && <Image src={service.image_url} width={30} alt={service.image_url} />}
+          startContent={service.imageUrl && <Image src={service.imageUrl} width={30} alt={service.imageUrl} />}
           description={service.description}
           classNames={{
             base: 'py-4',
@@ -35,6 +36,7 @@ const DropdownServiceCards = () => {
 
 export const ServicesDropdown = () => {
   const { locale } = useLanguageBrowser();
+  const { collapsed } = useSidebarContext();
   const company = {
     title: locale.CompaniesDropdown.Title,
     description: locale.CompaniesDropdown.Description,
@@ -44,17 +46,21 @@ export const ServicesDropdown = () => {
   return (
     <Dropdown
       classNames={{
-        base: 'w-full min-w-[260px]'
+        base: 'w-full min-w-[240px]'
       }}
     >
       <DropdownTrigger className='cursor-pointer'>
         <div className='flex items-center gap-2'>
           {company.logo}
-          <div className='flex flex-col gap-4'>
-            <h3 className='text-xl font-medium m-0 text-default-900 -mb-4 whitespace-nowrap'>{company.title}</h3>
-            <span className='text-xs font-medium text-default-500'>{company.description}</span>
-          </div>
-          <BottomIcon />
+          {collapsed ? null : (
+            <>
+              <div className='flex flex-col gap-4'>
+                <h3 className='text-xl font-medium m-0 text-default-900 -mb-4 whitespace-nowrap'>{company.title}</h3>
+                <span className='text-xs font-medium text-default-500'>{company.description}</span>
+              </div>
+              <ChevronDown className='w-3 h-3 stroke-[#969696]' />
+            </>
+          )}
         </div>
       </DropdownTrigger>
       <DropdownMenu aria-label='Avatar Actions'>

@@ -43,11 +43,18 @@ type SwaggerSSOToken struct {
 	UserId       string `json:"user_id"`
 }
 
-// SwaggerSSOTokenResponse copy of cms_client.SSOTokenResponse
+type UserLogoutRequest struct {
+	JSONRPC string       `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string       `json:"method" default:"user.logout" required:"true"`
+	Params  *interface{} `json:"params,omitempty"`
+	ID      string       `json:"id,omitempty" default:"1" required:"true"`
+}
+
 type SwaggerSSOTokenResponse struct {
-	Error  bool            `json:"error" validate:"required"`
-	Msg    string          `json:"msg" validate:"required"`
-	Result SwaggerSSOToken `json:"result"`
+	JSONRPC string          `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  SwaggerSSOToken `json:"result,omitempty"`
+	Error   interface{}     `json:"error,omitempty"`
+	ID      string          `json:"id,omitempty" default:"1" required:"true"`
 }
 
 // SwaggerSSOTokenPublicData copy of cms_client.SSOTokenPublicData
@@ -73,11 +80,13 @@ type SwaggerSSOTokenPublicData struct {
 	// Name. Полное ФИО пользователя
 	Name string `json:"name"`
 	// ServerID ID сервера аутентификации (как с Iss)
-	ServerID uint `json:"server_id"`
+	ServerID *uint `json:"server_id"`
 	// Roles. Роли пользователя
 	Roles []string `json:"roles"`
 	// LastLaunchId. ID пользователя SSO через LMS систему
 	LastLaunchId string `json:"last_launch_id"`
+	// K8S type
+	K8SType string `json:"k8s:access_type"`
 }
 
 func (u *SSOTokenUC) SetContext(issId string) *SSOTokenUC {
@@ -113,7 +122,10 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if err != nil {
 		return nil, err
 	}
-	server, err := u.PNETServerQueries.Get(attempt.ServerID)
+	if attempt.ServerID == nil || attempt.UserID == nil {
+		return nil, queries.PNETServerNotFoundError
+	}
+	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +136,7 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		return nil, errors.New("invalid redirect_uri")
 	}
-	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
+	return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
 }
 
 func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {
@@ -140,16 +152,20 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 	if err != nil {
 		return nil, err
 	}
-	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
-	if attempt.ServerID == 0 {
-		return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
+	if attempt.UserID == nil {
+		return nil, queries.UserNotFoundError
 	}
-	server, err := u.PNETServerQueries.Get(attempt.ServerID)
+	if attempt.ServerID == nil {
+		u.Logger.Info().Msg("Token get by refresh token by internal")
+		return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
+	}
+	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
+	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
 	if !server.IsActive {
 		return nil, errors.New("server is not active")
 	}
-	return u.TokenManager.NewJWTByUserId(u.IssId, attempt.UserID, attempt.ServerID, &attempt)
+	return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
 }

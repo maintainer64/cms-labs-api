@@ -1,11 +1,8 @@
 package cms_client
 
 import (
-	"errors"
-
-	fiber "github.com/gofiber/fiber/v2"
 	jwt "github.com/golang-jwt/jwt/v5"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 func SSOTokenGetStringSlice(claims map[string]interface{}, key string) []string {
@@ -26,10 +23,16 @@ func SSODecodeToken(jwtToken *jwt.Token) (*SSOTokenPublicData, error) {
 	// Setting and checking token and credentials.
 	claims, ok := jwtToken.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, utils.FiberValidationException{
-			Status:    fiber.StatusUnauthorized,
-			Exception: errors.New("token invalid"),
-		}
+		return nil, jsonrpc.NewRpcError("invalid_token", "token is invalid")
+	}
+	var serverID *uint = nil
+	k8sAccessType := ""
+	if val, ok := claims["server_id"].(float64); ok {
+		uintServerID := uint(val)
+		serverID = &uintServerID
+	}
+	if val, ok := claims["k8s:access_type"].(string); ok {
+		k8sAccessType = val
 	}
 	tokenData := SSOTokenPublicData{
 		Iss:          claims["iss"].(string),
@@ -42,9 +45,10 @@ func SSODecodeToken(jwtToken *jwt.Token) (*SSOTokenPublicData, error) {
 		Email:        claims["email"].(string),
 		Name:         claims["name"].(string),
 		Username:     claims["username"].(string),
-		ServerID:     uint(claims["server_id"].(float64)),
+		ServerID:     serverID,
 		Roles:        SSOTokenGetStringSlice(claims, "roles"),
 		LastLaunchId: claims["last_launch_id"].(string),
+		K8SType:      k8sAccessType,
 	}
 	return &tokenData, nil
 }

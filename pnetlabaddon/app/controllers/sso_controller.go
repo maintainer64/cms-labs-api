@@ -7,8 +7,8 @@ import (
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/app/usecases"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gitlab.com/a10869/api-modules/shared/logs"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 // SSOFirstFactor Переадресация пользователя на сервер аутентификации.
@@ -20,31 +20,29 @@ import (
 // @Param extra query string false "Дополнительные параметры в base64"
 // @Param path query string false "Путь с которого выполнился редирект"
 // @Success 307
-// @Router /v1/sso/login [get]
-func SSOFirstFactor(c *fiber.Ctx) error {
+// @Router /pnet-lab-addon/api/v1/sso/login [get]
+func SSOFirstFactor(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
-	extra := c.Query("extra", "")
-	path := c.Query("path", "/")
+	extra := ctx.Query("extra", "")
+	path := ctx.Query("path", "/")
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return utils.FiberValidationException{
-			Status:    fiber.StatusInternalServerError,
-			Exception: err,
-		}
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	}
 	defer container.Close()
 
 	client := container.CMSClient()
 
 	newURL := client.SSOAuthorizeURI(
-		c.BaseURL()+"/pnet-lab-addon/api/v1/sso/openid",
+		ctx.BaseURL()+"/pnet-lab-addon/api/v1/sso/openid",
 		"default",
 		path,
 		extra,
 	)
 	// Удаляем cookies все
-	c.ClearCookie()
-	return c.Redirect(newURL, fiber.StatusTemporaryRedirect)
+	ctx.ClearCookie()
+	return ctx.Redirect(newURL, fiber.StatusTemporaryRedirect)
 }
 
 // SSOSecondFactor Получение токена пользователя второй фактор OpenID.
@@ -61,25 +59,23 @@ func SSOFirstFactor(c *fiber.Ctx) error {
 // @Param application query string false "ClientID запрашиваемого из аутентификации"
 // @Param extra query string false "Дополнительные данные с backend base64 по всему пути аутентификации"
 // @Success 307
-// @Router /v1/sso/openid [get]
-func SSOSecondFactor(c *fiber.Ctx) error {
+// @Router /pnet-lab-addon/api/v1/sso/openid [get]
+func SSOSecondFactor(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return utils.FiberValidationException{
-			Status:    fiber.StatusInternalServerError,
-			Exception: err,
-		}
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	}
 	defer container.Close()
 	// Второй фактор аутентификации
 	uc := container.SSOSecondFactorUC()
 	dto := usecases.SSOSecondFactorInputDTO{
-		Code:        c.Query("code", ""),
-		Application: c.Query("application", ""),
-		Path:        c.Query("path", ""),
-		State:       c.Query("state", ""),
-		RedirectURI: c.BaseURL() + "/pnet-lab-addon/api/v1/sso/openid",
+		Code:        ctx.Query("code", ""),
+		Application: ctx.Query("application", ""),
+		Path:        ctx.Query("path", ""),
+		State:       ctx.Query("state", ""),
+		RedirectURI: ctx.BaseURL() + "/pnet-lab-addon/api/v1/sso/openid",
 	}
 	output, err := uc.Execute(dto)
 	if err != nil {
@@ -89,7 +85,7 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 	uc2 := container.LabCreateUC()
 	err = uc2.Execute(
 		usecases.LabCreateInputDTO{
-			Extra:   c.Query("extra", ""),
+			Extra:   ctx.Query("extra", ""),
 			UserPod: output.UserPod,
 		},
 	)
@@ -97,12 +93,12 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		return err
 	}
 	// Получаем hostname без порта
-	host := c.Hostname()
+	host := ctx.Hostname()
 	if strings.Contains(host, ":") {
 		host = strings.Split(host, ":")[0]
 	}
 	// Выполняем редирект
-	c.Cookie(&fiber.Cookie{
+	ctx.Cookie(&fiber.Cookie{
 		Name:     "token",
 		Value:    output.CookieToken,
 		Path:     "/",
@@ -111,7 +107,7 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		HTTPOnly: true,
 		Domain:   host,
 	})
-	c.Cookie(&fiber.Cookie{
+	ctx.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
 		Value:    output.RefreshToken,
 		MaxAge:   output.RefreshTokenMaxAge,
@@ -119,5 +115,5 @@ func SSOSecondFactor(c *fiber.Ctx) error {
 		Expires:  output.RefreshTokenAge,
 		HTTPOnly: true,
 	})
-	return c.Redirect("/", fiber.StatusTemporaryRedirect)
+	return ctx.Redirect("/", fiber.StatusTemporaryRedirect)
 }

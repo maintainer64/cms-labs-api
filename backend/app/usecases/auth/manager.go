@@ -28,34 +28,48 @@ type RenewManagerInputDTO struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+type RenewManagerRefreshRequest struct {
+	JSONRPC string               `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string               `json:"method" default:"user.token_refresh" validate:"required"`
+	Params  RenewManagerInputDTO `json:"params,omitempty"`
+	ID      string               `json:"id,omitempty" default:"1" validate:"required"`
+}
+
 type RenewManagerCredentialsInputDTO struct {
-	Email    string `json:"email" required:"true"`
-	Password string `json:"password" required:"true"`
+	Email      string `json:"email" required:"true"`
+	Password   string `json:"password" required:"true"`
+	ProviderId uint   `json:"provider_id"`
+}
+
+type RenewManagerCredentialsRequest struct {
+	JSONRPC string                          `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string                          `json:"method" default:"user.login" validate:"required"`
+	Params  RenewManagerCredentialsInputDTO `json:"params,omitempty"`
+	ID      string                          `json:"id,omitempty" default:"1" validate:"required"`
 }
 
 // NewJWTByCredentials генерирует новый JWT по логину/паролю
 func (m *TokenManager) NewJWTByCredentials(issID string, email string, password string) (*cms_client.SSOToken, error) {
-	invalidCreds := errors.New("username or password is incorrect")
 	if email == "" {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 	if password == "" {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 
 	entity, err := m.UserQueries.GetByEmail(email)
 	if err != nil {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 	creds, err := m.UserPasswordQueries.Get(entity.ID)
 	if err != nil {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(creds.HashPassword), []byte(password))
 	if err != nil {
-		return nil, invalidCreds
+		return nil, queries.IncorrectPassword
 	}
-	return m.NewJWTByUserId(issID, entity.ID, 0, nil)
+	return m.NewJWTByUserId(issID, entity.ID, nil, nil)
 }
 
 func (m *TokenManager) NewJWTByLaunchID(issID string, launchID string) (*cms_client.SSOToken, error) {
@@ -67,13 +81,13 @@ func (m *TokenManager) NewJWTByLaunchID(issID string, launchID string) (*cms_cli
 	if err != nil {
 		return nil, invalidCreds
 	}
-	return m.NewJWTByUserId(issID, entity.ID, 0, nil)
+	return m.NewJWTByUserId(issID, entity.ID, nil, nil)
 }
 
 func (m *TokenManager) NewJWTByUserId(
 	issID string,
 	userId uint,
-	serverID uint,
+	serverID *uint,
 	attempt *models.TokenAttempt,
 ) (*cms_client.SSOToken, error) {
 	attemptState, attemptNonce := "", ""
@@ -85,8 +99,8 @@ func (m *TokenManager) NewJWTByUserId(
 		return nil, err
 	}
 	var serverModel models.PNETServer
-	if serverID != 0 {
-		serverModel, _ = m.PNETServerQueries.Get(serverID)
+	if serverID != nil {
+		serverModel, _ = m.PNETServerQueries.Get(*serverID)
 	}
 	rolesJWT, err := m.JWTRolesByUserId(userModel.ID)
 	if err != nil {
@@ -110,7 +124,7 @@ func (m *TokenManager) NewJWTByUserId(
 		return nil, err
 	}
 	refreshModel := &models.TokenAttempt{}
-	refreshModel.UserID = userId
+	refreshModel.UserID = &userId
 	refreshModel.ServerID = serverID
 	refreshModel.State = attemptState
 	refreshModel.Nonce = attemptNonce

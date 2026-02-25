@@ -2,14 +2,11 @@ package queries
 
 import (
 	"crypto/rand"
-	"errors"
 	"math/big"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
 	"gorm.io/gorm"
 )
 
@@ -22,10 +19,7 @@ func (q *LTIRoomQueries) Get(id uint) (models.LTIRoom, error) {
 	var entity models.LTIRoom
 	result := q.DB.Where("id = ?", id).Find(&entity)
 	if entity.ID == 0 {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIAttempt not found"),
-		}
+		return entity, LTIAttemptNotFoundError
 	}
 	return entity, result.Error
 }
@@ -36,10 +30,7 @@ func (q *LTIRoomQueries) GetByRoomNumber(roomNumber int64) (models.LTIRoom, erro
 		`id desc`,
 	).Limit(1).Offset(0).Find(&entity)
 	if entity.ID == 0 {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIAttempt not found"),
-		}
+		return entity, LTIAttemptNotFoundError
 	}
 	return entity, result.Error
 }

@@ -11,9 +11,8 @@ import (
 
 	json "github.com/goccy/go-json"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gorm.io/gorm"
 )
 
@@ -30,10 +29,9 @@ func (q *LTIAccessTokenQueries) GetByIndex(index string) (models.LTIAccessToken,
 	var entity models.LTIAccessToken
 	q.DB.Where("`index` = ?", index).Find(&entity)
 	if entity.Index != index {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIAccessToken not found"),
-		}
+		return entity, jsonrpc.NewRpcError(
+			"has_not_access", "lti access token has not found",
+		)
 	}
 	return entity, nil
 }

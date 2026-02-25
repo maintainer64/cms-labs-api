@@ -15,7 +15,8 @@ import (
 
 func TestSSOAuthorize(t *testing.T) {
 	description := "successful authorization code generation"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	_, clientID := f.AuthorizationServiceBasic()
 
@@ -24,7 +25,7 @@ func TestSSOAuthorize(t *testing.T) {
 	user.Email = "test" + uuid.New().String() + "@example.com"
 	user.Name = "Name " + uuid.New().String()
 	f.DB.Create(&user)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	role := models.Role{}
 	role.Code = "student" + uuid.New().String()
@@ -46,10 +47,9 @@ func TestSSOAuthorize(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/sso/authorize",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "sso.authorize",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -64,7 +64,8 @@ func TestSSOAuthorize(t *testing.T) {
 
 func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	description := "authorization with invalid client"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Создаем тестового пользователя
 	user := models.User{}
@@ -81,7 +82,7 @@ func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     "invalid-client",
@@ -92,20 +93,20 @@ func TestSSOAuthorizeInvalidClient(t *testing.T) {
 	}
 
 	expectedCode := 500
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/sso/authorize",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "sso.authorize",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "PNETServer not found", description)
+	assert.Contains(t, body, "server_not_found", description)
 }
 
 func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
 	description := "authorization with not match roles"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// OpenID server
 	server := models.PNETServer{}
@@ -142,7 +143,7 @@ func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     server.ClientID,
@@ -153,20 +154,20 @@ func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
 	}
 
 	expectedCode := 500
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/sso/authorize",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "sso.authorize",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "You cannot use SSO with this role", description)
+	assert.Contains(t, body, "not_access_sso_with_current_role", description)
 }
 
 func TestSSOAuthorizeMatchRoles(t *testing.T) {
 	description := "authorization with match roles"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// OpenID server
 	server := models.PNETServer{}
@@ -199,7 +200,7 @@ func TestSSOAuthorizeMatchRoles(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, 0)
+	authHeader := f.AuthorizationUser(user.ID, nil)
 
 	input := auth.SSOAuthorizeInputDTO{
 		ClientID:     server.ClientID,
@@ -210,10 +211,9 @@ func TestSSOAuthorizeMatchRoles(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/sso/authorize",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "sso.authorize",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -228,7 +228,8 @@ func TestSSOAuthorizeMatchRoles(t *testing.T) {
 
 func TestSSOTokenByAuthCode(t *testing.T) {
 	description := "get tokens by authorization code"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeaderServer, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
@@ -253,8 +254,8 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 
 	// Создаем authorization code
 	attempt := models.TokenAttempt{}
-	attempt.UserID = user.ID
-	attempt.ServerID = server.ID
+	attempt.UserID = &user.ID
+	attempt.ServerID = &server.ID
 	attempt.State = uuid.New().String()
 	attempt.AuthorizationCode = uuid.New().String()
 	f.DB.Create(&attempt)
@@ -266,7 +267,7 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
+	statusCode, body := f.Request(&TestHttpRequest{
 		Method:        "POST",
 		Route:         "/api/v1/sso/token",
 		Body:          FiberRequestFormPayload(input),
@@ -288,19 +289,20 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 
 func TestSSOIntrospectValidToken(t *testing.T) {
 	description := "introspect valid access token"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeaderClient, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
-	authHeader := f.AuthorizationUser(0, server.ID)
+	authHeader := f.AuthorizationUser(0, &server.ID)
 
 	input := map[string]string{
 		"token": strings.Replace(authHeader, "Bearer ", "", 1),
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
+	statusCode, body := f.Request(&TestHttpRequest{
 		Method:        "POST",
 		Route:         "/api/v1/sso/introspect",
 		Body:          FiberRequestFormPayload(input),
@@ -320,7 +322,8 @@ func TestSSOIntrospectValidToken(t *testing.T) {
 
 func TestSSOUserInfo(t *testing.T) {
 	description := "get user info with valid token"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	_, clientID := f.AuthorizationServiceBasic()
 	server := models.PNETServer{}
@@ -339,11 +342,11 @@ func TestSSOUserInfo(t *testing.T) {
 	roleUser.UserID = &user.ID
 
 	f.DB.Create(&roleUser)
-	authHeader := f.AuthorizationUser(user.ID, server.ID)
+	authHeader := f.AuthorizationUser(user.ID, &server.ID)
 
 	expectedCode := 200
 	statusCode, body := f.Request(
-		&FiberTestHttpRequest{
+		&TestHttpRequest{
 			Method:        "GET",
 			Route:         "/api/v1/sso/userinfo",
 			Authorization: authHeader,
@@ -362,15 +365,16 @@ func TestSSOUserInfo(t *testing.T) {
 	assert.Equal(t, role.Code, response.UserRoleMain(), description)
 	assert.Equal(t, fmt.Sprintf("%d", user.ID), response.Sub, description)
 	assert.Equal(t, server.ClientID, response.Aud, description)
-	assert.Equal(t, server.ID, response.ServerID, description)
+	assert.Equal(t, server.ID, *response.ServerID, description)
 }
 
 func TestSSOOpenIdConfiguration(t *testing.T) {
 	description := "get OpenID configuration"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
+	statusCode, body := f.Request(&TestHttpRequest{
 		Method: "GET",
 		Route:  "/api/v1/sso/.well-known/openid-configuration",
 	})
@@ -389,10 +393,11 @@ func TestSSOOpenIdConfiguration(t *testing.T) {
 
 func TestSSOJwks(t *testing.T) {
 	description := "get JWKS"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
+	statusCode, body := f.Request(&TestHttpRequest{
 		Method: "GET",
 		Route:  "/api/v1/sso/jwks",
 	})

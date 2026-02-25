@@ -9,7 +9,7 @@ import (
 
 // LTIConnectorAPI упрощает взаимодействие с бекендом LTI протокола
 type LTIConnectorAPI struct {
-	LTIFormQueries             *datastore.LTIFormQueries
+	AuthProviderQueries        *datastore.AuthProviderQueries
 	LTILaunchDataQueries       *datastore.LTILaunchDataQueries
 	UserQueries                *queries.UserQueries
 	LTIProtocolDatastoreConfig *datastore.Config
@@ -30,7 +30,7 @@ func (c *LTIConnectorAPI) ConnectorByLaunchID(launchID string) (*connector.Conne
 	if err != nil {
 		return nil, err
 	}
-	form, err := c.LTIFormQueries.Get(launchEntity.LTIFormID)
+	form, err := c.AuthProviderQueries.Get(launchEntity.AuthProviderID)
 	if err != nil {
 		return nil, err
 	}

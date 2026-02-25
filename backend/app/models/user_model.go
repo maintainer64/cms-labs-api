@@ -17,7 +17,7 @@ type UserBase struct {
 
 type UserSecret struct {
 	LastLaunchID string          `gorm:"type:varchar(255)" json:"last_launch_id"`
-	Store        types.UserStore `gorm:"type:json" json:"store"`
+	Store        types.JsonStore `gorm:"type:json" json:"store"`
 }
 
 type UserListItem struct {
@@ -25,9 +25,9 @@ type UserListItem struct {
 	UserBase
 }
 
-// TableName переопределяет название таблицы для UserListItem на `users`
+// TableName переопределяет название таблицы для UserListItem на `user`
 func (UserListItem) TableName() string {
-	return "users"
+	return "user"
 }
 
 type User struct {

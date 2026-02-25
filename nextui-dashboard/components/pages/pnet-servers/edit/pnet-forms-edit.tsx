@@ -1,11 +1,10 @@
 'use client';
 import React from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { House, Server } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { useParams } from 'react-router-dom';
-import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
 import { PnetServersEditForm } from '@/components/pages/pnet-servers/edit/form';
 import { UserRoleBase } from '@/helpers/queries/sso/auth';
 import { RoleBasedAccess } from '@/components/layout/roleBasedAccess';
@@ -20,12 +19,12 @@ export const PnetFormsEdit = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <ServersIcon />,
+      icon: <Server className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Servers,
       href: RoutesLocation.pnetServers()
     },

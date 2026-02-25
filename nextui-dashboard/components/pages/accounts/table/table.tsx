@@ -3,7 +3,7 @@ import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
-import { UserItem } from '@/helpers/queries/users/model';
+import { UserItem } from '@/helpers/queries/user/use-infinity-user-list';
 
 interface UsersTableWrapperProps {
   loadMore?: () => void;
@@ -34,7 +34,18 @@ export const UsersTableWrapper = ({ users, isLoading, loadMore }: UsersTableWrap
             )}
           </TableHeader>
           <TableBody items={users ?? []}>
-            {(item) => <TableRow>{(columnKey) => <TableCell>{RenderCell({ item, columnKey })}</TableCell>}</TableRow>}
+            {(item) => (
+              <TableRow>
+                {(columnKey) => (
+                  <TableCell>
+                    {RenderCell({
+                      item,
+                      columnKey
+                    })}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

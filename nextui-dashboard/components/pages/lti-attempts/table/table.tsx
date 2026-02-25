@@ -2,14 +2,15 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React from 'react';
 import { RenderCell } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
-import { models_LTIAttemptListItem } from '@/helpers/api';
+import { ModelsLTIAttemptListItem } from '@/helpers/api';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
 interface Props {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: models_LTIAttemptListItem[];
+  rows?: CamelCasedPropertiesDeep<ModelsLTIAttemptListItem>[];
 }
 
 export const LTIAttemptTableWrapper = ({ rows, isLoading, loadMore }: Props) => {

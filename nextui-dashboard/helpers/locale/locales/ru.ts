@@ -1,7 +1,10 @@
 const ru = {
   Login: {
     PageName: 'Вход',
+    TabSSO: 'Moodle',
+    TabInternal: 'Внутренний',
     FieldEmail: 'Почта',
+    FieldEmailDescription: 'Введите корпоративную почту',
     FieldPassword: 'Пароль',
     Submit: 'Войти',
     ErrorFieldEmailNotEmpty: 'Это должна быть почта',
@@ -16,7 +19,7 @@ const ru = {
     ErrorPageTitle: 'Ошибка авторизации',
     ErrorPageDescription: 'Попробуйте перейти на страницу входа в систему или авторизоваться через курс',
     MainTitle: 'СУиМ Лаб',
-    MainDescription: 'Система Управления и Мониторинга лаболаторных работ. Сделано на Hero UI',
+    MainDescription: 'Система Управления и Мониторинга лаболаторных работ',
     MainChangeLanguage: 'Change language'
   },
   CompaniesDropdown: {
@@ -29,9 +32,11 @@ const ru = {
     Users: 'Пользователи',
     Roles: 'Роли',
     Servers: 'Серверы',
+    Targets: 'Карта',
+    Collapse: 'Свернуть',
     CurlRequests: 'API',
     ServiceCards: 'Сервисы',
-    LTIIntegrations: 'LTIs',
+    AuthProviders: 'Идентификации',
     LTIRouting: 'Маршруты LTI',
     LTIAttempts: 'Попытки LTI',
     APIRequests: 'Запросы по API',
@@ -67,8 +72,8 @@ const ru = {
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ]
     },
-    LTIFormsTable: {
-      Title: 'Интеграции LTI',
+    AuthProvidersTable: {
+      Title: 'Интеграции идентификации',
       ButtonAdd: 'Создать',
       SearchBar: 'Поиск интеграций',
       ButtonEdit: 'Редактировать',
@@ -182,14 +187,19 @@ const ru = {
     FieldUpdatedAt: 'Обновлен в',
     FieldRelationAttempts: 'Связные попытки'
   },
-  LTIForm: {
+  AuthProvider: {
     FieldID: 'ID',
     FieldName: 'Название',
-    FieldBaseURI: 'Базовый URL LTI',
+    FieldType: 'Тип',
+    FieldTypeLTI: 'LTI',
+    FieldTypeLTIDescription: 'Подключение к платформе курса',
+    FieldTypeLDAP: 'LDAP',
+    FieldTypeLDAPDescription: 'Подключение сервера доступа к каталогам',
+    FieldBaseURI: 'Базовый URL',
     ButtonBaseURI: 'Настройка URL',
     ButtonBaseURIMoodle: 'Moodle',
     ButtonBaseURIMoodleDescription: 'Установка URL по базовому адресу Moodle',
-    DescriptionBaseURI: 'URL базовый инструмента LTI',
+    DescriptionBaseURI: 'URL базовый выбранного инструмента',
     FieldLTIAuthLoginUri: 'URL авторизации LTI',
     DescriptionLTIAuthLoginUri: 'Адрес с /mod/lti/auth.php',
     FieldLTIAuthTokenUri: 'URL токен LTI',
@@ -199,6 +209,7 @@ const ru = {
     FieldLTIClientID: 'ID клиента LTI',
     FieldLTIDeployment: 'ID deployment LTI',
     FieldKeySetURI: 'URL для получения сертификатов LTI',
+    FieldDN: 'DN',
     DescriptionKeySetURI: 'Адрес с /mod/lti/certs.php',
     FieldSSOURL: 'SSO LTI URL',
     DescriptionSSOURL: 'Ссылка на элемент курса в инструменте LTI',
@@ -231,8 +242,8 @@ const ru = {
       AcceptGradesToolValue: 'Всегда'
     },
     DeletePopup: {
-      Title: 'Удаление сущности LTI-Forms',
-      Description: 'При удалении интеграция между LMS системой будет прекращена'
+      Title: 'Удаление сущности auth provider',
+      Description: 'При удалении интеграция между системой будет прекращена'
     }
   },
   CurlRequest: {
@@ -249,7 +260,7 @@ const ru = {
       Description: 'При удалении будет невозможно вызвать API'
     }
   },
-  LTIFormAttempt: {
+  AuthProviderAttempt: {
     FieldID: 'ID попытки',
     FieldRoomNumber: 'Номер комнаты',
     FieldUserId: 'ID пользователя',
@@ -392,6 +403,12 @@ const ru = {
     Title: 'Доступ запрещен',
     Description: 'Извините, доступ для просмотра этой страницы запрещен с вашей ролью',
     Button: 'Вернуться назад'
+  },
+  Target: {
+    Title: 'Карта сервисов',
+    ButtonAdd: 'Создать',
+    SearchBar: 'Поиск',
+    ButtonEdit: 'Редактировать'
   },
   Topology: {
     Menu: {

@@ -23,46 +23,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/curl-request/delete": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete pnet_server. Roles: [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CurlRequest"
-                ],
-                "summary": "delete curl_request",
-                "parameters": [
-                    {
-                        "description": "curl_request_id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestDeleteResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/curl-request/execute": {
+        "/api/v1/curl-request/execute": {
             "post": {
                 "description": "execute request.",
                 "consumes": [
@@ -72,7 +33,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "CurlRequest",
+                    "curl_request",
                     "EXTERNAL"
                 ],
                 "summary": "execute request",
@@ -101,384 +62,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/curl-request/get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get curl_request. Roles: [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CurlRequest"
-                ],
-                "summary": "get curl_request",
-                "parameters": [
-                    {
-                        "description": "pnet_server id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestGetInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/curl-request/list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List pnet_server. Roles: [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CurlRequest"
-                ],
-                "summary": "list pnet_server",
-                "parameters": [
-                    {
-                        "description": "pnet_server list info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestListInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/curl-request/upsert": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create curl_request. Roles [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CurlRequest"
-                ],
-                "summary": "create curl_request",
-                "parameters": [
-                    {
-                        "description": "curl_request form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestEditResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/global-store": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Global store of user get",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Store"
-                ],
-                "summary": "get store by user",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.UserStore"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Global store of user get",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Store"
-                ],
-                "summary": "set store by user",
-                "parameters": [
-                    {
-                        "description": "store of create",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.UserStore"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.UserStore"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-attempt/create": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create or get exists lti_attempt. Roles: [admin, instructor, student]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIAttempt"
-                ],
-                "summary": "create lti_attempt",
-                "parameters": [
-                    {
-                        "description": "lti_attempt form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptCreateInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptCreateResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-attempt/delete": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete lti_attempt.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIAttempt"
-                ],
-                "summary": "delete lti_attempt",
-                "parameters": [
-                    {
-                        "description": "lti_attempt id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptDeleteInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptDeleteResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-attempt/edit": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Edit lti_attempt. Roles: [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIAttempt"
-                ],
-                "summary": "edit lti_attempt",
-                "parameters": [
-                    {
-                        "description": "lti_attempt form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptEditInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptEditResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-attempt/get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get lti_attempt.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIAttempt"
-                ],
-                "summary": "get lti_attempt",
-                "parameters": [
-                    {
-                        "description": "lti_attempt id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptGetInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-attempt/list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List lti_attempt. Roles: [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIAttempt"
-                ],
-                "summary": "list lti_attempt",
-                "parameters": [
-                    {
-                        "description": "lti_attempt list info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptListInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIAttemptListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-form/delete": {
+        "/api/v1/rpc/auth_provider.delete": {
             "post": {
                 "security": [
                     {
@@ -493,17 +77,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "LTIForm"
+                    "lti_form"
                 ],
                 "summary": "delete lti_form",
                 "parameters": [
                     {
                         "description": "lti_form id",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormDeleteInputDTO"
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteRequest"
                         }
                     }
                 ],
@@ -511,13 +95,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormDeleteResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderDeleteResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/lti-form/get": {
+        "/api/v1/rpc/auth_provider.get": {
             "post": {
                 "security": [
                     {
@@ -532,17 +116,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "LTIForm"
+                    "lti_form"
                 ],
                 "summary": "get lti_form",
                 "parameters": [
                     {
                         "description": "lti_form id",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormGetInputDTO"
+                            "$ref": "#/definitions/usecases.AuthProviderGetRequest"
                         }
                     }
                 ],
@@ -550,20 +134,15 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormGetResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderGetResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/lti-form/list": {
+        "/api/v1/rpc/auth_provider.list": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List lti_form. Roles: [admin]",
+                "description": "List lti_form. Roles: [*]",
                 "consumes": [
                     "application/json"
                 ],
@@ -571,17 +150,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "LTIForm"
+                    "lti_form"
                 ],
                 "summary": "list lti_form",
                 "parameters": [
                     {
                         "description": "lti_form list info",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListInputDTO"
+                            "$ref": "#/definitions/usecases.AuthProviderListRequest"
                         }
                     }
                 ],
@@ -589,41 +168,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderListResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/lti-form/sso": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List sso url. Roles: [none]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIForm"
-                ],
-                "summary": "list sso url",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormListSSOResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-form/upsert": {
+        "/api/v1/rpc/auth_provider.upsert": {
             "post": {
                 "security": [
                     {
@@ -638,17 +189,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "LTIForm"
+                    "lti_form"
                 ],
                 "summary": "create lti_form",
                 "parameters": [
                     {
                         "description": "lti_form form info",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormEditInputDTO"
+                            "$ref": "#/definitions/usecases.AuthProviderEditRequest"
                         }
                     }
                 ],
@@ -656,225 +207,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.LTIFormEditResponse"
+                            "$ref": "#/definitions/usecases.AuthProviderEditResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/lti-routing/delete": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete lti_routing. Roles [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIRouting"
-                ],
-                "summary": "delete lti_routing",
-                "parameters": [
-                    {
-                        "description": "lti_routing id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingDeleteInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingDeleteResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-routing/get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get lti_routing. Roles [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIRouting"
-                ],
-                "summary": "get lti_routing",
-                "parameters": [
-                    {
-                        "description": "lti_routing id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingGetInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-routing/list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List lti_routing. Roles [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIRouting"
-                ],
-                "summary": "list lti_routing",
-                "parameters": [
-                    {
-                        "description": "lti_routing list info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingListInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/lti-routing/upsert": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create lti_routing. Roles [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LTIRouting"
-                ],
-                "summary": "create lti_routing",
-                "parameters": [
-                    {
-                        "description": "lti_routing form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingEditInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.LTIRoutingEditResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/pnet-server-queue/list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List pnet_server_queue. Roles: [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "PNETServerQueue"
-                ],
-                "summary": "list pnet_server_queue",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/pnet-server-queue/upsert": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create pnet_server_queue. Roles: [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "PNETServerQueue"
-                ],
-                "summary": "create pnet_server_queue",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/pnet-server/delete": {
+        "/api/v1/rpc/curl_request.delete": {
             "post": {
                 "security": [
                     {
@@ -889,17 +228,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "PNETServer"
+                    "curl_request"
                 ],
-                "summary": "delete pnet_server",
+                "summary": "delete curl_request",
                 "parameters": [
                     {
-                        "description": "pnet_server id",
+                        "description": "curl_request_id",
                         "name": "form",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerDeleteInputDTO"
+                            "$ref": "#/definitions/usecases.CurlRequestDeleteRequest"
                         }
                     }
                 ],
@@ -907,20 +246,20 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerDeleteResponse"
+                            "$ref": "#/definitions/usecases.CurlRequestDeleteResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/pnet-server/get": {
+        "/api/v1/rpc/curl_request.get": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get pnet_server. Roles: [admin, instructor]",
+                "description": "get curl_request. Roles: [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -928,9 +267,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "PNETServer"
+                    "curl_request"
                 ],
-                "summary": "get pnet_server",
+                "summary": "get curl_request",
                 "parameters": [
                     {
                         "description": "pnet_server id",
@@ -938,7 +277,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerGetInputDTO"
+                            "$ref": "#/definitions/usecases.CurlRequestGetRequest"
                         }
                     }
                 ],
@@ -946,13 +285,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerGetResponse"
+                            "$ref": "#/definitions/usecases.CurlRequestGetResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/pnet-server/list": {
+        "/api/v1/rpc/curl_request.list": {
             "post": {
                 "security": [
                     {
@@ -967,7 +306,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "PNETServer"
+                    "curl_request"
                 ],
                 "summary": "list pnet_server",
                 "parameters": [
@@ -977,7 +316,626 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerListInputDTO"
+                            "$ref": "#/definitions/usecases.CurlRequestListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/curl_request.upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create curl_request. Roles [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "curl_request"
+                ],
+                "summary": "create curl_request",
+                "parameters": [
+                    {
+                        "description": "curl_request form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestEditRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.CurlRequestEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_attempt.create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create or get exists lti_attempt. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_attempt"
+                ],
+                "summary": "create lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_attempt.delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete lti_attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_attempt"
+                ],
+                "summary": "delete lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_attempt.get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get lti_attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_attempt"
+                ],
+                "summary": "get lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt id",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_attempt.list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List lti_attempt. Roles: [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_attempt"
+                ],
+                "summary": "list lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_attempt.update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edit lti_attempt. Roles: [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_attempt"
+                ],
+                "summary": "edit lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptEditRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_routing.delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_routing"
+                ],
+                "summary": "delete lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_routing.get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_routing"
+                ],
+                "summary": "get lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_routing.list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_routing"
+                ],
+                "summary": "list lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_routing.upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create lti_routing. Roles [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_routing"
+                ],
+                "summary": "create lti_routing",
+                "parameters": [
+                    {
+                        "description": "lti_routing form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingEditRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIRoutingEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/role.delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete role. Roles: [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role"
+                ],
+                "summary": "delete role",
+                "parameters": [
+                    {
+                        "description": "pnet_server id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/role.list": {
+            "post": {
+                "description": "List user. Roles[admin, instructor, student, any]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role"
+                ],
+                "summary": "list role",
+                "parameters": [
+                    {
+                        "description": "user list info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/role.upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Upset role. Roles[admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role"
+                ],
+                "summary": "upsert role",
+                "parameters": [
+                    {
+                        "description": "user form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleEditRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.RoleEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/server.delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete pnet_server. Roles: [admin]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "delete pnet_server",
+                "parameters": [
+                    {
+                        "description": "pnet_server id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.PNETServerDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.PNETServerDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/server.get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get pnet_server. Roles: [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "get pnet_server",
+                "parameters": [
+                    {
+                        "description": "pnet_server id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.PNETServerGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.PNETServerGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/server.list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List pnet_server. Roles: [admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "list pnet_server",
+                "parameters": [
+                    {
+                        "description": "pnet_server list info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.PNETServerListRequest"
                         }
                     }
                 ],
@@ -991,7 +949,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/pnet-server/ping": {
+        "/api/v1/rpc/server.ping": {
             "post": {
                 "description": "ing from external servers.",
                 "consumes": [
@@ -1001,18 +959,18 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "PNETServer",
+                    "server",
                     "EXTERNAL"
                 ],
                 "summary": "ping from pnet_server",
                 "parameters": [
                     {
                         "description": "pnet_server id",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/external.PNETServerPingInputDTO"
+                            "$ref": "#/definitions/external.PNETServerPingRequest"
                         }
                     },
                     {
@@ -1033,7 +991,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/pnet-server/upsert": {
+        "/api/v1/rpc/server.upsert": {
             "post": {
                 "security": [
                     {
@@ -1048,17 +1006,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "PNETServer"
+                    "server"
                 ],
                 "summary": "create pnet_server",
                 "parameters": [
                     {
                         "description": "pnet_server form info",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerEditInputDTO"
+                            "$ref": "#/definitions/usecases.PNETServerEditRequest"
                         }
                     }
                 ],
@@ -1072,14 +1030,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/role/delete": {
+        "/api/v1/rpc/server_queue.list": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Delete role. Roles: [admin]",
+                "description": "List pnet_server_queue. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -1087,17 +1045,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Role"
+                    "server_queue"
                 ],
-                "summary": "delete role",
+                "summary": "list pnet_server_queue",
                 "parameters": [
                     {
-                        "description": "pnet_server id",
-                        "name": "form",
+                        "description": "request",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.RoleDeleteInputDTO"
+                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListRequest"
                         }
                     }
                 ],
@@ -1105,54 +1063,20 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.RoleDeleteResponse"
+                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/role/list": {
-            "post": {
-                "description": "List user. Roles[admin, instructor, student, any]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Role"
-                ],
-                "summary": "list role",
-                "parameters": [
-                    {
-                        "description": "user list info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.RoleListInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.RoleListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/role/upsert": {
+        "/api/v1/rpc/server_queue.upsert": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Upset role. Roles[admin]",
+                "description": "Create pnet_server_queue. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -1160,17 +1084,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Role"
+                    "server_queue"
                 ],
-                "summary": "upsert role",
+                "summary": "create pnet_server_queue",
                 "parameters": [
                     {
-                        "description": "user form info",
-                        "name": "form",
+                        "description": "request",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.RoleEditInputDTO"
+                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest"
                         }
                     }
                 ],
@@ -1178,13 +1102,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.RoleEditResponse"
+                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse"
                         }
                     }
                 }
             }
         },
-        "/v1/service-card/delete": {
+        "/api/v1/rpc/service_card.delete": {
             "post": {
                 "security": [
                     {
@@ -1199,17 +1123,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "ServiceCard"
+                    "service_card"
                 ],
                 "summary": "delete service_card",
                 "parameters": [
                     {
                         "description": "service_card id",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.ServiceCardDeleteInputDTO"
+                            "$ref": "#/definitions/usecases.ServiceCardDeleteRequest"
                         }
                     }
                 ],
@@ -1223,7 +1147,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/service-card/get": {
+        "/api/v1/rpc/service_card.get": {
             "post": {
                 "security": [
                     {
@@ -1238,17 +1162,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "ServiceCard"
+                    "service_card"
                 ],
                 "summary": "get service_card",
                 "parameters": [
                     {
                         "description": "service_card id",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.ServiceCardGetInputDTO"
+                            "$ref": "#/definitions/usecases.ServiceCardGetRequest"
                         }
                     }
                 ],
@@ -1262,7 +1186,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/service-card/list": {
+        "/api/v1/rpc/service_card.list": {
             "post": {
                 "security": [
                     {
@@ -1277,7 +1201,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "ServiceCard"
+                    "service_card"
                 ],
                 "summary": "list service_card",
                 "parameters": [
@@ -1287,7 +1211,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.ServiceCardListInputDTO"
+                            "$ref": "#/definitions/usecases.ServiceCardListRequest"
                         }
                     }
                 ],
@@ -1301,7 +1225,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/service-card/upsert": {
+        "/api/v1/rpc/service_card.upsert": {
             "post": {
                 "security": [
                     {
@@ -1316,17 +1240,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "ServiceCard"
+                    "service_card"
                 ],
                 "summary": "create service_card",
                 "parameters": [
                     {
                         "description": "service_card form info",
-                        "name": "form",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.ServiceCardEditInputDTO"
+                            "$ref": "#/definitions/usecases.ServiceCardEditRequest"
                         }
                     }
                 ],
@@ -1340,7 +1264,806 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/sso/.well-known/openid-configuration": {
+        "/api/v1/rpc/sso.authorize": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение кода авторизации по OpenID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SSO"
+                ],
+                "summary": "Получение кода авторизации по OpenID.",
+                "parameters": [
+                    {
+                        "description": "renew token form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOAuthorizeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SSOAuthorizeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.addon_create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create target_addon. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_addon"
+                ],
+                "summary": "create target_addon",
+                "parameters": [
+                    {
+                        "description": "target_addon form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.addon_delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target_addon. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_addon"
+                ],
+                "summary": "delete target_addon",
+                "parameters": [
+                    {
+                        "description": "target_addon delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonDeleteOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.addon_reset": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Reset target_addon. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_addon"
+                ],
+                "summary": "reset target_addon",
+                "parameters": [
+                    {
+                        "description": "target_addon reset info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonResetInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetAddonResetOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "delete target",
+                "parameters": [
+                    {
+                        "description": "target delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetDeleteInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetDeleteOutputDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "get target",
+                "parameters": [
+                    {
+                        "description": "target get info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "list target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "list target",
+                "parameters": [
+                    {
+                        "description": "target list info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.relation_create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create target_relation. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_relation"
+                ],
+                "summary": "create target_relation",
+                "parameters": [
+                    {
+                        "description": "target_relation create info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.relation_delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target_relation. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_relation"
+                ],
+                "summary": "delete target_relation",
+                "parameters": [
+                    {
+                        "description": "target_relation delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetRelationDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Upsert target. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "upsert target",
+                "parameters": [
+                    {
+                        "description": "target upsert info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUpsertRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUpsertResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.user_delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete target_user. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_user"
+                ],
+                "summary": "delete target_user",
+                "parameters": [
+                    {
+                        "description": "target_user delete info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserDeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/target.user_upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Upsert target_user. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target_user"
+                ],
+                "summary": "upsert target_user",
+                "parameters": [
+                    {
+                        "description": "target_user upsert info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserUpsertRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.TargetUserUpsertResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get user. Roles[admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "get user",
+                "parameters": [
+                    {
+                        "description": "user id",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.global_store_get": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Global store of user get",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "get store by user",
+                "parameters": [
+                    {
+                        "description": "store of get",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UserStoreGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.UserStoreGetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.global_store_set": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Global store of user get",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "set store by user",
+                "parameters": [
+                    {
+                        "description": "store of create",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UserStoreSetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.UserStoreSetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.list": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List user. Roles[admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "list user",
+                "parameters": [
+                    {
+                        "description": "user list info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.login": {
+            "post": {
+                "description": "Login by email and password.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "login by email and password",
+                "parameters": [
+                    {
+                        "description": "credentials form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.RenewManagerCredentialsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.logout": {
+            "post": {
+                "description": "Logout.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "logout",
+                "parameters": [
+                    {
+                        "description": "logout",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.UserLogoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.password_change": {
+            "post": {
+                "description": "Change password.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "change password",
+                "parameters": [
+                    {
+                        "description": "credentials form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.UserPasswordChangeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.UserPasswordChangeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.token_refresh": {
+            "post": {
+                "description": "Renew access and refresh tokens.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "renew access and refresh tokens",
+                "parameters": [
+                    {
+                        "description": "renew token form info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.RenewManagerRefreshRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/user.upsert": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create user. Roles[admin, instructor]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "create user",
+                "parameters": [
+                    {
+                        "description": "user form info",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserEditRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.UserEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sso/.well-known/openid-configuration": {
             "get": {
                 "description": "Получить информацию о спецификации.",
                 "consumes": [
@@ -1369,7 +2092,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/sso/authorize": {
+        "/api/v1/sso/authorize": {
             "get": {
                 "security": [
                     {
@@ -1456,46 +2179,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Получение кода авторизации по OpenID.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "SSO"
-                ],
-                "summary": "Получение кода авторизации по OpenID.",
-                "parameters": [
-                    {
-                        "description": "renew token form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/auth.SSOAuthorizeInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/auth.SSOAuthorizeResponse"
-                        }
-                    }
-                }
             }
         },
-        "/v1/sso/introspect": {
+        "/api/v1/sso/introspect": {
             "post": {
                 "security": [
                     {
@@ -1546,7 +2232,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/sso/jwks": {
+        "/api/v1/sso/jwks": {
             "get": {
                 "description": "Получить информацию о публичных ключах для подписи JWT токенов.",
                 "consumes": [
@@ -1575,7 +2261,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/sso/token": {
+        "/api/v1/sso/token": {
             "post": {
                 "security": [
                     {
@@ -1648,7 +2334,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/sso/userinfo": {
+        "/api/v1/sso/userinfo": {
             "get": {
                 "security": [
                     {
@@ -1691,249 +2377,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/token/login": {
-            "post": {
-                "description": "Login by email and password.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Token"
-                ],
-                "summary": "login by email and password",
-                "parameters": [
-                    {
-                        "description": "credentials form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/auth.RenewManagerCredentialsInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/token/logout": {
-            "post": {
-                "description": "Logout.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Token"
-                ],
-                "summary": "logout",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/token/password_change": {
-            "post": {
-                "description": "Change password.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Token"
-                ],
-                "summary": "change password",
-                "parameters": [
-                    {
-                        "description": "credentials form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/auth.UserPasswordChangeInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/auth.UserPasswordRecoverResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/token/renew": {
-            "post": {
-                "description": "Renew access and refresh tokens.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Token"
-                ],
-                "summary": "renew access and refresh tokens",
-                "parameters": [
-                    {
-                        "description": "renew token form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/auth.RenewManagerInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/auth.SwaggerSSOTokenResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/user/get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get user. Roles[admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "get user",
-                "parameters": [
-                    {
-                        "description": "user id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UserGetInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UserGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/user/list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List user. Roles[admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "list user",
-                "parameters": [
-                    {
-                        "description": "user list info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UserListInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UserListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/user/upsert": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create user. Roles[admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "create user",
-                "parameters": [
-                    {
-                        "description": "user form info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UserEditInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.UserEditResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v2/lti/launch": {
+        "/api/v2/lti/launch": {
             "get": {
                 "description": "инициализация подключения к LTI.",
                 "consumes": [
@@ -1971,7 +2415,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v2/lti/login": {
+        "/api/v2/lti/login": {
             "get": {
                 "description": "аутентификация LTI.",
                 "consumes": [
@@ -2042,6 +2486,34 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "provider_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "auth.RenewManagerCredentialsRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.login"
+                },
+                "params": {
+                    "$ref": "#/definitions/auth.RenewManagerCredentialsInputDTO"
                 }
             }
         },
@@ -2050,6 +2522,31 @@ const docTemplate = `{
             "properties": {
                 "refresh_token": {
                     "type": "string"
+                }
+            }
+        },
+        "auth.RenewManagerRefreshRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.token_refresh"
+                },
+                "params": {
+                    "$ref": "#/definitions/auth.RenewManagerInputDTO"
                 }
             }
         },
@@ -2117,18 +2614,37 @@ const docTemplate = `{
                 }
             }
         },
+        "auth.SSOAuthorizeRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "sso.authorize"
+                },
+                "params": {
+                    "$ref": "#/definitions/auth.SSOAuthorizeInputDTO"
+                }
+            }
+        },
         "auth.SSOAuthorizeResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/auth.SSOAuthorizeOutputDTO"
@@ -2242,6 +2758,10 @@ const docTemplate = `{
                     "description": "Iss. Идентификатор эмитента токена",
                     "type": "string"
                 },
+                "k8s:access_type": {
+                    "description": "K8S type",
+                    "type": "string"
+                },
                 "last_launch_id": {
                     "description": "LastLaunchId. ID пользователя SSO через LMS систему",
                     "type": "string"
@@ -2277,20 +2797,37 @@ const docTemplate = `{
         },
         "auth.SwaggerSSOTokenResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/auth.SwaggerSSOToken"
                 }
+            }
+        },
+        "auth.UserLogoutRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.logout"
+                },
+                "params": {}
             }
         },
         "auth.UserPasswordChangeInputDTO": {
@@ -2315,18 +2852,37 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.UserPasswordRecoverResponse": {
+        "auth.UserPasswordChangeRequest": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.password_change"
+                },
+                "params": {
+                    "$ref": "#/definitions/auth.UserPasswordChangeInputDTO"
+                }
+            }
+        },
+        "auth.UserPasswordChangeResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/auth.UserPasswordChangeOutputDTO"
@@ -2386,21 +2942,143 @@ const docTemplate = `{
                 }
             }
         },
+        "external.PNETServerPingRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.ping"
+                },
+                "params": {
+                    "$ref": "#/definitions/external.PNETServerPingInputDTO"
+                }
+            }
+        },
         "external.PNETServerPingResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/external.PNETServerPingOutputDTO"
+                }
+            }
+        },
+        "lti_query.AuthProviderListInputDTO": {
+            "type": "object",
+            "properties": {
+                "is_auth": {
+                    "type": "boolean"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AuthProvider": {
+            "type": "object",
+            "required": [
+                "base_uri",
+                "created_at",
+                "name",
+                "type",
+                "updated_at"
+            ],
+            "properties": {
+                "base_uri": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key_set_uri": {
+                    "type": "string"
+                },
+                "lti_auth_login_uri": {
+                    "type": "string"
+                },
+                "lti_auth_token_uri": {
+                    "type": "string"
+                },
+                "lti_client_id": {
+                    "type": "string"
+                },
+                "lti_deployment_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "private_key": {
+                    "type": "string"
+                },
+                "public_key": {
+                    "type": "string"
+                },
+                "sso_url": {
+                    "type": "string"
+                },
+                "target_link_uri": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AuthProviderListItem": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "name",
+                "type",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sso_url": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },
@@ -2551,100 +3229,6 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "user_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.LTIForm": {
-            "type": "object",
-            "required": [
-                "base_uri",
-                "created_at",
-                "key_set_uri",
-                "lti_auth_login_uri",
-                "lti_auth_token_uri",
-                "lti_client_id",
-                "lti_deployment_id",
-                "name",
-                "private_key",
-                "public_key",
-                "target_link_uri",
-                "updated_at"
-            ],
-            "properties": {
-                "base_uri": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "key_set_uri": {
-                    "type": "string"
-                },
-                "lti_auth_login_uri": {
-                    "type": "string"
-                },
-                "lti_auth_token_uri": {
-                    "type": "string"
-                },
-                "lti_client_id": {
-                    "type": "string"
-                },
-                "lti_deployment_id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "private_key": {
-                    "type": "string"
-                },
-                "public_key": {
-                    "type": "string"
-                },
-                "sso_url": {
-                    "type": "string"
-                },
-                "target_link_uri": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.LTIFormListItem": {
-            "type": "object",
-            "required": [
-                "created_at",
-                "lti_client_id",
-                "lti_deployment_id",
-                "name",
-                "updated_at"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "lti_client_id": {
-                    "type": "string"
-                },
-                "lti_deployment_id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "sso_url": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -2936,6 +3520,103 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Target": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "synchronized_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "internal_links": {
+                    "description": "список ссылок",
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "internal_tags": {
+                    "description": "массив внутренних тегов",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "links": {
+                    "description": "список ссылок",
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "synchronized_at": {
+                    "type": "string"
+                },
+                "tags": {
+                    "description": "массив тегов",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TargetLink": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TargetRelation": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "from_target_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "relation_type": {
+                    "type": "string"
+                },
+                "to_target_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "required": [
@@ -2969,7 +3650,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "store": {
-                    "$ref": "#/definitions/types.UserStore"
+                    "$ref": "#/definitions/types.JsonStore"
                 },
                 "updated_at": {
                     "type": "string"
@@ -3007,6 +3688,54 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "queries.CurlRequestQueriesListDTO": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "search": {
+                    "type": "string"
+                }
+            }
+        },
+        "queries.PNETServerQueriesListDTO": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "order_by": {
+                    "description": "The type of orderBy\nenum: createdAt,unitRate,lastCountUsers",
+                    "type": "string"
+                },
+                "search": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "The type of status\nenum: all,active",
+                    "type": "string"
+                },
+                "types": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -3049,18 +3778,35 @@ const docTemplate = `{
                 }
             }
         },
+        "round_queue_pool_pnet.RoundQueuePoolPnetListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server_queue.list"
+                },
+                "params": {}
+            }
+        },
         "round_queue_pool_pnet.RoundQueuePoolPnetListResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO"
@@ -3070,27 +3816,357 @@ const docTemplate = `{
         "round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO": {
             "type": "object"
         },
+        "round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server_queue.upsert"
+                },
+                "params": {}
+            }
+        },
         "round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO"
                 }
             }
         },
-        "types.UserStore": {
+        "types.JsonStore": {
             "type": "object",
             "additionalProperties": true
+        },
+        "types.UserStoreGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.global_store_get"
+                },
+                "params": {}
+            }
+        },
+        "types.UserStoreGetResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/types.JsonStore"
+                }
+            }
+        },
+        "types.UserStoreSetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.global_store_set"
+                },
+                "params": {
+                    "$ref": "#/definitions/types.JsonStore"
+                }
+            }
+        },
+        "types.UserStoreSetResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "usecases.AuthProviderDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.delete"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptGetInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderEditInputDTO": {
+            "type": "object",
+            "required": [
+                "base_uri",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "auth_login_uri": {
+                    "type": "string"
+                },
+                "auth_token_uri": {
+                    "type": "string"
+                },
+                "base_uri": {
+                    "type": "string"
+                },
+                "client_id": {
+                    "type": "string"
+                },
+                "deployment_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key_set_uri": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sso_url": {
+                    "type": "string"
+                },
+                "target_link_uri": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.AuthProviderEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderEditRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.AuthProviderEditInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderEditResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderEditOutputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.AuthProvider"
+                }
+            }
+        },
+        "usecases.AuthProviderGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.AuthProviderGetInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderGetResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderGetOutputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AuthProviderListItem"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.AuthProviderListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_form.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/lti_query.AuthProviderListInputDTO"
+                }
+            }
+        },
+        "usecases.AuthProviderListResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.AuthProviderListOutputDTO"
+                }
+            }
         },
         "usecases.CurlRequestDeleteInputDTO": {
             "type": "object",
@@ -3100,18 +4176,46 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.CurlRequestDeleteRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "curl_request.delete"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
+                }
+            }
+        },
         "usecases.CurlRequestDeleteResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
@@ -3164,18 +4268,46 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.CurlRequestEditRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "curl_request.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
+                }
+            }
+        },
         "usecases.CurlRequestEditResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.CurlRequestEditOutputDTO"
@@ -3198,41 +4330,49 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.CurlRequestGetResponse": {
+        "usecases.CurlRequestGetRequest": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc",
+                "method"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
-                "result": {
-                    "$ref": "#/definitions/usecases.CurlRequestGetOutputDTO"
+                "method": {
+                    "type": "string",
+                    "default": "curl_request.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.CurlRequestGetInputDTO"
                 }
             }
         },
-        "usecases.CurlRequestListInputDTO": {
+        "usecases.CurlRequestGetResponse": {
             "type": "object",
+            "required": [
+                "id",
+                "jsonrpc"
+            ],
             "properties": {
-                "ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "limit": {
-                    "type": "integer"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
-                "offset": {
-                    "type": "integer"
-                },
-                "search": {
-                    "type": "string"
+                "result": {
+                    "$ref": "#/definitions/usecases.CurlRequestGetOutputDTO"
                 }
             }
         },
@@ -3254,18 +4394,46 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.CurlRequestListRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "curl_request.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/queries.CurlRequestQueriesListDTO"
+                }
+            }
+        },
         "usecases.CurlRequestListResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.CurlRequestListOutputDTO"
@@ -3303,18 +4471,46 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIAttemptCreateRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_attempt.create"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptCreateInputDTO"
+                }
+            }
+        },
         "usecases.LTIAttemptCreateResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIAttemptCreateOutputDTO"
@@ -3329,18 +4525,46 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIAttemptDeleteRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_attempt.delete"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptDeleteInputDTO"
+                }
+            }
+        },
         "usecases.LTIAttemptDeleteResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIAttemptDeleteInputDTO"
@@ -3372,18 +4596,46 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIAttemptEditRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_attempt.update"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptEditInputDTO"
+                }
+            }
+        },
         "usecases.LTIAttemptEditResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIAttemptEditOutputDTO"
@@ -3406,18 +4658,46 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIAttemptGetRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_attempt.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptGetInputDTO"
+                }
+            }
+        },
         "usecases.LTIAttemptGetResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIAttemptGetOutputDTO"
@@ -3455,234 +4735,49 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIAttemptListRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_attempt.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptListInputDTO"
+                }
+            }
+        },
         "usecases.LTIAttemptListResponse": {
             "type": "object",
             "required": [
-                "error",
-                "msg"
+                "id",
+                "jsonrpc"
             ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIAttemptListOutputDTO"
-                }
-            }
-        },
-        "usecases.LTIFormDeleteInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.LTIFormDeleteResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.LTIFormDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.LTIFormEditInputDTO": {
-            "type": "object",
-            "required": [
-                "auth_login_uri",
-                "auth_token_uri",
-                "base_uri",
-                "client_id",
-                "deployment_id",
-                "key_set_uri",
-                "name",
-                "target_link_uri"
-            ],
-            "properties": {
-                "auth_login_uri": {
-                    "type": "string"
-                },
-                "auth_token_uri": {
-                    "type": "string"
-                },
-                "base_uri": {
-                    "type": "string"
-                },
-                "client_id": {
-                    "type": "string"
-                },
-                "deployment_id": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "key_set_uri": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "sso_url": {
-                    "type": "string"
-                },
-                "target_link_uri": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.LTIFormEditOutputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.LTIFormEditResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.LTIFormEditOutputDTO"
-                }
-            }
-        },
-        "usecases.LTIFormGetInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.LTIFormGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "model": {
-                    "$ref": "#/definitions/models.LTIForm"
-                }
-            }
-        },
-        "usecases.LTIFormGetResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.LTIFormGetOutputDTO"
-                }
-            }
-        },
-        "usecases.LTIFormListInputDTO": {
-            "type": "object",
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "search": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.LTIFormListOutputDTO": {
-            "type": "object",
-            "required": [
-                "model",
-                "total_count"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.LTIFormListItem"
-                    }
-                },
-                "total_count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.LTIFormListResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.LTIFormListOutputDTO"
-                }
-            }
-        },
-        "usecases.LTIFormListSSOOutputDTO": {
-            "type": "object",
-            "required": [
-                "model"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.LTIFormListItem"
-                    }
-                }
-            }
-        },
-        "usecases.LTIFormListSSOResponse": {
-            "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.LTIFormListSSOOutputDTO"
                 }
             }
         },
@@ -3694,18 +4789,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIRoutingDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_routing.delete"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIRoutingDeleteInputDTO"
+                }
+            }
+        },
         "usecases.LTIRoutingDeleteResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIRoutingDeleteInputDTO"
@@ -3770,18 +4884,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIRoutingEditRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_routing.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIRoutingEditInputDTO"
+                }
+            }
+        },
         "usecases.LTIRoutingEditResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIRoutingEditOutputDTO"
@@ -3804,18 +4937,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIRoutingGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_routing.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIRoutingGetInputDTO"
+                }
+            }
+        },
         "usecases.LTIRoutingGetResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIRoutingGetOutputDTO"
@@ -3854,18 +5006,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIRoutingListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_routing.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIRoutingListInputDTO"
+                }
+            }
+        },
         "usecases.LTIRoutingListResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.LTIRoutingListOutputDTO"
@@ -3880,18 +5051,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.PNETServerDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.PNETServerDeleteInputDTO"
+                }
+            }
+        },
         "usecases.PNETServerDeleteResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.PNETServerDeleteInputDTO"
@@ -3949,18 +5139,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.PNETServerEditRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.PNETServerEditInputDTO"
+                }
+            }
+        },
         "usecases.PNETServerEditResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.PNETServerEditOutputDTO"
@@ -3989,49 +5198,40 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.PNETServerGetResponse": {
+        "usecases.PNETServerGetRequest": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
-                "result": {
-                    "$ref": "#/definitions/usecases.PNETServerGetOutputDTO"
+                "method": {
+                    "type": "string",
+                    "default": "server.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.PNETServerGetInputDTO"
                 }
             }
         },
-        "usecases.PNETServerListInputDTO": {
+        "usecases.PNETServerGetResponse": {
             "type": "object",
             "properties": {
-                "limit": {
-                    "type": "integer"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "offset": {
-                    "type": "integer"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
-                "order_by": {
-                    "description": "The type of orderBy\nenum: createdAt,unitRate,lastCountUsers",
-                    "type": "string"
-                },
-                "search": {
-                    "type": "string"
-                },
-                "status": {
-                    "description": "The type of status\nenum: all,active",
-                    "type": "string"
-                },
-                "types": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "result": {
+                    "$ref": "#/definitions/usecases.PNETServerGetOutputDTO"
                 }
             }
         },
@@ -4070,18 +5270,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.PNETServerListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/queries.PNETServerQueriesListDTO"
+                }
+            }
+        },
         "usecases.PNETServerListResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.PNETServerListOutputDTO"
@@ -4099,18 +5318,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.RoleDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "role.delete"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.RoleDeleteInputDTO"
+                }
+            }
+        },
         "usecases.RoleDeleteResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.RoleDeleteInputDTO"
@@ -4131,21 +5369,48 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.RoleEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.RoleEditRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "role.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.RoleEditInputDTO"
+                }
+            }
+        },
         "usecases.RoleEditResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.UserEditOutputDTO"
+                    "$ref": "#/definitions/usecases.RoleEditOutputDTO"
                 }
             }
         },
@@ -4170,18 +5435,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.RoleListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "role.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.RoleListInputDTO"
+                }
+            }
+        },
         "usecases.RoleListResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.RoleListOutputDTO"
@@ -4196,18 +5480,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.ServiceCardDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ServiceCardDeleteInputDTO"
+                }
+            }
+        },
         "usecases.ServiceCardDeleteResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.ServiceCardDeleteInputDTO"
@@ -4240,29 +5543,40 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.ServiceCardEditOutputDTO": {
+        "usecases.ServiceCardEditRequest": {
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ServiceCardEditInputDTO"
                 }
             }
         },
         "usecases.ServiceCardEditResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/usecases.ServiceCardEditOutputDTO"
+                    "$ref": "#/definitions/usecases.ServiceCardDeleteInputDTO"
                 }
             }
         },
@@ -4282,18 +5596,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.ServiceCardGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ServiceCardGetInputDTO"
+                }
+            }
+        },
         "usecases.ServiceCardGetResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.ServiceCardGetOutputDTO"
@@ -4332,21 +5665,619 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.ServiceCardListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ServiceCardListInputDTO"
+                }
+            }
+        },
         "usecases.ServiceCardListResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.ServiceCardListOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetAddonCreateInputDTO": {
+            "type": "object",
+            "required": [
+                "addon_id",
+                "target_id"
+            ],
+            "properties": {
+                "addon_id": {
+                    "type": "string"
+                },
+                "iss_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetAddonCreateOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetAddonCreateRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetAddonCreateInputDTO"
+                }
+            }
+        },
+        "usecases.TargetAddonCreateResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetAddonCreateOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetAddonDeleteInputDTO": {
+            "type": "object",
+            "required": [
+                "addon_id",
+                "target_id"
+            ],
+            "properties": {
+                "addon_id": {
+                    "type": "string"
+                },
+                "iss_id": {
+                    "type": "string"
+                },
+                "target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetAddonDeleteOutputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetAddonResetInputDTO": {
+            "type": "object",
+            "required": [
+                "addon_id",
+                "target_id"
+            ],
+            "properties": {
+                "addon_id": {
+                    "type": "string"
+                },
+                "iss_id": {
+                    "type": "string"
+                },
+                "target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetAddonResetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetDeleteInputDTO": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetDeleteOutputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetGetInputDTO": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetGetInputDTO"
+                }
+            }
+        },
+        "usecases.TargetGetResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/models.Target"
+                }
+            }
+        },
+        "usecases.TargetItem": {
+            "type": "object",
+            "required": [
+                "is_mine",
+                "taget"
+            ],
+            "properties": {
+                "is_mine": {
+                    "type": "boolean"
+                },
+                "taget": {
+                    "$ref": "#/definitions/models.Target"
+                }
+            }
+        },
+        "usecases.TargetListInputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetListOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/usecases.TargetModel"
+                }
+            }
+        },
+        "usecases.TargetListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetListInputDTO"
+                }
+            }
+        },
+        "usecases.TargetListResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetListOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetModel": {
+            "type": "object",
+            "properties": {
+                "relations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.TargetRelationItem"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.TargetItem"
+                    }
+                }
+            }
+        },
+        "usecases.TargetRelationCreateInputDTO": {
+            "type": "object",
+            "required": [
+                "from_target_id",
+                "relation_type",
+                "to_target_id"
+            ],
+            "properties": {
+                "from_target_id": {
+                    "type": "string"
+                },
+                "relation_type": {
+                    "type": "string"
+                },
+                "to_target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetRelationCreateOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetRelationCreateRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetRelationCreateInputDTO"
+                }
+            }
+        },
+        "usecases.TargetRelationCreateResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetRelationCreateOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetRelationDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "from_target_id": {
+                    "type": "string"
+                },
+                "relation_type": {
+                    "type": "string"
+                },
+                "to_target_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetRelationDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetRelationDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.TargetRelationDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetRelationDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.TargetRelationItem": {
+            "type": "object",
+            "properties": {
+                "relation": {
+                    "$ref": "#/definitions/models.TargetRelation"
+                }
+            }
+        },
+        "usecases.TargetUpsertInputDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "nil – создание, иначе – обновление",
+                    "type": "string"
+                },
+                "links": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.TargetLink"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetUpsertOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.TargetUpsertRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetUpsertInputDTO"
+                }
+            }
+        },
+        "usecases.TargetUpsertResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetUpsertOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserDeleteInputDTO": {
+            "type": "object",
+            "required": [
+                "target_id",
+                "user_id"
+            ],
+            "properties": {
+                "target_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetUserDeleteOutputDTO": {
+            "type": "object"
+        },
+        "usecases.TargetUserDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetUserDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetUserDeleteOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertInputDTO": {
+            "type": "object",
+            "required": [
+                "roles",
+                "target_id",
+                "user_id"
+            ],
+            "properties": {
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "target_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "service_card.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.TargetUserUpsertInputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserUpsertResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.TargetUserUpsertOutputDTO"
                 }
             }
         },
@@ -4382,7 +6313,7 @@ const docTemplate = `{
                     }
                 },
                 "store": {
-                    "$ref": "#/definitions/types.UserStore"
+                    "$ref": "#/definitions/types.JsonStore"
                 }
             }
         },
@@ -4394,18 +6325,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.UserEditRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.UserEditInputDTO"
+                }
+            }
+        },
         "usecases.UserEditResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.UserEditOutputDTO"
@@ -4434,18 +6384,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.UserGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.UserGetInputDTO"
+                }
+            }
+        },
         "usecases.UserGetResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.UserGetOutputDTO"
@@ -4507,18 +6476,37 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.UserListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "user.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.UserListInputDTO"
+                }
+            }
+        },
         "usecases.UserListResponse": {
             "type": "object",
-            "required": [
-                "error",
-                "msg"
-            ],
             "properties": {
-                "error": {
-                    "type": "boolean"
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
                 },
-                "msg": {
-                    "type": "string"
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.UserListOutputDTO"
@@ -4539,7 +6527,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/api",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "API",
 	Description:      "This is an auto-generated API Docs.",

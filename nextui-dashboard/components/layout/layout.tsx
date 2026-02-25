@@ -1,33 +1,27 @@
 'use client';
 
 import React from 'react';
-import { useLockedBody } from '../hooks/useBodyLock';
-import { NavbarWrapper } from '../navbar/navbar';
 import { SidebarWrapper } from '../sidebar/sidebar';
 import { SidebarContext } from './layout-context';
+import useCollapseBrowser from '@/components/navbar/useCollapse';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
-  const [_, setLocked] = useLockedBody(false);
-  const handleToggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-    setLocked(!sidebarOpen);
-  };
+  const sidebarState = useCollapseBrowser();
 
   return (
     <SidebarContext.Provider
       value={{
-        collapsed: sidebarOpen,
-        setCollapsed: handleToggleSidebar
+        collapsed: sidebarState.collapsed,
+        setCollapsed: sidebarState.setCollapsed
       }}
     >
       <section className='flex'>
         <SidebarWrapper />
-        <NavbarWrapper>{children}</NavbarWrapper>
+        <div className='relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden'>{children}</div>
       </section>
     </SidebarContext.Provider>
   );

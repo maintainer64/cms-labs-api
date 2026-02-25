@@ -8,20 +8,21 @@ import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
-import { models_Role } from '@/helpers/api';
-import { useRoleDelete } from '@/helpers/queries/roles/delete';
-import { useRoleUpsert } from '@/helpers/queries/roles/upsert';
-import { useRolesList } from '@/helpers/queries/roles/get';
+import { ModelsRole } from '@/helpers/api';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { useQueryRoleList } from '@/helpers/queries/role/use-query-role-list';
+import { useMutationRoleUpsert } from '@/helpers/queries/role/use-mutation-role-upsert';
+import { useMutationRoleDelete } from '@/helpers/queries/role/use-mutation-role-delete';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_Role = {
+const defaultValues: CamelCasedPropertiesDeep<ModelsRole> = {
   code: '',
-  created_at: '',
+  createdAt: '',
   name: '',
-  updated_at: ''
+  updatedAt: ''
 };
 
 export const RolesEditForm = ({ id }: EditFormProps) => {
@@ -29,11 +30,11 @@ export const RolesEditForm = ({ id }: EditFormProps) => {
     locale: { Roles, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const queryRoles = useRolesList();
-  const initialValues = queryRoles.data?.result?.model.filter((role) => role.id === id)?.[0] ?? defaultValues;
-  const { mutate } = useRoleUpsert({
-    onSuccess: (data, { formikHelpers }) => {
-      navigate(RoutesLocation.rolesEdit(data.result?.id?.toString() || ''), { replace: true });
+  const queryRoles = useQueryRoleList({});
+  const initialValues = queryRoles.data?.model.filter((role) => role.id === id)?.[0] ?? defaultValues;
+  const { mutate } = useMutationRoleUpsert({
+    onSuccess: (data) => {
+      navigate(RoutesLocation.rolesEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -47,7 +48,7 @@ export const RolesEditForm = ({ id }: EditFormProps) => {
       });
     }
   });
-  const onDeleteMutation = useRoleDelete({
+  const onDeleteMutation = useMutationRoleDelete({
     onSuccess: () => {
       navigate(RoutesLocation.roles(), { replace: true });
       addToast({
@@ -74,7 +75,11 @@ export const RolesEditForm = ({ id }: EditFormProps) => {
       initialValues={initialValues}
       validationSchema={undefined}
       onSubmit={(values, formikHelpers) => {
-        mutate({ values, formikHelpers });
+        mutate({
+          id: values.id,
+          name: values.name,
+          code: values.code
+        });
       }}
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
@@ -106,14 +111,14 @@ export const RolesEditForm = ({ id }: EditFormProps) => {
               variant='bordered'
               label={Roles.FieldCreatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.created_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
               label={Roles.FieldUpdatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.updated_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>

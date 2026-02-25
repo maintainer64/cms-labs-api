@@ -1,21 +1,30 @@
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, NavbarItem } from '@heroui/react';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react';
 import React, { useCallback } from 'react';
-import { userClearCookies } from '@/helpers/queries/jwt/userClearCookies';
+import { useMutationUserLogout } from '@/helpers/queries/user/use-mutation-user-logout';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
 import CustomAvatar from '@/components/sidebar/avatar';
 import { RoutesLocation } from '@/components/routes';
+import { useSidebarContext } from '@/components/layout/layout-context';
 
 export const UserDropdown = () => {
   const navigate = useNavigate();
+  const { collapsed } = useSidebarContext();
   const { locale } = useLanguageBrowser();
   const user = useUserProfile();
 
+  const { mutateAsync } = useMutationUserLogout();
+
+  const handleUser = useCallback(async () => {
+    await mutateAsync({});
+    navigate(RoutesLocation.accountsEdit(user.sub));
+  }, [navigate, mutateAsync, user.sub]);
+
   const handleLogout = useCallback(async () => {
-    await userClearCookies();
+    await mutateAsync({});
     navigate(RoutesLocation.login());
-  }, [navigate]);
+  }, [navigate, mutateAsync]);
 
   const handleChangeLanguage = useCallback(() => {
     navigate(RoutesLocation.language());
@@ -31,20 +40,21 @@ export const UserDropdown = () => {
 
   return (
     <Dropdown>
-      <NavbarItem>
-        <DropdownTrigger>
+      <DropdownTrigger>
+        <div className='hover:bg-default-100 flex gap-2 w-full min-h-[44px] h-full items-center px-3.5 rounded-xl cursor-pointer transition-all duration-150 active:scale-[0.98]'>
           {CustomAvatar({
             tooltip: false,
             as: 'button',
-            size: 'md',
+            size: 'sm',
             username: user.name,
             name: user.name,
             email: user.email
           })}
-        </DropdownTrigger>
-      </NavbarItem>
+          {collapsed ? null : <span className='text-default-900'>{user.name || user.email}</span>}
+        </div>
+      </DropdownTrigger>
       <DropdownMenu aria-label='User menu actions'>
-        <DropdownItem key='profile' className='flex flex-col justify-start w-full items-start'>
+        <DropdownItem key='profile' className='flex flex-col justify-start w-full items-start' onPress={handleUser}>
           <p>{locale.UserNavBar.SignedAs}</p>
           <p>{user.email}</p>
         </DropdownItem>

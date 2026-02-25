@@ -23,7 +23,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/sso/login": {
+        "/pnet-lab-addon/api/v1/sso/login": {
             "get": {
                 "description": "Отправка пользователя с параметрами на сервер аутентификации.",
                 "consumes": [
@@ -57,7 +57,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/sso/openid": {
+        "/pnet-lab-addon/api/v1/sso/openid": {
             "get": {
                 "description": "Дополнительные параметры:",
                 "consumes": [
@@ -109,7 +109,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/task/pnet-server-ping": {
+        "/pnet-lab-addon/api/v1/task/pnet-server-ping": {
             "post": {
                 "description": "Пинг в core-backend для синхронизации попыток.",
                 "consumes": [
@@ -143,7 +143,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/pnet-lab-addon/api",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "API",
 	Description:      "This is an auto-generated API Docs.",

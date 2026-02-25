@@ -1,16 +1,19 @@
-import { auth_SSOAuthorizeInputDTO } from '@/helpers/api';
+import { AuthSSOAuthorizeInputDTO } from '@/helpers/api';
 import dayjs from 'dayjs';
 import { SSOAuthorizationParams } from '@/components/pages/auth/sso';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+
+type Params = CamelCasedPropertiesDeep<AuthSSOAuthorizeInputDTO>;
 
 interface SSORedirectSave {
-  params: auth_SSOAuthorizeInputDTO;
+  params: Params;
   createdAt: string;
 }
 
 const SSO_REDIRECT_PARAMS_KEY = 'sso_redirect_params';
 
-export const SSOAuthorizationSave = (params: auth_SSOAuthorizeInputDTO) => {
-  if (params?.redirect_uri && params?.client_id) {
+export const SSOAuthorizationSave = (params: Params) => {
+  if (params?.redirectUri && params?.clientId) {
     const payload: SSORedirectSave = {
       params: params,
       createdAt: dayjs().toString()
@@ -23,14 +26,14 @@ export const SSOAuthorizationReset = () => {
   localStorage.setItem(SSO_REDIRECT_PARAMS_KEY, '');
 };
 
-export const SSOAuthorizationGet = (): auth_SSOAuthorizeInputDTO | null => {
+export const SSOAuthorizationGet = (): Params | null => {
   SSOAuthorizationSave(SSOAuthorizationParams());
   const payloadString = localStorage.getItem(SSO_REDIRECT_PARAMS_KEY);
   try {
     const payload = JSON.parse(payloadString || '') as SSORedirectSave;
     if (
-      payload.params.redirect_uri &&
-      payload.params.client_id &&
+      payload.params.redirectUri &&
+      payload.params.clientId &&
       dayjs().diff(dayjs(payload.createdAt), 'minute') <= 3
     ) {
       return payload.params;

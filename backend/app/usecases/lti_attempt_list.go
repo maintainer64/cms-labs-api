@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type LTIAttemptListUC struct {
@@ -16,11 +15,23 @@ type LTIAttemptListInputDTO struct {
 	Offset  int    `json:"offset"`
 }
 
+type LTIAttemptListRequest struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string                 `json:"method" default:"lti_attempt.list" validate:"required"`
+	Params  LTIAttemptListInputDTO `json:"params,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" validate:"required"`
+}
+
 type LTIAttemptListOutputDTO struct {
 	Model []models.LTIAttemptListItem `json:"model" validate:"required"`
 }
 
-type LTIAttemptListResponse = response.Response[LTIAttemptListOutputDTO]
+type LTIAttemptListResponse struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" validate:"required"`
+	Result  LTIAttemptListOutputDTO `json:"result,omitempty"`
+	Error   interface{}             `json:"error,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" validate:"required"`
+}
 
 func (u *LTIAttemptListUC) Execute(dto LTIAttemptListInputDTO) (LTIAttemptListOutputDTO, error) {
 	entities, err := u.LTIAttemptQueries.List(dto.UserIds, dto.Limit, dto.Offset)

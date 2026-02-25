@@ -4,9 +4,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+
 	json "github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 
 	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
@@ -17,7 +18,8 @@ import (
 
 func TestV1PNETServerRouteGet(t *testing.T) {
 	description := "get server"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 	entity := models.PNETServer{}
 	entity.Name = "Server"
 	entity.Url = "https://localhost"
@@ -31,14 +33,13 @@ func TestV1PNETServerRouteGet(t *testing.T) {
 	entity.CreatedAt = time.Now().UTC()
 	entity.UpdatedAt = time.Now().UTC()
 	f.DB.Create(&entity)
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/pnet-server/get",
-		Body: FiberRequestPayload(map[string]any{
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "server.get",
+		Params: fiber.Map{
 			"id": entity.ID,
-		}),
+		},
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.PNETServerGetResponse{}
@@ -50,28 +51,38 @@ func TestV1PNETServerRouteGet(t *testing.T) {
 
 func TestV1PNETServerRouteGetNotFound(t *testing.T) {
 	description := "not found pnet"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
-	expectedBody := map[string]interface{}{
-		"error": true,
-		"msg":   "PNETServer not found",
-	}
-	expectedCode := 404
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/pnet-server/get",
-		Body: FiberRequestPayload(map[string]any{
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
+	expectedCode := 500
+	r := &TestRpcRequest{
+		Method: "server.get",
+		Params: fiber.Map{
 			"id": 9999999,
-		}),
+		},
 		Authorization: authHeader,
-	})
+	}
+	statusCode, body := f.Rpc(r)
+	expectedBody := map[string]interface{}{
+		"error": map[string]interface{}{
+			"code": -32010,
+			"data": map[string]interface{}{
+				"code":    "server_not_found",
+				"message": "Server has not found",
+			},
+			"message": "Validation error",
+		},
+		"id":      r.ID,
+		"jsonrpc": "2.0",
+	}
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, FiberJSON(expectedBody), body, description)
 }
 
 func TestV1PNETServerRouteSearch(t *testing.T) {
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 	now := time.Now().UTC()
 	entity := models.PNETServer{}
 	entity.Name = "Server " + uuid.New().String()
@@ -94,7 +105,7 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 	entity2.Token = uuid.New().String()
 	entity2.ClientID = uuid.New().String()
 	f.DB.Create(&entity2)
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	tests := []struct {
 		description string
 		body        map[string]any
@@ -157,10 +168,9 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		statusCode, body := f.Request(&FiberTestHttpRequest{
-			Method:        "POST",
-			Route:         "/api/v1/pnet-server/list",
-			Body:          FiberRequestPayload(test.body),
+		statusCode, body := f.Rpc(&TestRpcRequest{
+			Method:        "server.list",
+			Params:        test.body,
 			Authorization: authHeader,
 		})
 		bodyModel := usecases.PNETServerListResponse{}
@@ -175,7 +185,8 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 }
 
 func TestV1PNETServerRouteDelete(t *testing.T) {
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 	now := time.Now().UTC()
 	entity := models.PNETServer{}
 	entity.Name = "Server " + uuid.New().String()
@@ -190,7 +201,7 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 	entity.ClientID = uuid.New().String()
 	f.DB.Create(&entity)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 	tests := []struct {
 		description string
 		id          uint
@@ -209,14 +220,15 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		statusCode, body := f.Request(&FiberTestHttpRequest{
-			Method: "POST",
-			Route:  "/api/v1/pnet-server/delete",
-			Body: FiberRequestPayload(map[string]any{
-				"id": test.id,
-			}),
-			Authorization: authHeader,
-		})
+		statusCode, body := f.Rpc(
+			&TestRpcRequest{
+				Method: "server.delete",
+				Params: fiber.Map{
+					"id": test.id,
+				},
+				Authorization: authHeader,
+			},
+		)
 		response := usecases.PNETServerDeleteResponse{}
 		_ = json.Unmarshal([]byte(body), &response)
 		assert.Equal(t, 200, statusCode, test.description)
@@ -232,8 +244,9 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 
 func TestV1PNETServerRouteCreate(t *testing.T) {
 	description := "Create new PNET server"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Тестовые данные
 	now := time.Now().UTC()
@@ -249,10 +262,9 @@ func TestV1PNETServerRouteCreate(t *testing.T) {
 	entity.UnitRate = 20
 	entity.ClientID = uuid.New().String()
 
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/pnet-server/upsert",
-		Body: FiberRequestPayload(usecases.PNETServerEditInputDTO{
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "server.upsert",
+		Params: usecases.PNETServerEditInputDTO{
 			ClientID:             entity.ClientID,
 			Type:                 entity.Type,
 			Name:                 entity.Name,
@@ -261,7 +273,7 @@ func TestV1PNETServerRouteCreate(t *testing.T) {
 			MinutesForDisconnect: entity.MinutesForDisconnect,
 			MaxCountUsersLimit:   entity.MaxCountUsersLimit,
 			UnitRate:             entity.UnitRate,
-		}),
+		},
 		Authorization: authHeader,
 	})
 
@@ -285,7 +297,8 @@ func TestV1PNETServerRouteCreate(t *testing.T) {
 
 func TestV1PNETServerPingSuccess(t *testing.T) {
 	description := "ping PNET server successfully"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create a test PNET server
 	authHeader, clientID := f.AuthorizationServiceBasic()
@@ -319,13 +332,12 @@ func TestV1PNETServerPingSuccess(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/pnet-server/ping",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "server.ping",
+		Params:        input,
 		Authorization: authHeader,
 	})
-	bodyModel := response.Response[external.PNETServerPingOutputDTO]{}
+	bodyModel := external.PNETServerPingResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, expectedCode, statusCode, description)
@@ -347,7 +359,8 @@ func TestV1PNETServerPingSuccess(t *testing.T) {
 
 func TestV1PNETServerPingUnauthorized(t *testing.T) {
 	description := "ping PNET server unauthorized"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	input := external.PNETServerPingInputDTO{
 		Attempts: []external.AttemptDTO{
@@ -359,20 +372,20 @@ func TestV1PNETServerPingUnauthorized(t *testing.T) {
 		},
 	}
 
-	expectedCode := 401 // Assuming 401 is returned for unauthorized access
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/pnet-server/ping",
-		Body:   FiberRequestPayload(input),
+	expectedCode := 500 // Assuming 401 is returned for unauthorized access
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "server.ping",
+		Params: input,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "Unauthorized", description)
+	assert.Contains(t, body, "unauthorized", description)
 }
 
 func TestV1PNETServerPingInvalidAttempt(t *testing.T) {
 	description := "ping PNET server with invalid attempt"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeader, _ := f.AuthorizationServiceBasic()
 
@@ -387,13 +400,12 @@ func TestV1PNETServerPingInvalidAttempt(t *testing.T) {
 	}
 
 	expectedCode := 200 // Assuming 200 is returned even if some attempts are invalid
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/pnet-server/ping",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "server.ping",
+		Params:        input,
 		Authorization: authHeader,
 	})
-	bodyModel := response.Response[external.PNETServerPingOutputDTO]{}
+	bodyModel := external.PNETServerPingResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, expectedCode, statusCode, description)

@@ -1,15 +1,15 @@
 import { addToast, Navbar, NavbarContent, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
 import { useParamsConnectTopology } from '@/components/topology/utils';
 import { RoutesLocation } from '@/components/routes';
-import { useTopologyGet } from '@/helpers/queries/topology/get';
 import { TopologyMenuItem } from '@/components/topology/menu/item';
 import useLanguageBrowser from '@/helpers/locale';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
-import { useTopologyDelete } from '@/helpers/queries/topology/delete';
 import { useNavigate } from 'react-router-dom';
 import { zIndexClassMenu } from '@/components/providers/const';
 import { useCallback } from 'react';
 import { NavbarDarkModeToggle } from '@/components/navbar/darkiconswitch';
+import { useQueryTopologyGet } from '@/helpers/queries/topology/use-query-topology-get';
+import { useMutationTopologyDelete } from '@/helpers/queries/topology/use-mutation-topology-delete';
 
 export default function TopologyMenu() {
   const {
@@ -20,7 +20,7 @@ export default function TopologyMenu() {
   } = useLanguageBrowser();
   const navigate = useNavigate();
   const params = useParamsConnectTopology();
-  const queryTopology = useTopologyGet(params.namespace);
+  const queryTopology = useQueryTopologyGet({ namespace: params.namespace });
 
   const handleNavigateKubectlDocs = useCallback(() => {
     navigate(RoutesLocation.docsTopologyKubectl() + `?namespace=${params.namespace}`);
@@ -30,7 +30,7 @@ export default function TopologyMenu() {
     navigate(RoutesLocation.language());
   }, [navigate]);
 
-  const removeTopologyMutation = useTopologyDelete({
+  const removeTopologyMutation = useMutationTopologyDelete({
     onSuccess: () => {
       navigate(RoutesLocation.home(), { replace: true });
       addToast({
@@ -82,7 +82,7 @@ export default function TopologyMenu() {
             <NavbarDarkModeToggle />
           </NavbarContent>
           <NavbarMenu>
-            <TopologyMenuItem title={Menu.OpenLogs} href={queryTopology.data?.result?.web_url || '#'} target='_blank' />
+            <TopologyMenuItem title={Menu.OpenLogs} href={queryTopology.data?.webUrl || '#'} target='_blank' />
             <TopologyMenuItem title={Menu.RestartTopology} color='warning' onClick={restartTopologyPopup.onOpen} />
             <TopologyMenuItem title={Menu.ConnectToKubectl} onClick={handleNavigateKubectlDocs} />
             <TopologyMenuItem title={Menu.RemoveTopology} color='danger' onClick={removeTopologyPopup.onOpen} />

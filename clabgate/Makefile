@@ -29,6 +29,3 @@ run: generate build
 
 generate:
 	go generate
-
-crud:
-	cd ../gen && go run . -model $(MODEL) -root "gitlab.com/a10869/api-modules/clabgate" -directory $(CUR_DIR) && cd $(CUR_DIR)
