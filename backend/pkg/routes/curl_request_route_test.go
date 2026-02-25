@@ -2,6 +2,7 @@ package routes
 
 import (
 	"testing"
+	"time"
 
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
 
@@ -133,6 +134,9 @@ func TestCurlRequestList(t *testing.T) {
 			Name: "Request A " + uuid.New().String(),
 			URL:  "https://example.com/a",
 		},
+		Base: models.Base{
+			CreatedAt: time.Now().Add(-3 * time.Minute),
+		},
 	}
 	f.DB.Create(&entity1)
 
@@ -141,6 +145,9 @@ func TestCurlRequestList(t *testing.T) {
 			Name: "Request B " + uuid.New().String(),
 			URL:  "https://example.com/b",
 		},
+		Base: models.Base{
+			CreatedAt: time.Now().Add(-2 * time.Minute),
+		},
 	}
 	f.DB.Create(&entity2)
 
@@ -148,6 +155,9 @@ func TestCurlRequestList(t *testing.T) {
 		CurlRequestBase: models.CurlRequestBase{
 			Name: "Another Request " + uuid.New().String(),
 			URL:  "https://another.com",
+		},
+		Base: models.Base{
+			CreatedAt: time.Now().Add(-1 * time.Minute),
 		},
 	}
 	f.DB.Create(&entity3)
