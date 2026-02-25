@@ -12,6 +12,7 @@ deployments:
     initContainers:
     - name: vault-init
       image: harbor.cmslabs.ru/cms-labs/images/vault-inject
+      imageTag: latest
       args:
         - "--path=backend"
         - "--output=/var/run/secrets/app"
