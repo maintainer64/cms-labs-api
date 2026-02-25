@@ -199,6 +199,9 @@ func (s *KubernetesAddonService) Delete(ctx context.Context, emailOrTargetName s
 		ctx,
 		emailOrTargetName,
 	)
+	if err != nil {
+		return nil, err
+	}
 	return &AddonOperationConfig{}, nil
 }
 

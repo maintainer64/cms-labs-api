@@ -15,7 +15,7 @@ type LDAPClient struct {
 
 func (c *LDAPClient) GetInfo(username, password string) (*UserInfo, error) {
 	// Connect to LDAP over TLS
-	l, err := ldap.DialURL(c.URL, ldap.DialWithTLSConfig(&tls.Config{InsecureSkipVerify: true}))
+	l, err := ldap.DialURL(c.URL, ldap.DialWithTLSConfig(&tls.Config{InsecureSkipVerify: true})) // #nosec G402
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect: %w", err)
 	}

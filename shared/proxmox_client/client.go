@@ -3,6 +3,8 @@ package proxmox_client
 import (
 	"context"
 	"errors"
+	"fmt"
+	"math"
 	"net"
 	"strings"
 
@@ -118,6 +120,12 @@ func getTypeIp(ip net.IP) string {
 
 // GetVMNetworkInterfaces запрашивает сетевые интерфейсы ВМ через гостевой агент.
 func (p *ProxmoxAPI) GetVMNetworkInterfaces(ctx context.Context, node string, vmid int) ([]NetworkInterface, error) {
+	if node == "" {
+		return nil, errors.New("node cannot be empty")
+	}
+	if vmid <= 0 || vmid > math.MaxUint32 {
+		return nil, fmt.Errorf("vmid must be between 1 and %d", math.MaxUint32)
+	}
 	vmr := proxmox.NewVmRef(proxmox.GuestID(vmid))
 	vmr.SetNode(node)
 	vmr.SetVmType(proxmox.GuestQemu)

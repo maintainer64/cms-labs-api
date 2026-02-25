@@ -43,7 +43,6 @@ func main() {
 	taskCompleted, err := startup.Startup(task)
 	if err != nil {
 		panic(err)
-		return
 	}
 	if taskCompleted {
 		return

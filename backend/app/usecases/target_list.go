@@ -78,7 +78,7 @@ func (uc *TargetListUC) Execute(dto TargetListInputDTO) (*TargetListOutputDTO, e
 			model.Tagets,
 			&TargetItem{
 				Target: &target,
-				IsMine: !!targetsMine[target.ID],
+				IsMine: targetsMine[target.ID],
 			},
 		)
 	}
