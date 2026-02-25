@@ -41,49 +41,6 @@ core-build-docker:
     - buildah push $BACKEND_CI_IMAGE:$VERSION
     - echo "Deploying application..."
 
-clabgate-build:
-  stage: build
-  extends:
-    - .dependencies
-    - .releases-branch
-  image: $BUILDER_GO_IMAGE
-  variables:
-    KUBERNETES_CPU_LIMIT: 4
-    KUBERNETES_MEMORY_LIMIT: 4Gi
-    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: 10Gi
-  needs:
-    - golang-test
-  script:
-    - cd clabgate
-    - echo "Building apiserver bin..."
-    - make build
-  artifacts:
-    expose_as: 'Clabgate build'
-    paths:
-      - clabgate/build
-
-clabgate-build-docker:
-  stage: build
-  extends:
-    - .registry_login
-    - .releases-branch
-  image: ${DOCKER_IMAGE}
-  variables:
-    KUBERNETES_CPU_LIMIT: 4
-    KUBERNETES_MEMORY_LIMIT: 4Gi
-    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: 10Gi
-  needs:
-    - clabgate-build
-    - version
-  script:
-    - VERSION="$(cat ./VERSION)"
-    - cd clabgate
-    - echo "Building Docker image..."
-    - buildah bud --no-cache -t $CLABGATE_CI_IMAGE:$VERSION  .
-    - echo "Pushing Docker image to GitLab Registry..."
-    - buildah push $CLABGATE_CI_IMAGE:$VERSION
-    - echo "Deploying application..."
-
 frontend-build:
   stage: build
   extends:
