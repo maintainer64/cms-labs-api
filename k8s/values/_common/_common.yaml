@@ -5,3 +5,10 @@ defaultImageTag: ""
 
 generic:
   usePredefinedAffinity: false
+  extraVolumeMounts:
+    - name: vault-inject
+      mountPath: "/var/run/secrets/app"
+      readOnly: true
+  extraVolumes:
+    - name: vault-inject
+      emptyDir: { }
