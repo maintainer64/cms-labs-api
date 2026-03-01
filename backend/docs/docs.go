@@ -4168,6 +4168,34 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.AvailableAddonInfo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.ConnectedAddonInfo": {
+            "type": "object",
+            "properties": {
+                "addon_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "usecases.CurlRequestDeleteInputDTO": {
             "type": "object",
             "properties": {
@@ -5840,6 +5868,83 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.TargetGetOutputDTO": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "synchronized_at",
+                "updated_at"
+            ],
+            "properties": {
+                "availableAddons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.AvailableAddonInfo"
+                    }
+                },
+                "connectedAddons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.ConnectedAddonInfo"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "internal_links": {
+                    "description": "список ссылок",
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "internal_tags": {
+                    "description": "массив внутренних тегов",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "links": {
+                    "description": "список ссылок",
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "synchronized_at": {
+                    "type": "string"
+                },
+                "tags": {
+                    "description": "массив тегов",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "targetUsers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.TargetUserInfo"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "usecases.TargetGetRequest": {
             "type": "object",
             "properties": {
@@ -5873,7 +5978,7 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/models.Target"
+                    "$ref": "#/definitions/usecases.TargetGetOutputDTO"
                 }
             }
         },
@@ -6211,6 +6316,20 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.TargetUserDeleteOutputDTO"
+                }
+            }
+        },
+        "usecases.TargetUserInfo": {
+            "type": "object",
+            "properties": {
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

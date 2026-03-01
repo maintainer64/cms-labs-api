@@ -55,7 +55,10 @@ func (di *DIContainer) TargetDeleteUC() *usecases.TargetDeleteUC {
 
 func (di *DIContainer) TargetGetUC() *usecases.TargetGetUC {
 	return &usecases.TargetGetUC{
-		TargetQueries: di.Queries.TargetQueries,
+		TargetQueries:      di.Queries.TargetQueries,
+		TargetAddonQueries: di.Queries.TargetAddonQueries,
+		TargetUserQueries:  di.Queries.TargetUserQueries,
+		AddonsConfig:       configs.AppConfig.AddonsConfig,
 	}
 }
 

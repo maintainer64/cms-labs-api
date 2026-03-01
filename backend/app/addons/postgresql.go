@@ -60,9 +60,16 @@ func (s *PostgreSQLAddonService) Create(ctx context.Context, targetName string, 
 	dbQuoted := quoteIdentifier(dbName)
 	// Execute three separate statements – we handle “already exists” errors gracefully.
 	statements := []string{
-		fmt.Sprintf(`CREATE DATABASE %s;`, dbQuoted),
+		// 1. Создаем пользователя (если не существует)
 		fmt.Sprintf(`CREATE USER %s WITH PASSWORD '%s';`, dbQuoted, password),
+		// 2. На случай, если пользователь уже был, обновляем пароль
+		fmt.Sprintf(`ALTER USER %s WITH PASSWORD '%s';`, dbQuoted, password),
+		// 3. Создаем базу и СРАЗУ назначаем пользователя её владельцем
+		fmt.Sprintf(`CREATE DATABASE %s OWNER %s;`, dbQuoted, dbQuoted),
+		// 4. Дополнительно подтверждаем права (на случай существующих баз)
 		fmt.Sprintf(`GRANT ALL PRIVILEGES ON DATABASE %s TO %s;`, dbQuoted, dbQuoted),
+		// 5. Чтобы подстраховаться для уже существующих баз
+		fmt.Sprintf(`ALTER DATABASE %s OWNER TO %s;`, dbQuoted, dbQuoted),
 	}
 
 	for _, stmt := range statements {
@@ -149,10 +156,35 @@ func (s *PostgreSQLAddonService) Reset(ctx context.Context, targetName string, c
 	}
 
 	dbQuoted := quoteIdentifier(dbName)
-	text := fmt.Sprintf(`ALTER USER %s WITH PASSWORD '%s';`, dbQuoted, newPassword)
+	// Execute three separate statements – we handle “already exists” errors gracefully.
+	statements := []string{
+		// 1. Создаем пользователя (если не существует)
+		fmt.Sprintf(`CREATE USER %s WITH PASSWORD '%s';`, dbQuoted, newPassword),
+		// 2. На случай, если пользователь уже был, обновляем пароль
+		fmt.Sprintf(`ALTER USER %s WITH PASSWORD '%s';`, dbQuoted, newPassword),
+		// 3. Создаем базу и СРАЗУ назначаем пользователя её владельцем
+		fmt.Sprintf(`CREATE DATABASE %s OWNER %s;`, dbQuoted, dbQuoted),
+		// 4. Дополнительно подтверждаем права (на случай существующих баз)
+		fmt.Sprintf(`GRANT ALL PRIVILEGES ON DATABASE %s TO %s;`, dbQuoted, dbQuoted),
+		// 5. Чтобы подстраховаться для уже существующих баз
+		fmt.Sprintf(`ALTER DATABASE %s OWNER TO %s;`, dbQuoted, dbQuoted),
+	}
 
-	if err := s.execRoot(ctx, text); err != nil {
-		return nil, err
+	for _, stmt := range statements {
+		if err := s.execRoot(ctx, stmt); err != nil {
+			// Ignore “already exists” errors for CREATE DATABASE and CREATE USER
+			if strings.Contains(err.Error(), "already exists") {
+				if strings.Contains(stmt, "CREATE DATABASE") {
+					// log? we can ignore
+					continue
+				}
+				if strings.Contains(stmt, "CREATE USER") {
+					// log? we can ignore
+					continue
+				}
+			}
+			return nil, err
+		}
 	}
 
 	// Preserve existing size metadata

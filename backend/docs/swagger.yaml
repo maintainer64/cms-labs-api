@@ -1180,6 +1180,24 @@ definitions:
       result:
         $ref: '#/definitions/usecases.AuthProviderListOutputDTO'
     type: object
+  usecases.AvailableAddonInfo:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  usecases.ConnectedAddonInfo:
+    properties:
+      addon_id:
+        type: string
+      id:
+        type: integer
+      type:
+        type: string
+    type: object
   usecases.CurlRequestDeleteInputDTO:
     properties:
       id:
@@ -2326,6 +2344,59 @@ definitions:
     required:
     - id
     type: object
+  usecases.TargetGetOutputDTO:
+    properties:
+      availableAddons:
+        items:
+          $ref: '#/definitions/usecases.AvailableAddonInfo'
+        type: array
+      connectedAddons:
+        items:
+          $ref: '#/definitions/usecases.ConnectedAddonInfo'
+        type: array
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      internal_links:
+        description: список ссылок
+        items:
+          type: object
+        type: array
+      internal_tags:
+        description: массив внутренних тегов
+        items:
+          type: string
+        type: array
+      links:
+        description: список ссылок
+        items:
+          type: object
+        type: array
+      name:
+        type: string
+      synchronized_at:
+        type: string
+      tags:
+        description: массив тегов
+        items:
+          type: string
+        type: array
+      targetUsers:
+        items:
+          $ref: '#/definitions/usecases.TargetUserInfo'
+        type: array
+      type:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - synchronized_at
+    - updated_at
+    type: object
   usecases.TargetGetRequest:
     properties:
       id:
@@ -2350,7 +2421,7 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/models.Target'
+        $ref: '#/definitions/usecases.TargetGetOutputDTO'
     type: object
   usecases.TargetItem:
     properties:
@@ -2581,6 +2652,15 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.TargetUserDeleteOutputDTO'
+    type: object
+  usecases.TargetUserInfo:
+    properties:
+      roles:
+        items:
+          type: string
+        type: array
+      user_id:
+        type: integer
     type: object
   usecases.TargetUserUpsertInputDTO:
     properties:

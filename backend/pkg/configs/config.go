@@ -65,10 +65,10 @@ func (c *AppConfigModel) Reload() {
 		VaultToken: os.Getenv("VAULT_TOKEN"),
 	}
 	c.AddonsConfig = connection.GetAddonsConfig(
-		os.Getenv("ADDONS_CONFIG"),
+		os.Getenv("ADDONS_PATH_CONFIG"),
 	)
 	c.ProxmoxSyncConfig = connection.GetProxmoxConfig(
-		os.Getenv("PROXMOX_CONFIG"),
+		os.Getenv("PROXMOX_PATH_CONFIG"),
 	)
 }
 

@@ -407,7 +407,86 @@ const en = {
     Title: 'Map services',
     ButtonAdd: 'Create',
     SearchBar: 'Search',
-    ButtonEdit: 'Edit'
+    ButtonEdit: 'Edit',
+    FieldID: 'ID',
+    FieldName: 'Name',
+    FieldDescription: 'Description',
+    FieldType: 'Type',
+    FieldTags: 'Tags',
+    FieldLinks: 'Links',
+    FieldCreatedAt: 'Created',
+    FieldUpdatedAt: 'Updated',
+    FieldSynchronizedAt: 'Synchronized',
+    Types: {
+      server: 'Server',
+      virtual: 'Virtual Server',
+      service: 'Service',
+      module: 'Module'
+    },
+    Relation: {
+      Title: 'Relations',
+      Parent: 'Parent',
+      AddParent: 'Add parent',
+      RemoveParent: 'Remove parent relation',
+      SelectParent: 'Select parent'
+    },
+    Addon: {
+      Title: 'Addons',
+      Connect: 'Connect',
+      Disconnect: 'Disconnect',
+      Reset: 'Reset',
+      SelectAddon: 'Select addon',
+      DeleteRequest: 'Delete request',
+      DeleteConfirmStep1: 'Create backup of data',
+      DeleteConfirmStep2: 'Completely clear application data',
+      DeleteConfirmStep3: 'The addon will be permanently deleted and cannot be restored',
+      DeleteConfirmWarning: 'Are you sure you want to delete this addon?',
+      DeleteConfirmButton: 'Yes, delete',
+      DeleteCancelButton: 'Cancel',
+      DeletePendingMessage: 'Waiting for deletion confirmation from another user',
+      DeleteRequestedBy: 'Deletion requested by user',
+      DeleteConfirmRequired: 'Deletion confirmation required'
+    },
+    User: {
+      Title: 'Users',
+      AddTitle: 'Add user',
+      EditTitle: 'Edit permissions',
+      Add: 'Add user',
+      Remove: 'Remove',
+      Email: 'Email',
+      Roles: 'Roles',
+      UserLabel: 'User',
+      UserPlaceholder: 'Start typing name',
+      RolesLabel: 'Roles',
+      SelectUser: 'Select user',
+      SelectRole: 'Select role',
+      AddButton: 'Add user',
+      NoUsers: 'No linked users',
+      NoRoles: 'No roles'
+    },
+    Roles: [
+      {
+        key: 'vault_viewer',
+        value: 'Vault Viewer'
+      },
+      {
+        key: 'vault_writer',
+        value: 'Vault Writer'
+      },
+      {
+        key: 'editor',
+        value: 'Editor'
+      },
+      {
+        key: 'nominal',
+        value: 'Nominal'
+      },
+
+    ],
+    DeletePopup: {
+      Title: 'Delete target',
+      Description: 'Are you sure you want to delete this object?'
+    }
   },
   Topology: {
     Menu: {

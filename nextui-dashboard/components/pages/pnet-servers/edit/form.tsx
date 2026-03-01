@@ -53,7 +53,7 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
     onError: (error: any) => {
       addToast({
         title: Forms.SaveError,
-        description: error.body.msg,
+        description: error.data.message,
         color: 'danger'
       });
     }
@@ -69,7 +69,7 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
     onError: (error: any) => {
       addToast({
         title: Forms.DeleteError,
-        description: error.body.msg,
+        description: error.data.message,
         color: 'danger'
       });
     }

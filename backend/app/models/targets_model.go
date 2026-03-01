@@ -62,10 +62,11 @@ type TargetUserBase struct {
 }
 
 type TargetAddonBase struct {
-	TargetID  string               `gorm:"column:target_id;type:varchar(255);index;not null" json:"target_id"`
-	AddonType connection.AddonType `gorm:"column:addon_type;type:varchar(50);not null" json:"addon_type"`
-	AddonID   string               `gorm:"column:addon_id;type:varchar(36);not null" json:"addon_id"`
-	Config    types.JsonStore      `gorm:"type:json;not null" json:"config"`
+	TargetID             string               `gorm:"column:target_id;type:varchar(255);index;not null" json:"target_id"`
+	AddonType            connection.AddonType `gorm:"column:addon_type;type:varchar(50);not null" json:"addon_type"`
+	AddonID              string               `gorm:"column:addon_id;type:varchar(36);not null" json:"addon_id"`
+	Config               types.JsonStore      `gorm:"type:json;not null" json:"config"`
+	RequestDeletedUserID *uint                `gorm:"column:request_deleted_user_id;type:int" json:"request_deleted_user_id"`
 }
 
 type TargetAddon struct {

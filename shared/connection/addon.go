@@ -1,6 +1,10 @@
 package connection
 
-import "github.com/goccy/go-json"
+import (
+	"os"
+
+	"github.com/goccy/go-json"
+)
 
 type AddonType string
 
@@ -25,12 +29,16 @@ type AddonsConfig struct {
 	Addons []AddonConfig `json:"addons"`
 }
 
-func GetAddonsConfig(rawConfig string) *AddonsConfig {
-	if rawConfig == "" {
+func GetAddonsConfig(pathConfig string) *AddonsConfig {
+	if pathConfig == "" {
 		return &AddonsConfig{}
 	}
 	var cfg AddonsConfig
-	if err := json.Unmarshal([]byte(rawConfig), &cfg); err != nil {
+	rawConfig, err := os.ReadFile(pathConfig)
+	if err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(rawConfig, &cfg); err != nil {
 		panic(err)
 	}
 	return &cfg

@@ -55,9 +55,9 @@ export const Login = () => {
         window.location.href = RoutesLocation.home();
       }
     },
-    onError: (aio: any, { formikHelpers }) => {
+    onError: (error: any, { formikHelpers }) => {
       formikHelpers.setErrors({});
-      formikHelpers.setErrors({ password: aio?.response?.data?.error?.data?.message });
+      formikHelpers.setErrors({ password: error?.data?.message });
     }
   });
 

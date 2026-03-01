@@ -35,7 +35,7 @@ export const LTIAttemptCreate = () => {
     onError: (error: any) => {
       addToast({
         title: LTIAttemptRoom.RoomChangeError,
-        description: error.body.msg,
+        description: error.data.message,
         color: 'danger'
       });
     }

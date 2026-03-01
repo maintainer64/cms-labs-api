@@ -40,6 +40,8 @@ export const AutoCompleteFull = (props: AutoCompleteFullProps) => {
       }}
       isLoading={responseSearch?.isLoading}
       aria-label={props.label?.toString()}
+      isReadOnly={props.isReadOnly}
+      isDisabled={props.isDisabled}
     >
       {(item) => <AutocompleteItem key={item.key}>{item.value}</AutocompleteItem>}
     </Autocomplete>

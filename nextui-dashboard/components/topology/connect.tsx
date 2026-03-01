@@ -26,7 +26,7 @@ export const TopologyConnect = () => {
   if (queryTopologyCreate.isLoading) return <HorizontalInfiniteLoader />;
   if (queryTopologyCreate.error) {
     // @ts-ignore
-    const errMsg = queryTopologyCreate?.error?.body?.msg || Connect.Error;
+    const errMsg = queryTopologyCreate?.error?.data?.message || Connect.Error;
     return (
       <ErrorModal title={Connect.ErrorModalConnectTitle} description={errMsg}>
         <Button onPress={() => queryTopologyCreate.refetch()} href='#' variant='light' color='primary'>

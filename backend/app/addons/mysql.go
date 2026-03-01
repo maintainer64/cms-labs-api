@@ -73,8 +73,9 @@ func (s *MySQLAddonService) Create(ctx context.Context, targetName string, name 
 		`CREATE DATABASE IF NOT EXISTS %s;
         CREATE USER IF NOT EXISTS %s@'%%' IDENTIFIED BY '%s';
         GRANT ALL PRIVILEGES ON %s.* TO %s@'%%';
-        FLUSH PRIVILEGES;`,
-		dbNameQuoted, dbNameQuoted, password, dbNameQuoted, dbNameQuoted,
+    	ALTER USER %s@'%%' IDENTIFIED BY '%s';
+    	FLUSH PRIVILEGES;`,
+		dbNameQuoted, dbNameQuoted, password, dbNameQuoted, dbNameQuoted, dbNameQuoted, password,
 	)
 
 	if err := s.execRoot(ctx, text); err != nil {
@@ -135,9 +136,12 @@ func (s *MySQLAddonService) Reset(ctx context.Context, targetName string, cfg *A
 	// 2. Change the user's password in MySQL
 	dbNameQuoted := quoteIdentifier(dbName)
 	text := fmt.Sprintf(
-		`ALTER USER %s@'%%' IDENTIFIED BY '%s';
-        FLUSH PRIVILEGES;`,
-		dbNameQuoted, newPassword,
+		`CREATE DATABASE IF NOT EXISTS %s;
+        CREATE USER IF NOT EXISTS %s@'%%' IDENTIFIED BY '%s';
+        GRANT ALL PRIVILEGES ON %s.* TO %s@'%%';
+    	ALTER USER %s@'%%' IDENTIFIED BY '%s';
+    	FLUSH PRIVILEGES;`,
+		dbNameQuoted, dbNameQuoted, newPassword, dbNameQuoted, dbNameQuoted, dbNameQuoted, newPassword,
 	)
 
 	if err := s.execRoot(ctx, text); err != nil {
