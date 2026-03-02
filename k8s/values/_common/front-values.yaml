@@ -11,7 +11,7 @@ deployments:
     replicas: 1
     initContainers:
     - name: vault-init
-      image: harbor.cmslabs.ru/cms-labs/images/vault-inject
+      image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
       imageTag: latest
       args:
         - "--path=front"

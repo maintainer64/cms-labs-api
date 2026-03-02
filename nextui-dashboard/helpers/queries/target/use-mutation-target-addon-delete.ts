@@ -2,10 +2,7 @@
 Template auto generated with params from openapi.json
 */
 import { useMutation } from '@tanstack/react-query';
-import {
-  CoreJsonRpcPath,
-  transportWithAuth
-} from '@/helpers/api';
+import { CoreJsonRpcPath, transportWithAuth } from '@/helpers/api';
 import { TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '@/helpers/queries/base';
 
@@ -13,6 +10,7 @@ type Params = {
   targetId: string;
   addonId: string;
   issId?: string;
+  revoke?: boolean;
 };
 type Response = object;
 

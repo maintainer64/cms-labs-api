@@ -62,7 +62,7 @@ export const Login = () => {
   });
 
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center w-full'>
       <div className='text-center text-[25px] font-bold mb-6'>{locale.Login.PageName}</div>
 
       <Tabs

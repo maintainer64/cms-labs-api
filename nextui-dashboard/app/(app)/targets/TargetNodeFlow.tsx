@@ -3,7 +3,7 @@
 import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
-import {RoutesLocation} from "@/components/routes";
+import { RoutesLocation } from '@/components/routes';
 
 interface TargetsNodeData {
   label: string;

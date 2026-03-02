@@ -1,4 +1,4 @@
-defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/backend/master
+defaultImage: harbor.k8s.cmslabs.ru/svc_cms_labs/api-modules/backend/master
 
 deployments:
   core-backend:

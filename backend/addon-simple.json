@@ -1,7 +1,7 @@
 {
   "addons": [
     {
-      "id": "87b54eea-edc8-411a-ba2d-d1ab4beb8255",
+      "id": "postgresql-1",
       "tag": "PROD",
       "name": "База данных postgresql",
       "type": "postgresql",
@@ -12,12 +12,12 @@
       }
     },
     {
-      "id": "69929a64-ceaa-4997-931e-e800b2a36094",
+      "id": "mysql-1",
       "tag": "PROD",
       "name": "База данных mysql",
       "type": "mysql",
       "params": {
-        "url": "mysql://root:mysql@localhost:3306",
+        "url": "root:pnetlab@tcp(127.0.0.1:3306)/",
         "host": "localhost",
         "port": 3306
       }
@@ -29,7 +29,7 @@
       "type": "vault"
     },
     {
-      "id": "0be90f65-16aa-49dd-952b-4c493c77ba01",
+      "id": "seaweedfs-1",
       "tag": "PROD",
       "name": "S3",
       "type": "s3",

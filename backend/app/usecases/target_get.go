@@ -41,9 +41,11 @@ type TargetUserInfo struct {
 
 // ConnectedAddonInfo – информация о подключенном аддоне
 type ConnectedAddonInfo struct {
-	ID      uint   `json:"id"`
-	AddonID string `json:"addon_id"`
-	Type    string `json:"type"`
+	ID                   uint                   `json:"id"`
+	AddonID              string                 `json:"addon_id"`
+	Type                 string                 `json:"type"`
+	RequestDeletedUserID *uint                  `json:"request_deleted_user_id"`
+	Config               map[string]interface{} `json:"config"`
 }
 
 // TargetGetOutputDTO – выходные данные (расширенная модель)
@@ -96,10 +98,19 @@ func (uc *TargetGetUC) Execute(dto TargetGetInputDTO) (TargetGetOutputDTO, error
 	// Формируем список подключенных аддонов
 	connectedAddonsResp := make([]ConnectedAddonInfo, 0)
 	for _, ca := range connectedAddons {
+		var requestDeletedUserID *uint
+		if ca.Config != nil {
+			if uid, ok := ca.Config["request_deleted_user_id"].(float64); ok && uid > 0 {
+				uidUint := uint(uid)
+				requestDeletedUserID = &uidUint
+			}
+		}
 		connectedAddonsResp = append(connectedAddonsResp, ConnectedAddonInfo{
-			ID:      ca.ID,
-			AddonID: ca.AddonID,
-			Type:    string(ca.AddonType),
+			ID:                   ca.ID,
+			AddonID:              ca.AddonID,
+			Type:                 string(ca.AddonType),
+			RequestDeletedUserID: requestDeletedUserID,
+			Config:               ca.Config,
 		})
 	}
 

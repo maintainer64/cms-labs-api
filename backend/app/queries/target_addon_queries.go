@@ -93,3 +93,13 @@ func (q *TargetAddonQueries) GetAllByTarget(targetID string) ([]models.TargetAdd
 	err := q.DB.Where("target_id = ?", targetID).Find(&entities).Error
 	return entities, err
 }
+
+// Update обновляет запись
+func (q *TargetAddonQueries) Update(entity *models.TargetAddon) error {
+	if entity == nil {
+		return nil
+	}
+	q.Logger.Debug().Msg(fmt.Sprintf("TargetAddonQueries: update id=%d", entity.ID))
+	entity.UpdatedAt = time.Now().UTC()
+	return q.DB.Save(entity).Error
+}

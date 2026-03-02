@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
 /*
@@ -136,7 +135,7 @@ export interface AuthSwaggerSSOTokenPublicData {
   /** Iss. Идентификатор эмитента токена */
   iss?: string;
   /** K8S type */
-  "k8s:access_type"?: string;
+  'k8s:access_type'?: string;
   /** LastLaunchId. ID пользователя SSO через LMS систему */
   last_launch_id?: string;
   /** Name. Полное ФИО пользователя */
@@ -712,7 +711,9 @@ export interface UsecasesAvailableAddonInfo {
 
 export interface UsecasesConnectedAddonInfo {
   addon_id?: string;
+  config?: Record<string, any>;
   id?: number;
+  request_deleted_user_id?: number;
   type?: string;
 }
 
@@ -1420,10 +1421,14 @@ export interface UsecasesTargetAddonCreateResponse {
 export interface UsecasesTargetAddonDeleteInputDTO {
   addon_id: string;
   iss_id?: string;
+  revoke?: boolean;
   target_id: string;
 }
 
-export type UsecasesTargetAddonDeleteOutputDTO = object;
+export interface UsecasesTargetAddonDeleteOutputDTO {
+  message?: string;
+  pending_confirmation?: boolean;
+}
 
 export interface UsecasesTargetAddonResetInputDTO {
   addon_id: string;

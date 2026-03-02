@@ -45,8 +45,9 @@ const en = {
     Edit: 'Edit',
     Save: 'Save',
     Confirm: 'Confirm',
-    Close: 'Close',
+    Cancel: 'Cancel',
     Delete: 'Delete',
+    Close: 'Close',
     ViewAll: 'View all'
   },
   LanguageSwitcher: {
@@ -426,15 +427,23 @@ const en = {
     Relation: {
       Title: 'Relations',
       Parent: 'Parent',
-      AddParent: 'Add parent',
-      RemoveParent: 'Remove parent relation',
-      SelectParent: 'Select parent'
+      AddParent: 'Add relation',
+      RemoveParent: 'Remove relation',
+      SelectParent: 'Select relation',
+      NoParents: 'No relations'
     },
     Addon: {
       Title: 'Addons',
       Connect: 'Connect',
+      NoAddons: 'Not connected addons',
+      ConnectTitle: 'Connect addon',
+      Name: 'Name',
+      Type: 'Type',
       Disconnect: 'Disconnect',
       Reset: 'Reset',
+      ResetTitle: 'Reset tokens',
+      ResetDescription:
+        'Access tokens will be recreated. Data in the resource will not be changed or deleted. Continue?',
       SelectAddon: 'Select addon',
       DeleteRequest: 'Delete request',
       DeleteConfirmStep1: 'Create backup of data',
@@ -445,7 +454,20 @@ const en = {
       DeleteCancelButton: 'Cancel',
       DeletePendingMessage: 'Waiting for deletion confirmation from another user',
       DeleteRequestedBy: 'Deletion requested by user',
-      DeleteConfirmRequired: 'Deletion confirmation required'
+      DeleteConfirmRequired: 'Deletion confirmation required',
+      Config: 'Configuration',
+      DatabaseSize: 'Used',
+      Cluster: 'Cluster',
+      Namespace: 'Namespace',
+      Registry: 'Image registry',
+      ApiKeyInVault: 'API key in Vault',
+      RotateCredentials: 'Rotate credentials',
+      RotateCredentialsTitle: 'Rotate credentials',
+      RotateCredentialsDescription: 'Keys and passwords will be recreated. Old keys will become invalid. Continue?',
+      RevokeDeleteRequest: 'Revoke delete request',
+      RevokeDeleteRequestTitle: 'Revoke delete request',
+      RevokeDeleteRequestDescription: 'Delete request will be canceled. Continue?',
+      Expires: 'Expires'
     },
     User: {
       Title: 'Users',
@@ -480,8 +502,7 @@ const en = {
       {
         key: 'nominal',
         value: 'Nominal'
-      },
-
+      }
     ],
     DeletePopup: {
       Title: 'Delete target',

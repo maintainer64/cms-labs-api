@@ -4188,7 +4188,14 @@ const docTemplate = `{
                 "addon_id": {
                     "type": "string"
                 },
+                "config": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
                 "id": {
+                    "type": "integer"
+                },
+                "request_deleted_user_id": {
                     "type": "integer"
                 },
                 "type": {
@@ -5809,13 +5816,24 @@ const docTemplate = `{
                 "iss_id": {
                     "type": "string"
                 },
+                "revoke": {
+                    "type": "boolean"
+                },
                 "target_id": {
                     "type": "string"
                 }
             }
         },
         "usecases.TargetAddonDeleteOutputDTO": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "pending_confirmation": {
+                    "type": "boolean"
+                }
+            }
         },
         "usecases.TargetAddonResetInputDTO": {
             "type": "object",
