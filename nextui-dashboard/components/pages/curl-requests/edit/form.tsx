@@ -2,33 +2,34 @@
 import React from 'react';
 import { addToast, Button, Input } from '@heroui/react';
 import { Formik } from 'formik';
-import { models_CurlRequest } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
 import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
-import { useCurlRequestByID } from '@/helpers/queries/curl-requests/get';
-import { useCurlRequestDelete } from '@/helpers/queries/curl-requests/delete';
 import { Textarea } from '@heroui/input';
-import { useCurlRequestUpsert } from '@/helpers/queries/curl-requests/upsert';
-import { curlParsedDataValidator } from '@/components/pages/curl-requests/edit/validate';
+import { useMutationCurlRequestUpsert } from '@/helpers/queries/curl_request/use-mutation-curl-request-upsert';
+import { curlParsedData, curlParsedDataValidator } from '@/components/pages/curl-requests/edit/validate';
+import { useQueryCurlRequestGet } from '@/helpers/queries/curl_request/use-query-curl-request-get';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { ModelsCurlRequest } from '@/helpers/api';
+import { useMutationCurlRequestDelete } from '@/helpers/queries/curl_request/use-mutation-curl-request-delete';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: models_CurlRequest = {
+const defaultValues: CamelCasedPropertiesDeep<ModelsCurlRequest> = {
   body: undefined,
-  created_at: '',
+  createdAt: '',
   headers: undefined,
   id: undefined,
   method: undefined,
   name: undefined,
   raw: '',
   timeout: 300,
-  updated_at: '',
+  updatedAt: '',
   url: undefined
 };
 
@@ -37,11 +38,11 @@ export const CurlRequestEditForm = ({ id }: EditFormProps) => {
     locale: { CurlRequest, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
-  const response = useCurlRequestByID(id);
-  const initialValues = response.data?.result?.model ?? defaultValues;
-  const { mutate } = useCurlRequestUpsert({
-    onSuccess: (data, { formikHelpers }) => {
-      navigate(RoutesLocation.curlRequestEdit(data.result?.id?.toString() || ''), { replace: true });
+  const response = useQueryCurlRequestGet({ id });
+  const initialValues = response.data?.model ?? defaultValues;
+  const { mutate } = useMutationCurlRequestUpsert({
+    onSuccess: (data) => {
+      navigate(RoutesLocation.curlRequestEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -50,12 +51,12 @@ export const CurlRequestEditForm = ({ id }: EditFormProps) => {
     onError: (error: any) => {
       addToast({
         title: Forms.SaveError,
-        description: error.body.msg,
+        description: error.data.message,
         color: 'danger'
       });
     }
   });
-  const onDeleteMutation = useCurlRequestDelete({
+  const onDeleteMutation = useMutationCurlRequestDelete({
     onSuccess: () => {
       navigate(RoutesLocation.curlRequest(), { replace: true });
       addToast({
@@ -66,7 +67,7 @@ export const CurlRequestEditForm = ({ id }: EditFormProps) => {
     onError: (error: any) => {
       addToast({
         title: Forms.DeleteError,
-        description: error.body.msg,
+        description: error.data.message,
         color: 'danger'
       });
     }
@@ -81,7 +82,19 @@ export const CurlRequestEditForm = ({ id }: EditFormProps) => {
     <Formik
       initialValues={initialValues}
       onSubmit={(values, formikHelpers) => {
-        mutate({ values, formikHelpers });
+        if (values === null) return;
+        const curlParsed = curlParsedData(values.raw);
+        const timeout = parseInt(`${values.timeout}`);
+        mutate({
+          body: curlParsed.body,
+          headers: curlParsed.headers,
+          id: values.id,
+          method: curlParsed.method,
+          name: curlParsed.name,
+          rawRequest: values.raw,
+          timeout: timeout,
+          url: curlParsed.url
+        });
       }}
     >
       {({ values, handleChange, setFieldValue, handleSubmit }) => (
@@ -124,14 +137,14 @@ export const CurlRequestEditForm = ({ id }: EditFormProps) => {
               variant='bordered'
               label={CurlRequest.FieldCreatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.created_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
               label={CurlRequest.FieldUpdatedAt}
               type='datetime-local'
-              value={dayjs(initialValues.updated_at ?? '').format('YYYY-MM-DDTHH:mm')}
+              value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Button onPress={() => handleSubmit()} variant='flat' color='primary'>

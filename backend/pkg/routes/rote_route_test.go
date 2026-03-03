@@ -15,9 +15,10 @@ import (
 
 func TestRoleUpsert(t *testing.T) {
 	description := "successful role upsert (create)"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	input := usecases.RoleEditInputDTO{
 		Name: "Test Role " + uuid.New().String(),
@@ -25,10 +26,9 @@ func TestRoleUpsert(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/role/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "role.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -47,9 +47,10 @@ func TestRoleUpsert(t *testing.T) {
 
 func TestRoleUpsertUpdate(t *testing.T) {
 	description := "successful role upsert (update)"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Create existing role to update
 	existingRole := models.Role{}
@@ -64,10 +65,9 @@ func TestRoleUpsertUpdate(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/role/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "role.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -87,34 +87,35 @@ func TestRoleUpsertUpdate(t *testing.T) {
 
 func TestRoleUpsertUnauthorized(t *testing.T) {
 	description := "role upsert without admin privileges"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create regular user (non-admin)
 	regularUser := models.User{}
 	regularUser.Email = "user" + uuid.New().String() + "@example.com"
 	f.DB.Create(&regularUser)
-	authHeader := f.AuthorizationUser(regularUser.ID, 0)
+	authHeader := f.AuthorizationUser(regularUser.ID, nil)
 
 	input := usecases.RoleEditInputDTO{
 		Name: "Test Role",
 		Code: "test-role",
 	}
 
-	expectedCode := fiber.StatusForbidden
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/role/upsert",
-		Body:          FiberRequestPayload(input),
+	expectedCode := fiber.StatusInternalServerError
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "role.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "User with current role is not allow action", description)
+	assert.Contains(t, body, "user with current role is not allow action", description)
 }
 
 func TestRoleList(t *testing.T) {
 	description := "successful role list"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(models.Role{})
@@ -130,10 +131,9 @@ func TestRoleList(t *testing.T) {
 	input := usecases.RoleListInputDTO{}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/role/list",
-		Body:   FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "role.list",
+		Params: input,
 	})
 
 	response := usecases.RoleListResponse{}
@@ -146,9 +146,10 @@ func TestRoleList(t *testing.T) {
 
 func TestRoleDelete(t *testing.T) {
 	description := "successful role delete"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Create role to delete
 	roleToDelete := models.Role{}
@@ -161,10 +162,9 @@ func TestRoleDelete(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/role/delete",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "role.delete",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
@@ -183,13 +183,14 @@ func TestRoleDelete(t *testing.T) {
 
 func TestRoleDeleteUnauthorized(t *testing.T) {
 	description := "role delete without admin privileges"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Create regular user (non-admin)
 	regularUser := models.User{}
 	regularUser.Email = "user" + uuid.New().String() + "@example.com"
 	f.DB.Create(&regularUser)
-	authHeader := f.AuthorizationUser(regularUser.ID, 0)
+	authHeader := f.AuthorizationUser(regularUser.ID, nil)
 
 	// Create role that would be deleted if authorized
 	role := models.Role{}
@@ -201,16 +202,15 @@ func TestRoleDeleteUnauthorized(t *testing.T) {
 		ID: role.ID,
 	}
 
-	expectedCode := fiber.StatusForbidden
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/role/delete",
-		Body:          FiberRequestPayload(input),
+	expectedCode := fiber.StatusInternalServerError
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "role.delete",
+		Params:        input,
 		Authorization: authHeader,
 	})
 
 	assert.Equal(t, expectedCode, statusCode, description)
-	assert.Contains(t, body, "User with current role is not allow action", description)
+	assert.Contains(t, body, "user with current role is not allow action", description)
 
 	// Verify role was NOT deleted from DB
 	var dbRole models.Role

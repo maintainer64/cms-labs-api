@@ -1,8 +1,5 @@
 core-deploy:
   stage: deploy
-  tags:
-    - ${TAG}
-    - k8s
   extends:
     - .deploy-kubectl
     - .releases-branch
@@ -15,28 +12,8 @@ core-deploy:
   variables:
     DEPLOY_NAME: core-backend
 
-clabgate-deploy:
-  stage: deploy
-  tags:
-    - ${TAG}
-    - k8s
-  extends:
-    - .deploy-kubectl
-    - .releases-branch
-  image: $KUBECTL_IMAGE
-  needs:
-    - clabgate-build-docker
-    - version
-  environment:
-    name: clabgate-${CI_COMMIT_REF_SLUG}
-  variables:
-    DEPLOY_NAME: clabgate
-
 frontend-deploy:
   stage: deploy
-  tags:
-    - ${TAG}
-    - k8s
   extends:
     - .deploy-kubectl
     - .releases-branch

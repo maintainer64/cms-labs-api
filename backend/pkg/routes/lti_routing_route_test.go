@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	json "github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
@@ -15,8 +16,9 @@ import (
 
 func TestV1LTIRoutingCreate(t *testing.T) {
 	description := "create lti routing"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
 
@@ -35,10 +37,9 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/lti-routing/upsert",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "lti_routing.upsert",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.LTIRoutingEditResponse{}
@@ -58,8 +59,9 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 
 func TestV1LTIRoutingList(t *testing.T) {
 	description := "list lti routings"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
 
@@ -69,6 +71,8 @@ func TestV1LTIRoutingList(t *testing.T) {
 		entity.Name = fmt.Sprintf("LTIRouting %d", i)
 		entity.LTITitle = fmt.Sprintf("Title %d", i)
 		entity.LTIDescription = fmt.Sprintf("Description %d", i)
+		entity.CreatedAt = time.Now().UTC().Add(time.Duration(i) * time.Minute)
+		entity.UpdatedAt = time.Now().UTC().Add(time.Duration(i) * time.Minute)
 		f.DB.Create(&entity)
 		entities = append(entities, entity)
 	}
@@ -79,10 +83,9 @@ func TestV1LTIRoutingList(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/lti-routing/list",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "lti_routing.list",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.LTIRoutingListResponse{}
@@ -101,8 +104,9 @@ func TestV1LTIRoutingList(t *testing.T) {
 
 func TestV1LTIRoutingDelete(t *testing.T) {
 	description := "delete lti routing"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
@@ -119,10 +123,9 @@ func TestV1LTIRoutingDelete(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/lti-routing/delete",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "lti_routing.delete",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.LTIRoutingDeleteResponse{}
@@ -138,8 +141,9 @@ func TestV1LTIRoutingDelete(t *testing.T) {
 
 func TestV1LTIRoutingGet(t *testing.T) {
 	description := "get lti routing"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
@@ -156,10 +160,9 @@ func TestV1LTIRoutingGet(t *testing.T) {
 	}
 
 	expectedCode := 200
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/lti-routing/get",
-		Body:          FiberRequestPayload(input),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "lti_routing.get",
+		Params:        input,
 		Authorization: authHeader,
 	})
 	bodyModel := usecases.LTIRoutingGetResponse{}

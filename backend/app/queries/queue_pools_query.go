@@ -1,15 +1,13 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	gorm "gorm.io/gorm"
 )
 
@@ -36,10 +34,7 @@ func (q *RoundQueuePoolQueries) Get(id uint) (models.RoundQueuePool, error) {
 	var entity models.RoundQueuePool
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("RoundQueuePool not found"),
-		}
+		return entity, jsonrpc.NewRpcError("round_queue_not_found", "RoundQueuePool not found")
 	}
 	return entity, result.Error
 }
@@ -229,10 +224,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 			poolType,
 		),
 	)
-	return models.RoundQueuePool{}, utils.FiberValidationException{
-		Status:    fiber.StatusNotFound,
-		Exception: errors.New("no pool item found"),
-	}
+	return models.RoundQueuePool{}, jsonrpc.NewRpcError("pool_item_not_found", "no pool item found")
 }
 
 func (q *RoundQueuePoolQueries) finishDistribution(tx *gorm.DB, poolType string, id uint) error {

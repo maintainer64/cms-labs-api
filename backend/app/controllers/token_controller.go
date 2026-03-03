@@ -5,37 +5,37 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gitlab.com/a10869/api-modules/shared/logs"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-// TokensRenew method for renew access and refresh tokens.
+// UserTokenRefresh method for renew access and refresh tokens.
 // @Description Renew access and refresh tokens.
 // @Summary renew access and refresh tokens
-// @Tags Token
+// @Tags user
 // @Accept json
 // @Produce json
-// @Param form body auth.RenewManagerInputDTO true "renew token form info"
+// @Param form body auth.RenewManagerRefreshRequest true "renew token form info"
 // @Success 200 {object} auth.SwaggerSSOTokenResponse
-// @Router /v1/token/renew [post]
-func TokensRenew(c *fiber.Ctx) error {
-	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+// @Router /api/v1/rpc/user.token_refresh [post]
+func UserTokenRefresh(c *jsonrpc.Ctx) (interface{}, error) {
+	issuer, err := auth.IssuerURLByBaseUrl(c.FiberCtx.BaseURL())
 	if err != nil {
-		return err
+		return nil, err
 	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
-	refreshToken := c.Cookies(cms_client.SSORefreshTokenName, "")
+	refreshToken := c.FiberCtx.Cookies(cms_client.SSORefreshTokenName, "")
 	if refreshToken == "" {
 		dto := auth.RenewManagerInputDTO{}
-		err := utils.FiberValidatorBase(c, &dto)
+		err := jsonrpc.ValidatorBase(c, &dto)
 		if err != nil {
-			return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+			return nil, err
 		}
 		refreshToken = dto.RefreshToken
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc := container.SSOTokenUC()
@@ -46,9 +46,9 @@ func TokensRenew(c *fiber.Ctx) error {
 		},
 	)
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, err
 	}
-	c.Cookie(&fiber.Cookie{
+	c.FiberCtx.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
 		Value:    token.RefreshToken,
 		Path:     "/",
@@ -56,40 +56,40 @@ func TokensRenew(c *fiber.Ctx) error {
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Secure:   true,
 	})
-	return utils.FiberSuccessResponse{Result: token}
+	return token, nil
 }
 
-// TokensByCredentials method for grant access by email and password
+// UserLogin method for grant access by email and password
 // @Description Login by email and password.
 // @Summary login by email and password
-// @Tags Token
+// @Tags user
 // @Accept json
 // @Produce json
-// @Param form body auth.RenewManagerCredentialsInputDTO true "credentials form info"
+// @Param object body auth.RenewManagerCredentialsRequest true "credentials form info"
 // @Success 200 {object} auth.SwaggerSSOTokenResponse
-// @Router /v1/token/login [post]
-func TokensByCredentials(c *fiber.Ctx) error {
-	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+// @Router /api/v1/rpc/user.login [post]
+func UserLogin(c *jsonrpc.Ctx) (interface{}, error) {
+	issuer, err := auth.IssuerURLByBaseUrl(c.FiberCtx.BaseURL())
 	if err != nil {
-		return err
+		return nil, err
 	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.RenewManagerCredentialsInputDTO{}
-	err = utils.FiberValidatorBase(c, &dto)
+	err = jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
-	uc := container.AuthTokenManager()
-	token, err := uc.NewJWTByCredentials(issuer, dto.Email, dto.Password)
+	uc := container.UserLoginUC()
+	token, err := uc.SetContext(issuer).Execute(dto)
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, err
 	}
-	c.Cookie(&fiber.Cookie{
+	c.FiberCtx.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
 		Value:    token.RefreshToken,
 		Path:     "/",
@@ -97,19 +97,20 @@ func TokensByCredentials(c *fiber.Ctx) error {
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Secure:   true,
 	})
-	return utils.FiberSuccessResponse{Result: token}
+	return token, nil
 }
 
-// TokensRemove method for remove access and refresh token
+// UserLogout method for remove access and refresh token
 // @Description Logout.
 // @Summary logout
-// @Tags Token
+// @Tags user
 // @Accept json
 // @Produce json
+// @Param object body auth.UserLogoutRequest true "logout"
 // @Success 200 {object} auth.SwaggerSSOTokenResponse
-// @Router /v1/token/logout [post]
-func TokensRemove(c *fiber.Ctx) error {
-	c.Cookie(&fiber.Cookie{
+// @Router /api/v1/rpc/user.logout [post]
+func UserLogout(c *jsonrpc.Ctx) (interface{}, error) {
+	c.FiberCtx.Cookie(&fiber.Cookie{
 		Name:     cms_client.SSORefreshTokenName,
 		Value:    "",
 		Path:     "/",
@@ -117,37 +118,34 @@ func TokensRemove(c *fiber.Ctx) error {
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Secure:   true,
 	})
-	return utils.FiberSuccessResponse{Result: nil}
+	return true, nil
 }
 
-// TokensPasswordRecover method for change password
+// UserPasswordChange method for change password
 // @Description Change password.
 // @Summary change password
-// @Tags Token
+// @Tags user
 // @Accept json
 // @Produce json
-// @Param form body auth.UserPasswordChangeInputDTO true "credentials form info"
-// @Success 200 {object} auth.UserPasswordRecoverResponse
-// @Router /v1/token/password_change [post]
-func TokensPasswordRecover(c *fiber.Ctx) error {
+// @Param object body auth.UserPasswordChangeRequest true "credentials form info"
+// @Success 200 {object} auth.UserPasswordChangeResponse
+// @Router /api/v1/rpc/user.password_change [post]
+func UserPasswordChange(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	dto := auth.UserPasswordChangeInputDTO{}
-	if err := utils.FiberValidatorBase(c, &dto); err != nil {
-		return err
+	if err := jsonrpc.ValidatorBase(c, &dto); err != nil {
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc := container.UserPasswordRecoverUC()
 	response, err := uc.SetContext(claims).Execute(dto)
-	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
-	return utils.FiberSuccessResponse{Result: response}
+	return response, err
 }

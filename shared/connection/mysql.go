@@ -1,9 +1,10 @@
 package connection
 
 import (
-	"errors"
 	"fmt"
 	"time"
+
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 
 	"github.com/rs/zerolog"
 	"gorm.io/driver/mysql"
@@ -49,14 +50,14 @@ func MysqlConnection(c *DBConfig, l *zerolog.Logger) (*gorm.DB, error) {
 	if err != nil {
 		errText := fmt.Sprintf("error, not connected to database, %+v", err)
 		l.Error().Msg(errText)
-		return nil, errors.New(errText)
+		return nil, jsonrpc.NewRpcError("db_not_connected", errText)
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
 		errText := fmt.Sprintf("error, not opened connected to database, %+v", err)
 		l.Error().Msg(errText)
-		return nil, errors.New(errText)
+		return nil, jsonrpc.NewRpcError("db_not_connected", errText)
 	}
 
 	sqlDB.SetMaxIdleConns(c.MaxIdleConnections)

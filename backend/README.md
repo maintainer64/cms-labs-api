@@ -132,6 +132,17 @@ JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT
 
 Смотри пример в файле [.env.test](.env.test)
 
+Для аддонов используй
+
+```shell
+# Addons Configuration
+ADDONS_PATH_CONFIG=addon-simple.json
+```
+
+```shell
+# Подключение к серверам proxmox
+PROXMOX_PATH_CONFIG=proxmox-simple.json
+```
 ## ⚙️ Тесты & Линтер
 
 ```bash

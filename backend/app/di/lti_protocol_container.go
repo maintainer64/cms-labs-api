@@ -11,11 +11,11 @@ import (
 func (di *DIContainer) LTIProtocolDatastoreConfig() *lti_connector.LTIConnectorAPI {
 	logger := logs.NewZeroLogger(di.ZeroLogConf.SetName("lti_connector.LTIConnectorAPI"))
 	return &lti_connector.LTIConnectorAPI{
-		LTIFormQueries:       di.Queries.LTIFormQueries,
+		AuthProviderQueries:  di.Queries.AuthProviderQueries,
 		LTILaunchDataQueries: di.Queries.LTILaunchDataQueries,
 		UserQueries:          di.Queries.UserQueries,
 		LTIProtocolDatastoreConfig: &datastore.Config{
-			Registrations: di.Queries.LTIFormQueries,
+			Registrations: di.Queries.AuthProviderQueries,
 			Nonces:        di.Queries.LTINonceTokenQueries,
 			LaunchData:    di.Queries.LTILaunchDataQueries,
 			AccessTokens:  di.Queries.LTIAccessTokenQueries,

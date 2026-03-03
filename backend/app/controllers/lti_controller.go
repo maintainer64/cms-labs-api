@@ -5,6 +5,7 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
@@ -15,10 +16,11 @@ import (
 // @Accept json
 // @Produce json
 // @Success 302
-// @Router /v2/lti/launch [post]
-// @Router /v2/lti/launch [get]
-func LTILaunch(c *fiber.Ctx) error {
-	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+// @Router /api/v2/lti/launch [post]
+// @Router /api/v2/lti/launch [get]
+func LTILaunch(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
+	issuer, err := auth.IssuerURLByBaseUrl(c.FiberCtx.BaseURL())
 	if err != nil {
 		return err
 	}
@@ -29,15 +31,15 @@ func LTILaunch(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.LTIProtocolLaunch()
-	if err = uc.ServeHTTP(c); err != nil {
+	if err = uc.ServeHTTP(c.FiberCtx); err != nil {
 		return err
 	}
 	authManager := container.AuthTokenManager()
-	token, err := authManager.NewJWTByLaunchID(issuer, c.Locals("LTILaunchID").(string))
+	token, err := authManager.NewJWTByLaunchID(issuer, c.FiberCtx.Locals("LTILaunchID").(string))
 	if err != nil {
 		return err
 	}
-	c.Cookie(
+	c.FiberCtx.Cookie(
 		&fiber.Cookie{
 			Name:     cms_client.SSORefreshTokenName,
 			Value:    token.RefreshToken,
@@ -47,7 +49,7 @@ func LTILaunch(c *fiber.Ctx) error {
 			Secure:   true,
 		},
 	)
-	return c.Redirect("/lti-redirect", fiber.StatusFound)
+	return c.FiberCtx.Redirect("/lti-redirect", fiber.StatusFound)
 }
 
 // LTILogin функция аутентификация пользователя по LTI.
@@ -57,9 +59,10 @@ func LTILaunch(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /v2/lti/login [post]
-// @Router /v2/lti/login [get]
-func LTILogin(c *fiber.Ctx) error {
+// @Router /api/v2/lti/login [post]
+// @Router /api/v2/lti/login [get]
+func LTILogin(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
@@ -67,5 +70,5 @@ func LTILogin(c *fiber.Ctx) error {
 	}
 	defer container.Close()
 	uc := container.LTIProtocolLogin()
-	return uc.ServeHTTP(c)
+	return uc.ServeHTTP(c.FiberCtx)
 }

@@ -9,10 +9,16 @@ services:
 deployments:
   front:
     replicas: 1
+    initContainers:
+    - name: vault-init
+      image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
+      imageTag: latest
+      args:
+        - "--path=front"
+        - "--output=/var/run/secrets/app"
+        - "--formats=env"
     containers:
     - name: front
-      envSecrets:
-      - front-env-list
       ports:
       - name: http
         containerPort: 80

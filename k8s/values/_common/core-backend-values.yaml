@@ -9,10 +9,16 @@ services:
 deployments:
   core-backend:
     replicas: 1
+    initContainers:
+    - name: vault-init
+      image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
+      imageTag: latest
+      args:
+        - "--path=backend"
+        - "--output=/var/run/secrets/app"
+        - "--formats=env"
     containers:
     - name: core-backend
-      envSecrets:
-      - core-backend-env-list
       ports:
       - name: http
         containerPort: 8080
@@ -31,7 +37,7 @@ deployments:
         periodSeconds: 10
         successThreshold: 1
         failureThreshold: 12
-      livenessProbe: 
+      livenessProbe:
         httpGet:
           path: /api/docs/index.html
           port: http

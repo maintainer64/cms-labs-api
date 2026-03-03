@@ -12,7 +12,7 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200 {object} string
-// @Router /v1/tokens/yaml [get]
+// @Router /clabgate/api/v1/tokens/yaml [get]
 func TokenAccessYaml(c *fiber.Ctx) error {
 	c.Set(fiber.HeaderContentDisposition, `attachment; filename="kubeconfig.yaml"`)
 	c.Set(fiber.HeaderContentType, "application/octet-stream")

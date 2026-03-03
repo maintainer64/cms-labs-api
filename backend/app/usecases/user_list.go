@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type UserListUC struct {
@@ -27,7 +26,19 @@ type UserListOutputDTO struct {
 	TotalCount int64           `json:"total_count" validate:"required"`
 }
 
-type UserListResponse = response.Response[UserListOutputDTO]
+type UserListRequest struct {
+	JSONRPC string           `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string           `json:"method" default:"user.get" required:"true"`
+	Params  UserListInputDTO `json:"params,omitempty"`
+	ID      string           `json:"id,omitempty" default:"1" required:"true"`
+}
+
+type UserListResponse struct {
+	JSONRPC string            `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  UserListOutputDTO `json:"result,omitempty"`
+	Error   interface{}       `json:"error,omitempty"`
+	ID      string            `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *UserListUC) Execute(dto UserListInputDTO) (UserListOutputDTO, error) {
 	entities, count, err := u.UserQueries.List(dto.Search, dto.UserIds, dto.Limit, dto.Offset)

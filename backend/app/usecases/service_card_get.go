@@ -3,7 +3,6 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/response"
 )
 
 type ServiceCardGetUC struct {
@@ -18,7 +17,19 @@ type ServiceCardGetOutputDTO struct {
 	Model models.ServiceCard `json:"model" required:"true"`
 }
 
-type ServiceCardGetResponse = response.Response[ServiceCardGetOutputDTO]
+type ServiceCardGetRequest struct {
+	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string                 `json:"method" default:"service_card.get" required:"true"`
+	Params  ServiceCardGetInputDTO `json:"params,omitempty"`
+	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+}
+
+type ServiceCardGetResponse struct {
+	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  ServiceCardGetOutputDTO `json:"result,omitempty"`
+	Error   interface{}             `json:"error,omitempty"`
+	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+}
 
 func (u *ServiceCardGetUC) Execute(dto ServiceCardGetInputDTO) (ServiceCardGetOutputDTO, error) {
 	form, err := u.ServiceCardQueries.Get(dto.ID)

@@ -43,6 +43,3 @@ migrate.status:
 
 generate:
 	go generate
-
-crud:
-	cd ../gen && go run . -model $(MODEL) -root "gitlab.com/a10869/api-modules/backend" -directory $(CUR_DIR) && cd $(CUR_DIR)

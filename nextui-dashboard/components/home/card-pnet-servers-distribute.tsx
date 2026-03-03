@@ -1,18 +1,21 @@
 import React from 'react';
 import Chart, { Props } from 'react-apexcharts';
-import { usePnetServerQueueList } from '@/helpers/queries/pnet-server-queue/get';
 import { Loading } from '@/components/scroll/loader';
-import { queries_RoundQueuePoolPnetListItem } from '@/helpers/api';
+import { useQueryServerQueueList } from '@/helpers/queries/server_queue/use-query-server-queue-list';
+import { CamelCasedPropertiesDeep } from 'type-fest';
+import { QueriesRoundQueuePoolPnetListItem } from '@/helpers/api';
 
 interface serversSeriesProps {
   name: string;
   data: number[][];
 }
 
-const serversName = (model: Array<queries_RoundQueuePoolPnetListItem>): [serversSeriesProps[], number] => {
+const serversName = (
+  model: Array<CamelCasedPropertiesDeep<QueriesRoundQueuePoolPnetListItem>>
+): [serversSeriesProps[], number] => {
   const series: serversSeriesProps[] = [];
   const seriesLabel: Set<number> = new Set();
-  const lastUsedServer = model.find((server) => server.last_used);
+  const lastUsedServer = model.find((server) => server.lastUsed);
   model.forEach((server) => {
     if (seriesLabel.has(server?.id || 0)) return;
     series.push({
@@ -29,15 +32,15 @@ const serversName = (model: Array<queries_RoundQueuePoolPnetListItem>): [servers
     name: `Last ${lastUsedServer?.name}`,
     // @ts-expect-error: return nullable value
     data: model
-      .map((distributionServer, index) => (distributionServer.last_used ? [index, 1.05] : null))
+      .map((distributionServer, index) => (distributionServer.lastUsed ? [index, 1.05] : null))
       .filter((x) => x !== null)
   });
   return [series, seriesLabel.size];
 };
 export const CardPnetServersDistribute = () => {
-  const response = usePnetServerQueueList();
+  const response = useQueryServerQueueList({});
   if (response.isLoading) return <Loading size='md' />;
-  const servers = response.data?.result?.model || [];
+  const servers = response.data?.model || [];
   const [series, seriesSize] = serversName(servers);
   const shapes = Array(seriesSize + 1)
     .fill(undefined)

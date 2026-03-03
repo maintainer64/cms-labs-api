@@ -7,9 +7,10 @@
     "dev": "vite --profile --open",
     "start": "vite start",
     "lint": "eslint app components helpers --report-unused-disable-directives --max-warnings 0",
+    "types": "tsc --noEmit",
     "format": "prettier --write \"app/**/*.{ts,tsx,js,jsx,json,css}\" \"components/**/*.{ts,tsx,js,jsx,json,css}\" \"helpers/**/*.{ts,tsx,js,jsx,json,css}\"",
     "serve": "serve dist",
-    "generate": "node openapi-ts/generate.mjs",
+    "generate": "node helpers/generate.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "dayjs": "^1.11.13",
     "formik": "^2.4.6",
     "framer-motion": "12.5.0",
+    "lucide-react": "^0.574.0",
     "next-themes": "0.2.1",
     "parse-curl": "^0.2.6",
     "react": "19.0.0",
@@ -46,13 +48,13 @@
     "react-router-dom": "^7.7.0",
     "remark-gfm": "^4.0.1",
     "sockjs-client": "^1.6.1",
+    "ts-case-convert": "^2.1.0",
     "use-screen-size": "^1.4.11",
     "vite": "^6.2.2",
     "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
-    "@hey-api/openapi-ts": "^0.64.13",
     "@types/dagre": "^0.7.53",
     "@types/http-proxy": "^1.17.16",
     "@types/jsonwebtoken": "^9.0.9",
@@ -69,6 +71,7 @@
     "postcss": "^8.4.28",
     "prettier": "^3.4.1",
     "serve": "^14.2.3",
+    "swagger-typescript-api": "^13.2.13",
     "tailwindcss": "^3.3.3",
     "typescript": "4.8.4",
     "typescript-eslint": "^8.16.0"

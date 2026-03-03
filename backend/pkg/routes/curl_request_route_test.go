@@ -2,6 +2,11 @@ package routes
 
 import (
 	"testing"
+	"time"
+
+	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+
+	"github.com/gofiber/fiber/v2"
 
 	json "github.com/goccy/go-json"
 	"github.com/google/uuid"
@@ -14,8 +19,9 @@ import (
 
 func TestCurlRequestCreate(t *testing.T) {
 	description := "Create new CurlRequest"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
 
 	// Тестовые данные
 	dto := usecases.CurlRequestEditInputDTO{
@@ -27,10 +33,9 @@ func TestCurlRequestCreate(t *testing.T) {
 		RawRequest: `POST /api HTTP/1.1\nContent-Type: application/json\n\n{"key":"value"}`,
 	}
 
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method:        "POST",
-		Route:         "/api/v1/curl-request/upsert",
-		Body:          FiberRequestPayload(dto),
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "curl_request.upsert",
+		Params:        dto,
 		Authorization: authHeader,
 	})
 
@@ -50,7 +55,8 @@ func TestCurlRequestCreate(t *testing.T) {
 
 func TestCurlRequestGet(t *testing.T) {
 	description := "get CurlRequest"
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Создаем тестовый запрос
 	entity := models.CurlRequest{
@@ -67,13 +73,12 @@ func TestCurlRequestGet(t *testing.T) {
 	}
 	f.DB.Create(&entity)
 
-	authHeader := f.AuthorizationUser(0, 0)
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/curl-request/get",
-		Body: FiberRequestPayload(map[string]any{
+	authHeader := f.AuthorizationUser(0, nil)
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method: "curl_request.get",
+		Params: fiber.Map{
 			"id": entity.ID,
-		}),
+		},
 		Authorization: authHeader,
 	})
 
@@ -88,28 +93,37 @@ func TestCurlRequestGet(t *testing.T) {
 
 func TestCurlRequestGetNotFound(t *testing.T) {
 	description := "not found CurlRequest"
-	f := NewFiberTestHTTP()
-	authHeader := f.AuthorizationUser(0, 0)
+	f := NewTestHTTP()
+	defer f.Close()
+	authHeader := f.AuthorizationUser(0, nil)
+	request := &TestRpcRequest{
+		Method: "curl_request.get",
+		Params: fiber.Map{
+			"id": 9999999,
+		},
+		Authorization: authHeader,
+	}
+	statusCode, body := f.Rpc(request)
 	expectedBody := map[string]interface{}{
-		"error": true,
-		"msg":   "CurlRequest not found",
+		"error": map[string]interface{}{
+			"code": -32010,
+			"data": map[string]interface{}{
+				"code":    "curl_request_not_found",
+				"message": "curl request has not found",
+			},
+			"message": "Validation error",
+		},
+		"id":      request.ID,
+		"jsonrpc": "2.0",
 	}
 
-	statusCode, body := f.Request(&FiberTestHttpRequest{
-		Method: "POST",
-		Route:  "/api/v1/curl-request/get",
-		Body: FiberRequestPayload(map[string]any{
-			"id": 9999999,
-		}),
-		Authorization: authHeader,
-	})
-
-	assert.Equal(t, 404, statusCode, description)
+	assert.Equal(t, 500, statusCode, description)
 	assert.Equal(t, FiberJSON(expectedBody), body, description)
 }
 
 func TestCurlRequestList(t *testing.T) {
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Clear Table
 	f.DB.Where("id > ?", 0).Delete(&models.CurlRequest{})
@@ -120,6 +134,9 @@ func TestCurlRequestList(t *testing.T) {
 			Name: "Request A " + uuid.New().String(),
 			URL:  "https://example.com/a",
 		},
+		Base: models.Base{
+			CreatedAt: time.Now().Add(-3 * time.Minute),
+		},
 	}
 	f.DB.Create(&entity1)
 
@@ -127,6 +144,9 @@ func TestCurlRequestList(t *testing.T) {
 		CurlRequestBase: models.CurlRequestBase{
 			Name: "Request B " + uuid.New().String(),
 			URL:  "https://example.com/b",
+		},
+		Base: models.Base{
+			CreatedAt: time.Now().Add(-2 * time.Minute),
 		},
 	}
 	f.DB.Create(&entity2)
@@ -136,10 +156,13 @@ func TestCurlRequestList(t *testing.T) {
 			Name: "Another Request " + uuid.New().String(),
 			URL:  "https://another.com",
 		},
+		Base: models.Base{
+			CreatedAt: time.Now().Add(-1 * time.Minute),
+		},
 	}
 	f.DB.Create(&entity3)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	tests := []struct {
 		description string
@@ -183,10 +206,9 @@ func TestCurlRequestList(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		statusCode, body := f.Request(&FiberTestHttpRequest{
-			Method:        "POST",
-			Route:         "/api/v1/curl-request/list",
-			Body:          FiberRequestPayload(test.body),
+		statusCode, body := f.Rpc(&TestRpcRequest{
+			Method:        "curl_request.list",
+			Params:        test.body,
 			Authorization: authHeader,
 		})
 
@@ -204,7 +226,8 @@ func TestCurlRequestList(t *testing.T) {
 }
 
 func TestCurlRequestDelete(t *testing.T) {
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	// Создаем тестовый запрос
 	entity := models.CurlRequest{
@@ -215,7 +238,7 @@ func TestCurlRequestDelete(t *testing.T) {
 	}
 	f.DB.Create(&entity)
 
-	authHeader := f.AuthorizationUser(0, 0)
+	authHeader := f.AuthorizationUser(0, nil)
 
 	tests := []struct {
 		description string
@@ -232,12 +255,11 @@ func TestCurlRequestDelete(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		statusCode, body := f.Request(&FiberTestHttpRequest{
-			Method: "POST",
-			Route:  "/api/v1/curl-request/delete",
-			Body: FiberRequestPayload(map[string]any{
+		statusCode, body := f.Rpc(&TestRpcRequest{
+			Method: "curl_request.delete",
+			Params: fiber.Map{
 				"id": test.id,
-			}),
+			},
 			Authorization: authHeader,
 		})
 
@@ -254,50 +276,45 @@ func TestCurlRequestDelete(t *testing.T) {
 }
 
 func TestCurlRequestUnauthorizedAccess(t *testing.T) {
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	tests := []struct {
 		description  string
 		method       string
-		route        string
-		body         map[string]any
+		body         interface{}
 		expectedCode int
 	}{
 		{
 			description:  "Unauthorized access to create",
-			method:       "POST",
-			route:        "/api/v1/curl-request/upsert",
-			body:         map[string]any{"name": "Test", "url": "https://test.com"},
-			expectedCode: 401,
+			method:       "curl_request.upsert",
+			body:         fiber.Map{"name": "Test", "url": "https://test.com"},
+			expectedCode: 500,
 		},
 		{
 			description:  "Unauthorized access to get",
-			method:       "POST",
-			route:        "/api/v1/curl-request/get",
-			body:         map[string]any{"id": 1},
-			expectedCode: 401,
+			method:       "curl_request.get",
+			body:         fiber.Map{"id": 1},
+			expectedCode: 500,
 		},
 		{
 			description:  "Unauthorized access to list",
-			method:       "POST",
-			route:        "/api/v1/curl-request/list",
-			body:         map[string]any{},
-			expectedCode: 401,
+			method:       "curl_request.list",
+			body:         fiber.Map{},
+			expectedCode: 500,
 		},
 		{
 			description:  "Unauthorized access to delete",
-			method:       "POST",
-			route:        "/api/v1/curl-request/delete",
-			body:         map[string]any{"id": 1},
-			expectedCode: 401,
+			method:       "curl_request.delete",
+			body:         fiber.Map{"id": 1},
+			expectedCode: 500,
 		},
 	}
 
 	for _, test := range tests {
-		statusCode, _ := f.Request(&FiberTestHttpRequest{
+		statusCode, _ := f.Rpc(&TestRpcRequest{
 			Method: test.method,
-			Route:  test.route,
-			Body:   FiberRequestPayload(test.body),
+			Params: test.body,
 		})
 
 		assert.Equal(t, test.expectedCode, statusCode, test.description)
@@ -359,7 +376,8 @@ func TestApplyOverrides(t *testing.T) {
 
 func TestCurlRequestExecute(t *testing.T) {
 	// Инициализация тестового приложения
-	f := NewFiberTestHTTP()
+	f := NewTestHTTP()
+	defer f.Close()
 
 	authHeader, _ := f.AuthorizationServiceBasic()
 
@@ -384,6 +402,11 @@ func TestCurlRequestExecute(t *testing.T) {
 		Get("/users/42").
 		Reply(200).
 		JSON(map[string]interface{}{"id": 42, "name": "John Doe"})
+
+	overrideError := "Internal Server Error"
+	if configs.AppConfig.Server.Layer == "dev" {
+		overrideError = "cannot match any request"
+	}
 
 	tests := []struct {
 		name           string
@@ -416,11 +439,10 @@ func TestCurlRequestExecute(t *testing.T) {
 					// token не указан
 				},
 			},
-			expectedStatus: 500,
 			expectedBody: map[string]interface{}{
-				"error": true,
-				"msg":   "cannot match any request",
+				"error": overrideError,
 			},
+			expectedStatus: 500,
 		},
 		{
 			name: "Invalid request ID",
@@ -433,8 +455,7 @@ func TestCurlRequestExecute(t *testing.T) {
 			},
 			expectedStatus: 500,
 			expectedBody: map[string]interface{}{
-				"error": true,
-				"msg":   "CurlRequest not found",
+				"error": "curl_request_not_found",
 			},
 		},
 	}
@@ -442,7 +463,7 @@ func TestCurlRequestExecute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Подготовка запроса
-			statusCode, body := f.Request(&FiberTestHttpRequest{
+			statusCode, body := f.Request(&TestHttpRequest{
 				Method:        "POST",
 				Route:         "/api/v1/curl-request/execute",
 				Body:          FiberRequestPayload(tt.payload),
@@ -464,10 +485,7 @@ func TestCurlRequestExecute(t *testing.T) {
 			} else {
 				// Для ошибок проверяем наличие полей error и msg
 				// Проверяем body
-				actualBody := make(map[string]interface{})
-				_ = json.Unmarshal([]byte(body), &actualBody)
-				assert.Equal(t, tt.expectedBody["error"], actualBody["error"])
-				assert.Contains(t, actualBody["msg"], tt.expectedBody["msg"])
+				assert.Contains(t, body, tt.expectedBody["error"])
 			}
 		})
 	}

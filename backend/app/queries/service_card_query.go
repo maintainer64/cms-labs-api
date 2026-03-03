@@ -1,15 +1,13 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gorm.io/gorm"
 )
 
@@ -22,10 +20,10 @@ func (q *ServiceCardQueries) Get(id uint) (models.ServiceCard, error) {
 	var entity models.ServiceCard
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("ServiceCard not found"),
-		}
+		return entity, jsonrpc.NewRpcError(
+			"service_card_not_found",
+			"service card not found",
+		)
 	}
 	return entity, result.Error
 }

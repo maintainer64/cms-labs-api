@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { Chip, Select, SelectItem, Tooltip } from '@heroui/react';
-import { useRolesList } from '@/helpers/queries/roles/get';
 import { Key } from '@react-types/shared';
 import { SharedSelection } from '@heroui/system';
 import { Loading } from '@/components/scroll/loader';
+import { useQueryRoleList } from '@/helpers/queries/role/use-query-role-list';
 
 interface RolesSelectorProps {
   label?: ReactNode;
@@ -13,8 +13,8 @@ interface RolesSelectorProps {
 }
 
 export const RolesSelector = (props: RolesSelectorProps) => {
-  const queryRoles = useRolesList();
-  const roles = queryRoles.data?.result?.model || [];
+  const queryRoles = useQueryRoleList({});
+  const roles = queryRoles.data?.model || [];
   const selectedKeys = props.selectedKeys?.map((item) => item.toString());
   return (
     <Select
@@ -39,10 +39,10 @@ interface RolesChipProps {
 }
 
 export const RolesChip = ({ roles, maxRoles }: RolesChipProps) => {
-  const queryRoles = useRolesList();
+  const queryRoles = useQueryRoleList({});
   if (queryRoles.isLoading) return <Loading size='sm' />;
 
-  const filteredRoles = queryRoles.data?.result?.model.filter((role) => (roles || []).includes(role.id || 0));
+  const filteredRoles = queryRoles.data?.model.filter((role) => (roles || []).includes(role.id || 0));
 
   if (!filteredRoles?.length) return null;
 

@@ -1,10 +1,8 @@
 package di
 
 import (
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/pnetlabaddon/platform/database"
 	"gitlab.com/a10869/api-modules/shared/logs"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
 type DIContainer struct {
@@ -25,7 +23,7 @@ func NewDIContainer(zeroLogConf *logs.ZeroLoggerConf) (*DIContainer, error) {
 	}
 	if err != nil {
 		dbLogger.Warn().Err(err).Msg("failed to open database connection")
-		return di, utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return di, err
 	}
 	return di, nil
 }

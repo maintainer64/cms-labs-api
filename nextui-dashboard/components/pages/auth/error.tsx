@@ -2,7 +2,6 @@ import useLanguageBrowser from '@/helpers/locale';
 import { Modal, ModalBody, ModalContent, ModalHeader } from '@heroui/modal';
 import { ModalFooter } from '@heroui/react';
 import React from 'react';
-import { zIndexClassModal } from '@/components/providers/const';
 
 type ErrorModalProps = {
   title: string;

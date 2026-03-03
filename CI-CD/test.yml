@@ -29,7 +29,7 @@ golang-test:
     KUBERNETES_MEMORY_LIMIT: 4Gi
     KUBERNETES_EPHEMERAL_STORAGE_LIMIT: 10Gi
   services:
-    - name: harbor.cmslabs.ru/proxy_docker_io/mysql:9.1
+    - name: harbor.k8s.cmslabs.ru/proxy_docker_io/mysql:9.1
       alias: mysqldatabase
       variables:
         MYSQL_HOST: 'mysqldatabase'

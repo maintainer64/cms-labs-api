@@ -181,7 +181,7 @@ func (a *AGS) PutScore(s Score, useLaunchUserID bool) error {
 	return nil
 }
 
-// GetResults gets the launched limeitem's Results for all users enrolled in that lineitem's context (i.e. course).
+// GetResults gets the launched limeitem's Results for all user enrolled in that lineitem's context (i.e. course).
 func (a *AGS) GetResults() ([]Result, error) {
 	return a.resultsGetter("")
 }

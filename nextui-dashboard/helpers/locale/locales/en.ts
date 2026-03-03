@@ -1,7 +1,10 @@
 const en = {
   Login: {
     PageName: 'Login',
+    TabSSO: 'Moodle',
+    TabInternal: 'Internal',
     FieldEmail: 'Email',
+    FieldEmailDescription: 'Enter your business email address',
     FieldPassword: 'Password',
     Submit: 'Login',
     ErrorFieldEmailNotEmpty: 'This field must be an email',
@@ -16,7 +19,7 @@ const en = {
     ErrorPageTitle: 'Authorization Error',
     ErrorPageDescription: 'Try to go to the login page or log in through the course',
     MainTitle: 'CMS LABS',
-    MainDescription: '[Admin] Control Management System labs by Hero UI',
+    MainDescription: '[Admin] Control Management System labs',
     MainChangeLanguage: 'Сменить язык'
   },
   CompaniesDropdown: {
@@ -29,9 +32,11 @@ const en = {
     Users: 'Users',
     Roles: 'Roles',
     Servers: 'Servers',
+    Targets: 'Map',
+    Collapse: 'Collapse',
     CurlRequests: 'API',
     ServiceCards: 'Services',
-    LTIIntegrations: 'LTIs',
+    AuthProviders: 'Auth providers',
     LTIRouting: 'LTI Routes',
     LTIAttempts: 'LTI Attempts',
     APIRequests: 'API Requests',
@@ -40,8 +45,9 @@ const en = {
     Edit: 'Edit',
     Save: 'Save',
     Confirm: 'Confirm',
-    Close: 'Close',
+    Cancel: 'Cancel',
     Delete: 'Delete',
+    Close: 'Close',
     ViewAll: 'View all'
   },
   LanguageSwitcher: {
@@ -55,9 +61,9 @@ const en = {
   },
   Tables: {
     UsersTable: {
-      Title: 'All users',
-      TitleWidgetHome: 'Latest users',
-      SearchBar: 'Search users',
+      Title: 'All user',
+      TitleWidgetHome: 'Latest user',
+      SearchBar: 'Search user',
       ButtonAdd: 'Add user',
       ButtonEdit: 'Edit user',
       Columns: [
@@ -67,10 +73,10 @@ const en = {
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
-    LTIFormsTable: {
-      Title: 'LTI Integration',
+    AuthProvidersTable: {
+      Title: 'Auth providers',
       ButtonAdd: 'Create',
-      SearchBar: 'Search integrations',
+      SearchBar: 'Search providers',
       ButtonEdit: 'Edit',
       Columns: [
         { name: 'ID', uid: 'id' },
@@ -182,14 +188,19 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     FieldRelationAttempts: 'Relation attempts'
   },
-  LTIForm: {
+  AuthProvider: {
     FieldID: 'ID',
     FieldName: 'Name',
-    FieldBaseURI: 'Base URL LTI',
+    FieldType: 'Тип',
+    FieldTypeLTI: 'LTI',
+    FieldTypeLTIDescription: 'Connect to course',
+    FieldTypeLDAP: 'LDAP',
+    FieldTypeLDAPDescription: 'Connect to lightweight directory',
+    FieldBaseURI: 'Base URL',
     ButtonBaseURI: 'Settings URL',
     ButtonBaseURIMoodle: 'Moodle',
     ButtonBaseURIMoodleDescription: 'Setup URI on base URL Moodle service',
-    DescriptionBaseURI: 'URL base service provider LTI',
+    DescriptionBaseURI: 'URL base service provider',
     FieldLTIAuthLoginUri: 'URL authorization LTI',
     DescriptionLTIAuthLoginUri: 'Address suffix /mod/lti/auth.php',
     FieldLTIAuthTokenUri: 'URL token LTI',
@@ -199,6 +210,7 @@ const en = {
     FieldLTIClientID: 'ClientID LTI',
     FieldLTIDeployment: 'DeploymentID LTI',
     FieldKeySetURI: 'URL certificates LTI',
+    FieldDN: 'DN',
     DescriptionKeySetURI: 'Address suffix /mod/lti/certs.php',
     FieldSSOURL: 'SSO LTI URL',
     DescriptionSSOURL: 'Link to the course element in the LTI tool',
@@ -248,7 +260,7 @@ const en = {
       Description: 'It will be impossible to call the API when deleting it'
     }
   },
-  LTIFormAttempt: {
+  AuthProviderAttempt: {
     FieldID: 'ID attempt',
     FieldRoomNumber: 'Room number',
     FieldUserId: 'User id',
@@ -261,7 +273,7 @@ const en = {
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
-      Title: 'Deleting an LTI-Attempt entity',
+      Title: 'Deleting an Auth provider entity',
       Description:
         'When you delete it, the other systems will not be able to interact with the user. It is safe if the user has completed the work'
     }
@@ -279,7 +291,7 @@ const en = {
     FieldUnitRate: 'Percentage of distribution',
     FieldMinutesForDisconnect: 'Minutes for auto-shutdown',
     DescriptionMinutesForDisconnect: 'Used to disable user allocation',
-    FieldMaxCountUsers: 'Max count users for auto-shutdown',
+    FieldMaxCountUsers: 'Max count user for auto-shutdown',
     DescriptionMaxCountUsers: 'Used to disable user allocation',
     FieldToken: 'Token',
     FieldLastOnlineStatus: 'Last active at',
@@ -309,7 +321,7 @@ const en = {
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
       Title: 'Deleting a Role entity',
-      Description: 'This role will be disabled for all users'
+      Description: 'This role will be disabled for all user'
     }
   },
   ServiceCards: {
@@ -391,6 +403,111 @@ const en = {
     Title: 'Forbidden',
     Description: 'Sorry, access to view this page is denied with your role',
     Button: 'Go back'
+  },
+  Target: {
+    Title: 'Map services',
+    ButtonAdd: 'Create',
+    SearchBar: 'Search',
+    ButtonEdit: 'Edit',
+    FieldID: 'ID',
+    FieldName: 'Name',
+    FieldDescription: 'Description',
+    FieldType: 'Type',
+    FieldTags: 'Tags',
+    FieldLinks: 'Links',
+    FieldCreatedAt: 'Created',
+    FieldUpdatedAt: 'Updated',
+    FieldSynchronizedAt: 'Synchronized',
+    Types: {
+      server: 'Server',
+      virtual: 'Virtual Server',
+      service: 'Service',
+      module: 'Module'
+    },
+    Relation: {
+      Title: 'Relations',
+      Parent: 'Parent',
+      AddParent: 'Add relation',
+      RemoveParent: 'Remove relation',
+      SelectParent: 'Select relation',
+      NoParents: 'No relations'
+    },
+    Addon: {
+      Title: 'Addons',
+      Connect: 'Connect',
+      NoAddons: 'Not connected addons',
+      ConnectTitle: 'Connect addon',
+      Name: 'Name',
+      Type: 'Type',
+      Disconnect: 'Disconnect',
+      Reset: 'Reset',
+      ResetTitle: 'Reset tokens',
+      ResetDescription:
+        'Access tokens will be recreated. Data in the resource will not be changed or deleted. Continue?',
+      SelectAddon: 'Select addon',
+      DeleteRequest: 'Delete request',
+      DeleteConfirmStep1: 'Create backup of data',
+      DeleteConfirmStep2: 'Completely clear application data',
+      DeleteConfirmStep3: 'The addon will be permanently deleted and cannot be restored',
+      DeleteConfirmWarning: 'Are you sure you want to delete this addon?',
+      DeleteConfirmButton: 'Yes, delete',
+      DeleteCancelButton: 'Cancel',
+      DeletePendingMessage: 'Waiting for deletion confirmation from another user',
+      DeleteRequestedBy: 'Deletion requested by user',
+      DeleteConfirmRequired: 'Deletion confirmation required',
+      Config: 'Configuration',
+      DatabaseSize: 'Used',
+      Cluster: 'Cluster',
+      Namespace: 'Namespace',
+      Registry: 'Image registry',
+      ApiKeyInVault: 'API key in Vault',
+      RotateCredentials: 'Rotate credentials',
+      RotateCredentialsTitle: 'Rotate credentials',
+      RotateCredentialsDescription: 'Keys and passwords will be recreated. Old keys will become invalid. Continue?',
+      RevokeDeleteRequest: 'Revoke delete request',
+      RevokeDeleteRequestTitle: 'Revoke delete request',
+      RevokeDeleteRequestDescription: 'Delete request will be canceled. Continue?',
+      Expires: 'Expires'
+    },
+    User: {
+      Title: 'Users',
+      AddTitle: 'Add user',
+      EditTitle: 'Edit permissions',
+      Add: 'Add user',
+      Remove: 'Remove',
+      Email: 'Email',
+      Roles: 'Roles',
+      UserLabel: 'User',
+      UserPlaceholder: 'Start typing name',
+      RolesLabel: 'Roles',
+      SelectUser: 'Select user',
+      SelectRole: 'Select role',
+      AddButton: 'Add user',
+      NoUsers: 'No linked users',
+      NoRoles: 'No roles'
+    },
+    Roles: [
+      {
+        key: 'vault_viewer',
+        value: 'Vault Viewer'
+      },
+      {
+        key: 'vault_writer',
+        value: 'Vault Writer'
+      },
+      {
+        key: 'editor',
+        value: 'Editor'
+      },
+      {
+        key: 'nominal',
+        value: 'Nominal'
+      }
+    ],
+    DeletePopup: {
+      Title: 'Delete target',
+      Description: 'Are you sure you want to delete this object?'
+    }
   },
   Topology: {
     Menu: {

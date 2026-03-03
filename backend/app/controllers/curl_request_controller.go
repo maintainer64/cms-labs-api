@@ -3,6 +3,8 @@ package controllers
 import (
 	"io"
 
+	"gitlab.com/a10869/api-modules/backend/app/queries"
+
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 
 	fiber "github.com/gofiber/fiber/v2"
@@ -10,168 +12,156 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/external"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gitlab.com/a10869/api-modules/shared/logs"
-	"gitlab.com/a10869/api-modules/shared/utils"
 )
 
-// CurlRequestCreate func for creates a new CurlRequest.
+// CurlRequestUpsert func for creates a new CurlRequest.
 // @Description Create curl_request. Roles [admin]
 // @Summary create curl_request
-// @Tags CurlRequest
+// @Tags curl_request
 // @Accept json
 // @Produce json
-// @Param form body usecases.CurlRequestEditInputDTO true "curl_request form info"
+// @Param object body usecases.CurlRequestEditRequest true "curl_request form info"
 // @Success 200 {object} usecases.CurlRequestEditResponse
 // @Security ApiKeyAuth
-// @Router /v1/curl-request/upsert [post]
-func CurlRequestCreate(c *fiber.Ctx) error {
+// @Router /api/v1/rpc/curl_request.upsert [post]
+func CurlRequestUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
-		return err
+		return nil, err
 	}
 	dto := usecases.CurlRequestEditInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc := container.CurlRequestEditUC()
-	output, err := uc.Execute(dto)
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return uc.Execute(dto)
 }
 
 // CurlRequestList func for view of list CurlRequest.
 // @Description List pnet_server. Roles: [admin, instructor]
 // @Summary list pnet_server
-// @Tags CurlRequest
+// @Tags curl_request
 // @Accept json
 // @Produce json
-// @Param form body usecases.CurlRequestListInputDTO true "pnet_server list info"
+// @Param form body usecases.CurlRequestListRequest true "pnet_server list info"
 // @Success 200 {object} usecases.CurlRequestListResponse
 // @Security ApiKeyAuth
-// @Router /v1/curl-request/list [post]
-func CurlRequestList(c *fiber.Ctx) error {
+// @Router /api/v1/rpc/curl_request.list [post]
+func CurlRequestList(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	dto := usecases.CurlRequestListInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	dto := queries.CurlRequestQueriesListDTO{}
+	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc := container.CurlRequestListUC()
-	output, err := uc.Execute(dto)
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return uc.Execute(dto)
 }
 
 // CurlRequestDelete func for delete CurlRequest.
 // @Description Delete pnet_server. Roles: [admin]
 // @Summary delete curl_request
-// @Tags CurlRequest
+// @Tags curl_request
 // @Accept json
 // @Produce json
-// @Param form body usecases.CurlRequestDeleteInputDTO true "curl_request_id"
+// @Param form body usecases.CurlRequestDeleteRequest true "curl_request_id"
 // @Success 200 {object} usecases.CurlRequestDeleteResponse
 // @Security ApiKeyAuth
-// @Router /v1/curl-request/delete [post]
-func CurlRequestDelete(c *fiber.Ctx) error {
+// @Router /api/v1/rpc/curl_request.delete [post]
+func CurlRequestDelete(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
-		return err
+		return nil, err
 	}
 	dto := usecases.CurlRequestDeleteInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc := container.CurlRequestDeleteUC()
-	output, err := uc.Execute(dto)
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return uc.Execute(dto)
 }
 
 // CurlRequestGet func for full model CurlRequest.
 // @Description get curl_request. Roles: [admin]
 // @Summary get curl_request
-// @Tags CurlRequest
+// @Tags curl_request
 // @Accept json
 // @Produce json
-// @Param form body usecases.CurlRequestGetInputDTO true "pnet_server id"
+// @Param form body usecases.CurlRequestGetRequest true "pnet_server id"
 // @Success 200 {object} usecases.CurlRequestGetResponse
 // @Security ApiKeyAuth
-// @Router /v1/curl-request/get [post]
-func CurlRequestGet(c *fiber.Ctx) error {
+// @Router /api/v1/rpc/curl_request.get [post]
+func CurlRequestGet(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
 		[]string{cms_client.SSOUsersRoleAdmin},
 	); err != nil {
-		return err
+		return nil, err
 	}
 	dto := usecases.CurlRequestGetInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer container.Close()
 	uc := container.CurlRequestGetUC()
-	output, err := uc.Execute(dto)
-	if err != nil {
-		return err
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return uc.Execute(dto)
 }
 
 // CurlRequestExecute execute prepare request.
 // @Description execute request.
 // @Summary execute request
-// @Tags CurlRequest, EXTERNAL
+// @Tags curl_request, EXTERNAL
 // @Accept json
 // @Produce json
 // @Param form body external.CurlRequestExecuteInputDTO true "pnet_server id"
 // @Success 200
 // @Param Authorization header string true "Basic-токен, созданный клиентом"
-// @Router /v1/curl-request/execute [post]
-func CurlRequestExecute(c *fiber.Ctx) error {
+// @Router /api/v1/curl-request/execute [post]
+func CurlRequestExecute(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{
+		FiberCtx: ctx,
+		Params:   ctx.Body(),
+	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := external.CurlRequestExecuteInputDTO{}
-	err := utils.FiberValidatorBase(c, &dto)
+	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
 		return err
 	}
@@ -180,36 +170,33 @@ func CurlRequestExecute(c *fiber.Ctx) error {
 		return err
 	}
 	defer container.Close()
-	uc := container.CurlRequestExecuteUC()
-	output, err := uc.SetContext(c.Locals("x-service-id").(string)).Execute(dto)
+	err = container.ServiceAuthorizeUC().Execute(c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
+		return err
+	}
+	uc := container.CurlRequestExecuteUC()
+	output, err := uc.SetContext(
+		c.FiberCtx.Locals("x-service-id").(string),
+	).Execute(dto)
+	if err != nil {
+		return err
 	}
 	if output == nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": true,
-			"msg":   "The method was not executed",
-		})
+		return jsonrpc.NewRpcError("curl_request_not_execute", "the method was not executed")
 	}
 	defer output.Body.Close()
-	c.Status(output.StatusCode)
+	c.FiberCtx.Status(output.StatusCode)
 	// Копируем заголовки из ответа
 	for k, v := range output.Header {
 		if len(v) > 0 {
-			c.Set(k, v[0])
+			c.FiberCtx.Set(k, v[0])
 		}
 	}
 	// Читаем тело ответа
 	body, err := io.ReadAll(output.Body)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
+		return err
 	}
 	// Возвращаем ответ "как есть" с оригинальным статус-кодом и заголовками
-	return c.Send(body)
+	return c.FiberCtx.Send(body)
 }

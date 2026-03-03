@@ -1,15 +1,13 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gorm.io/gorm"
 )
 
@@ -18,14 +16,13 @@ type LTIRoutingQueries struct {
 	Logger *zerolog.Logger
 }
 
+var LTIRoutingNotFoundError = jsonrpc.NewRpcError("routing_not_found", "route has not found")
+
 func (q *LTIRoutingQueries) Get(id uint) (models.LTIRouting, error) {
 	var entity models.LTIRouting
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIRouting not found"),
-		}
+		return entity, LTIRoutingNotFoundError
 	}
 	return entity, result.Error
 }
@@ -118,10 +115,7 @@ func (q *LTIRoutingQueries) GetRelevantRouting(
 	}
 	if !execute {
 		q.Logger.Info().Msg("LTIRoutingQueries: GetRelevantRouting not execute null params")
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("LTIRouting not found"),
-		}
+		return entity, LTIRoutingNotFoundError
 	}
 	result := tx.Scan(&entity)
 	q.Logger.Info().Msg(

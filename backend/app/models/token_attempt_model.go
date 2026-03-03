@@ -12,8 +12,9 @@ type UserPassword struct {
 
 // TokenAttemptBase struct to describe TokenAttempt object.
 type TokenAttemptBase struct {
-	UserID   uint `gorm:"type:int" json:"user_id"`
-	ServerID uint `gorm:"type:int" json:"server_id"`
+	UserID   *uint   `gorm:"type:int" json:"user_id"`
+	ServerID *uint   `gorm:"type:int" json:"server_id"`
+	TargetID *string `gorm:"type:varchar(255)" json:"target_id"`
 }
 
 type TokenAttemptSecret struct {

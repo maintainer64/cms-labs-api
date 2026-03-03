@@ -103,7 +103,7 @@ services:
       SERVER_READ_TIMEOUT: "60"
 
       K8S_CONFIG: ""
-      K8S_NAMESPACE: "k8s-users"
+      K8S_NAMESPACE: "k8s-user"
       K8S_KREW_CONFIG: ""
       # Git settings
       GITLAB_BASE_URL: "https://gitlab.com"

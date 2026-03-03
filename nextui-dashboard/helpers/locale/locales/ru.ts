@@ -1,7 +1,10 @@
 const ru = {
   Login: {
     PageName: 'Вход',
+    TabSSO: 'Moodle',
+    TabInternal: 'Внутренний',
     FieldEmail: 'Почта',
+    FieldEmailDescription: 'Введите корпоративную почту',
     FieldPassword: 'Пароль',
     Submit: 'Войти',
     ErrorFieldEmailNotEmpty: 'Это должна быть почта',
@@ -16,7 +19,7 @@ const ru = {
     ErrorPageTitle: 'Ошибка авторизации',
     ErrorPageDescription: 'Попробуйте перейти на страницу входа в систему или авторизоваться через курс',
     MainTitle: 'СУиМ Лаб',
-    MainDescription: 'Система Управления и Мониторинга лаболаторных работ. Сделано на Hero UI',
+    MainDescription: 'Система Управления и Мониторинга лаболаторных работ',
     MainChangeLanguage: 'Change language'
   },
   CompaniesDropdown: {
@@ -29,9 +32,11 @@ const ru = {
     Users: 'Пользователи',
     Roles: 'Роли',
     Servers: 'Серверы',
+    Targets: 'Карта',
+    Collapse: 'Свернуть',
     CurlRequests: 'API',
     ServiceCards: 'Сервисы',
-    LTIIntegrations: 'LTIs',
+    AuthProviders: 'Идентификации',
     LTIRouting: 'Маршруты LTI',
     LTIAttempts: 'Попытки LTI',
     APIRequests: 'Запросы по API',
@@ -40,6 +45,7 @@ const ru = {
     Edit: 'Редактирование',
     Save: 'Сохранить',
     Confirm: 'Подтвердить',
+    Cancel: 'Отмена',
     Delete: 'Удалить',
     Close: 'Закрыть',
     ViewAll: 'Перейти'
@@ -67,8 +73,8 @@ const ru = {
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ]
     },
-    LTIFormsTable: {
-      Title: 'Интеграции LTI',
+    AuthProvidersTable: {
+      Title: 'Интеграции идентификации',
       ButtonAdd: 'Создать',
       SearchBar: 'Поиск интеграций',
       ButtonEdit: 'Редактировать',
@@ -182,14 +188,19 @@ const ru = {
     FieldUpdatedAt: 'Обновлен в',
     FieldRelationAttempts: 'Связные попытки'
   },
-  LTIForm: {
+  AuthProvider: {
     FieldID: 'ID',
     FieldName: 'Название',
-    FieldBaseURI: 'Базовый URL LTI',
+    FieldType: 'Тип',
+    FieldTypeLTI: 'LTI',
+    FieldTypeLTIDescription: 'Подключение к платформе курса',
+    FieldTypeLDAP: 'LDAP',
+    FieldTypeLDAPDescription: 'Подключение сервера доступа к каталогам',
+    FieldBaseURI: 'Базовый URL',
     ButtonBaseURI: 'Настройка URL',
     ButtonBaseURIMoodle: 'Moodle',
     ButtonBaseURIMoodleDescription: 'Установка URL по базовому адресу Moodle',
-    DescriptionBaseURI: 'URL базовый инструмента LTI',
+    DescriptionBaseURI: 'URL базовый выбранного инструмента',
     FieldLTIAuthLoginUri: 'URL авторизации LTI',
     DescriptionLTIAuthLoginUri: 'Адрес с /mod/lti/auth.php',
     FieldLTIAuthTokenUri: 'URL токен LTI',
@@ -199,6 +210,7 @@ const ru = {
     FieldLTIClientID: 'ID клиента LTI',
     FieldLTIDeployment: 'ID deployment LTI',
     FieldKeySetURI: 'URL для получения сертификатов LTI',
+    FieldDN: 'DN',
     DescriptionKeySetURI: 'Адрес с /mod/lti/certs.php',
     FieldSSOURL: 'SSO LTI URL',
     DescriptionSSOURL: 'Ссылка на элемент курса в инструменте LTI',
@@ -231,8 +243,8 @@ const ru = {
       AcceptGradesToolValue: 'Всегда'
     },
     DeletePopup: {
-      Title: 'Удаление сущности LTI-Forms',
-      Description: 'При удалении интеграция между LMS системой будет прекращена'
+      Title: 'Удаление сущности auth provider',
+      Description: 'При удалении интеграция между системой будет прекращена'
     }
   },
   CurlRequest: {
@@ -249,7 +261,7 @@ const ru = {
       Description: 'При удалении будет невозможно вызвать API'
     }
   },
-  LTIFormAttempt: {
+  AuthProviderAttempt: {
     FieldID: 'ID попытки',
     FieldRoomNumber: 'Номер комнаты',
     FieldUserId: 'ID пользователя',
@@ -392,6 +404,111 @@ const ru = {
     Title: 'Доступ запрещен',
     Description: 'Извините, доступ для просмотра этой страницы запрещен с вашей ролью',
     Button: 'Вернуться назад'
+  },
+  Target: {
+    Title: 'Карта сервисов',
+    ButtonAdd: 'Создать',
+    SearchBar: 'Поиск',
+    ButtonEdit: 'Редактировать',
+    FieldID: 'ID',
+    FieldName: 'Название',
+    FieldDescription: 'Описание',
+    FieldType: 'Тип',
+    FieldTags: 'Теги',
+    FieldLinks: 'Ссылки',
+    FieldCreatedAt: 'Создано',
+    FieldUpdatedAt: 'Обновлено',
+    FieldSynchronizedAt: 'Синхронизировано',
+    Types: {
+      server: 'Сервер',
+      virtual: 'Виртуальный сервер',
+      service: 'Сервис',
+      module: 'Модуль'
+    },
+    Relation: {
+      Title: 'Связи',
+      Parent: 'Родитель',
+      AddParent: 'Добавить связь',
+      RemoveParent: 'Удалить связь',
+      SelectParent: 'Выберите связь',
+      NoParents: 'Нет связей'
+    },
+    Addon: {
+      Title: 'Дополнения',
+      Connect: 'Подключить',
+      NoAddons: 'Нет подключенных дополнений',
+      ConnectTitle: 'Подключить дополнение',
+      Name: 'Название',
+      Type: 'Тип',
+      Disconnect: 'Отключить',
+      Reset: 'Сбросить',
+      ResetTitle: 'Перевыпустить токены',
+      ResetDescription: 'Токены доступа будут пересозданы. Данные в ресурсе не будут изменены или удалены. Продолжить?',
+      SelectAddon: 'Выберите дополнение',
+      DeleteRequest: 'Запрос на удаление',
+      DeleteConfirmStep1: 'Сделать бекап данных',
+      DeleteConfirmStep2: 'Полностью очистить данные приложения',
+      DeleteConfirmStep3: 'Дополнение безвозвратно будет удалено и не доступно к восстановлению',
+      DeleteConfirmWarning: 'Вы уверены, что хотите удалить это дополнение?',
+      DeleteConfirmButton: 'Да, удалить',
+      DeleteCancelButton: 'Отмена',
+      DeletePendingMessage: 'Ожидание подтверждения удаления от другого пользователя',
+      DeleteRequestedBy: 'Удаление запрошено пользователем',
+      DeleteConfirmRequired: 'Требуется подтверждение удаления',
+      Config: 'Конфигурация',
+      DatabaseSize: 'Использовано',
+      Cluster: 'Кластер',
+      Namespace: 'Пространство имен',
+      Registry: 'Реестр образов',
+      ApiKeyInVault: 'API ключ в Vault',
+      RotateCredentials: 'Перевыпустить ключи',
+      RotateCredentialsTitle: 'Перевыпуск ключей',
+      RotateCredentialsDescription:
+        'Ключи и пароли будут пересозданы. Старые ключи станут недействительны. Продолжить?',
+      RevokeDeleteRequest: 'Отозвать запрос на удаление',
+      RevokeDeleteRequestTitle: 'Отзыв запроса на удаление',
+      RevokeDeleteRequestDescription: 'Запрос на удаление будет отменён. Продолжить?',
+      Expires: 'Действителен до'
+    },
+    User: {
+      Title: 'Пользователи',
+      AddTitle: 'Добавить пользователя',
+      EditTitle: 'Редактирование прав',
+      Add: 'Добавить пользователя',
+      Remove: 'Удалить',
+      Email: 'Почта',
+      Roles: 'Роли',
+      UserLabel: 'Пользователь',
+      UserPlaceholder: 'Начните вводить имя',
+      RolesLabel: 'Роли',
+      SelectUser: 'Выберите пользователя',
+      SelectRole: 'Выберите роль',
+      AddButton: 'Добавить пользователя',
+      NoUsers: 'Нет привязанных пользователей',
+      NoRoles: 'Нет ролей'
+    },
+    Roles: [
+      {
+        key: 'vault_viewer',
+        value: 'Просмотр Vault'
+      },
+      {
+        key: 'vault_writer',
+        value: 'Запись в Vault'
+      },
+      {
+        key: 'editor',
+        value: 'Редактор'
+      },
+      {
+        key: 'nominal',
+        value: 'Номинальный'
+      }
+    ],
+    DeletePopup: {
+      Title: 'Удалить target',
+      Description: 'Вы уверены, что хотите удалить этот объект?'
+    }
   },
   Topology: {
     Menu: {

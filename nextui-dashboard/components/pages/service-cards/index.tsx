@@ -1,14 +1,12 @@
 import { Button } from '@heroui/react';
 import React from 'react';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
+import { House, ScrollText, Server } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
-import { ServersIcon } from '@/components/icons/breadcrumb/servers-icon';
-import { useServiceCardList } from '@/helpers/queries/service-cards/get';
 import { ServiceCardsTableWrapper } from '@/components/pages/service-cards/table/table';
-import { ServicesCardIcon } from '@/components/icons/breadcrumb/services-card-icon';
+import { useQueryServiceCardList } from '@/helpers/queries/service_card/use-query-service-card-list';
 
 export const ServiceCardsList = () => {
   const { locale } = useLanguageBrowser();
@@ -19,17 +17,17 @@ export const ServiceCardsList = () => {
   } = useLanguageBrowser();
   const crumbs = [
     {
-      icon: <HouseIcon />,
+      icon: <House className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Home,
       href: RoutesLocation.home()
     },
     {
-      icon: <ServersIcon />,
+      icon: <Server className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Servers,
       href: RoutesLocation.pnetServers()
     },
     {
-      icon: <ServicesCardIcon />,
+      icon: <ScrollText className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.ServiceCards,
       href: RoutesLocation.serviceCards()
     },
@@ -39,9 +37,9 @@ export const ServiceCardsList = () => {
       href: '#'
     }
   ];
-  const response = useServiceCardList();
-  const rows = response?.data?.result?.model || [];
-  const totalCount = response.data?.result?.total_count ?? 0;
+  const response = useQueryServiceCardList({});
+  const rows = response?.data?.model || [];
+  const totalCount = response.data?.totalCount ?? 0;
   return (
     <CrumbsLayout name={`${ServiceCardsTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>

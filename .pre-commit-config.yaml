@@ -28,6 +28,12 @@ repos:
         language: system
         pass_filenames: false
 
+      - id: front-types
+        name: front-types
+        entry: yarn --cwd nextui-dashboard types
+        language: system
+        pass_filenames: false
+
       - id: front-format
         name: front-format
         entry: yarn --cwd nextui-dashboard format

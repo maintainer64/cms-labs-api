@@ -1,10 +1,11 @@
 import { Edge as RFEdge, Node as RFNode } from '@xyflow/react';
-import { topology_TopologiesEdge, topology_TopologiesNode } from '@/helpers/api';
+import { TopologyTopologiesEdge, TopologyTopologiesNode } from '@/helpers/api';
 import { CSSProperties } from 'react';
+import { CamelCasedPropertiesDeep } from 'type-fest';
 
-export type RFNodeTopology = RFNode<topology_TopologiesNode>;
+export type RFNodeTopology = RFNode<CamelCasedPropertiesDeep<TopologyTopologiesNode>>;
 
-export type RFEdgeTopology = RFEdge<topology_TopologiesEdge>;
+export type RFEdgeTopology = RFEdge<CamelCasedPropertiesDeep<TopologyTopologiesEdge>>;
 
 export const defaultStyleNodes: CSSProperties = {
   width: 'auto',

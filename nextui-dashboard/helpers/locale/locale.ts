@@ -1,6 +1,7 @@
 import ru from './locales/ru';
 import en from './locales/en';
-import { useGlobalStoreGet, useGlobalStoreSet } from '@/helpers/queries/users/store';
+import { useQueryUserGlobalStoreGet } from '@/helpers/queries/user/use-query-user-global-store-get';
+import { useMutationUserGlobalStoreSet } from '@/helpers/queries/user/use-mutation-user-global-store-set';
 
 export type LanguageType = 'ru' | 'en';
 
@@ -9,8 +10,8 @@ const languageResource = (lang: LanguageType) => {
 };
 
 const useLanguageBrowser = () => {
-  const globalStoreQuery = useGlobalStoreGet();
-  const { mutate } = useGlobalStoreSet();
+  const globalStoreQuery = useQueryUserGlobalStoreGet({});
+  const { mutate } = useMutationUserGlobalStoreSet();
   // @ts-ignore
   const lang = (globalStoreQuery?.data?.['lang'] || 'ru') as LanguageType;
   return {

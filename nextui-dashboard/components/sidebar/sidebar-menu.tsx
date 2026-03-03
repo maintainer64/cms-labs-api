@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSidebarContext } from '@/components/layout/layout-context';
 
 interface Props {
   title: string;
@@ -6,9 +7,10 @@ interface Props {
 }
 
 export const SidebarMenu = ({ title, children }: Props) => {
+  const { collapsed } = useSidebarContext();
   return (
     <div className='flex gap-2 flex-col'>
-      <span className='text-xs font-normal '>{title}</span>
+      {collapsed ? null : <span className='text-xs font-normal'>{title}</span>}
       {children}
     </div>
   );

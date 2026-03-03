@@ -36,7 +36,8 @@ func NewWithClaims(kid string, method jwt.SigningMethod, claims jwt.Claims, opts
 // GenerateNewTokens func for generate a new Access & Refresh tokens. Return jti (unique id on refresh token)
 func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cms_client.SSOToken, string, error) {
 	// Generate JWT Access token.
-	accessToken, err := generateNewAccessToken(entity)
+	jwtConfig := configs.AppConfig.JWT.AccessKey
+	accessToken, err := GenerateAndSignNewAccessToken(entity, jwtConfig.Expire)
 	if err != nil {
 		// Return token generation error.
 		return nil, "", err
@@ -60,7 +61,10 @@ func GenerateNewTokens(entity *cms_client.SSOTokenPublicData, state string) (*cm
 	}, jti, nil
 }
 
-func generateNewAccessToken(entity *cms_client.SSOTokenPublicData) (*TokenDataWithExp, error) {
+func GenerateAndSignNewAccessToken(
+	entity *cms_client.SSOTokenPublicData,
+	expire time.Duration,
+) (*TokenDataWithExp, error) {
 	// Получаем конфигурацию JWT
 	jwtConfig := configs.AppConfig.JWT.AccessKey
 
@@ -71,7 +75,7 @@ func generateNewAccessToken(entity *cms_client.SSOTokenPublicData) (*TokenDataWi
 
 	// Устанавливаем срок действия токена
 	entity.Iat = time.Now().Unix()
-	entity.Exp = time.Now().Add(jwtConfig.Expire).Unix()
+	entity.Exp = time.Now().Add(expire).Unix()
 
 	// Создаем claims
 	claims := entity.JWTClaims()

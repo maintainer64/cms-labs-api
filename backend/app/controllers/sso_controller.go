@@ -8,7 +8,7 @@ import (
 	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 // SSOAuthorize Получить код авторизации.
@@ -27,7 +27,7 @@ import (
 // @Success 200 {object} auth.SSOAuthorizeResponse
 // @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
-// @Router /v1/sso/authorize [get]
+// @Router /api/v1/sso/authorize [get]
 func SSOAuthorize(c *fiber.Ctx) error {
 	// Получаем QueryParams в виде map
 	queryParams := c.Queries()
@@ -57,33 +57,30 @@ func SSOAuthorize(c *fiber.Ctx) error {
 // @Tags SSO
 // @Accept json
 // @Produce json
-// @Param form body auth.SSOAuthorizeInputDTO true "renew token form info"
+// @Param form body auth.SSOAuthorizeRequest true "renew token form info"
 // @Success 200 {object} auth.SSOAuthorizeResponse
 // @Security ApiKeyAuth
-// @Router /v1/sso/authorize [post]
-func SSOAuthorizePost(c *fiber.Ctx) error {
+// @Router /api/v1/rpc/sso.authorize [post]
+func SSOAuthorizePost(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, err
 	}
 	dto := auth.SSOAuthorizeInputDTO{}
-	err = utils.FiberValidatorBase(c, &dto)
+	err = jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
+		return nil, err
 	}
 	dto.UserID = claims.UserID()
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
+		return nil, err
 	}
 	defer container.Close()
 	uc := container.SSOAuthorizeUC()
 	output, err := uc.Execute(dto)
-	if err != nil {
-		return utils.FiberValidationException{Status: fiber.StatusInternalServerError, Exception: err}
-	}
-	return utils.FiberSuccessResponse{Result: output}
+	return output, err
 }
 
 // SSOToken Получить токен доступа и токен обновления.
@@ -100,29 +97,30 @@ func SSOAuthorizePost(c *fiber.Ctx) error {
 // @Success 200 {object} auth.SwaggerSSOToken
 // @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
-// @Router /v1/sso/token [post]
-func SSOToken(c *fiber.Ctx) error {
-	issuer, err := auth.IssuerURLByBaseUrl(c.BaseURL())
+// @Router /api/v1/sso/token [post]
+func SSOToken(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
+	issuer, err := auth.IssuerURLByBaseUrl(c.FiberCtx.BaseURL())
 	if err != nil {
 		return err
 	}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.SSOTokenInputDTO{}
-	dto.GrantType = c.FormValue("grant_type", "")
-	dto.RedirectUri = c.FormValue("redirect_uri", "")
-	dto.Code = c.FormValue("code", "")
-	dto.RefreshToken = c.FormValue("refresh_token", "")
+	dto.GrantType = c.FiberCtx.FormValue("grant_type", "")
+	dto.RedirectUri = c.FiberCtx.FormValue("redirect_uri", "")
+	dto.Code = c.FiberCtx.FormValue("code", "")
+	dto.RefreshToken = c.FiberCtx.FormValue("refresh_token", "")
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "invalid_request", ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: "invalid_request", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOTokenUC()
 	output, err := uc.SetContext(issuer).Execute(dto)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
 	}
-	return c.JSON(output)
+	return c.FiberCtx.JSON(output)
 }
 
 // SSOIntrospect Проверка состояния токена.
@@ -136,22 +134,23 @@ func SSOToken(c *fiber.Ctx) error {
 // @Success 200 {object} auth.SSOTokenIntrospect
 // @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
-// @Router /v1/sso/introspect [post]
-func SSOIntrospect(c *fiber.Ctx) error {
+// @Router /api/v1/sso/introspect [post]
+func SSOIntrospect(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.SSOIntrospectInputDTO{}
-	dto.Token = c.FormValue("token", "")
+	dto.Token = c.FiberCtx.FormValue("token", "")
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "internal_error", ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: "internal_error", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOIntrospectUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: "invalid_grant", ErrorDescription: err.Error()})
 	}
-	return c.JSON(output)
+	return c.FiberCtx.JSON(output)
 }
 
 // SSOUserInfo Получить информацию о пользователе.
@@ -164,13 +163,14 @@ func SSOIntrospect(c *fiber.Ctx) error {
 // @Success 200 {object} auth.SwaggerSSOTokenPublicData
 // @Success 400 {object} auth.SSOError
 // @Security ApiKeyAuth
-// @Router /v1/sso/userinfo [get]
-func SSOUserInfo(c *fiber.Ctx) error {
+// @Router /api/v1/sso/userinfo [get]
+func SSOUserInfo(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	claims, err := auth.ExtractTokenMetadata(c, []string{})
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: `invalid_grant`, ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: `invalid_grant`, ErrorDescription: err.Error()})
 	}
-	return c.JSON(claims)
+	return c.FiberCtx.JSON(claims)
 }
 
 // SSOOpenIdConfiguration Получить информацию о спецификации.
@@ -181,23 +181,24 @@ func SSOUserInfo(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} auth.SSOAuthorizeResponse
 // @Success 400 {object} auth.SSOError
-// @Router /v1/sso/.well-known/openid-configuration [get]
-func SSOOpenIdConfiguration(c *fiber.Ctx) error {
+// @Router /api/v1/sso/.well-known/openid-configuration [get]
+func SSOOpenIdConfiguration(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	dto := auth.SSOOpenidConfigurationInputDTO{
-		BaseURL: c.BaseURL(),
+		BaseURL: c.FiberCtx.BaseURL(),
 	}
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOOpenidConfigurationUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
 	}
-	return c.JSON(output)
+	return c.FiberCtx.JSON(output)
 }
 
 // SSOJwks Получить информацию о публичных ключах для подписи JWT токенов.
@@ -208,18 +209,19 @@ func SSOOpenIdConfiguration(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} auth.SSOJWKSOutputDTO
 // @Success 500 {object} auth.SSOError
-// @Router /v1/sso/jwks [get]
-func SSOJwks(c *fiber.Ctx) error {
+// @Router /api/v1/sso/jwks [get]
+func SSOJwks(ctx *fiber.Ctx) error {
+	c := &jsonrpc.Ctx{FiberCtx: ctx}
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: "internal_server_error", ErrorDescription: err.Error()})
 	}
 	defer container.Close()
 	uc := container.SSOJwksUC()
 	output, err := uc.Execute()
 	if err != nil {
-		return c.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
+		return c.FiberCtx.JSON(auth.SSOError{Error: `internal_server_error`, ErrorDescription: err.Error()})
 	}
-	return c.JSON(output)
+	return c.FiberCtx.JSON(output)
 }

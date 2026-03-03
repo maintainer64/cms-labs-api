@@ -1,15 +1,13 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
 	"github.com/rs/zerolog"
 
-	fiber "github.com/gofiber/fiber/v2"
 	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/utils"
+	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	gorm "gorm.io/gorm"
 )
 
@@ -35,10 +33,10 @@ func (q *CurlRequestQueries) Get(id uint) (models.CurlRequest, error) {
 	var entity models.CurlRequest
 	result := q.DB.First(&entity, id)
 	if result.Error != nil && result.Error.Error() == "record not found" {
-		return entity, utils.FiberValidationException{
-			Status:    fiber.StatusNotFound,
-			Exception: errors.New("CurlRequest not found"),
-		}
+		return entity, jsonrpc.NewRpcError(
+			"curl_request_not_found",
+			"curl request has not found",
+		)
 	}
 	return entity, result.Error
 }

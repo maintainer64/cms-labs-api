@@ -1,0 +1,64 @@
+{
+  "addons": [
+    {
+      "id": "postgresql-1",
+      "tag": "PROD",
+      "name": "База данных postgresql",
+      "type": "postgresql",
+      "params": {
+        "url": "postgresql://postgres:postgres@localhost:5432",
+        "host": "localhost",
+        "port": 5432
+      }
+    },
+    {
+      "id": "mysql-1",
+      "tag": "PROD",
+      "name": "База данных mysql",
+      "type": "mysql",
+      "params": {
+        "url": "root:pnetlab@tcp(127.0.0.1:3306)/",
+        "host": "localhost",
+        "port": 3306
+      }
+    },
+    {
+      "id": "vault",
+      "tag": "PROD",
+      "name": "Vault",
+      "type": "vault"
+    },
+    {
+      "id": "seaweedfs-1",
+      "tag": "PROD",
+      "name": "S3",
+      "type": "s3",
+      "params": {
+        "endpoint": "http://localhost:8333",
+        "serviceInVault": "seaweedfs",
+        "webHookReload": "http://localhost:8333"
+      }
+    },
+    {
+      "id": "harbor",
+      "tag": "PROD",
+      "name": "Registry",
+      "type": "harbor",
+      "params": {
+        "apiUrl": "https://localhost:44444",
+        "adminUsername": "robot$admin",
+        "adminPassword": "password-harbor",
+        "baseUrl": "https://localhost:44444"
+      }
+    },
+    {
+      "id": "6b126898-2629-4477-89b4-9ae40b06b5de",
+      "tag": "PROD",
+      "name": "Kubernetes",
+      "type": "kubernetes",
+      "params": {
+        "kubeconfig": "base64 secret"
+      }
+    }
+  ]
+}

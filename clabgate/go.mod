@@ -4,8 +4,6 @@ go 1.24.4
 
 replace gitlab.com/a10869/api-modules/shared => ../shared
 
-replace gitlab.com/a10869/api-modules/gen => ../gen
-
 require (
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/goccy/go-json v0.10.5
@@ -66,7 +64,6 @@ require (
 	github.com/valyala/fasthttp v1.58.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	gitlab.com/a10869/api-modules/pnetlabaddon v0.0.0-20250520184617-c2bb401ff14c // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/net v0.38.0 // indirect
 	golang.org/x/oauth2 v0.27.0 // indirect

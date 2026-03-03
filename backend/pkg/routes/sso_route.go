@@ -9,7 +9,6 @@ import (
 func V1SSORoute(a *fiber.App) {
 	group := a.Group("/api/v1/sso")
 	group.Get("/authorize", controllers.SSOAuthorize)
-	group.Post("/authorize", controllers.SSOAuthorizePost)
 	group.Post("/token", controllers.SSOToken)
 	group.Post("/introspect", controllers.SSOIntrospect)
 	group.Get("/userinfo", controllers.SSOUserInfo)
