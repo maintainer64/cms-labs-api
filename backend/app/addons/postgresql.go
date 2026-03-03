@@ -35,6 +35,10 @@ func NewPostgreSQLAddonService(cfg *connection.AddonConfig, vaultClient vault.Cl
 	}
 }
 
+func quoteIdentifierPostgresql(id string) string {
+	return `"` + strings.ReplaceAll(id, `"`, `""`) + `"`
+}
+
 // Create provisions a new PostgreSQL database and user, stores credentials in Vault.
 func (s *PostgreSQLAddonService) Create(ctx context.Context, targetName string, name *string) (*AddonOperationConfig, error) {
 	dbName := generateName(targetName, name)
@@ -57,7 +61,7 @@ func (s *PostgreSQLAddonService) Create(ctx context.Context, targetName string, 
 		return nil, err
 	}
 
-	dbQuoted := quoteIdentifier(dbName)
+	dbQuoted := quoteIdentifierPostgresql(dbName)
 	// Execute three separate statements – we handle “already exists” errors gracefully.
 	statements := []string{
 		// 1. Создаем пользователя (если не существует)
@@ -103,7 +107,7 @@ func (s *PostgreSQLAddonService) Delete(ctx context.Context, targetName string, 
 	}
 
 	dbName := cfg.Name
-	dbQuoted := quoteIdentifier(dbName)
+	dbQuoted := quoteIdentifierPostgresql(dbName)
 
 	// Terminate existing connections to the database
 	terminateSQL := fmt.Sprintf(
@@ -155,7 +159,7 @@ func (s *PostgreSQLAddonService) Reset(ctx context.Context, targetName string, c
 		return nil, err
 	}
 
-	dbQuoted := quoteIdentifier(dbName)
+	dbQuoted := quoteIdentifierPostgresql(dbName)
 	// Execute three separate statements – we handle “already exists” errors gracefully.
 	statements := []string{
 		// 1. Создаем пользователя (если не существует)

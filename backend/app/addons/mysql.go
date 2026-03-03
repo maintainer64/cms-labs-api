@@ -35,7 +35,7 @@ func NewMySQLAddonService(cfg *connection.AddonConfig, vaultClient vault.ClientI
 	}
 }
 
-func quoteIdentifier(id string) string {
+func quoteIdentifierMysql(id string) string {
 	return "`" + strings.ReplaceAll(id, "`", "``") + "`"
 }
 
@@ -68,7 +68,7 @@ func (s *MySQLAddonService) Create(ctx context.Context, targetName string, name 
 	if err != nil {
 		return nil, err
 	}
-	dbNameQuoted := quoteIdentifier(dbName)
+	dbNameQuoted := quoteIdentifierMysql(dbName)
 	text := fmt.Sprintf(
 		`CREATE DATABASE IF NOT EXISTS %s;
         CREATE USER IF NOT EXISTS %s@'%%' IDENTIFIED BY '%s';
@@ -91,7 +91,7 @@ func (s *MySQLAddonService) Delete(ctx context.Context, targetName string, cfg *
 		return nil, fmt.Errorf("database name is required for deletion")
 	}
 
-	dbNameQuoted := quoteIdentifier(cfg.Name)
+	dbNameQuoted := quoteIdentifierMysql(cfg.Name)
 	text := fmt.Sprintf(
 		`DROP DATABASE IF EXISTS %s;
         DROP USER IF EXISTS %s@'%%';
@@ -134,7 +134,7 @@ func (s *MySQLAddonService) Reset(ctx context.Context, targetName string, cfg *A
 	}
 
 	// 2. Change the user's password in MySQL
-	dbNameQuoted := quoteIdentifier(dbName)
+	dbNameQuoted := quoteIdentifierMysql(dbName)
 	text := fmt.Sprintf(
 		`CREATE DATABASE IF NOT EXISTS %s;
         CREATE USER IF NOT EXISTS %s@'%%' IDENTIFIED BY '%s';

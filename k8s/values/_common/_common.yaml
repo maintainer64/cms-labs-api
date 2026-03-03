@@ -8,7 +8,7 @@ generic:
   extraVolumeMounts:
     - name: vault-inject
       mountPath: "/var/run/secrets/app"
-      readOnly: true
+      readOnly: false
   extraVolumes:
     - name: vault-inject
       emptyDir: { }

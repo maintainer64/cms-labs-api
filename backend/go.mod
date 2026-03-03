@@ -17,7 +17,7 @@ require (
 	github.com/hashicorp/vault/api v1.22.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lestrrat-go/jwx v1.2.30
-	github.com/lib/pq v1.0.0
+	github.com/lib/pq v1.11.2
 	github.com/macewan-cs/lti v0.0.0-20210722191030-9ab95e5f3eb8
 	github.com/ory/go-convenience v0.1.0
 	github.com/rs/zerolog v1.33.0
