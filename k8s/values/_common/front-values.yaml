@@ -16,7 +16,7 @@ deployments:
       args:
         - "--path=front"
         - "--output=/var/run/secrets/app"
-        - "--formats=env"
+        - "--formats=sh"
     containers:
     - name: front
       ports:

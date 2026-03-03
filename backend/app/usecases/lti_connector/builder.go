@@ -30,7 +30,7 @@ func (c *LTIConnectorAPI) ConnectorByLaunchID(launchID string) (*connector.Conne
 	if err != nil {
 		return nil, err
 	}
-	form, err := c.AuthProviderQueries.Get(launchEntity.AuthProviderID)
+	form, err := c.AuthProviderQueries.Get(launchEntity.LTIFormID)
 	if err != nil {
 		return nil, err
 	}
