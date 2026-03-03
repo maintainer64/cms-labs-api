@@ -21,6 +21,7 @@ func GetProxmoxConfig(pathConfig string) *ProxmoxSyncConfig {
 	if pathConfig == "" {
 		return &ProxmoxSyncConfig{}
 	}
+	// #nosec G304
 	rawConfig, err := os.ReadFile(pathConfig)
 	if err != nil {
 		panic(err)

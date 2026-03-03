@@ -86,10 +86,10 @@ func TestHarborAddonService_Create_Success(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
-			"base_url": "https://harbor.example.com",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
+			"baseUrl":       "https://harbor.example.com",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)
@@ -139,10 +139,10 @@ func TestHarborAddonService_Create_ProjectExists(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
-			"base_url": "https://harbor.example.com",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
+			"baseUrl":       "https://harbor.example.com",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)
@@ -179,10 +179,10 @@ func TestHarborAddonService_Create_ProjectFails(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
-			"base_url": "https://harbor.example.com",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
+			"baseUrl":       "https://harbor.example.com",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)
@@ -226,10 +226,10 @@ func TestHarborAddonService_Create_RobotFails(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
-			"base_url": "https://harbor.example.com",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
+			"baseUrl":       "https://harbor.example.com",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)
@@ -287,10 +287,10 @@ func TestHarborAddonService_Create_SetPublicFails(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
-			"base_url": "https://harbor.example.com",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
+			"baseUrl":       "https://harbor.example.com",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)
@@ -347,10 +347,10 @@ func TestHarborAddonService_Create_VaultFails(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
-			"base_url": "https://harbor.example.com",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
+			"baseUrl":       "https://harbor.example.com",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)
@@ -421,9 +421,9 @@ func TestHarborAddonService_Delete_Success(t *testing.T) {
 	cfg := &connection.AddonConfig{
 		Type: connection.HarborAddon,
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
 		},
 	}
 	svc := NewHarborAddonService(cfg, nil).(*HarborAddonService)
@@ -462,9 +462,9 @@ func TestHarborAddonService_Delete_ProjectNotFound(t *testing.T) {
 	cfg := &connection.AddonConfig{
 		Type: connection.HarborAddon,
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
 		},
 	}
 	svc := NewHarborAddonService(cfg, nil).(*HarborAddonService)
@@ -502,9 +502,9 @@ func TestHarborAddonService_Delete_ProjectDeleteFails(t *testing.T) {
 	cfg := &connection.AddonConfig{
 		Type: connection.HarborAddon,
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
 		},
 	}
 	svc := NewHarborAddonService(cfg, nil).(*HarborAddonService)
@@ -583,10 +583,10 @@ func TestHarborAddonService_Reset_Success(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
-			"base_url": "https://harbor.example.com",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
+			"baseUrl":       "https://harbor.example.com",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)
@@ -634,9 +634,9 @@ func TestHarborAddonService_Reset_RobotCreateFails(t *testing.T) {
 		Type: connection.HarborAddon,
 		Tag:  "test",
 		Params: map[string]interface{}{
-			"api_url":  "https://harbor.example.com",
-			"username": "admin",
-			"password": "pass",
+			"apiUrl":        "https://harbor.example.com",
+			"adminUsername": "admin",
+			"adminPassword": "pass",
 		},
 	}
 	svc := NewHarborAddonService(cfg, mockVault).(*HarborAddonService)

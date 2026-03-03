@@ -34,6 +34,7 @@ func GetAddonsConfig(pathConfig string) *AddonsConfig {
 		return &AddonsConfig{}
 	}
 	var cfg AddonsConfig
+	// #nosec G304
 	rawConfig, err := os.ReadFile(pathConfig)
 	if err != nil {
 		panic(err)
