@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	json "github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
@@ -70,6 +71,8 @@ func TestV1LTIRoutingList(t *testing.T) {
 		entity.Name = fmt.Sprintf("LTIRouting %d", i)
 		entity.LTITitle = fmt.Sprintf("Title %d", i)
 		entity.LTIDescription = fmt.Sprintf("Description %d", i)
+		entity.CreatedAt = time.Now().UTC().Add(time.Duration(i) * time.Minute)
+		entity.UpdatedAt = time.Now().UTC().Add(time.Duration(i) * time.Minute)
 		f.DB.Create(&entity)
 		entities = append(entities, entity)
 	}

@@ -5,8 +5,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"gitlab.com/a10869/api-modules/shared/connection"
@@ -65,16 +63,6 @@ func NewFiberTestHTTP() *FiberTestHTTP {
 	if err := godotenv.Load("../../.env.test"); err != nil {
 		panic(err)
 	}
-	// Fix relative paths for config files - find project root
-	projectRoot := findPnetlabTestProjectRoot()
-	if projectRoot != "" {
-		if path := os.Getenv("ADDONS_PATH_CONFIG"); path != "" && !filepath.IsAbs(path) {
-			os.Setenv("ADDONS_PATH_CONFIG", filepath.Join(projectRoot, path))
-		}
-		if path := os.Getenv("PROXMOX_PATH_CONFIG"); path != "" && !filepath.IsAbs(path) {
-			os.Setenv("PROXMOX_PATH_CONFIG", filepath.Join(projectRoot, path))
-		}
-	}
 	// Load .env local file form the additional
 	configs.AppConfig.Reload()
 
@@ -103,38 +91,4 @@ func FiberJSON(data any) string {
 
 func FiberRequestPayload(data any) io.Reader {
 	return strings.NewReader(fmt.Sprint(FiberJSON(data)))
-}
-
-func findPnetlabTestProjectRoot() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		return ""
-	}
-	for {
-		goModPath := filepath.Join(dir, "go.mod")
-		// #nosec G304
-		if _, err := os.ReadFile(goModPath); err == nil {
-			if isPnetlabTestProjectRoot(dir) {
-				return dir
-			}
-		}
-		parent := filepath.Dir(dir)
-		if parent == dir {
-			return ""
-		}
-		dir = parent
-	}
-}
-
-func isPnetlabTestProjectRoot(dir string) bool {
-	// #nosec G304
-	data, err := os.ReadFile(filepath.Join(dir, "go.mod"))
-	if err != nil {
-		return false
-	}
-	content := string(data)
-	return !strings.Contains(content, "/backend") &&
-		!strings.Contains(content, "/shared") &&
-		!strings.Contains(content, "/pnetlabaddon") &&
-		!strings.Contains(content, "/clabgate")
 }
