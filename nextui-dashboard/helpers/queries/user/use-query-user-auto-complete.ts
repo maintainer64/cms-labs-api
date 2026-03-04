@@ -22,7 +22,10 @@ export const useQueryUserAutoComplete = (search: string, props: InputProps) => {
   // Объединяем данные и статусы загрузки
   const isLoading = queryList.isLoading || queryListItem?.isLoading;
   const items = entities.map((entity) => {
-    return { key: entity.model.id || 0, value: entity.model.name || '' };
+    return {
+      key: entity.model.id || 0,
+      value: entity.model.name || '' + entity.model.deletedAt ? ' *' : ''
+    };
   });
 
   return { isLoading, items };

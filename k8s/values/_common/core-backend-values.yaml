@@ -1,57 +1,85 @@
 services:
   core-backend:
     ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: http
+      - name: http
+        protocol: TCP
+        port: 80
+        targetPort: http
 
 deployments:
   core-backend:
     replicas: 1
     initContainers:
-    - name: vault-init
-      image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
-      imageTag: latest
-      command: [ "bash", "-c" ]
-      args:
-        - |
-          fetch_secrets --path=addon --output=/var/run/secrets/app --filename=addon --formats=json
-          fetch_secrets --path=proxmox --output=/var/run/secrets/app --filename=proxmox --formats=json
-          fetch_secrets --path=backend --output=/var/run/secrets/app --formats=env
+      - name: vault-init
+        image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
+        imageTag: latest
+        command: [ "bash", "-c" ]
+        args:
+          - |
+            fetch_secrets --path=addon --output=/var/run/secrets/app --filename=addon --formats=json
+            fetch_secrets --path=proxmox --output=/var/run/secrets/app --filename=proxmox --formats=json
+            fetch_secrets --path=backend --output=/var/run/secrets/app --formats=env
     containers:
-    - name: core-backend
-      ports:
-      - name: http
-        containerPort: 8080
-      resources:
-        requests:
-          memory: "128Mi"
-          cpu: "100m"
-        limits:
-          memory: "250Mi"
-          cpu: "200m"
-      startupProbe: 
-        httpGet:
-          path: /api/docs/index.html
-          port: http
-        timeoutSeconds: 1
-        periodSeconds: 10
-        successThreshold: 1
-        failureThreshold: 12
-      livenessProbe:
-        httpGet:
-          path: /api/docs/index.html
-          port: http
-        timeoutSeconds: 1
-        periodSeconds: 10
-        successThreshold: 1
-        failureThreshold: 6
-      readinessProbe:
-        httpGet:
-          path: /api/docs/index.html
-          port: http
-        timeoutSeconds: 1
-        periodSeconds: 10
-        successThreshold: 1
-        failureThreshold: 2
+      - name: core-backend
+        ports:
+          - name: http
+            containerPort: 8080
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "250Mi"
+            cpu: "200m"
+        startupProbe:
+          httpGet:
+            path: /api/docs/index.html
+            port: http
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 12
+        livenessProbe:
+          httpGet:
+            path: /api/docs/index.html
+            port: http
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /api/docs/index.html
+            port: http
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 2
+
+cronJobs:
+  proxmox-sync:
+    schedule: "0 * * * *"
+    singleOnly: true
+    commandDurationAlert: 300
+    commandMaxDuration: 600
+    backoffLimit: 3
+    initContainers:
+      - name: vault-init
+        image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
+        imageTag: latest
+        command: [ "bash", "-c" ]
+        args:
+          - |
+            fetch_secrets --path=addon --output=/var/run/secrets/app --filename=addon --formats=json
+            fetch_secrets --path=proxmox --output=/var/run/secrets/app --filename=proxmox --formats=json
+            fetch_secrets --path=backend --output=/var/run/secrets/app --formats=env
+    containers:
+      - name: proxmox-sync
+        args: [ "--task=proxmox_sync" ]
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "250Mi"
+            cpu: "200m"
