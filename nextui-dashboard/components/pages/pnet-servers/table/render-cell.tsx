@@ -5,7 +5,7 @@ import { RolesChip } from '@/components/base-forms/roles';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { PnetServerItem } from '@/helpers/queries/server/use-query-server-get';
-import { SquarePen } from 'lucide-react';
+import { Cog, SquarePen } from 'lucide-react';
 
 interface Props {
   item: PnetServerItem;
@@ -109,7 +109,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
         <div className='flex items-center gap-4 '>
           <div>
             <Link to={RoutesLocation.pnetServersEdit(item.id?.toString())}>
-              <SquarePen className='w-4 p-4 stroke-[#979797]' />
+              <SquarePen className='w-5 h-5 stroke-[#969696]' />
             </Link>
           </div>
         </div>
