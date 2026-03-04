@@ -27,11 +27,18 @@ func (uc *TargetUserRotateAddonsUC) Execute(userID uint) error {
 		userID,
 	))
 	user, err := uc.UserQueries.Get(userID)
-	if err != nil && !errors.Is(err, queries.UserNotActive) {
+	if err != nil && !errors.Is(err, queries.UserNotActive) && !errors.Is(err, queries.UserNotFoundError) {
 		uc.Logger.Info().Msg(fmt.Sprintf(
 			"TargetUserRotateAddonsUC get by userId %d %+v", userID, err,
 		))
 		return err
+	}
+	if err == queries.UserNotFoundError {
+		uc.Logger.Info().Msg(fmt.Sprintf(
+			"TargetUserRotateAddonsUC get by userId %d user has not found",
+			userID,
+		))
+		return nil
 	}
 	targetsIds := make([]string, 0)
 	if user.IsActive() {

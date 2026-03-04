@@ -8,11 +8,8 @@ import (
 	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
-func (di *DIContainer) NewVaultClient() *vault.Client {
-	return vault.NewClient(
-		configs.AppConfig.Vault,
-		logs.NewZeroLogger(di.ZeroLogConf.SetName("vault")),
-	)
+func (di *DIContainer) NewVaultClient() vault.ClientInterface {
+	return NewVaultClient()
 }
 func (di *DIContainer) FactoryAddonService() *addons.FactoryAddonService {
 	return &addons.FactoryAddonService{

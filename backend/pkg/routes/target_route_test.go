@@ -6,8 +6,8 @@ import (
 
 	json "github.com/goccy/go-json"
 	"github.com/google/uuid"
+	"github.com/h2non/gock"
 	"github.com/stretchr/testify/assert"
-
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/models/types"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
@@ -830,6 +830,39 @@ func TestV1TargetUserUpsert_CreateFirstEditor(t *testing.T) {
 
 func TestV1TargetUserUpsert_CreateAnotherEditor_AsEditor(t *testing.T) {
 	desc := "create another editor when current user is an editor"
+	defer gock.Off()
+	gock.New("http://localhost:8200").
+		Get("/v1/sys/auth").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"oidc/": map[string]interface{}{
+				"type":        "oidc",
+				"accessor":    "auth_oidc_abc123",
+				"config":      map[string]interface{}{},
+				"description": "OIDC auth method",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/lookup/entity").
+		Reply(404).
+		JSON(map[string]interface{}{})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/entity").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/entity-alias").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "alias-123",
+			},
+		})
+
 	f := NewTestHTTP()
 	defer f.Close()
 	authUser := f.AuthorizationUser(0, nil) // редактор
@@ -945,6 +978,35 @@ func TestV1TargetUserUpsert_CreateAnotherEditor_NotEditor(t *testing.T) {
 
 func TestV1TargetUserUpsert_UpdateOwnRoles_AsEditor(t *testing.T) {
 	desc := "editor updates own roles"
+	defer gock.Off()
+	gock.New("http://localhost:8200").
+		Get("/v1/sys/auth").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"oidc/": map[string]interface{}{
+				"type":        "oidc",
+				"accessor":    "auth_oidc_abc123",
+				"config":      map[string]interface{}{},
+				"description": "OIDC auth method",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/lookup/entity").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/entity/id/entity-123").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+
 	f := NewTestHTTP()
 	defer f.Close()
 	regularUser := models.User{}
@@ -1034,6 +1096,35 @@ func TestV1TargetUserUpsert_InvalidInput(t *testing.T) {
 
 func TestV1TargetUserDelete_Success(t *testing.T) {
 	desc := "editor deletes target_user"
+	defer gock.Off()
+	gock.New("http://localhost:8200").
+		Get("/v1/sys/auth").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"oidc/": map[string]interface{}{
+				"type":        "oidc",
+				"accessor":    "auth_oidc_abc123",
+				"config":      map[string]interface{}{},
+				"description": "OIDC auth method",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/lookup/entity").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/entity/id/entity-123").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+
 	f := NewTestHTTP()
 	defer f.Close()
 	regularUser := models.User{}
@@ -1171,6 +1262,35 @@ func TestV1TargetUserDelete_NotEditor(t *testing.T) {
 
 func TestV1TargetUserDelete_NonExistent(t *testing.T) {
 	desc := "delete non-existent target_user should succeed (idempotent)"
+	defer gock.Off()
+	gock.New("http://localhost:8200").
+		Get("/v1/sys/auth").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"oidc/": map[string]interface{}{
+				"type":        "oidc",
+				"accessor":    "auth_oidc_abc123",
+				"config":      map[string]interface{}{},
+				"description": "OIDC auth method",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/lookup/entity").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/entity/id/entity-123").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+
 	f := NewTestHTTP()
 	defer f.Close()
 	regularUser := models.User{}
@@ -1216,6 +1336,35 @@ func TestV1TargetUserDelete_NonExistent(t *testing.T) {
 
 func TestV1TargetUserDelete_DeleteLastEditor(t *testing.T) {
 	desc := "delete the last editor of a target - should be allowed?"
+	defer gock.Off()
+	gock.New("http://localhost:8200").
+		Get("/v1/sys/auth").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"oidc/": map[string]interface{}{
+				"type":        "oidc",
+				"accessor":    "auth_oidc_abc123",
+				"config":      map[string]interface{}{},
+				"description": "OIDC auth method",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/lookup/entity").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+	gock.New("http://localhost:8200").
+		Post("/v1/identity/entity/id/entity-123").
+		Reply(200).
+		JSON(map[string]interface{}{
+			"data": map[string]interface{}{
+				"id": "entity-123",
+			},
+		})
+
 	f := NewTestHTTP()
 	defer f.Close()
 	regularUser := models.User{}

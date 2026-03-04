@@ -17,6 +17,7 @@ import (
 	json "github.com/goccy/go-json"
 
 	"github.com/google/uuid"
+	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
 	"gitlab.com/a10869/api-modules/backend/app/di"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
@@ -170,6 +171,11 @@ func NewTestHTTP() *TestHTTP {
 		return resty.NewWithClient(
 			&http.Client{Transport: gock.DefaultTransport},
 		)
+	}
+
+	// Inject Vault mock
+	di.NewVaultClient = func() vault.ClientInterface {
+		return &vault.MockVaultClient{}
 	}
 
 	// Define a new Fiber app.
