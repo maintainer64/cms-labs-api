@@ -13,10 +13,12 @@ deployments:
     - name: vault-init
       image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
       imageTag: latest
+      command: [ "bash", "-c" ]
       args:
-        - "--path=backend"
-        - "--output=/var/run/secrets/app"
-        - "--formats=env"
+        - |
+          fetch_secrets --path=addon --output=/var/run/secrets/app --filename=addon --formats=json
+          fetch_secrets --path=proxmox --output=/var/run/secrets/app --filename=proxmox --formats=json
+          fetch_secrets --path=backend --output=/var/run/secrets/app --formats=env
     containers:
     - name: core-backend
       ports:

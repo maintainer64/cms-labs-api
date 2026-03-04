@@ -8,9 +8,10 @@ import (
 
 // TargetUserDeleteUC – удаление пользователя из цели
 type TargetUserDeleteUC struct {
-	TargetUserQueries *queries.TargetUserQueries
-	TargetQueries     *queries.TargetQueries
-	User              *cms_client.SSOTokenPublicData
+	TargetUserQueries        *queries.TargetUserQueries
+	TargetQueries            *queries.TargetQueries
+	TargetUserRotateAddonsUC *TargetUserRotateAddonsUC
+	User                     *cms_client.SSOTokenPublicData
 }
 
 // TargetUserDeleteInputDTO – параметры удаления
@@ -52,8 +53,9 @@ func (uc *TargetUserDeleteUC) Execute(dto TargetUserDeleteInputDTO) (*TargetUser
 	if err != nil {
 		return nil, err
 	}
-
-	// TODO: Синхронизация прав всех пользоваетелей сервиса
-
+	err = uc.TargetUserRotateAddonsUC.Execute(dto.UserID)
+	if err != nil {
+		return nil, err
+	}
 	return &TargetUserDeleteOutputDTO{}, nil
 }
