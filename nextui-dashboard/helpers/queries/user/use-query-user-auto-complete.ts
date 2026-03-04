@@ -24,7 +24,7 @@ export const useQueryUserAutoComplete = (search: string, props: InputProps) => {
   const items = entities.map((entity) => {
     return {
       key: entity.model.id || 0,
-      value: entity.model.name || '' + entity.model.deletedAt ? ' *' : ''
+      value: (entity.model.name || '') + (entity.model.deletedAt ? ' *' : '')
     };
   });
 
