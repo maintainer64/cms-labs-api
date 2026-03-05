@@ -17,9 +17,7 @@ type Response = CamelCasedPropertiesDeep<UsecasesCurlRequestEditResponse['result
 
 export const useMutationCurlRequestUpsert = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({
-    // @ts-expect-error: return nullable value
     mutationFn: (params: Params) => {
-      if (!params?.id) return null;
       return transportWithAuth.rpc(CoreJsonRpcPath, {
         method: 'curl_request.upsert',
         params: params
