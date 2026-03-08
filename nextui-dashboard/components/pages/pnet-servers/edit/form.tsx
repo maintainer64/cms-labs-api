@@ -95,6 +95,7 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
           url: values.url || '',
           type: values.type || 'pnet',
           clientId: values.clientId || '',
+          token: values.token || '',
           roles: values.roles?.map((roleId) => parseInt(roleId.toString()))
         });
       }}
@@ -196,7 +197,8 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
               variant='bordered'
               label={PnetServers.FieldToken}
               type='password'
-              value={initialValues.token ?? ''}
+              value={values.token ?? ''}
+              onChange={handleChange('token')}
             />
             <Input
               variant='bordered'

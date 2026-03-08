@@ -2,7 +2,7 @@
   "addons": [
     {
       "id": "postgresql-1",
-      "tag": "PROD",
+      "tag": "prod",
       "name": "База данных postgresql",
       "type": "postgresql",
       "params": {
@@ -13,7 +13,7 @@
     },
     {
       "id": "mysql-1",
-      "tag": "PROD",
+      "tag": "prod",
       "name": "База данных mysql",
       "type": "mysql",
       "params": {
@@ -24,13 +24,13 @@
     },
     {
       "id": "vault",
-      "tag": "PROD",
+      "tag": "prod",
       "name": "Vault",
       "type": "vault"
     },
     {
       "id": "seaweedfs-1",
-      "tag": "PROD",
+      "tag": "prod",
       "name": "S3",
       "type": "s3",
       "params": {
@@ -41,7 +41,7 @@
     },
     {
       "id": "harbor",
-      "tag": "PROD",
+      "tag": "prod",
       "name": "Registry",
       "type": "harbor",
       "params": {
@@ -52,13 +52,10 @@
       }
     },
     {
-      "id": "6b126898-2629-4477-89b4-9ae40b06b5de",
-      "tag": "PROD",
+      "id": "kubernetes",
+      "tag": "prod",
       "name": "Kubernetes",
-      "type": "kubernetes",
-      "params": {
-        "kubeconfig": "base64 secret"
-      }
+      "type": "kubernetes"
     }
   ]
 }

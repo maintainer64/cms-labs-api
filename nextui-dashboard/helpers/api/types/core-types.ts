@@ -58,6 +58,8 @@ export interface AuthSSOAuthorizeInputDTO {
   scope?: string;
   state?: string;
   user_id?: number;
+  code_challenge?: string;
+  code_challenge_method?: string;
 }
 
 export interface AuthSSOAuthorizeOutputDTO {
@@ -1116,6 +1118,7 @@ export interface UsecasesPNETServerEditInputDTO {
   minutes_for_disconnect?: number;
   name: string;
   roles?: number[];
+  token?: string;
   type: string;
   unit_rate?: number;
   url: string;

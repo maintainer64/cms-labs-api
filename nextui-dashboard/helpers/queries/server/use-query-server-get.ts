@@ -16,6 +16,7 @@ type Response = CamelCasedPropertiesDeep<UsecasesPNETServerGetResponse['result']
 
 export interface PnetServerItem extends CamelCasedPropertiesDeep<ModelsPNETServer> {
   roles?: Array<number>;
+  token?: string;
 }
 
 export function MapServerItem(server?: CamelCasedPropertiesDeep<ModelsPNETServer>, roles?: Array<number>) {
