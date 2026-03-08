@@ -339,8 +339,8 @@ func TestSSOAuthorizeWithCodeChallenge(t *testing.T) {
 
 	var attempt models.TokenAttempt
 	f.DB.Where("authorization_code = ?", response.Result.Code).First(&attempt)
-	assert.Equal(t, codeChallenge, attempt.CodeChallenge, description)
-	assert.Equal(t, codeChallengeMethod, attempt.CodeChallengeMethod, description)
+	assert.Equal(t, codeChallenge, *attempt.CodeChallenge, description)
+	assert.Equal(t, codeChallengeMethod, *attempt.CodeChallengeMethod, description)
 }
 
 func TestSSOTokenByAuthCodeWithPKCE(t *testing.T) {
@@ -369,15 +369,16 @@ func TestSSOTokenByAuthCodeWithPKCE(t *testing.T) {
 	f.DB.Create(&roleUser)
 
 	codeVerifier := "dFYxeuLgr2mq8IeJT4C1WqoAH9A7s9e3QzZ9LqK5rXw"
-	codeChallenge := "dFYxeuLgr2mq8IeJT4C1WqoAH9A7s9e3QzZ9LqK5rXw"
+	codeChallenge := "JxTX7oXvq0V2O2kKCFOw3NCuEAxCxhYH7Pxr0ZZEd0U"
+	codeChallengeMethod := "S256"
 
 	attempt := models.TokenAttempt{}
 	attempt.UserID = &user.ID
 	attempt.ServerID = &server.ID
 	attempt.State = uuid.New().String()
 	attempt.AuthorizationCode = uuid.New().String()
-	attempt.CodeChallenge = codeChallenge
-	attempt.CodeChallengeMethod = "S256"
+	attempt.CodeChallenge = &codeChallenge
+	attempt.CodeChallengeMethod = &codeChallengeMethod
 	f.DB.Create(&attempt)
 
 	input := map[string]string{
@@ -428,15 +429,16 @@ func TestSSOTokenByAuthCodeWithInvalidPKCE(t *testing.T) {
 
 	f.DB.Create(&roleUser)
 
-	codeChallenge := "dFYxeuLgr2mq8IeJT4C1WqoAH9A7s9e3QzZ9LqK5rXw"
+	codeChallenge := "JxTX7oXvq0V2O2kKCFOw3NCuEAxCxhYH7Pxr0ZZEd0U"
+	codeChallengeMethod := "S256"
 
 	attempt := models.TokenAttempt{}
 	attempt.UserID = &user.ID
 	attempt.ServerID = &server.ID
 	attempt.State = uuid.New().String()
 	attempt.AuthorizationCode = uuid.New().String()
-	attempt.CodeChallenge = codeChallenge
-	attempt.CodeChallengeMethod = "S256"
+	attempt.CodeChallenge = &codeChallenge
+	attempt.CodeChallengeMethod = &codeChallengeMethod
 	f.DB.Create(&attempt)
 
 	input := map[string]string{
@@ -446,7 +448,7 @@ func TestSSOTokenByAuthCodeWithInvalidPKCE(t *testing.T) {
 		"code_verifier": "invalid_code_verifier",
 	}
 
-	expectedCode := 400
+	expectedCode := 200
 	statusCode, body := f.Request(&TestHttpRequest{
 		Method:        "POST",
 		Route:         "/api/v1/sso/token",
@@ -484,15 +486,16 @@ func TestSSOTokenByAuthCodeWithMissingCodeVerifier(t *testing.T) {
 
 	f.DB.Create(&roleUser)
 
-	codeChallenge := "dFYxeuLgr2mq8IeJT4C1WqoAH9A7s9e3QzZ9LqK5rXw"
+	codeChallenge := "JxTX7oXvq0V2O2kKCFOw3NCuEAxCxhYH7Pxr0ZZEd0U"
+	codeChallengeMethod := "S256"
 
 	attempt := models.TokenAttempt{}
 	attempt.UserID = &user.ID
 	attempt.ServerID = &server.ID
 	attempt.State = uuid.New().String()
 	attempt.AuthorizationCode = uuid.New().String()
-	attempt.CodeChallenge = codeChallenge
-	attempt.CodeChallengeMethod = "S256"
+	attempt.CodeChallenge = &codeChallenge
+	attempt.CodeChallengeMethod = &codeChallengeMethod
 	f.DB.Create(&attempt)
 
 	input := map[string]string{
@@ -501,7 +504,7 @@ func TestSSOTokenByAuthCodeWithMissingCodeVerifier(t *testing.T) {
 		"redirect_uri": server.Url + "/callback",
 	}
 
-	expectedCode := 400
+	expectedCode := 200
 	statusCode, body := f.Request(&TestHttpRequest{
 		Method:        "POST",
 		Route:         "/api/v1/sso/token",

@@ -106,8 +106,12 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 	entityCreate.State = attemptState
 	entityCreate.Nonce = attemptNonce
 	entityCreate.AuthorizationCode = uuid.New().String()
-	entityCreate.CodeChallenge = inputDTO.CodeChallenge
-	entityCreate.CodeChallengeMethod = inputDTO.CodeChallengeMethod
+	if inputDTO.CodeChallenge != "" {
+		entityCreate.CodeChallenge = &inputDTO.CodeChallenge
+	}
+	if inputDTO.CodeChallengeMethod != "" {
+		entityCreate.CodeChallengeMethod = &inputDTO.CodeChallengeMethod
+	}
 	err = u.TokenAttemptQueries.Upsert(entityCreate)
 	if err != nil {
 		return nil, err

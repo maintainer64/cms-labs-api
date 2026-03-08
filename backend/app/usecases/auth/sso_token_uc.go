@@ -140,15 +140,19 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		return nil, errors.New("invalid redirect_uri")
 	}
-	if attempt.CodeChallenge != "" {
+	if attempt.CodeChallenge != nil && *attempt.CodeChallenge != "" {
+		codeChallengeMethod := "S256"
+		if attempt.CodeChallengeMethod != nil && *attempt.CodeChallengeMethod != "" {
+			codeChallengeMethod = *attempt.CodeChallengeMethod
+		}
 		if inputDTO.CodeVerifier == "" {
 			return nil, errors.New("code_verifier required")
 		}
-		expectedChallenge, err := computeCodeChallenge(inputDTO.CodeVerifier, attempt.CodeChallengeMethod)
+		expectedChallenge, err := computeCodeChallenge(inputDTO.CodeVerifier, codeChallengeMethod)
 		if err != nil {
 			return nil, err
 		}
-		if expectedChallenge != attempt.CodeChallenge {
+		if expectedChallenge != *attempt.CodeChallenge {
 			return nil, errors.New("invalid code_verifier")
 		}
 	}
