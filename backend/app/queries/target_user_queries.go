@@ -145,3 +145,10 @@ func (q *TargetUserQueries) DeleteByTargetAndUser(targetID string, userID uint) 
 	q.Logger.Debug().Msg(fmt.Sprintf("TargetUserQueries: delete target=%s user=%d", targetID, userID))
 	return q.DB.Where("target_id = ? AND user_id = ?", targetID, userID).Delete(&models.TargetUser{}).Error
 }
+
+// GetAllByTarget возвращает всех пользователей для указанного target
+func (q *TargetUserQueries) GetAllByTarget(targetID string) ([]models.TargetUser, error) {
+	var entities []models.TargetUser
+	err := q.DB.Where("target_id = ?", targetID).Find(&entities).Error
+	return entities, err
+}

@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { objectToCamel, objectToSnake } from 'ts-case-convert';
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
+import axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import { AuthDataGet, AuthDataUpdate, AuthOptionsSetup, RpcParams } from './types';
 
 function onceTime(func: () => Promise<void>) {
@@ -61,10 +61,20 @@ export class RpcTransport {
         return config;
       }
     );
-    this.transport.interceptors.response.use((response: AxiosResponse) => {
-      if (response?.request?.method === 'POST' && response.data.error) throw response;
-      return response;
-    });
+    this.transport.interceptors.response.use(
+      (response: AxiosResponse) => {
+        if (response?.request?.method === 'POST' && response.data.error) throw response;
+        return response;
+      },
+      (error: AxiosError) => {
+        // @ts-ignore
+        if (error?.code === 'ERR_BAD_RESPONSE' && error.response?.data?.error) {
+          // @ts-ignore
+          throw error.response?.data?.error;
+        }
+        return error;
+      }
+    );
   }
 
   /**

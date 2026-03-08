@@ -29,7 +29,7 @@ export const ProfilePasswordChangeForm = () => {
     onError: (error: any) => {
       addToast({
         title: Forms.SaveError,
-        description: error.body.msg,
+        description: error.data.message,
         color: 'danger'
       });
     }

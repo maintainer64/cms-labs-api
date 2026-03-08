@@ -25,4 +25,6 @@ type ClientInterface interface {
 
 	CreateKubernetesRole(ctx context.Context, targetName string) error
 	RevokeKubernetesRole(ctx context.Context, targetName string) error
+
+	UserBindAccessServices(ctx context.Context, binds []UsersAndServices) error
 }

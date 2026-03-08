@@ -1,1 +1,1 @@
-defaultImage: harbor.cmslabs.ru/cms-labs/api-modules/backend/pre
+defaultImage: harbor.k8s.cmslabs.ru/svc_cms_labs/api-modules/backend/pre

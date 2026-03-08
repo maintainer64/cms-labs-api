@@ -43,7 +43,7 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
   if (queryTopology.isLoading) return <HorizontalInfiniteLoader />;
   if (queryTopology.error) {
     // @ts-ignore
-    const errMsg = queryTopology?.error?.body?.msg || Connect.Error;
+    const errMsg = queryTopology?.error?.data?.message || Connect.Error;
     return (
       <ErrorModal title={Connect.ErrorModalViewTitle} description={errMsg}>
         <Button onPress={() => queryTopology.refetch()} href='#' variant='light' color='primary'>

@@ -68,7 +68,7 @@ metadata:
   labels:
     prometheus: k8s
     role: alert-rules
-  namespace: nxs-monitoring
+  namespace: {{ $.Release.Namespace | quote }}
 spec:
   groups:
   - name: "jobs_rules"

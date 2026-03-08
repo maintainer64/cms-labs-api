@@ -12,6 +12,7 @@ processed_migrations/
 
 # Environment variables
 .env
+*.local.json
 
 # Go builds
 **/build/

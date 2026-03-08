@@ -12,9 +12,7 @@ type Response = CamelCasedPropertiesDeep<UsecasesUserEditResponse['result']>;
 
 export const useMutationUserUpsert = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({
-    // @ts-expect-error: return nullable value
     mutationFn: (params: Params) => {
-      if (!params?.id) return null;
       return transportWithAuth.rpc(CoreJsonRpcPath, {
         method: 'user.upsert',
         params: params

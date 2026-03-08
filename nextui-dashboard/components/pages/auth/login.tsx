@@ -5,8 +5,10 @@ import { Button, Input, Tab, Tabs } from '@heroui/react';
 import { Formik } from 'formik';
 import useLanguageBrowser from '@/helpers/locale';
 import { RoutesLocation } from '@/components/routes';
-import { SSOAuthorizationGet } from '@/components/pages/auth/ssoSave';
+import { SSOAuthorizationGet, SSOAuthorizationReset } from '@/components/pages/auth/ssoSave';
+import { SSOAuthorizationComplete } from '@/components/pages/auth/sso';
 import { useMutationUserLogin } from '@/helpers/queries/user/use-mutation-user-login';
+import { useMutationSsoAuthorize } from '@/helpers/queries/sso/use-mutation-sso-authorize';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 import { AuthRenewManagerCredentialsInputDTO } from '@/helpers/api';
 import { useSearchParams } from 'react-router-dom';
@@ -47,22 +49,43 @@ export const Login = () => {
 
   const activeTab = searchParams.get('type') || tabs?.[0]?.id;
 
+  const { mutate: mutateSsoAuthorize } = useMutationSsoAuthorize({
+    onSuccess: (data) => {
+      SSOAuthorizationReset();
+      const redirectUrl = SSOAuthorizationComplete(data);
+      window.location.href = redirectUrl;
+    }
+  });
+
   const { mutate } = useMutationUserLogin({
     onSuccess: (data, { formikHelpers }) => {
       formikHelpers.resetForm();
       const params = SSOAuthorizationGet();
       if (params === null) {
         window.location.href = RoutesLocation.home();
+      } else {
+        mutateSsoAuthorize({
+          clientId: params.clientId,
+          redirectUri: params.redirectUri,
+          responseType: params.responseType,
+          scope: params.scope,
+          path: params.path,
+          state: params.state,
+          nonce: params.nonce,
+          extra: params.extra,
+          codeChallenge: params.codeChallenge,
+          codeChallengeMethod: params.codeChallengeMethod
+        });
       }
     },
-    onError: (aio: any, { formikHelpers }) => {
+    onError: (error: any, { formikHelpers }) => {
       formikHelpers.setErrors({});
-      formikHelpers.setErrors({ password: aio?.response?.data?.error?.data?.message });
+      formikHelpers.setErrors({ password: error?.data?.message });
     }
   });
 
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center w-full'>
       <div className='text-center text-[25px] font-bold mb-6'>{locale.Login.PageName}</div>
 
       <Tabs

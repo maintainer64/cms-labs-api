@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
+import { RoutesLocation } from '@/components/routes';
 
 interface TargetsNodeData {
   label: string;
@@ -118,7 +119,7 @@ export const TargetsNode = memo(({ data, selected }: NodeProps) => {
       {!isActive && <div className='absolute -top-1 -right-1 w-3 h-3 bg-gray-400 rounded-full border-2 border-white' />}
 
       <a
-        href={`/targets/${nodeId}`}
+        href={RoutesLocation.targetsEdit(nodeId)}
         target='_blank'
         onClick={(e) => e.stopPropagation()}
         className='absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-md border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors'

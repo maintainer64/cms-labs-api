@@ -2,6 +2,7 @@ package connection
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/goccy/go-json"
 )
@@ -15,12 +16,17 @@ type ProxmoxServerConfig struct {
 	Token string `json:"token"`
 }
 
-func GetProxmoxConfig(rawConfig string) *ProxmoxSyncConfig {
+func GetProxmoxConfig(pathConfig string) *ProxmoxSyncConfig {
 	var config ProxmoxSyncConfig
-	if rawConfig == "" {
-		return &config
+	if pathConfig == "" {
+		return &ProxmoxSyncConfig{}
 	}
-	if err := json.Unmarshal([]byte(rawConfig), &config); err != nil {
+	// #nosec G304
+	rawConfig, err := os.ReadFile(pathConfig)
+	if err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(rawConfig, &config); err != nil {
 		panic(fmt.Errorf("failed to parse ProxmoxConfig: %w", err))
 	}
 	return &config

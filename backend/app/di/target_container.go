@@ -5,12 +5,16 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
+func (di *DIContainer) NewVaultClient() vault.ClientInterface {
+	return NewVaultClient()
+}
 func (di *DIContainer) FactoryAddonService() *addons.FactoryAddonService {
 	return &addons.FactoryAddonService{
 		Config:              configs.AppConfig.AddonsConfig,
-		VaultClient:         vault.NewClient(configs.AppConfig.Vault),
+		VaultClient:         di.NewVaultClient(),
 		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
 		PNETServerQueries:   di.Queries.PNETServerQueries,
 		UserQueries:         di.Queries.UserQueries,
@@ -55,7 +59,10 @@ func (di *DIContainer) TargetDeleteUC() *usecases.TargetDeleteUC {
 
 func (di *DIContainer) TargetGetUC() *usecases.TargetGetUC {
 	return &usecases.TargetGetUC{
-		TargetQueries: di.Queries.TargetQueries,
+		TargetQueries:      di.Queries.TargetQueries,
+		TargetAddonQueries: di.Queries.TargetAddonQueries,
+		TargetUserQueries:  di.Queries.TargetUserQueries,
+		AddonsConfig:       configs.AppConfig.AddonsConfig,
 	}
 }
 
@@ -90,14 +97,28 @@ func (di *DIContainer) TargetUpsertUC() *usecases.TargetUpsertUC {
 
 func (di *DIContainer) TargetUserDeleteUC() *usecases.TargetUserDeleteUC {
 	return &usecases.TargetUserDeleteUC{
-		TargetQueries:     di.Queries.TargetQueries,
+		TargetQueries:            di.Queries.TargetQueries,
+		TargetUserQueries:        di.Queries.TargetUserQueries,
+		TargetUserRotateAddonsUC: di.TargetUserRotateAddonsUC(),
+	}
+}
+
+func (di *DIContainer) TargetUserRotateAddonsUC() *usecases.TargetUserRotateAddonsUC {
+	return &usecases.TargetUserRotateAddonsUC{
 		TargetUserQueries: di.Queries.TargetUserQueries,
+		TargetQueries:     di.Queries.TargetQueries,
+		UserQueries:       di.Queries.UserQueries,
+		VaultClient:       di.NewVaultClient(),
+		Logger: logs.NewZeroLogger(
+			di.ZeroLogConf.SetName("usecases.TargetUserRotateAddonsUC"),
+		),
 	}
 }
 
 func (di *DIContainer) TargetUserUpsertUC() *usecases.TargetUserUpsertUC {
 	return &usecases.TargetUserUpsertUC{
-		TargetQueries:     di.Queries.TargetQueries,
-		TargetUserQueries: di.Queries.TargetUserQueries,
+		TargetQueries:            di.Queries.TargetQueries,
+		TargetUserQueries:        di.Queries.TargetUserQueries,
+		TargetUserRotateAddonsUC: di.TargetUserRotateAddonsUC(),
 	}
 }

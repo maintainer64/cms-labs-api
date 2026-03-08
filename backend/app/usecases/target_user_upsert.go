@@ -12,9 +12,10 @@ import (
 
 // TargetUserUpsertUC – добавление или обновление пользователя цели
 type TargetUserUpsertUC struct {
-	TargetUserQueries *queries.TargetUserQueries
-	TargetQueries     *queries.TargetQueries
-	User              *cms_client.SSOTokenPublicData
+	TargetUserQueries        *queries.TargetUserQueries
+	TargetQueries            *queries.TargetQueries
+	TargetUserRotateAddonsUC *TargetUserRotateAddonsUC
+	User                     *cms_client.SSOTokenPublicData
 }
 
 // TargetUserUpsertInputDTO – входные данные
@@ -92,7 +93,10 @@ func (uc *TargetUserUpsertUC) Execute(dto TargetUserUpsertInputDTO) (*TargetUser
 		return nil, err
 	}
 
-	// TODO: Здесь синхронизировать права всех пользователей сервиса
+	err = uc.TargetUserRotateAddonsUC.Execute(dto.UserID)
+	if err != nil {
+		return nil, err
+	}
 
 	return &TargetUserUpsertOutputDTO{ID: entity.ID}, nil
 }

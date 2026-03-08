@@ -42,7 +42,7 @@ export default function TopologyMenu() {
     onError: (error: any) => {
       addToast({
         title: Menu.RemoveTopologyTitle,
-        description: error.body.msg,
+        description: error.data.message,
         color: 'danger'
       });
     }

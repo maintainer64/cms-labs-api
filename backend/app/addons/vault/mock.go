@@ -15,6 +15,7 @@ type MockVaultClient struct {
 	CreateKubernetesRoleFunc    func(ctx context.Context, targetName string) error
 	RevokeKubernetesRoleFunc    func(ctx context.Context, targetName string) error
 	GetVaultAddrFunc            func() string
+	UserBindAccessServicesFunc  func(ctx context.Context, binds []UsersAndServices) error
 }
 
 // CreateServiceExtension вызывает заданную функцию-заглушку.
@@ -74,6 +75,13 @@ func (m *MockVaultClient) CreateKubernetesRole(ctx context.Context, targetName s
 func (m *MockVaultClient) RevokeKubernetesRole(ctx context.Context, targetName string) error {
 	if m.RevokeKubernetesRoleFunc != nil {
 		return m.RevokeKubernetesRoleFunc(ctx, targetName)
+	}
+	return nil
+}
+
+func (m *MockVaultClient) UserBindAccessServices(ctx context.Context, binds []UsersAndServices) error {
+	if m.UserBindAccessServicesFunc != nil {
+		return m.UserBindAccessServicesFunc(ctx, binds)
 	}
 	return nil
 }

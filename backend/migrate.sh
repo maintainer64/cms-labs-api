@@ -1,29 +1,36 @@
 #!/bin/sh
 
-# Функция для загрузки переменных из .env файла
+# Список разрешённых переменных (через пробел)
+ALLOWED_VARS="DB_TYPE DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DB_SSL_MODE DB_TABLE_PREFIX"
+
+# Функция для загрузки переменных из .env файла с фильтрацией
 load_env_file() {
   ENV_FILE="$1"
-
   if [ -f "$ENV_FILE" ]; then
     while IFS= read -r line; do
-      # Пропускаем пустые строки и комментарии
-      if [ -z "$line" ] || [ "$(echo "$line" | cut -c1)" = "#" ]; then
-        continue
+      # Пропускаем комментарии и пустые строки
+      if [ -n "$line" ] && [ "$(echo "$line" | cut -c1)" != "#" ]; then
+        # Убираем комментарии в конце строки
+        line=$(echo "$line" | sed 's/\s*#.*//')
+        # Извлекаем имя переменной (часть до =)
+        var_name=$(echo "$line" | cut -d= -f1)
+        # Проверяем, входит ли имя в список разрешённых
+        if echo "$ALLOWED_VARS" | grep -qw "$var_name"; then
+          # Безопасный экспорт: используем export с подстановкой, но без eval
+          # Убираем возможные кавычки вокруг значения (опционально)
+          value=$(echo "$line" | cut -d= -f2-)
+          # Удаляем обрамляющие кавычки, если они есть (одинарные или двойные)
+          value=$(echo "$value" | sed -e "s/^['\"]//" -e "s/['\"]$//")
+          export "$var_name"="$value"
+        fi
       fi
-      # Пропускаем строки без '=' — это либо продолжение многострочной переменной, либо мусор
-      if ! echo "$line" | grep -q '='; then
-        continue
-      fi
-      # Убираем комментарии в конце строки
-      line=$(echo "$line" | sed 's/\s*#.*//')
-      eval "export $line"
     done < "$ENV_FILE"
   else
     echo "Warning: Файл $ENV_FILE не найден"
   fi
 }
 
-# Импортируем переменные окружения из .env.test, если файл существует
+# Загружаем переменные
 load_env_file ".env.test"
 load_env_file ".env"
 
@@ -31,17 +38,13 @@ load_env_file ".env"
 output_dir="processed_migrations"
 echo "DB_TABLE_PREFIX = $DB_TABLE_PREFIX | DB_NAME = $DB_NAME | DB_USER = $DB_USER | DB_HOST = $DB_HOST | DB_PORT = $DB_PORT"
 
-# Создаем директорию, если она не существует
 mkdir -p "$output_dir"
 
 # Функция для замены шаблона в файле
 replace_template() {
   local input_file="$1"
   local output_file="$2"
-  # Копируем файл в новую директорию
   cp "$input_file" "$output_file"
-  # Используем sed для замены шаблона на значение переменной
-  # Проверяем операционную систему
   if [ "$(uname)" = "Darwin" ]; then
       sed -i '' -e "s/{{.DB_TABLE_PREFIX}}/$DB_TABLE_PREFIX/g" "$output_file"
   else
@@ -63,23 +66,17 @@ sql_migrate_cmd() {
 }
 
 # Указываем директорию или файлы, в которых нужно произвести замену
-# Например, platform/migrations и конфигурационный файл
 files_to_process="platform/migrations"
 
-# Проходим по каждому файлу или директории
 for item in $files_to_process; do
   if [ -d "$item" ]; then
-    # Если это директория, обрабатываем все файлы в ней
     find "$item" -type f \( -name '*.sql' -o -name '*.yml' \) | while read -r file; do
-      # Определяем путь для сохранения измененного файла
       relative_path="${file#$item/}"
       output_file="$output_dir/$relative_path"
-      # Создаем необходимые директории
       mkdir -p "$(dirname "$output_file")"
       replace_template "$file" "$output_file"
     done
   elif [ -f "$item" ]; then
-    # Если это файл, обрабатываем его
     output_file="$output_dir/$(basename "$item")"
     replace_template "$item" "$output_file"
   else

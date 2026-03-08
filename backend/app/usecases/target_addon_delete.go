@@ -24,9 +24,12 @@ type TargetAddonDeleteInputDTO struct {
 	TargetID string `json:"target_id" validate:"required"`
 	AddonID  string `json:"addon_id" validate:"required"`
 	IssId    string `json:"iss_id"`
+	Revoke   bool   `json:"revoke"`
 }
 
 type TargetAddonDeleteOutputDTO struct {
+	PendingConfirmation bool   `json:"pending_confirmation"`
+	Message             string `json:"message"`
 }
 
 type TargetAddonDeleteRequest struct {
@@ -62,17 +65,67 @@ func (uc *TargetAddonDeleteUC) Execute(dto TargetAddonDeleteInputDTO) (*TargetAd
 	if err != nil {
 		return nil, err
 	}
-	addonService := uc.FactoryAddonService.GetAddonServiceByID(dto.AddonID)
-	if addonService == nil {
-		return nil, ErrAddonConfigNotFound
+
+	currentUserID := uc.User.UserID()
+
+	config := addon.Config
+	if config == nil {
+		config = make(map[string]interface{})
 	}
-	data, _ := json.Marshal(addon.Config)
-	var configAddon addons.AddonOperationConfig
-	_ = json.Unmarshal(data, &configAddon)
-	ctx := context.Background()
-	_, err = addonService.Delete(ctx, target.Name, &configAddon)
+
+	existingRequestUserID, _ := config["request_deleted_user_id"].(float64)
+
+	if dto.Revoke {
+		if existingRequestUserID > 0 {
+			delete(config, "request_deleted_user_id")
+			addon.Config = config
+			err = uc.TargetAddonQueries.Update(&addon)
+			if err != nil {
+				return nil, err
+			}
+			return &TargetAddonDeleteOutputDTO{
+				PendingConfirmation: false,
+				Message:             "Deletion request revoked.",
+			}, nil
+		}
+		return &TargetAddonDeleteOutputDTO{
+			PendingConfirmation: false,
+			Message:             "No pending deletion request.",
+		}, nil
+	}
+
+	if existingRequestUserID > 0 {
+		if uint(existingRequestUserID) == currentUserID {
+			return &TargetAddonDeleteOutputDTO{
+				PendingConfirmation: true,
+				Message:             "You have already requested deletion. Waiting for another user to confirm.",
+			}, nil
+		}
+
+		addonService := uc.FactoryAddonService.GetAddonServiceByID(dto.AddonID)
+		if addonService == nil {
+			return nil, ErrAddonConfigNotFound
+		}
+		data, _ := json.Marshal(addon.Config)
+		var configAddon addons.AddonOperationConfig
+		_ = json.Unmarshal(data, &configAddon)
+		ctx := context.Background()
+		_, err = addonService.Delete(ctx, target.Name, &configAddon)
+		if err != nil {
+			return nil, err
+		}
+		return &TargetAddonDeleteOutputDTO{}, uc.TargetAddonQueries.Delete(addon.ID)
+	}
+
+	config["request_deleted_user_id"] = float64(currentUserID)
+	addon.Config = config
+	err = uc.TargetAddonQueries.Update(&addon)
 	if err != nil {
 		return nil, err
 	}
-	return &TargetAddonDeleteOutputDTO{}, uc.TargetAddonQueries.Delete(addon.ID)
+
+	return &TargetAddonDeleteOutputDTO{
+		PendingConfirmation: true,
+		Message:             "Deletion requested. Another user must confirm.",
+	}, nil
 }

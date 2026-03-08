@@ -58,6 +58,8 @@ export interface AuthSSOAuthorizeInputDTO {
   scope?: string;
   state?: string;
   user_id?: number;
+  code_challenge?: string;
+  code_challenge_method?: string;
 }
 
 export interface AuthSSOAuthorizeOutputDTO {
@@ -703,6 +705,20 @@ export interface UsecasesAuthProviderListResponse {
   result?: UsecasesAuthProviderListOutputDTO;
 }
 
+export interface UsecasesAvailableAddonInfo {
+  id?: string;
+  name?: string;
+  type?: string;
+}
+
+export interface UsecasesConnectedAddonInfo {
+  addon_id?: string;
+  config?: Record<string, any>;
+  id?: number;
+  request_deleted_user_id?: number;
+  type?: string;
+}
+
 export interface UsecasesCurlRequestDeleteInputDTO {
   id?: number;
 }
@@ -1102,6 +1118,7 @@ export interface UsecasesPNETServerEditInputDTO {
   minutes_for_disconnect?: number;
   name: string;
   roles?: number[];
+  token?: string;
   type: string;
   unit_rate?: number;
   url: string;
@@ -1407,10 +1424,14 @@ export interface UsecasesTargetAddonCreateResponse {
 export interface UsecasesTargetAddonDeleteInputDTO {
   addon_id: string;
   iss_id?: string;
+  revoke?: boolean;
   target_id: string;
 }
 
-export type UsecasesTargetAddonDeleteOutputDTO = object;
+export interface UsecasesTargetAddonDeleteOutputDTO {
+  message?: string;
+  pending_confirmation?: boolean;
+}
 
 export interface UsecasesTargetAddonResetInputDTO {
   addon_id: string;
@@ -1432,6 +1453,27 @@ export interface UsecasesTargetGetInputDTO {
   id: string;
 }
 
+export interface UsecasesTargetGetOutputDTO {
+  availableAddons?: UsecasesAvailableAddonInfo[];
+  connectedAddons?: UsecasesConnectedAddonInfo[];
+  created_at: string;
+  description?: string;
+  id?: string;
+  /** список ссылок */
+  internal_links?: object[];
+  /** массив внутренних тегов */
+  internal_tags?: string[];
+  /** список ссылок */
+  links?: object[];
+  name?: string;
+  synchronized_at: string;
+  /** массив тегов */
+  tags?: string[];
+  targetUsers?: UsecasesTargetUserInfo[];
+  type?: string;
+  updated_at: string;
+}
+
 export interface UsecasesTargetGetRequest {
   /** @default "1" */
   id?: string;
@@ -1448,7 +1490,7 @@ export interface UsecasesTargetGetResponse {
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: ModelsTarget;
+  result?: UsecasesTargetGetOutputDTO;
 }
 
 export interface UsecasesTargetItem {
@@ -1601,6 +1643,11 @@ export interface UsecasesTargetUserDeleteResponse {
   /** @default "2.0" */
   jsonrpc?: string;
   result?: UsecasesTargetUserDeleteOutputDTO;
+}
+
+export interface UsecasesTargetUserInfo {
+  roles?: string[];
+  user_id?: number;
 }
 
 export interface UsecasesTargetUserUpsertInputDTO {

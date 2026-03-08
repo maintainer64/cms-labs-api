@@ -78,10 +78,10 @@ type HarborAddonService struct {
 
 // NewHarborAddonService creates a new Harbor service instance.
 func NewHarborAddonService(cfg *connection.AddonConfig, vaultClient vault.ClientInterface) AddonService {
-	apiUrl, _ := cfg.Params["api_url"].(string)
-	username, _ := cfg.Params["username"].(string)
-	password, _ := cfg.Params["password"].(string)
-	baseUrl, _ := cfg.Params["base_url"].(string)
+	apiUrl, _ := cfg.Params["apiUrl"].(string)
+	username, _ := cfg.Params["adminUsername"].(string)
+	password, _ := cfg.Params["adminPassword"].(string)
+	baseUrl, _ := cfg.Params["baseUrl"].(string)
 	params := HarborConfig{
 		ApiURL:        apiUrl,
 		AdminUsername: username,

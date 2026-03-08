@@ -45,6 +45,7 @@ const ru = {
     Edit: 'Редактирование',
     Save: 'Сохранить',
     Confirm: 'Подтвердить',
+    Cancel: 'Отмена',
     Delete: 'Удалить',
     Close: 'Закрыть',
     ViewAll: 'Перейти'
@@ -408,7 +409,106 @@ const ru = {
     Title: 'Карта сервисов',
     ButtonAdd: 'Создать',
     SearchBar: 'Поиск',
-    ButtonEdit: 'Редактировать'
+    ButtonEdit: 'Редактировать',
+    FieldID: 'ID',
+    FieldName: 'Название',
+    FieldDescription: 'Описание',
+    FieldType: 'Тип',
+    FieldTags: 'Теги',
+    FieldLinks: 'Ссылки',
+    FieldCreatedAt: 'Создано',
+    FieldUpdatedAt: 'Обновлено',
+    FieldSynchronizedAt: 'Синхронизировано',
+    Types: {
+      server: 'Сервер',
+      virtual: 'Виртуальный сервер',
+      service: 'Сервис',
+      module: 'Модуль'
+    },
+    Relation: {
+      Title: 'Связи',
+      Parent: 'Родитель',
+      AddParent: 'Добавить связь',
+      RemoveParent: 'Удалить связь',
+      SelectParent: 'Выберите связь',
+      NoParents: 'Нет связей'
+    },
+    Addon: {
+      Title: 'Дополнения',
+      Connect: 'Подключить',
+      NoAddons: 'Нет подключенных дополнений',
+      ConnectTitle: 'Подключить дополнение',
+      Name: 'Название',
+      Type: 'Тип',
+      Disconnect: 'Отключить',
+      Reset: 'Сбросить',
+      ResetTitle: 'Перевыпустить токены',
+      ResetDescription: 'Токены доступа будут пересозданы. Данные в ресурсе не будут изменены или удалены. Продолжить?',
+      SelectAddon: 'Выберите дополнение',
+      DeleteRequest: 'Запрос на удаление',
+      DeleteConfirmStep1: 'Сделать бекап данных',
+      DeleteConfirmStep2: 'Полностью очистить данные приложения',
+      DeleteConfirmStep3: 'Дополнение безвозвратно будет удалено и не доступно к восстановлению',
+      DeleteConfirmWarning: 'Вы уверены, что хотите удалить это дополнение?',
+      DeleteConfirmButton: 'Да, удалить',
+      DeleteCancelButton: 'Отмена',
+      DeletePendingMessage: 'Ожидание подтверждения удаления от другого пользователя',
+      DeleteRequestedBy: 'Удаление запрошено пользователем',
+      DeleteConfirmRequired: 'Требуется подтверждение удаления',
+      Config: 'Конфигурация',
+      DatabaseSize: 'Использовано',
+      Cluster: 'Кластер',
+      Namespace: 'Пространство имен',
+      Registry: 'Реестр образов',
+      ApiKeyInVault: 'API ключ в Vault',
+      RotateCredentials: 'Перевыпустить ключи',
+      RotateCredentialsTitle: 'Перевыпуск ключей',
+      RotateCredentialsDescription:
+        'Ключи и пароли будут пересозданы. Старые ключи станут недействительны. Продолжить?',
+      RevokeDeleteRequest: 'Отозвать запрос на удаление',
+      RevokeDeleteRequestTitle: 'Отзыв запроса на удаление',
+      RevokeDeleteRequestDescription: 'Запрос на удаление будет отменён. Продолжить?',
+      Expires: 'Действителен до'
+    },
+    User: {
+      Title: 'Пользователи',
+      AddTitle: 'Добавить пользователя',
+      EditTitle: 'Редактирование прав',
+      Add: 'Добавить пользователя',
+      Remove: 'Удалить',
+      Email: 'Почта',
+      Roles: 'Роли',
+      UserLabel: 'Пользователь',
+      UserPlaceholder: 'Начните вводить имя',
+      RolesLabel: 'Роли',
+      SelectUser: 'Выберите пользователя',
+      SelectRole: 'Выберите роль',
+      AddButton: 'Добавить пользователя',
+      NoUsers: 'Нет привязанных пользователей',
+      NoRoles: 'Нет ролей'
+    },
+    Roles: [
+      {
+        key: 'vault_viewer',
+        value: 'Просмотр Vault'
+      },
+      {
+        key: 'vault_writer',
+        value: 'Запись в Vault'
+      },
+      {
+        key: 'editor',
+        value: 'Редактор'
+      },
+      {
+        key: 'nominal',
+        value: 'Номинальный'
+      }
+    ],
+    DeletePopup: {
+      Title: 'Удалить target',
+      Description: 'Вы уверены, что хотите удалить этот объект?'
+    }
   },
   Topology: {
     Menu: {

@@ -21,6 +21,7 @@ type PNETServerEditInputDTO struct {
 	MaxCountUsersLimit   int    `json:"max_count_users_limit"`
 	UnitRate             int    `json:"unit_rate"`
 	Roles                []uint `json:"roles"`
+	Token                string `json:"token"`
 }
 
 type PNETServerEditRequest struct {
@@ -52,6 +53,9 @@ func (u *PNETServerEditUC) Execute(dto PNETServerEditInputDTO) (PNETServerEditOu
 	entity.UnitRate = dto.UnitRate
 	entity.MinutesForDisconnect = dto.MinutesForDisconnect
 	entity.MaxCountUsersLimit = dto.MaxCountUsersLimit
+	if dto.Token != "" {
+		entity.Token = dto.Token
+	}
 	err := u.PNETServerQueries.Upsert(entity)
 	if err != nil {
 		return PNETServerEditOutputDTO{}, err
