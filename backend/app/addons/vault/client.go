@@ -99,12 +99,10 @@ func (v *Client) CreateKubernetesRole(ctx context.Context, targetName string) er
 	p := fmt.Sprintf("auth/kubernetes/role/%s", targetName)
 
 	payload := map[string]any{
-		"data": map[string]any{
-			"bound_service_account_names":      "default",
-			"bound_service_account_namespaces": sanitize(targetName),
-			"policies":                         fmt.Sprintf("services-%s-read", sanitize(targetName)),
-			"ttl":                              "1h",
-		},
+		"bound_service_account_names":      "default",
+		"bound_service_account_namespaces": sanitize(targetName),
+		"policies":                         fmt.Sprintf("services-%s-read", sanitize(targetName)),
+		"ttl":                              "1h",
 	}
 	_, err := v.Client.Logical().WriteWithContext(ctx, p, payload)
 	if err == nil {
