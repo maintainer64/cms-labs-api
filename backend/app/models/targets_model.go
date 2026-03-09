@@ -11,10 +11,11 @@ import (
 // роль пользователя в TargetUser
 
 const (
-	UserRoleVaultViewer = "vault_viewer"
-	UserRoleVaultWriter = "vault_writer"
-	UserRoleEditor      = "editor"
-	UserRoleNominal     = "nominal"
+	UserRoleVaultViewer  = "vault_viewer"
+	UserRoleVaultWriter  = "vault_writer"
+	UserRoleHarborAccess = "harbor_access"
+	UserRoleEditor       = "editor"
+	UserRoleNominal      = "nominal"
 )
 
 // TargetType — тип целевого объекта (сервис, сервер, модуль, виртуальный)

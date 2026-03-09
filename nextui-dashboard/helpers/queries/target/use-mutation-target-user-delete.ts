@@ -25,8 +25,10 @@ export const useMutationTargetUserDelete = (options: TMutationCustomOptions<Resp
       if (options.onSuccess) {
         options.onSuccess(...args);
       }
-      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'target.list'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'target.delete'] });
       await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'target.get'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'target.list'] });
+      await queryClient.invalidateQueries({ queryKey: [CoreJsonRpcPath, 'target.upsert'] });
     }
   });
 };

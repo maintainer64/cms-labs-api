@@ -90,8 +90,11 @@ func (q *TargetAddonQueries) DeleteByTargetAndAddon(targetID string, addonID str
 // GetAllByTarget возвращает все аддоны для указанного target
 func (q *TargetAddonQueries) GetAllByTarget(targetID string) ([]models.TargetAddon, error) {
 	var entities []models.TargetAddon
-	err := q.DB.Where("target_id = ?", targetID).Find(&entities).Error
-	return entities, err
+	result := q.DB.Where("target_id = ?", targetID).Find(&entities)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return entities, nil
 }
 
 // Update обновляет запись

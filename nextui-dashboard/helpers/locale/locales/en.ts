@@ -502,6 +502,10 @@ const en = {
       {
         key: 'nominal',
         value: 'Nominal'
+      },
+      {
+        key: 'nominal',
+        value: 'Harbor Access'
       }
     ],
     DeletePopup: {
