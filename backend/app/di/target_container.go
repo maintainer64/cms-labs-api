@@ -105,10 +105,12 @@ func (di *DIContainer) TargetUserDeleteUC() *usecases.TargetUserDeleteUC {
 
 func (di *DIContainer) TargetUserRotateAddonsUC() *usecases.TargetUserRotateAddonsUC {
 	return &usecases.TargetUserRotateAddonsUC{
-		TargetUserQueries: di.Queries.TargetUserQueries,
-		TargetQueries:     di.Queries.TargetQueries,
-		UserQueries:       di.Queries.UserQueries,
-		VaultClient:       di.NewVaultClient(),
+		TargetUserQueries:   di.Queries.TargetUserQueries,
+		TargetQueries:       di.Queries.TargetQueries,
+		UserQueries:         di.Queries.UserQueries,
+		VaultClient:         di.NewVaultClient(),
+		TargetAddonQueries:  di.Queries.TargetAddonQueries,
+		FactoryAddonService: di.FactoryAddonService(),
 		Logger: logs.NewZeroLogger(
 			di.ZeroLogConf.SetName("usecases.TargetUserRotateAddonsUC"),
 		),

@@ -40,9 +40,14 @@ func (f *FactoryAddonService) SetContext(issId string) *FactoryAddonService {
 }
 
 func (f *FactoryAddonService) GetAddonServiceByID(id string) AddonService {
+	cfg := f.GetAddonConfigByID(id)
+	return f.NewAddonService(cfg)
+}
+
+func (f *FactoryAddonService) GetAddonConfigByID(id string) *connection.AddonConfig {
 	for _, addon := range f.Config.Addons {
 		if addon.ID == id {
-			return f.NewAddonService(&addon)
+			return &addon
 		}
 	}
 	return nil

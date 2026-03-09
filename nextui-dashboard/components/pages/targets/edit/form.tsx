@@ -212,7 +212,6 @@ export const TargetEditForm = ({ id }: EditFormProps) => {
   const { mutate: relationCreateMutate } = useMutationTargetRelationCreate({
     onSuccess: () => {
       addToast({ title: Forms.SaveSuccess, color: 'success' });
-      listResponse.refetch();
     },
     onError: (error: any) => {
       addToast({ title: Forms.SaveError, description: error?.data?.message, color: 'danger' });
@@ -222,7 +221,6 @@ export const TargetEditForm = ({ id }: EditFormProps) => {
   const { mutate: relationDeleteMutate } = useMutationTargetRelationDelete({
     onSuccess: () => {
       addToast({ title: Forms.SaveSuccess, color: 'success' });
-      listResponse.refetch();
     },
     onError: (error: any) => {
       addToast({ title: Forms.SaveError, description: error?.data?.message, color: 'danger' });
@@ -232,7 +230,6 @@ export const TargetEditForm = ({ id }: EditFormProps) => {
   const { mutate: userUpsertMutate } = useMutationTargetUserUpsert({
     onSuccess: () => {
       addToast({ title: Forms.SaveSuccess, color: 'success' });
-      response.refetch();
     },
     onError: (error: any) => {
       addToast({ title: Forms.SaveError, description: error?.data?.message, color: 'danger' });
@@ -242,7 +239,6 @@ export const TargetEditForm = ({ id }: EditFormProps) => {
   const { mutate: userDeleteMutate } = useMutationTargetUserDelete({
     onSuccess: () => {
       addToast({ title: Forms.DeleteSuccess, color: 'success' });
-      response.refetch();
     },
     onError: (error: any) => {
       addToast({ title: Forms.DeleteError, description: error?.data?.message, color: 'danger' });
@@ -252,7 +248,6 @@ export const TargetEditForm = ({ id }: EditFormProps) => {
   const { mutate: addonCreateMutate } = useMutationTargetAddonCreate({
     onSuccess: () => {
       addToast({ title: Forms.SaveSuccess, color: 'success' });
-      response.refetch();
     },
     onError: (error: any) => {
       addToast({ title: Forms.SaveError, description: error?.data?.message, color: 'danger' });
@@ -262,7 +257,6 @@ export const TargetEditForm = ({ id }: EditFormProps) => {
   const { mutate: addonDeleteMutate } = useMutationTargetAddonDelete({
     onSuccess: () => {
       addToast({ title: Forms.DeleteSuccess, color: 'success' });
-      response.refetch();
     },
     onError: (error: any) => {
       addToast({ title: Forms.DeleteError, description: error?.data?.message, color: 'danger' });
@@ -272,7 +266,6 @@ export const TargetEditForm = ({ id }: EditFormProps) => {
   const { mutate: addonResetMutate } = useMutationTargetAddonReset({
     onSuccess: () => {
       addToast({ title: Forms.SaveSuccess, color: 'success' });
-      response.refetch();
     },
     onError: (error: any) => {
       addToast({ title: Forms.SaveError, description: error?.data?.message, color: 'danger' });
