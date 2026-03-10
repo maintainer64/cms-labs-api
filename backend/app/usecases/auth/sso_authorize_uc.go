@@ -14,15 +14,17 @@ import (
 )
 
 type SSOAuthorizeInputDTO struct {
-	UserID       uint   `json:"user_id"`
-	ClientID     string `json:"client_id"`
-	RedirectUri  string `json:"redirect_uri"`
-	ResponseType string `json:"response_type"`
-	Scope        string `json:"scope"`
-	Path         string `json:"path"`
-	Nonce        string `json:"nonce"`
-	State        string `json:"state"`
-	Extra        string `json:"extra"`
+	UserID              uint   `json:"user_id"`
+	ClientID            string `json:"client_id"`
+	RedirectUri         string `json:"redirect_uri"`
+	ResponseType        string `json:"response_type"`
+	Scope               string `json:"scope"`
+	Path                string `json:"path"`
+	Nonce               string `json:"nonce"`
+	State               string `json:"state"`
+	Extra               string `json:"extra"`
+	CodeChallenge       string `json:"code_challenge"`
+	CodeChallengeMethod string `json:"code_challenge_method"`
 }
 
 type SSOAuthorizeRequest struct {
@@ -104,6 +106,12 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 	entityCreate.State = attemptState
 	entityCreate.Nonce = attemptNonce
 	entityCreate.AuthorizationCode = uuid.New().String()
+	if inputDTO.CodeChallenge != "" {
+		entityCreate.CodeChallenge = &inputDTO.CodeChallenge
+	}
+	if inputDTO.CodeChallengeMethod != "" {
+		entityCreate.CodeChallengeMethod = &inputDTO.CodeChallengeMethod
+	}
 	err = u.TokenAttemptQueries.Upsert(entityCreate)
 	if err != nil {
 		return nil, err

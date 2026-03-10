@@ -53,7 +53,7 @@ func (uc *TargetUserDeleteUC) Execute(dto TargetUserDeleteInputDTO) (*TargetUser
 	if err != nil {
 		return nil, err
 	}
-	err = uc.TargetUserRotateAddonsUC.Execute(dto.UserID)
+	err = uc.TargetUserRotateAddonsUC.Execute(dto.UserID, dto.TargetID)
 	if err != nil {
 		return nil, err
 	}

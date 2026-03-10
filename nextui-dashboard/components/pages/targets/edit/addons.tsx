@@ -21,6 +21,7 @@ import {
 import { Database, HardDrive, MoreVertical, RotateCcw, Server, Trash2, XCircle } from 'lucide-react';
 import useLanguageBrowser from '@/helpers/locale';
 import { useQueryUserGet } from '@/helpers/queries/user/use-query-user-get';
+import { useUserProfile } from '@/components/providers/auth-jwt/hooks';
 
 interface ConnectedAddon {
   addonId?: string;
@@ -54,6 +55,7 @@ export const AddonsTab = ({
   const {
     locale: { Target: TargetLocale, Sidebar }
   } = useLanguageBrowser();
+  const user = useUserProfile();
 
   const { isOpen: isDeleteModalOpen, onOpen: onDeleteModalOpen, onClose: onDeleteModalClose } = useDisclosure();
   const { isOpen: isConnectModalOpen, onOpen: onConnectModalOpen, onClose: onConnectModalClose } = useDisclosure();
@@ -70,9 +72,7 @@ export const AddonsTab = ({
   const [revokeModalAddon, setRevokeModalAddon] = useState<ConnectedAddon | null>(null);
 
   const pendingAddon = connectedAddons.find((a) => a.requestDeletedUserId && a.requestDeletedUserId > 0);
-  const pendingUserQuery = pendingAddon?.requestDeletedUserId
-    ? useQueryUserGet({ id: pendingAddon.requestDeletedUserId })
-    : undefined;
+  const pendingUserQuery = useQueryUserGet({ id: pendingAddon?.requestDeletedUserId });
   const pendingUser = pendingUserQuery?.data?.model;
 
   const connectedAddonIds = connectedAddons.map((a) => a.addonId);
@@ -246,7 +246,10 @@ export const AddonsTab = ({
         <div className='grid gap-3'>
           {connectedAddons.map((addon, idx) => {
             const addonInfo = availableAddons.find((a) => a.id === addon.addonId);
-            const isPending = addon.requestDeletedUserId && addon.requestDeletedUserId > 0;
+            const isRequestDeleted = (addon.requestDeletedUserId && addon.requestDeletedUserId > 0) as boolean;
+            const isRequestDeletedYou = (addon.requestDeletedUserId &&
+              addon.requestDeletedUserId > 0 &&
+              addon.requestDeletedUserId?.toString() === user.sub) as boolean;
             const displayName = addonInfo?.name || addon.addonId;
 
             return (
@@ -258,45 +261,45 @@ export const AddonsTab = ({
                       <span className='text-sm text-gray-500'>({addon.type})</span>
                     </div>
                     {getAddonDescription(addon)}
+                    {isRequestDeleted ? (
+                      <span className='text-sm text-gray-500'>{TargetLocale.Addon.DeletePendingMessage}</span>
+                    ) : undefined}
                   </div>
                   <div className='ml-4'>
-                    {isPending ? (
-                      <Button
-                        size='sm'
-                        color='warning'
-                        variant='flat'
-                        onPress={() => handleRevokeRequest(addon)}
-                        startContent={<XCircle className='w-4 h-4' />}
-                      >
-                        {TargetLocale.Addon.RevokeDeleteRequest}
-                      </Button>
-                    ) : (
-                      <Dropdown>
-                        <DropdownTrigger>
-                          <Button isIconOnly size='sm' variant='light'>
-                            <MoreVertical className='w-4 h-4' />
-                          </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label='Addon actions'>
-                          <DropdownItem
-                            key='reset'
-                            onPress={() => handleResetRequest(addon)}
-                            startContent={<RotateCcw className='w-4 h-4' />}
-                          >
-                            {TargetLocale.Addon.Reset}
-                          </DropdownItem>
-                          <DropdownItem
-                            key='delete'
-                            onPress={() => handleDeleteRequest(addon)}
-                            startContent={<Trash2 className='w-4 h-4' />}
-                            className='text-danger'
-                            color='danger'
-                          >
-                            {TargetLocale.Addon.Disconnect}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    )}
+                    <Dropdown>
+                      <DropdownTrigger>
+                        <Button isIconOnly size='sm' variant='light'>
+                          <MoreVertical className='w-4 h-4' />
+                        </Button>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label='Addon actions'>
+                        <DropdownItem
+                          key='reset'
+                          onPress={() => handleResetRequest(addon)}
+                          startContent={<RotateCcw className='w-4 h-4' />}
+                        >
+                          {TargetLocale.Addon.Reset}
+                        </DropdownItem>
+                        <DropdownItem
+                          key='revokeDelete'
+                          isDisabled={!isRequestDeleted}
+                          onPress={() => handleRevokeRequest(addon)}
+                          startContent={<XCircle className='w-4 h-4' />}
+                        >
+                          {TargetLocale.Addon.RevokeDeleteRequest}
+                        </DropdownItem>
+                        <DropdownItem
+                          key='delete'
+                          isDisabled={isRequestDeletedYou}
+                          onPress={() => handleDeleteRequest(addon)}
+                          startContent={<Trash2 className='w-4 h-4' />}
+                          className='text-danger'
+                          color='danger'
+                        >
+                          {TargetLocale.Addon.Disconnect}
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
                   </div>
                 </CardBody>
               </Card>
@@ -366,7 +369,7 @@ export const AddonsTab = ({
           <ModalHeader>{TargetLocale.Addon.DeleteRequest}</ModalHeader>
           <ModalBody className='flex flex-col gap-4'>
             <p className='text-lg font-semibold'>{TargetLocale.Addon.DeleteConfirmWarning}</p>
-            <div className='flex flex-col gap-2 p-4 bg-danger-50 border border-danger-200 rounded-lg'>
+            <div>
               <Checkbox
                 isSelected={confirmSteps.step1}
                 onValueChange={(v) => setConfirmSteps((p) => ({ ...p, step1: v }))}

@@ -93,7 +93,7 @@ func (uc *TargetUserUpsertUC) Execute(dto TargetUserUpsertInputDTO) (*TargetUser
 		return nil, err
 	}
 
-	err = uc.TargetUserRotateAddonsUC.Execute(dto.UserID)
+	err = uc.TargetUserRotateAddonsUC.Execute(dto.UserID, dto.TargetID)
 	if err != nil {
 		return nil, err
 	}

@@ -5,23 +5,35 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/goccy/go-json"
 	"github.com/rs/zerolog"
+	"gitlab.com/a10869/api-modules/backend/app/addons"
 	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/shared/connection"
+	"gitlab.com/a10869/api-modules/shared/k8s_utils"
 )
 
 // TargetUserRotateAddonsUC – перевыпуск и обновление всех прав для пользователя
 type TargetUserRotateAddonsUC struct {
-	TargetUserQueries *queries.TargetUserQueries
-	TargetQueries     *queries.TargetQueries
-	UserQueries       *queries.UserQueries
-	VaultClient       vault.ClientInterface
-	Logger            *zerolog.Logger
+	TargetUserQueries   *queries.TargetUserQueries
+	TargetQueries       *queries.TargetQueries
+	UserQueries         *queries.UserQueries
+	VaultClient         vault.ClientInterface
+	TargetAddonQueries  *queries.TargetAddonQueries
+	FactoryAddonService *addons.FactoryAddonService
+	Logger              *zerolog.Logger
 }
 
-// Execute – удаляет пользователя из цели
-func (uc *TargetUserRotateAddonsUC) Execute(userID uint) error {
+type HarborMembers struct {
+	Username string
+	TargetID string
+	Access   bool
+}
+
+// Execute – Перевыпускает и меняет правила работы с пользователем
+func (uc *TargetUserRotateAddonsUC) Execute(userID uint, currentTargetID string) error {
 	uc.Logger.Error().Msg(fmt.Sprintf(
 		"TargetUserRotateAddonsUC rotate permissions on by users %d",
 		userID,
@@ -33,13 +45,14 @@ func (uc *TargetUserRotateAddonsUC) Execute(userID uint) error {
 		))
 		return err
 	}
-	if err == queries.UserNotFoundError {
+	if errors.Is(err, queries.UserNotFoundError) {
 		uc.Logger.Info().Msg(fmt.Sprintf(
 			"TargetUserRotateAddonsUC get by userId %d user has not found",
 			userID,
 		))
 		return nil
 	}
+	// Для некоторых сервисов нужно bulk роли по одной сущности
 	targetsIds := make([]string, 0)
 	if user.IsActive() {
 		targetsIds, err = uc.TargetUserQueries.GetByUserId(userID)
@@ -61,10 +74,14 @@ func (uc *TargetUserRotateAddonsUC) Execute(userID uint) error {
 		len(targetsIds),
 		userID,
 	))
+	// Обязательно чтобы у пользователя обновилась текущая
+	targetsIds = append(targetsIds, currentTargetID)
 	vaultBind := vault.UsersAndServices{
 		UserEmail: user.Email,
 		Services:  make([]vault.ServicesBindUser, 0),
 	}
+	harborBind := make([]HarborMembers, 0)
+	ctx := context.Background()
 	for _, targetID := range targetsIds {
 		uc.Logger.Info().Msg(fmt.Sprintf(
 			"TargetUserRotateAddonsUC get target %s and userId %d",
@@ -96,9 +113,18 @@ func (uc *TargetUserRotateAddonsUC) Execute(userID uint) error {
 		) {
 			vaultBindServices.Policies = append(vaultBindServices.Policies, vault.Write)
 		}
+		accessHarbor := uc.TargetUserQueries.CheckTargetAndUserByRole(
+			targetID,
+			userID,
+			models.UserRoleHarborAccess,
+		)
 		vaultBind.Services = append(vaultBind.Services, vaultBindServices)
+		harborBind = append(harborBind, HarborMembers{
+			Username: k8s_utils.NormalizeK8SEntityName(k8s_utils.UsernameByEmail(user.Email)),
+			TargetID: targetID,
+			Access:   accessHarbor,
+		})
 	}
-	ctx := context.Background()
 	err = uc.VaultClient.UserBindAccessServices(ctx, []vault.UsersAndServices{vaultBind})
 	if err != nil {
 		uc.Logger.Error().Msg(
@@ -109,6 +135,67 @@ func (uc *TargetUserRotateAddonsUC) Execute(userID uint) error {
 			),
 		)
 		return err
+	}
+	err = uc.HarborMembersUpdate(ctx, harborBind)
+	if err != nil {
+		uc.Logger.Error().Msg(
+			fmt.Sprintf(
+				"TargetUserRotateAddonsUC error with harbor by userId %d %+v",
+				userID,
+				err,
+			),
+		)
+		return err
+	}
+	return nil
+}
+
+// HarborMembersUpdate – обновляет пользователей в harbor
+func (uc *TargetUserRotateAddonsUC) HarborMembersUpdate(ctx context.Context, members []HarborMembers) error {
+	for _, member := range members {
+		uc.Logger.Info().Msg(fmt.Sprintf("HarborMembersUpdate: get target by id %s", member.TargetID))
+		connectedAddons, err := uc.TargetAddonQueries.GetAllByTarget(member.TargetID)
+		if err != nil {
+			uc.Logger.Error().Msg(
+				fmt.Sprintf(
+					"HarborMembersUpdate: not found connected addons target by id %s %+v",
+					member.TargetID,
+					err))
+			return err
+		}
+		for _, connectedAddon := range connectedAddons {
+			if connectedAddon.AddonType != connection.HarborAddon {
+				continue
+			}
+			data, _ := json.Marshal(connectedAddon.Config)
+			var configAddon addons.AddonOperationConfig
+			_ = json.Unmarshal(data, &configAddon)
+			if configAddon.Name == "" {
+				return errors.New("config addon name is empty by target")
+			}
+			uc.Logger.Error().Msg(
+				fmt.Sprintf(
+					"HarborMembersUpdate: found connected harbor type addon on taget id %s",
+					member.TargetID,
+				),
+			)
+			harborConfig := uc.FactoryAddonService.GetAddonConfigByID(connectedAddon.AddonID)
+			harborService := addons.NewHarborMemberService(harborConfig)
+			if member.Access {
+				err = harborService.AddProjectMember(ctx, configAddon.Name, member.Username)
+			} else {
+				err = harborService.RemoveProjectMember(ctx, configAddon.Name, member.Username)
+			}
+			if err != nil {
+				uc.Logger.Error().Msg(fmt.Sprintf(
+					"HarborMembersUpdate: error by change access by project %s, %s, %+v",
+					configAddon.Name,
+					member.Username,
+					err,
+				))
+				return err
+			}
+		}
 	}
 	return nil
 }

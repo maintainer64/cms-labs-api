@@ -110,6 +110,7 @@ func SSOToken(ctx *fiber.Ctx) error {
 	dto.RedirectUri = c.FiberCtx.FormValue("redirect_uri", "")
 	dto.Code = c.FiberCtx.FormValue("code", "")
 	dto.RefreshToken = c.FiberCtx.FormValue("refresh_token", "")
+	dto.CodeVerifier = c.FiberCtx.FormValue("code_verifier", "")
 	container, err := di.NewDIContainer(diLoggerConf)
 	if err != nil {
 		return c.FiberCtx.JSON(auth.SSOError{Error: "invalid_request", ErrorDescription: err.Error()})

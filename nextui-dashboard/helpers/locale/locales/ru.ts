@@ -503,6 +503,10 @@ const ru = {
       {
         key: 'nominal',
         value: 'Номинальный'
+      },
+      {
+        key: 'harbor_access',
+        value: 'Доступ в Harbor'
       }
     ],
     DeletePopup: {

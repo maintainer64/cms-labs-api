@@ -70,10 +70,6 @@ ALTER TABLE `{{.DB_TABLE_PREFIX}}token_attempts`
   ADD COLUMN `target_id` varchar(255) NULL AFTER `server_id`;
 
 -- +migrate Up
-ALTER TABLE `{{.DB_TABLE_PREFIX}}backend_token_attempts`
-  MODIFY `target_id` VARCHAR (255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL;
-
--- +migrate Up
 ALTER TABLE `{{.DB_TABLE_PREFIX}}token_attempts`
   ADD CONSTRAINT `fk_token_attempts_target` FOREIGN KEY (`target_id`) REFERENCES `{{.DB_TABLE_PREFIX}}targets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 

@@ -1,8 +1,11 @@
 package auth
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -17,6 +20,7 @@ type SSOTokenInputDTO struct {
 	RedirectUri  string `json:"redirect_uri"`
 	Code         string `json:"code"`
 	RefreshToken string `json:"refresh_token"`
+	CodeVerifier string `json:"code_verifier"`
 }
 
 const (
@@ -136,7 +140,38 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 	if !server.HasPrefixUrl(inputDTO.RedirectUri) {
 		return nil, errors.New("invalid redirect_uri")
 	}
+	if attempt.CodeChallenge != nil && *attempt.CodeChallenge != "" {
+		codeChallengeMethod := "S256"
+		if attempt.CodeChallengeMethod != nil && *attempt.CodeChallengeMethod != "" {
+			codeChallengeMethod = *attempt.CodeChallengeMethod
+		}
+		if inputDTO.CodeVerifier == "" {
+			return nil, errors.New("code_verifier required")
+		}
+		expectedChallenge, err := computeCodeChallenge(inputDTO.CodeVerifier, codeChallengeMethod)
+		if err != nil {
+			return nil, err
+		}
+		if expectedChallenge != *attempt.CodeChallenge {
+			return nil, errors.New("invalid code_verifier")
+		}
+	}
 	return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
+}
+
+func computeCodeChallenge(verifier string, method string) (string, error) {
+	method = strings.ToUpper(method)
+	switch method {
+	case "S256":
+		hash := sha256.Sum256([]byte(verifier))
+		encoded := base64.URLEncoding.EncodeToString(hash[:])
+		encoded = strings.TrimRight(encoded, "=")
+		return encoded, nil
+	case "PLAIN":
+		return verifier, nil
+	default:
+		return "", errors.New("unsupported code_challenge_method")
+	}
 }
 
 func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken, error) {

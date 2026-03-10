@@ -287,6 +287,236 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 	assert.Greater(t, response.ExpiresIn, int64(0), description)
 }
 
+func TestSSOAuthorizeWithCodeChallenge(t *testing.T) {
+	description := "successful authorization with PKCE code_challenge"
+	f := NewTestHTTP()
+	defer f.Close()
+
+	_, clientID := f.AuthorizationServiceBasic()
+
+	user := models.User{}
+	user.Email = "test" + uuid.New().String() + "@example.com"
+	user.Name = "Name " + uuid.New().String()
+	f.DB.Create(&user)
+	authHeader := f.AuthorizationUser(user.ID, nil)
+
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
+
+	codeChallenge := "dFYxeuLgr2mq8IeJT4C1WqoAH9A7s9e3QzZ9LqK5rXw"
+	codeChallengeMethod := "S256"
+
+	input := auth.SSOAuthorizeInputDTO{
+		ClientID:            clientID,
+		RedirectUri:         "https://localhost/callback",
+		ResponseType:        "code",
+		Scope:               "openid",
+		UserID:              user.ID,
+		CodeChallenge:       codeChallenge,
+		CodeChallengeMethod: codeChallengeMethod,
+	}
+
+	expectedCode := 200
+	statusCode, body := f.Rpc(&TestRpcRequest{
+		Method:        "sso.authorize",
+		Params:        input,
+		Authorization: authHeader,
+	})
+
+	response := auth.SSOAuthorizeResponse{}
+	_ = json.Unmarshal([]byte(body), &response)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.NotEmpty(t, response.Result.Code, description)
+
+	var attempt models.TokenAttempt
+	f.DB.Where("authorization_code = ?", response.Result.Code).First(&attempt)
+	assert.Equal(t, codeChallenge, *attempt.CodeChallenge, description)
+	assert.Equal(t, codeChallengeMethod, *attempt.CodeChallengeMethod, description)
+}
+
+func TestSSOTokenByAuthCodeWithPKCE(t *testing.T) {
+	description := "get tokens by authorization code with valid PKCE code_verifier"
+	f := NewTestHTTP()
+	defer f.Close()
+
+	authHeaderServer, clientID := f.AuthorizationServiceBasic()
+	server := models.PNETServer{}
+	f.DB.Where("client_id = ?", clientID).Find(&server)
+
+	user := models.User{}
+	user.Email = "test" + uuid.New().String() + "@example.com"
+	user.Name = "Name " + uuid.New().String()
+	f.DB.Create(&user)
+
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
+
+	codeVerifier := "dFYxeuLgr2mq8IeJT4C1WqoAH9A7s9e3QzZ9LqK5rXw"
+	codeChallenge := "JxTX7oXvq0V2O2kKCFOw3NCuEAxCxhYH7Pxr0ZZEd0U"
+	codeChallengeMethod := "S256"
+
+	attempt := models.TokenAttempt{}
+	attempt.UserID = &user.ID
+	attempt.ServerID = &server.ID
+	attempt.State = uuid.New().String()
+	attempt.AuthorizationCode = uuid.New().String()
+	attempt.CodeChallenge = &codeChallenge
+	attempt.CodeChallengeMethod = &codeChallengeMethod
+	f.DB.Create(&attempt)
+
+	input := map[string]string{
+		"grant_type":    "authorization_code",
+		"code":          attempt.AuthorizationCode,
+		"redirect_uri":  server.Url + "/callback",
+		"code_verifier": codeVerifier,
+	}
+
+	expectedCode := 200
+	statusCode, body := f.Request(&TestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/sso/token",
+		Body:          FiberRequestFormPayload(input),
+		Authorization: authHeaderServer,
+		ContentType:   "application/x-www-form-urlencoded",
+	})
+
+	response := auth.SwaggerSSOToken{}
+	_ = json.Unmarshal([]byte(body), &response)
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.NotEmpty(t, response.AccessToken, description)
+}
+
+func TestSSOTokenByAuthCodeWithInvalidPKCE(t *testing.T) {
+	description := "get tokens by authorization code with invalid PKCE code_verifier"
+	f := NewTestHTTP()
+	defer f.Close()
+
+	authHeaderServer, clientID := f.AuthorizationServiceBasic()
+	server := models.PNETServer{}
+	f.DB.Where("client_id = ?", clientID).Find(&server)
+
+	user := models.User{}
+	user.Email = "test" + uuid.New().String() + "@example.com"
+	user.Name = "Name " + uuid.New().String()
+	f.DB.Create(&user)
+
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
+
+	codeChallenge := "JxTX7oXvq0V2O2kKCFOw3NCuEAxCxhYH7Pxr0ZZEd0U"
+	codeChallengeMethod := "S256"
+
+	attempt := models.TokenAttempt{}
+	attempt.UserID = &user.ID
+	attempt.ServerID = &server.ID
+	attempt.State = uuid.New().String()
+	attempt.AuthorizationCode = uuid.New().String()
+	attempt.CodeChallenge = &codeChallenge
+	attempt.CodeChallengeMethod = &codeChallengeMethod
+	f.DB.Create(&attempt)
+
+	input := map[string]string{
+		"grant_type":    "authorization_code",
+		"code":          attempt.AuthorizationCode,
+		"redirect_uri":  server.Url + "/callback",
+		"code_verifier": "invalid_code_verifier",
+	}
+
+	expectedCode := 200
+	statusCode, body := f.Request(&TestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/sso/token",
+		Body:          FiberRequestFormPayload(input),
+		Authorization: authHeaderServer,
+		ContentType:   "application/x-www-form-urlencoded",
+	})
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.Contains(t, body, "invalid code_verifier", description)
+}
+
+func TestSSOTokenByAuthCodeWithMissingCodeVerifier(t *testing.T) {
+	description := "get tokens by authorization code with missing code_verifier when code_challenge exists"
+	f := NewTestHTTP()
+	defer f.Close()
+
+	authHeaderServer, clientID := f.AuthorizationServiceBasic()
+	server := models.PNETServer{}
+	f.DB.Where("client_id = ?", clientID).Find(&server)
+
+	user := models.User{}
+	user.Email = "test" + uuid.New().String() + "@example.com"
+	user.Name = "Name " + uuid.New().String()
+	f.DB.Create(&user)
+
+	role := models.Role{}
+	role.Code = "student" + uuid.New().String()
+	role.Name = "Student"
+	f.DB.Create(&role)
+
+	roleUser := models.RoleRelation{}
+	roleUser.RoleID = role.ID
+	roleUser.UserID = &user.ID
+
+	f.DB.Create(&roleUser)
+
+	codeChallenge := "JxTX7oXvq0V2O2kKCFOw3NCuEAxCxhYH7Pxr0ZZEd0U"
+	codeChallengeMethod := "S256"
+
+	attempt := models.TokenAttempt{}
+	attempt.UserID = &user.ID
+	attempt.ServerID = &server.ID
+	attempt.State = uuid.New().String()
+	attempt.AuthorizationCode = uuid.New().String()
+	attempt.CodeChallenge = &codeChallenge
+	attempt.CodeChallengeMethod = &codeChallengeMethod
+	f.DB.Create(&attempt)
+
+	input := map[string]string{
+		"grant_type":   "authorization_code",
+		"code":         attempt.AuthorizationCode,
+		"redirect_uri": server.Url + "/callback",
+	}
+
+	expectedCode := 200
+	statusCode, body := f.Request(&TestHttpRequest{
+		Method:        "POST",
+		Route:         "/api/v1/sso/token",
+		Body:          FiberRequestFormPayload(input),
+		Authorization: authHeaderServer,
+		ContentType:   "application/x-www-form-urlencoded",
+	})
+
+	assert.Equal(t, expectedCode, statusCode, description)
+	assert.Contains(t, body, "code_verifier required", description)
+}
+
 func TestSSOIntrospectValidToken(t *testing.T) {
 	description := "introspect valid access token"
 	f := NewTestHTTP()
