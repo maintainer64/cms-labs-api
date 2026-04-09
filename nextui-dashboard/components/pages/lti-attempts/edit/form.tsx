@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { addToast, Button, Input } from '@heroui/react';
+import { addToast, Button, Input, Select, SelectItem } from '@heroui/react';
 import { Formik } from 'formik';
 import { ModelsLTIAttempt } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
@@ -24,12 +24,13 @@ interface EditFormProps {
 const defaultValues: CamelCasedPropertiesDeep<ModelsLTIAttempt> = {
   attemptId: '',
   createdAt: '',
-  expiredAt: '',
   ltiRoutingId: 0,
   pnetServerId: 0,
   roomId: 0,
   userId: 0,
-  updatedAt: ''
+  updatedAt: '',
+  status: '',
+  result: undefined
 };
 
 export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
@@ -88,9 +89,10 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
       validationSchema={undefined}
       onSubmit={(values, formikHelpers) => {
         mutate({
-          expiredAt: dayjs(values.expiredAt).format(),
           id: values.id,
-          pnetServerId: parseInt(values.pnetServerId?.toString() || '')
+          pnetServerId: parseInt(values.pnetServerId?.toString() || ''),
+          status: values.status,
+          result: values.result
         });
       }}
     >
@@ -110,13 +112,17 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
               value={(values.pnetServerId ?? '').toString()}
               onChange={handleChange('pnetServerId')}
             />
-            <Input
+            <Select
               variant='bordered'
-              label={AuthProviderAttempt.FieldExpiredAt}
-              type='datetime-local'
-              value={dayjs(values.expiredAt ?? '').format('YYYY-MM-DDTHH:mm')}
-              onChange={handleChange('expiredAt')}
-            />
+              label={AuthProviderAttempt.FieldStatus}
+              selectedKeys={[values.status || '']}
+              onChange={handleChange('status')}
+            >
+              <SelectItem key='pending'>pending</SelectItem>
+              <SelectItem key='active'>active</SelectItem>
+              <SelectItem key='completed'>completed</SelectItem>
+              <SelectItem key='failed'>failed</SelectItem>
+            </Select>
             {initialValues.roomId && (
               <Input
                 variant='bordered'

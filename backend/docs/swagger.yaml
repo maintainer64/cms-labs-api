@@ -69,6 +69,10 @@ definitions:
     properties:
       client_id:
         type: string
+      code_challenge:
+        type: string
+      code_challenge_method:
+        type: string
       extra:
         type: string
       nonce:
@@ -301,66 +305,6 @@ definitions:
       result:
         $ref: '#/definitions/auth.UserPasswordChangeOutputDTO'
     type: object
-  external.AttemptDTO:
-    properties:
-      attempt_id:
-        type: string
-      user_email:
-        type: string
-      user_id:
-        type: integer
-    required:
-    - attempt_id
-    type: object
-  external.CurlRequestExecuteInputDTO:
-    properties:
-      curl_request_id:
-        type: integer
-      override:
-        additionalProperties:
-          type: string
-        type: object
-    required:
-    - curl_request_id
-    type: object
-  external.PNETServerPingInputDTO:
-    properties:
-      attempts:
-        items:
-          $ref: '#/definitions/external.AttemptDTO'
-        type: array
-    type: object
-  external.PNETServerPingOutputDTO:
-    properties:
-      count:
-        type: integer
-    type: object
-  external.PNETServerPingRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: server.ping
-        type: string
-      params:
-        $ref: '#/definitions/external.PNETServerPingInputDTO'
-    type: object
-  external.PNETServerPingResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/external.PNETServerPingOutputDTO'
-    type: object
   lti_query.AuthProviderListInputDTO:
     properties:
       is_auth:
@@ -431,57 +375,11 @@ definitions:
     - type
     - updated_at
     type: object
-  models.CurlRequest:
-    properties:
-      body:
-        type: string
-      created_at:
-        type: string
-      headers:
-        additionalProperties:
-          type: string
-        type: object
-      id:
-        type: integer
-      method:
-        type: string
-      name:
-        type: string
-      raw:
-        type: string
-      timeout:
-        type: integer
-      updated_at:
-        type: string
-      url:
-        type: string
-    required:
-    - created_at
-    - updated_at
-    type: object
-  models.CurlRequestListItem:
-    properties:
-      created_at:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updated_at:
-        type: string
-      url:
-        type: string
-    required:
-    - created_at
-    - updated_at
-    type: object
   models.LTIAttempt:
     properties:
       attempt_id:
         type: string
       created_at:
-        type: string
-      expired_at:
         type: string
       id:
         type: integer
@@ -489,8 +387,12 @@ definitions:
         type: integer
       pnet_server_id:
         type: integer
+      result:
+        type: object
       room_id:
         type: integer
+      status:
+        type: string
       updated_at:
         type: string
       user_id:
@@ -498,7 +400,7 @@ definitions:
     required:
     - attempt_id
     - created_at
-    - expired_at
+    - status
     - updated_at
     type: object
   models.LTIAttemptListItem:
@@ -506,8 +408,6 @@ definitions:
       attempt_id:
         type: string
       created_at:
-        type: string
-      expired_at:
         type: string
       id:
         type: integer
@@ -518,6 +418,10 @@ definitions:
       pnet_server_id:
         type: integer
       pnet_server_name:
+        type: string
+      result:
+        type: object
+      status:
         type: string
       updated_at:
         type: string
@@ -530,7 +434,7 @@ definitions:
     required:
     - attempt_id
     - created_at
-    - expired_at
+    - status
     - updated_at
     type: object
   models.LTIRouting:
@@ -847,18 +751,28 @@ definitions:
     - group_name
     - updated_at
     type: object
-  queries.CurlRequestQueriesListDTO:
+  queries.LTIAttemptSearchParams:
     properties:
-      ids:
+      attempt_ids:
         items:
-          type: integer
+          type: string
         type: array
       limit:
         type: integer
       offset:
         type: integer
-      search:
-        type: string
+      server_client_ids:
+        items:
+          type: string
+        type: array
+      statuses:
+        items:
+          type: string
+        type: array
+      user_ids:
+        items:
+          type: integer
+        type: array
     type: object
   queries.PNETServerQueriesListDTO:
     properties:
@@ -1203,196 +1117,6 @@ definitions:
       type:
         type: string
     type: object
-  usecases.CurlRequestDeleteInputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.CurlRequestDeleteRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: curl_request.delete
-        type: string
-      params:
-        $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
-    required:
-    - id
-    - jsonrpc
-    - method
-    type: object
-  usecases.CurlRequestDeleteResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.CurlRequestDeleteInputDTO'
-    required:
-    - id
-    - jsonrpc
-    type: object
-  usecases.CurlRequestEditInputDTO:
-    properties:
-      body:
-        type: string
-      headers:
-        additionalProperties:
-          type: string
-        type: object
-      id:
-        type: integer
-      method:
-        type: string
-      name:
-        type: string
-      raw_request:
-        type: string
-      timeout:
-        type: integer
-      url:
-        type: string
-    required:
-    - headers
-    - method
-    - name
-    - url
-    type: object
-  usecases.CurlRequestEditOutputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.CurlRequestEditRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: curl_request.upsert
-        type: string
-      params:
-        $ref: '#/definitions/usecases.CurlRequestEditInputDTO'
-    required:
-    - id
-    - jsonrpc
-    - method
-    type: object
-  usecases.CurlRequestEditResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.CurlRequestEditOutputDTO'
-    required:
-    - id
-    - jsonrpc
-    type: object
-  usecases.CurlRequestGetInputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.CurlRequestGetOutputDTO:
-    properties:
-      model:
-        $ref: '#/definitions/models.CurlRequest'
-    type: object
-  usecases.CurlRequestGetRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: curl_request.get
-        type: string
-      params:
-        $ref: '#/definitions/usecases.CurlRequestGetInputDTO'
-    required:
-    - id
-    - jsonrpc
-    - method
-    type: object
-  usecases.CurlRequestGetResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.CurlRequestGetOutputDTO'
-    required:
-    - id
-    - jsonrpc
-    type: object
-  usecases.CurlRequestListOutputDTO:
-    properties:
-      model:
-        items:
-          $ref: '#/definitions/models.CurlRequestListItem'
-        type: array
-      total_count:
-        type: integer
-    required:
-    - model
-    - total_count
-    type: object
-  usecases.CurlRequestListRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: curl_request.list
-        type: string
-      params:
-        $ref: '#/definitions/queries.CurlRequestQueriesListDTO'
-    required:
-    - id
-    - jsonrpc
-    - method
-    type: object
-  usecases.CurlRequestListResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.CurlRequestListOutputDTO'
-    required:
-    - id
-    - jsonrpc
-    type: object
   usecases.LTIAttemptCreateInputDTO:
     properties:
       room_number:
@@ -1484,16 +1208,74 @@ definitions:
     - id
     - jsonrpc
     type: object
+  usecases.LTIAttemptEditBulkInput:
+    properties:
+      attempt_id:
+        type: string
+      result:
+        type: object
+      status:
+        type: string
+    required:
+    - attempt_id
+    type: object
+  usecases.LTIAttemptEditBulkInputDTO:
+    properties:
+      models:
+        items:
+          $ref: '#/definitions/usecases.LTIAttemptEditBulkInput'
+        type: array
+    type: object
+  usecases.LTIAttemptEditBulkOutputDTO:
+    properties:
+      count:
+        type: integer
+    type: object
+  usecases.LTIAttemptEditBulkRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: lti_attempt.update
+        type: string
+      params:
+        $ref: '#/definitions/usecases.LTIAttemptEditBulkInputDTO'
+    required:
+    - id
+    - jsonrpc
+    - method
+    type: object
+  usecases.LTIAttemptEditBulkResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.LTIAttemptEditBulkOutputDTO'
+    required:
+    - id
+    - jsonrpc
+    type: object
   usecases.LTIAttemptEditInputDTO:
     properties:
-      expired_at:
-        type: string
       id:
         type: integer
       pnet_server_id:
         type: integer
+      result:
+        type: object
+      status:
+        type: string
     required:
-    - expired_at
+    - status
     type: object
   usecases.LTIAttemptEditOutputDTO:
     properties:
@@ -1576,17 +1358,6 @@ definitions:
     - id
     - jsonrpc
     type: object
-  usecases.LTIAttemptListInputDTO:
-    properties:
-      limit:
-        type: integer
-      offset:
-        type: integer
-      user_ids:
-        items:
-          type: integer
-        type: array
-    type: object
   usecases.LTIAttemptListOutputDTO:
     properties:
       model:
@@ -1608,7 +1379,7 @@ definitions:
         default: lti_attempt.list
         type: string
       params:
-        $ref: '#/definitions/usecases.LTIAttemptListInputDTO'
+        $ref: '#/definitions/queries.LTIAttemptSearchParams'
     required:
     - id
     - jsonrpc
@@ -1856,6 +1627,8 @@ definitions:
         items:
           type: integer
         type: array
+      token:
+        type: string
       type:
         type: string
       unit_rate:
@@ -2889,32 +2662,6 @@ info:
   title: API
   version: "1.0"
 paths:
-  /api/v1/curl-request/execute:
-    post:
-      consumes:
-      - application/json
-      description: execute request.
-      parameters:
-      - description: pnet_server id
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/external.CurlRequestExecuteInputDTO'
-      - description: Basic-токен, созданный клиентом
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      summary: execute request
-      tags:
-      - curl_request
-      - EXTERNAL
   /api/v1/rpc/auth_provider.delete:
     post:
       consumes:
@@ -3009,102 +2756,6 @@ paths:
       summary: create lti_form
       tags:
       - lti_form
-  /api/v1/rpc/curl_request.delete:
-    post:
-      consumes:
-      - application/json
-      description: 'Delete pnet_server. Roles: [admin]'
-      parameters:
-      - description: curl_request_id
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.CurlRequestDeleteRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.CurlRequestDeleteResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: delete curl_request
-      tags:
-      - curl_request
-  /api/v1/rpc/curl_request.get:
-    post:
-      consumes:
-      - application/json
-      description: 'get curl_request. Roles: [admin]'
-      parameters:
-      - description: pnet_server id
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.CurlRequestGetRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.CurlRequestGetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: get curl_request
-      tags:
-      - curl_request
-  /api/v1/rpc/curl_request.list:
-    post:
-      consumes:
-      - application/json
-      description: 'List pnet_server. Roles: [admin, instructor]'
-      parameters:
-      - description: pnet_server list info
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.CurlRequestListRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.CurlRequestListResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: list pnet_server
-      tags:
-      - curl_request
-  /api/v1/rpc/curl_request.upsert:
-    post:
-      consumes:
-      - application/json
-      description: Create curl_request. Roles [admin]
-      parameters:
-      - description: curl_request form info
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.CurlRequestEditRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.CurlRequestEditResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: create curl_request
-      tags:
-      - curl_request
   /api/v1/rpc/lti_attempt.create:
     post:
       consumes:
@@ -3201,6 +2852,31 @@ paths:
       summary: list lti_attempt
       tags:
       - lti_attempt
+  /api/v1/rpc/lti_attempt.list_external:
+    post:
+      consumes:
+      - application/json
+      description: List lti_attempt. Only external servers
+      parameters:
+      - description: lti_attempt list info
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptListResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: list lti_attempt
+      tags:
+      - lti_attempt
+      - EXTERNAL
   /api/v1/rpc/lti_attempt.update:
     post:
       consumes:
@@ -3225,6 +2901,34 @@ paths:
       summary: edit lti_attempt
       tags:
       - lti_attempt
+  /api/v1/rpc/lti_attempt.update_external:
+    post:
+      consumes:
+      - application/json
+      description: attempt update from external servers.
+      parameters:
+      - description: attempts
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.LTIAttemptEditBulkRequest'
+      - description: Basic-токен, созданный клиентом
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.LTIAttemptEditBulkResponse'
+      summary: attempt update from external servers
+      tags:
+      - lti_attempt
+      - EXTERNAL
   /api/v1/rpc/lti_routing.delete:
     post:
       consumes:
@@ -3463,34 +3167,6 @@ paths:
       summary: list pnet_server
       tags:
       - server
-  /api/v1/rpc/server.ping:
-    post:
-      consumes:
-      - application/json
-      description: ing from external servers.
-      parameters:
-      - description: pnet_server id
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/external.PNETServerPingRequest'
-      - description: Basic-токен, созданный клиентом
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/external.PNETServerPingResponse'
-      summary: ping from pnet_server
-      tags:
-      - server
-      - EXTERNAL
   /api/v1/rpc/server.upsert:
     post:
       consumes:

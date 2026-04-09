@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"time"
 
 	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 
@@ -102,7 +101,6 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		attempt.PNETServerID = otherAttempt.PNETServerID
 		attempt.RoomID = otherAttempt.RoomID
 		attempt.LTIRoutingID = otherAttempt.LTIRoutingID
-		attempt.ExtendExpiredAt(1)
 		if err := u.LTIAttemptQueries.Upsert(&attempt); err != nil {
 			return LTIAttemptCreateOutputDTO{}, err
 		}
@@ -115,7 +113,6 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 				u.user.Email,
 			),
 		)
-		attempt.ExtendExpiredAt(1)
 		if err := u.LTIAttemptQueries.Upsert(&attempt); err != nil {
 			return LTIAttemptCreateOutputDTO{}, err
 		}
@@ -138,12 +135,6 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 			return LTIAttemptCreateOutputDTO{}, jsonrpc.NewRpcError("not_found_room", "not created room")
 		}
 		attempt.RoomID = &roomEntity.ID
-	}
-	// Set ExpiredAt
-	if route.PinnedSessionMinutes > 1 {
-		attempt.ExpiredAt = time.Now().UTC().Add(time.Duration(route.PinnedSessionMinutes) * time.Minute)
-	} else {
-		attempt.ExpiredAt = time.Now().UTC().Add(time.Duration(1) * time.Hour)
 	}
 	if err := u.LTIAttemptQueries.Upsert(&attempt); err != nil {
 		return LTIAttemptCreateOutputDTO{}, err

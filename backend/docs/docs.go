@@ -23,45 +23,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/curl-request/execute": {
-            "post": {
-                "description": "execute request.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "curl_request",
-                    "EXTERNAL"
-                ],
-                "summary": "execute request",
-                "parameters": [
-                    {
-                        "description": "pnet_server id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/external.CurlRequestExecuteInputDTO"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Basic-токен, созданный клиентом",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
         "/api/v1/rpc/auth_provider.delete": {
             "post": {
                 "security": [
@@ -208,162 +169,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/usecases.AuthProviderEditResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/curl_request.delete": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete pnet_server. Roles: [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "curl_request"
-                ],
-                "summary": "delete curl_request",
-                "parameters": [
-                    {
-                        "description": "curl_request_id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestDeleteRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestDeleteResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/curl_request.get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get curl_request. Roles: [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "curl_request"
-                ],
-                "summary": "get curl_request",
-                "parameters": [
-                    {
-                        "description": "pnet_server id",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestGetRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/curl_request.list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List pnet_server. Roles: [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "curl_request"
-                ],
-                "summary": "list pnet_server",
-                "parameters": [
-                    {
-                        "description": "pnet_server list info",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestListRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/curl_request.upsert": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create curl_request. Roles [admin]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "curl_request"
-                ],
-                "summary": "create curl_request",
-                "parameters": [
-                    {
-                        "description": "curl_request form info",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestEditRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.CurlRequestEditResponse"
                         }
                     }
                 }
@@ -525,6 +330,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/rpc/lti_attempt.list_external": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List lti_attempt. Only external servers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_attempt",
+                    "EXTERNAL"
+                ],
+                "summary": "list lti_attempt",
+                "parameters": [
+                    {
+                        "description": "lti_attempt list info",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptListResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/rpc/lti_attempt.update": {
             "post": {
                 "security": [
@@ -559,6 +404,48 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/usecases.LTIAttemptEditResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rpc/lti_attempt.update_external": {
+            "post": {
+                "description": "attempt update from external servers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lti_attempt",
+                    "EXTERNAL"
+                ],
+                "summary": "attempt update from external servers",
+                "parameters": [
+                    {
+                        "description": "attempts",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptEditBulkRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.LTIAttemptEditBulkResponse"
                         }
                     }
                 }
@@ -944,48 +831,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/usecases.PNETServerListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/rpc/server.ping": {
-            "post": {
-                "description": "ing from external servers.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "server",
-                    "EXTERNAL"
-                ],
-                "summary": "ping from pnet_server",
-                "parameters": [
-                    {
-                        "description": "pnet_server id",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/external.PNETServerPingRequest"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Basic-токен, созданный клиентом",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/external.PNETServerPingResponse"
                         }
                     }
                 }
@@ -2556,6 +2401,12 @@ const docTemplate = `{
                 "client_id": {
                     "type": "string"
                 },
+                "code_challenge": {
+                    "type": "string"
+                },
+                "code_challenge_method": {
+                    "type": "string"
+                },
                 "extra": {
                     "type": "string"
                 },
@@ -2889,96 +2740,6 @@ const docTemplate = `{
                 }
             }
         },
-        "external.AttemptDTO": {
-            "type": "object",
-            "required": [
-                "attempt_id"
-            ],
-            "properties": {
-                "attempt_id": {
-                    "type": "string"
-                },
-                "user_email": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "external.CurlRequestExecuteInputDTO": {
-            "type": "object",
-            "required": [
-                "curl_request_id"
-            ],
-            "properties": {
-                "curl_request_id": {
-                    "type": "integer"
-                },
-                "override": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "external.PNETServerPingInputDTO": {
-            "type": "object",
-            "properties": {
-                "attempts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/external.AttemptDTO"
-                    }
-                }
-            }
-        },
-        "external.PNETServerPingOutputDTO": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "external.PNETServerPingRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "server.ping"
-                },
-                "params": {
-                    "$ref": "#/definitions/external.PNETServerPingInputDTO"
-                }
-            }
-        },
-        "external.PNETServerPingResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/external.PNETServerPingOutputDTO"
-                }
-            }
-        },
         "lti_query.AuthProviderListInputDTO": {
             "type": "object",
             "properties": {
@@ -3082,78 +2843,12 @@ const docTemplate = `{
                 }
             }
         },
-        "models.CurlRequest": {
-            "type": "object",
-            "required": [
-                "created_at",
-                "updated_at"
-            ],
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "headers": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "method": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "raw": {
-                    "type": "string"
-                },
-                "timeout": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.CurlRequestListItem": {
-            "type": "object",
-            "required": [
-                "created_at",
-                "updated_at"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
         "models.LTIAttempt": {
             "type": "object",
             "required": [
                 "attempt_id",
                 "created_at",
-                "expired_at",
+                "status",
                 "updated_at"
             ],
             "properties": {
@@ -3161,9 +2856,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "created_at": {
-                    "type": "string"
-                },
-                "expired_at": {
                     "type": "string"
                 },
                 "id": {
@@ -3175,8 +2867,14 @@ const docTemplate = `{
                 "pnet_server_id": {
                     "type": "integer"
                 },
+                "result": {
+                    "type": "object"
+                },
                 "room_id": {
                     "type": "integer"
+                },
+                "status": {
+                    "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
@@ -3191,7 +2889,7 @@ const docTemplate = `{
             "required": [
                 "attempt_id",
                 "created_at",
-                "expired_at",
+                "status",
                 "updated_at"
             ],
             "properties": {
@@ -3199,9 +2897,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "created_at": {
-                    "type": "string"
-                },
-                "expired_at": {
                     "type": "string"
                 },
                 "id": {
@@ -3217,6 +2912,12 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "pnet_server_name": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "object"
+                },
+                "status": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -3691,13 +3392,13 @@ const docTemplate = `{
                 }
             }
         },
-        "queries.CurlRequestQueriesListDTO": {
+        "queries.LTIAttemptSearchParams": {
             "type": "object",
             "properties": {
-                "ids": {
+                "attempt_ids": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "type": "string"
                     }
                 },
                 "limit": {
@@ -3706,8 +3407,23 @@ const docTemplate = `{
                 "offset": {
                     "type": "integer"
                 },
-                "search": {
-                    "type": "string"
+                "server_client_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "statuses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "user_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -4203,278 +3919,6 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.CurlRequestDeleteInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.CurlRequestDeleteRequest": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc",
-                "method"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "curl_request.delete"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.CurlRequestDeleteResponse": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc"
-            ],
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.CurlRequestDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.CurlRequestEditInputDTO": {
-            "type": "object",
-            "required": [
-                "headers",
-                "method",
-                "name",
-                "url"
-            ],
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "headers": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "method": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "raw_request": {
-                    "type": "string"
-                },
-                "timeout": {
-                    "type": "integer"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.CurlRequestEditOutputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.CurlRequestEditRequest": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc",
-                "method"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "curl_request.upsert"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.CurlRequestEditInputDTO"
-                }
-            }
-        },
-        "usecases.CurlRequestEditResponse": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc"
-            ],
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.CurlRequestEditOutputDTO"
-                }
-            }
-        },
-        "usecases.CurlRequestGetInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.CurlRequestGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "model": {
-                    "$ref": "#/definitions/models.CurlRequest"
-                }
-            }
-        },
-        "usecases.CurlRequestGetRequest": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc",
-                "method"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "curl_request.get"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.CurlRequestGetInputDTO"
-                }
-            }
-        },
-        "usecases.CurlRequestGetResponse": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc"
-            ],
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.CurlRequestGetOutputDTO"
-                }
-            }
-        },
-        "usecases.CurlRequestListOutputDTO": {
-            "type": "object",
-            "required": [
-                "model",
-                "total_count"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.CurlRequestListItem"
-                    }
-                },
-                "total_count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.CurlRequestListRequest": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc",
-                "method"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "curl_request.list"
-                },
-                "params": {
-                    "$ref": "#/definitions/queries.CurlRequestQueriesListDTO"
-                }
-            }
-        },
-        "usecases.CurlRequestListResponse": {
-            "type": "object",
-            "required": [
-                "id",
-                "jsonrpc"
-            ],
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.CurlRequestListOutputDTO"
-                }
-            }
-        },
         "usecases.LTIAttemptCreateInputDTO": {
             "type": "object",
             "properties": {
@@ -4606,20 +4050,105 @@ const docTemplate = `{
                 }
             }
         },
+        "usecases.LTIAttemptEditBulkInput": {
+            "type": "object",
+            "required": [
+                "attempt_id"
+            ],
+            "properties": {
+                "attempt_id": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "object"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.LTIAttemptEditBulkInputDTO": {
+            "type": "object",
+            "properties": {
+                "models": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.LTIAttemptEditBulkInput"
+                    }
+                }
+            }
+        },
+        "usecases.LTIAttemptEditBulkOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.LTIAttemptEditBulkRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc",
+                "method"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "lti_attempt.update"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.LTIAttemptEditBulkInputDTO"
+                }
+            }
+        },
+        "usecases.LTIAttemptEditBulkResponse": {
+            "type": "object",
+            "required": [
+                "id",
+                "jsonrpc"
+            ],
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.LTIAttemptEditBulkOutputDTO"
+                }
+            }
+        },
         "usecases.LTIAttemptEditInputDTO": {
             "type": "object",
             "required": [
-                "expired_at"
+                "status"
             ],
             "properties": {
-                "expired_at": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
                 "pnet_server_id": {
                     "type": "integer"
+                },
+                "result": {
+                    "type": "object"
+                },
+                "status": {
+                    "type": "string"
                 }
             }
         },
@@ -4739,23 +4268,6 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.LTIAttemptListInputDTO": {
-            "type": "object",
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "user_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
         "usecases.LTIAttemptListOutputDTO": {
             "type": "object",
             "required": [
@@ -4791,7 +4303,7 @@ const docTemplate = `{
                     "default": "lti_attempt.list"
                 },
                 "params": {
-                    "$ref": "#/definitions/usecases.LTIAttemptListInputDTO"
+                    "$ref": "#/definitions/queries.LTIAttemptSearchParams"
                 }
             }
         },
@@ -5154,6 +4666,9 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
+                },
+                "token": {
+                    "type": "string"
                 },
                 "type": {
                     "type": "string"

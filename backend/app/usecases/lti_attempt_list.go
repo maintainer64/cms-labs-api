@@ -9,17 +9,11 @@ type LTIAttemptListUC struct {
 	LTIAttemptQueries *queries.LTIAttemptQueries
 }
 
-type LTIAttemptListInputDTO struct {
-	UserIds []uint `json:"user_ids"`
-	Limit   int    `json:"limit"`
-	Offset  int    `json:"offset"`
-}
-
 type LTIAttemptListRequest struct {
-	JSONRPC string                 `json:"jsonrpc" default:"2.0" validate:"required"`
-	Method  string                 `json:"method" default:"lti_attempt.list" validate:"required"`
-	Params  LTIAttemptListInputDTO `json:"params,omitempty"`
-	ID      string                 `json:"id,omitempty" default:"1" validate:"required"`
+	JSONRPC string                         `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string                         `json:"method" default:"lti_attempt.list" validate:"required"`
+	Params  queries.LTIAttemptSearchParams `json:"params,omitempty"`
+	ID      string                         `json:"id,omitempty" default:"1" validate:"required"`
 }
 
 type LTIAttemptListOutputDTO struct {
@@ -33,8 +27,8 @@ type LTIAttemptListResponse struct {
 	ID      string                  `json:"id,omitempty" default:"1" validate:"required"`
 }
 
-func (u *LTIAttemptListUC) Execute(dto LTIAttemptListInputDTO) (LTIAttemptListOutputDTO, error) {
-	entities, err := u.LTIAttemptQueries.List(dto.UserIds, dto.Limit, dto.Offset)
+func (u *LTIAttemptListUC) Execute(dto queries.LTIAttemptSearchParams) (LTIAttemptListOutputDTO, error) {
+	entities, err := u.LTIAttemptQueries.List(&dto)
 	return LTIAttemptListOutputDTO{
 		Model: entities,
 	}, err

@@ -1,9 +1,9 @@
 package usecases
 
 import (
-	"time"
-
+	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gorm.io/datatypes"
 )
 
 type LTIAttemptEditUC struct {
@@ -11,9 +11,10 @@ type LTIAttemptEditUC struct {
 }
 
 type LTIAttemptEditInputDTO struct {
-	ID           uint      `json:"id"`
-	PNETServerID uint      `json:"pnet_server_id"`
-	ExpiredAt    time.Time `json:"expired_at" validate:"required"`
+	ID           uint                                         `json:"id"`
+	PNETServerID uint                                         `json:"pnet_server_id"`
+	Status       string                                       `json:"status" validate:"required"`
+	Result       *datatypes.JSONType[models.LTIAttemptResult] `json:"result" swaggertype:"object"`
 }
 
 type LTIAttemptEditRequest struct {
@@ -41,7 +42,8 @@ func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOu
 	}
 	entity.ID = dto.ID
 	entity.PNETServerID = &dto.PNETServerID
-	entity.ExpiredAt = dto.ExpiredAt
+	entity.Status = dto.Status
+	entity.Result = dto.Result
 	err = u.LTIAttemptQueries.Upsert(&entity)
 	return LTIAttemptEditOutputDTO{ID: entity.ID}, err
 }

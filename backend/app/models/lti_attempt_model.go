@@ -1,14 +1,60 @@
 package models
 
-import "time"
+import (
+	"gorm.io/datatypes"
+)
+
+const (
+	// AttemptStatusPending Попытка создана в базе, но еще не назначена на конкретный сервер или сервер еще не подтвердил прием.
+	AttemptStatusPending = "pending"
+	// AttemptStatusActive Сервер подтвердил получение задачи и начал работу. Попытка считается «живой».
+	AttemptStatusActive = "active"
+	// AttemptStatusTerminating Пользователь или система отправили запрос на удаление/завершение, но сервер еще не отчитался об очистке ресурсов.
+	AttemptStatusTerminating = "terminating"
+	// AttemptStatusCompleted Сервер подтвердил успешное удаление/завершение всех процессов, связанных с этой попыткой. Конечная точка.
+	AttemptStatusCompleted = "completed"
+)
+
+type LTIAttemptResult struct {
+	// Числовые оценки
+	MaxScore     float64 `json:"max_score"`     // Максимально возможный балл (например, 10 или 100)
+	CurrentScore float64 `json:"current_score"` // Текущий полученный балл
+	// Текстовый результат или фидбек
+	// Называем универсально Comment или Feedback, так как там может быть и текст, и URL
+	ResultDisplay string `json:"result_display"`
+}
 
 // LTIAttemptBase struct to describe LTIAttempt object.
 type LTIAttemptBase struct {
-	AttemptID    string    `gorm:"type:varchar(255)" json:"attempt_id" validate:"required"`
-	UserID       uint      `gorm:"type:int" json:"user_id"`
-	PNETServerID *uint     `gorm:"type:int" json:"pnet_server_id"`
-	LTIRoutingID uint      `gorm:"type:int" json:"lti_routing_id"`
-	ExpiredAt    time.Time `gorm:"type:datetime(3)" json:"expired_at" validate:"required"`
+	AttemptID    string                                `gorm:"type:varchar(255)" json:"attempt_id" validate:"required"`
+	Status       string                                `gorm:"type:varchar(255)" json:"status" validate:"required"`
+	Result       *datatypes.JSONType[LTIAttemptResult] `gorm:"type:json" json:"result" swaggertype:"object"`
+	UserID       uint                                  `gorm:"type:int" json:"user_id"`
+	PNETServerID *uint                                 `gorm:"type:int" json:"pnet_server_id"`
+	LTIRoutingID uint                                  `gorm:"type:int" json:"lti_routing_id"`
+}
+
+func (a *LTIAttemptBase) SetStatus(status string) {
+	// Порядок статусов (чем больше число, тем "старше" статус)
+	statusOrder := map[string]int{
+		AttemptStatusPending:     1,
+		AttemptStatusActive:      2,
+		AttemptStatusTerminating: 3,
+		AttemptStatusCompleted:   4,
+	}
+
+	currentOrder, currentExists := statusOrder[a.Status]
+	newOrder, newExists := statusOrder[status]
+
+	// Если какой-то статус неизвестен — не обновляем
+	if !currentExists || !newExists {
+		return
+	}
+
+	// Разрешаем переход только если новый статус "больше" текущего
+	if newOrder > currentOrder {
+		a.Status = status
+	}
 }
 
 type LTIAttemptSecret struct {
@@ -33,12 +79,4 @@ type LTIAttempt struct {
 	Base
 	LTIAttemptBase
 	LTIAttemptSecret
-}
-
-func (l *LTIAttempt) ExtendExpiredAt(extensionHours int) {
-	// Проверяем, осталось ли до окончания сессии меньше часа
-	if time.Until(l.ExpiredAt) < time.Hour {
-		// Продлеваем сессию на указанное количество часов
-		l.ExpiredAt = l.ExpiredAt.Add(time.Duration(extensionHours) * time.Hour)
-	}
 }
