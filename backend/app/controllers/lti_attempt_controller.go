@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"gitlab.com/a10869/api-modules/backend/app/di"
+	"gitlab.com/a10869/api-modules/backend/app/queries"
 	"gitlab.com/a10869/api-modules/backend/app/usecases"
 	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
@@ -91,7 +92,7 @@ func LTIAttemptList(c *jsonrpc.Ctx) (interface{}, error) {
 	); err != nil {
 		return nil, err
 	}
-	dto := usecases.LTIAttemptListInputDTO{}
+	dto := queries.LTIAttemptSearchParams{}
 	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
 		return nil, err
@@ -163,5 +164,70 @@ func LTIAttemptGet(c *jsonrpc.Ctx) (interface{}, error) {
 	defer container.Close()
 	uc := container.LTIAttemptGetUC()
 	output, err := uc.Execute(dto)
+	return output, err
+}
+
+// LTIAttemptListExternal func for view of list LTIAttempt by external.
+// @Description List lti_attempt. Only external servers
+// @Summary list lti_attempt
+// @Tags lti_attempt, EXTERNAL
+// @Accept json
+// @Produce json
+// @Param form body usecases.LTIAttemptListRequest true "lti_attempt list info"
+// @Success 200 {object} usecases.LTIAttemptListResponse
+// @Param Authorization header string true "Basic-токен, созданный клиентом"
+// @Router /api/v1/rpc/lti_attempt.list_external [post]
+func LTIAttemptListExternal(c *jsonrpc.Ctx) (interface{}, error) {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	dto := queries.LTIAttemptSearchParams{}
+	err := jsonrpc.ValidatorBase(c, &dto)
+	if err != nil {
+		return nil, err
+	}
+	container, err := di.NewDIContainer(diLoggerConf)
+	if err != nil {
+		return nil, err
+	}
+	defer container.Close()
+	err = container.ServiceAuthorizeUC().Execute(c)
+	if err != nil {
+		return nil, err
+	}
+	uc := container.LTIAttemptListUC()
+	dto.ServerClientIds = []string{
+		c.FiberCtx.Locals("x-service-id").(string),
+	}
+	output, err := uc.Execute(dto)
+	return output, err
+}
+
+// LTIAttemptUpdateExternal update attempts from external servers.
+// @Description attempt update from external servers.
+// @Summary attempt update from external servers
+// @Tags lti_attempt, EXTERNAL
+// @Accept json
+// @Produce json
+// @Param object body usecases.LTIAttemptEditBulkRequest true "attempts"
+// @Success 200 {object} usecases.LTIAttemptEditBulkResponse
+// @Param Authorization header string true "Basic-токен, созданный клиентом"
+// @Router /api/v1/rpc/lti_attempt.update_external [post]
+func LTIAttemptUpdateExternal(c *jsonrpc.Ctx) (interface{}, error) {
+	diLoggerConf := logs.NewZeroLoggerConf(c)
+	dto := usecases.LTIAttemptEditBulkInputDTO{}
+	err := jsonrpc.ValidatorBase(c, &dto)
+	if err != nil {
+		return nil, err
+	}
+	container, err := di.NewDIContainer(diLoggerConf)
+	if err != nil {
+		return nil, err
+	}
+	defer container.Close()
+	err = container.ServiceAuthorizeUC().Execute(c)
+	if err != nil {
+		return nil, err
+	}
+	uc := container.LTIAttemptEditBulkUC()
+	output, err := uc.SetContext(c.FiberCtx.Locals("x-service-id").(string)).Execute(dto)
 	return output, err
 }

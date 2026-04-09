@@ -51,6 +51,12 @@ export const RenderCell = ({ item, columnKey }: Props) => {
           </div>
         </Link>
       );
+    case 'status':
+      return (
+        <div>
+          <span>{item.status}</span>
+        </div>
+      );
     case 'actions':
       return (
         <div className='flex items-center gap-4 '>

@@ -93,6 +93,7 @@ const en = {
         { name: 'USER', uid: 'user' },
         { name: 'SERVER', uid: 'server' },
         { name: 'NAME', uid: 'name' },
+        { name: 'STATUS', uid: 'status' },
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
@@ -270,6 +271,7 @@ const en = {
     FieldLTIRoutingName: 'Routing name',
     FieldPNETServer: 'Pnet server',
     FieldExpiredAt: 'Expired at',
+    FieldStatus: 'Status',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {

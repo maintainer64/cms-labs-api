@@ -22,6 +22,13 @@ func (di *DIContainer) LTIAttemptEditUC() *usecases.LTIAttemptEditUC {
 	}
 }
 
+func (di *DIContainer) LTIAttemptEditBulkUC() *usecases.LTIAttemptEditBulkUC {
+	return &usecases.LTIAttemptEditBulkUC{
+		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
+		PNETServerQueries: di.Queries.PNETServerQueries,
+	}
+}
+
 func (di *DIContainer) LTIAttemptGetUC() *usecases.LTIAttemptGetUC {
 	return &usecases.LTIAttemptGetUC{
 		LTIAttemptQueries: di.Queries.LTIAttemptQueries,

@@ -93,6 +93,7 @@ const ru = {
         { name: 'ПОЛЬЗОВАТЕЛЬ', uid: 'user' },
         { name: 'СЕРВЕР', uid: 'server' },
         { name: 'НАЗВАНИЕ', uid: 'name' },
+        { name: 'СТАТУС', uid: 'status' },
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ]
     },
@@ -271,6 +272,7 @@ const ru = {
     FieldLTIRoutingName: 'Название маршрута',
     FieldPNETServer: 'Сервер',
     FieldExpiredAt: 'Закреплен до',
+    FieldStatus: 'Статус',
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в',
     DeletePopup: {

@@ -1,0 +1,119 @@
+package usecases
+
+import (
+	"errors"
+	"fmt"
+	"time"
+
+	"github.com/rs/zerolog/log"
+	"gitlab.com/a10869/api-modules/backend/app/models"
+	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gorm.io/datatypes"
+	"gorm.io/gorm"
+)
+
+type LTIAttemptEditBulkUC struct {
+	LTIAttemptQueries *queries.LTIAttemptQueries
+	PNETServerQueries *queries.PNETServerQueries
+	xServiceId        string
+}
+
+type LTIAttemptEditBulkInput struct {
+	AttemptID string                                       `json:"attempt_id" validate:"required"`
+	Status    string                                       `json:"status"`
+	Result    *datatypes.JSONType[models.LTIAttemptResult] `json:"result" swaggertype:"object"`
+}
+
+type LTIAttemptEditBulkInputDTO struct {
+	Models []LTIAttemptEditBulkInput `json:"models"`
+}
+
+type LTIAttemptEditBulkRequest struct {
+	JSONRPC string                     `json:"jsonrpc" default:"2.0" validate:"required"`
+	Method  string                     `json:"method" default:"lti_attempt.update" validate:"required"`
+	Params  LTIAttemptEditBulkInputDTO `json:"params,omitempty"`
+	ID      string                     `json:"id,omitempty" default:"1" validate:"required"`
+}
+
+type LTIAttemptEditBulkOutputDTO struct {
+	Count uint `json:"count"`
+}
+
+type LTIAttemptEditBulkResponse struct {
+	JSONRPC string                      `json:"jsonrpc" default:"2.0" validate:"required"`
+	Result  LTIAttemptEditBulkOutputDTO `json:"result,omitempty"`
+	Error   interface{}                 `json:"error,omitempty"`
+	ID      string                      `json:"id,omitempty" default:"1" validate:"required"`
+}
+
+func (u *LTIAttemptEditBulkUC) SetContext(xServiceId string) *LTIAttemptEditBulkUC {
+	u.xServiceId = xServiceId
+	return u
+}
+
+func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttemptEditBulkOutputDTO, error) {
+	if u.xServiceId == "" {
+		return LTIAttemptEditBulkOutputDTO{}, errors.New("not authorized service")
+	}
+	serverEntity, err := u.PNETServerQueries.GetByClientId(u.xServiceId)
+	if err != nil {
+		return LTIAttemptEditBulkOutputDTO{}, err
+	}
+	var count uint = 0
+	for _, attemptDTO := range dto.Models {
+		attempt, err := u.LTIAttemptQueries.GetByAttemptID(attemptDTO.AttemptID)
+		if err != nil {
+			log.Warn().Msg(fmt.Sprintf("LTIAttemptEditBulkUC: LTI attempt id %s not found", attemptDTO.AttemptID))
+			continue
+		}
+		if attempt.PNETServerID != nil && *attempt.PNETServerID != serverEntity.ID {
+			log.Warn().Msg(fmt.Sprintf(
+				"LTIAttemptEditBulkUC: LTI attempt id %s is not owned by service %s",
+				attemptDTO.AttemptID,
+				u.xServiceId,
+			))
+			continue
+		}
+		attempt.SetStatus(attemptDTO.Status)
+		if attemptDTO.Result != nil {
+			attempt.Result = attemptDTO.Result
+		}
+		err = u.LTIAttemptQueries.Upsert(&attempt)
+		if err != nil {
+			log.Warn().Msg(fmt.Sprintf(
+				"LTIAttemptEditBulkUC: LTI attempt id %s update not complete %+v",
+				attemptDTO.AttemptID,
+				err,
+			))
+			return LTIAttemptEditBulkOutputDTO{}, err
+		}
+		count++
+	}
+	activeAttempts, _ := u.LTIAttemptQueries.List(
+		&queries.LTIAttemptSearchParams{
+			Statuses:        []string{models.AttemptStatusActive},
+			ServerClientIds: []string{serverEntity.ClientID},
+			Limit:           queries.MaxLimitCount,
+			Offset:          0,
+		},
+	)
+	log.Info().Msg(fmt.Sprintf("LTIAttemptEditBulkUC: Update %s last online status and count attempts/user %d", u.xServiceId, len(activeAttempts)))
+	err = u.PNETServerQueries.DB.Transaction(
+		func(tx *gorm.DB) error {
+			serverEntity, err := u.PNETServerQueries.GetByClientId(u.xServiceId)
+			if err != nil {
+				return err
+			}
+			now := time.Now().UTC()
+			serverEntity.LastOnlineStatus = &now
+			serverEntity.LastCountUsers = len(activeAttempts)
+			serverEntity.UpdatedAt = now
+			tx.Save(serverEntity)
+			return nil
+		},
+	)
+	if err != nil {
+		return LTIAttemptEditBulkOutputDTO{}, err
+	}
+	return LTIAttemptEditBulkOutputDTO{Count: count}, err
+}

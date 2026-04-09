@@ -19,6 +19,15 @@ type LTIAttemptQueries struct {
 	Logger *zerolog.Logger
 }
 
+type LTIAttemptSearchParams struct {
+	AttemptIds      []string `json:"attempt_ids"`
+	UserIds         []uint   `json:"user_ids"`
+	Statuses        []string `json:"statuses"`
+	ServerClientIds []string `json:"server_client_ids"`
+	Limit           int      `json:"limit"`
+	Offset          int      `json:"offset"`
+}
+
 const MaxLimitCount = 5000
 
 var LTIAttemptNotFoundError = jsonrpc.NewRpcError(
@@ -88,10 +97,11 @@ func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 func (q *LTIAttemptQueries) GetActiveByUserId(userId uint, routeId uint) (models.LTIAttempt, error) {
 	var entity models.LTIAttempt
 	result := q.DB.Model(&entity).Where(
-		"user_id = ? AND lti_routing_id = ?",
+		"user_id = ? AND lti_routing_id = ? AND status IN (?)",
 		userId,
 		routeId,
-	).Where("UTC_TIMESTAMP() < expired_at").Limit(
+		[]string{models.AttemptStatusPending, models.AttemptStatusActive},
+	).Limit(
 		1,
 	).Offset(0).Order(`created_at desc`).Find(&entity)
 	return entity, result.Error
@@ -103,10 +113,9 @@ func (q *LTIAttemptQueries) GetByRoomID(roomID uint) ([]models.LTIAttempt, error
 		return entities, nil
 	}
 	result := q.DB.Model(&entities).Where(
-		"room_id = ?",
+		"room_id = ? AND status IN (?)",
 		roomID,
-	).Where(
-		"UTC_TIMESTAMP() < expired_at",
+		[]string{models.AttemptStatusPending, models.AttemptStatusActive},
 	).Limit(MaxLimitCount).Offset(0).Find(&entities)
 	count := result.RowsAffected
 	q.Logger.Info().Msg(fmt.Sprintf("LTIAttemptQueries GetByRoomNumber: count %+v", count))
@@ -114,23 +123,21 @@ func (q *LTIAttemptQueries) GetByRoomID(roomID uint) ([]models.LTIAttempt, error
 }
 
 func (q *LTIAttemptQueries) List(
-	userIds []uint,
-	limit int,
-	offset int,
+	search *LTIAttemptSearchParams,
 ) ([]models.LTIAttemptListItem, error) {
 	var entities []models.LTIAttemptListItem
 	result := q.listFilter(
-		userIds,
-		q.DB.Limit(limit).Offset(offset),
+		search,
+		q.DB.Limit(search.Limit).Offset(search.Offset),
 	).Find(&entities)
 	return entities, result.Error
 }
 
-func (q *LTIAttemptQueries) listFilter(userIds []uint, tx *gorm.DB) *gorm.DB {
+func (q *LTIAttemptQueries) listFilter(search *LTIAttemptSearchParams, tx *gorm.DB) *gorm.DB {
 	tx = tx.Table(
 		q.tableName(&models.LTIAttempt{}) + " AS lti_attempts",
 	).Select(
-		"lti_attempts.id, lti_attempts.user_id, lti_attempts.pnet_server_id, lti_attempts.lti_routing_id, lti_attempts.expired_at, " +
+		"lti_attempts.id, lti_attempts.attempt_id, lti_attempts.status, lti_attempts.result, lti_attempts.user_id, lti_attempts.pnet_server_id, lti_attempts.lti_routing_id, " +
 			"user.email as user_email, user.name as user_name, pnet_servers.name as pnet_server_name, lti_routings.name as lti_routing_name",
 	).Joins(
 		"join " + q.tableName(&models.User{}) + " user on user.id = lti_attempts.user_id",
@@ -140,8 +147,17 @@ func (q *LTIAttemptQueries) listFilter(userIds []uint, tx *gorm.DB) *gorm.DB {
 		"join " + q.tableName(&models.LTIRouting{}) + " lti_routings on lti_routings.id = lti_attempts.lti_routing_id",
 	)
 	tx = tx.Order(`lti_attempts.created_at desc`)
-	if len(userIds) > 0 {
-		tx = tx.Where("lti_attempts.user_id IN (?)", userIds)
+	if len(search.UserIds) > 0 {
+		tx = tx.Where("lti_attempts.user_id IN (?)", search.UserIds)
+	}
+	if len(search.AttemptIds) > 0 {
+		tx = tx.Where("lti_attempts.attempt_id IN (?)", search.AttemptIds)
+	}
+	if len(search.ServerClientIds) > 0 {
+		tx = tx.Where("pnet_servers.client_id IN (?)", search.ServerClientIds)
+	}
+	if len(search.Statuses) > 0 {
+		tx = tx.Where("lti_attempts.status IN (?)", search.Statuses)
 	}
 	return tx
 }

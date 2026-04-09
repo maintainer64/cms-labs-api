@@ -50,6 +50,8 @@ export interface AuthRenewManagerRefreshRequest {
 
 export interface AuthSSOAuthorizeInputDTO {
   client_id?: string;
+  code_challenge?: string;
+  code_challenge_method?: string;
   extra?: string;
   nonce?: string;
   path?: string;
@@ -58,8 +60,6 @@ export interface AuthSSOAuthorizeInputDTO {
   scope?: string;
   state?: string;
   user_id?: number;
-  code_challenge?: string;
-  code_challenge_method?: string;
 }
 
 export interface AuthSSOAuthorizeOutputDTO {
@@ -202,44 +202,6 @@ export interface AuthUserPasswordChangeResponse {
   result?: AuthUserPasswordChangeOutputDTO;
 }
 
-export interface ExternalAttemptDTO {
-  attempt_id: string;
-  user_email?: string;
-  user_id?: number;
-}
-
-export interface ExternalCurlRequestExecuteInputDTO {
-  curl_request_id: number;
-  override?: Record<string, string>;
-}
-
-export interface ExternalPNETServerPingInputDTO {
-  attempts?: ExternalAttemptDTO[];
-}
-
-export interface ExternalPNETServerPingOutputDTO {
-  count?: number;
-}
-
-export interface ExternalPNETServerPingRequest {
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  /** @default "server.ping" */
-  method?: string;
-  params?: ExternalPNETServerPingInputDTO;
-}
-
-export interface ExternalPNETServerPingResponse {
-  error?: any;
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  result?: ExternalPNETServerPingOutputDTO;
-}
-
 export interface LtiQueryAuthProviderListInputDTO {
   is_auth?: boolean;
   limit?: number;
@@ -274,35 +236,15 @@ export interface ModelsAuthProviderListItem {
   updated_at: string;
 }
 
-export interface ModelsCurlRequest {
-  body?: string;
-  created_at: string;
-  headers?: Record<string, string>;
-  id?: number;
-  method?: string;
-  name?: string;
-  raw?: string;
-  timeout?: number;
-  updated_at: string;
-  url?: string;
-}
-
-export interface ModelsCurlRequestListItem {
-  created_at: string;
-  id?: number;
-  name?: string;
-  updated_at: string;
-  url?: string;
-}
-
 export interface ModelsLTIAttempt {
   attempt_id: string;
   created_at: string;
-  expired_at: string;
   id?: number;
   lti_routing_id?: number;
   pnet_server_id?: number;
+  result?: object;
   room_id?: number;
+  status: string;
   updated_at: string;
   user_id?: number;
 }
@@ -310,12 +252,13 @@ export interface ModelsLTIAttempt {
 export interface ModelsLTIAttemptListItem {
   attempt_id: string;
   created_at: string;
-  expired_at: string;
   id?: number;
   lti_routing_id?: number;
   lti_routing_name?: string;
   pnet_server_id?: number;
   pnet_server_name?: string;
+  result?: object;
+  status: string;
   updated_at: string;
   user_email?: string;
   user_id?: number;
@@ -478,11 +421,13 @@ export interface ModelsUserListItem {
   updated_at: string;
 }
 
-export interface QueriesCurlRequestQueriesListDTO {
-  ids?: number[];
+export interface QueriesLTIAttemptSearchParams {
+  attempt_ids?: string[];
   limit?: number;
   offset?: number;
-  search?: string;
+  server_client_ids?: string[];
+  statuses?: string[];
+  user_ids?: number[];
 }
 
 export interface QueriesPNETServerQueriesListDTO {
@@ -719,114 +664,6 @@ export interface UsecasesConnectedAddonInfo {
   type?: string;
 }
 
-export interface UsecasesCurlRequestDeleteInputDTO {
-  id?: number;
-}
-
-export interface UsecasesCurlRequestDeleteRequest {
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  /** @default "curl_request.delete" */
-  method: string;
-  params?: UsecasesCurlRequestDeleteInputDTO;
-}
-
-export interface UsecasesCurlRequestDeleteResponse {
-  error?: any;
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  result?: UsecasesCurlRequestDeleteInputDTO;
-}
-
-export interface UsecasesCurlRequestEditInputDTO {
-  body?: string;
-  headers: Record<string, string>;
-  id?: number;
-  method: string;
-  name: string;
-  raw_request?: string;
-  timeout?: number;
-  url: string;
-}
-
-export interface UsecasesCurlRequestEditOutputDTO {
-  id?: number;
-}
-
-export interface UsecasesCurlRequestEditRequest {
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  /** @default "curl_request.upsert" */
-  method: string;
-  params?: UsecasesCurlRequestEditInputDTO;
-}
-
-export interface UsecasesCurlRequestEditResponse {
-  error?: any;
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  result?: UsecasesCurlRequestEditOutputDTO;
-}
-
-export interface UsecasesCurlRequestGetInputDTO {
-  id?: number;
-}
-
-export interface UsecasesCurlRequestGetOutputDTO {
-  model?: ModelsCurlRequest;
-}
-
-export interface UsecasesCurlRequestGetRequest {
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  /** @default "curl_request.get" */
-  method: string;
-  params?: UsecasesCurlRequestGetInputDTO;
-}
-
-export interface UsecasesCurlRequestGetResponse {
-  error?: any;
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  result?: UsecasesCurlRequestGetOutputDTO;
-}
-
-export interface UsecasesCurlRequestListOutputDTO {
-  model: ModelsCurlRequestListItem[];
-  total_count: number;
-}
-
-export interface UsecasesCurlRequestListRequest {
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  /** @default "curl_request.list" */
-  method: string;
-  params?: QueriesCurlRequestQueriesListDTO;
-}
-
-export interface UsecasesCurlRequestListResponse {
-  error?: any;
-  /** @default "1" */
-  id: string;
-  /** @default "2.0" */
-  jsonrpc: string;
-  result?: UsecasesCurlRequestListOutputDTO;
-}
-
 export interface UsecasesLTIAttemptCreateInputDTO {
   room_number?: number;
 }
@@ -881,10 +718,44 @@ export interface UsecasesLTIAttemptDeleteResponse {
   result?: UsecasesLTIAttemptDeleteInputDTO;
 }
 
+export interface UsecasesLTIAttemptEditBulkInput {
+  attempt_id: string;
+  result?: object;
+  status?: string;
+}
+
+export interface UsecasesLTIAttemptEditBulkInputDTO {
+  models?: UsecasesLTIAttemptEditBulkInput[];
+}
+
+export interface UsecasesLTIAttemptEditBulkOutputDTO {
+  count?: number;
+}
+
+export interface UsecasesLTIAttemptEditBulkRequest {
+  /** @default "1" */
+  id: string;
+  /** @default "2.0" */
+  jsonrpc: string;
+  /** @default "lti_attempt.update" */
+  method: string;
+  params?: UsecasesLTIAttemptEditBulkInputDTO;
+}
+
+export interface UsecasesLTIAttemptEditBulkResponse {
+  error?: any;
+  /** @default "1" */
+  id: string;
+  /** @default "2.0" */
+  jsonrpc: string;
+  result?: UsecasesLTIAttemptEditBulkOutputDTO;
+}
+
 export interface UsecasesLTIAttemptEditInputDTO {
-  expired_at: string;
   id?: number;
   pnet_server_id?: number;
+  result?: object;
+  status: string;
 }
 
 export interface UsecasesLTIAttemptEditOutputDTO {
@@ -937,12 +808,6 @@ export interface UsecasesLTIAttemptGetResponse {
   result?: UsecasesLTIAttemptGetOutputDTO;
 }
 
-export interface UsecasesLTIAttemptListInputDTO {
-  limit?: number;
-  offset?: number;
-  user_ids?: number[];
-}
-
 export interface UsecasesLTIAttemptListOutputDTO {
   model: ModelsLTIAttemptListItem[];
 }
@@ -954,7 +819,7 @@ export interface UsecasesLTIAttemptListRequest {
   jsonrpc: string;
   /** @default "lti_attempt.list" */
   method: string;
-  params?: UsecasesLTIAttemptListInputDTO;
+  params?: QueriesLTIAttemptSearchParams;
 }
 
 export interface UsecasesLTIAttemptListResponse {
