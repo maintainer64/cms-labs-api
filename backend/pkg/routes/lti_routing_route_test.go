@@ -23,17 +23,16 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
 
 	input := usecases.LTIRoutingEditInputDTO{
-		Name:                 "Test LTIRouting",
-		LTITitle:             "Test Title",
-		LTIDescription:       "Test Description",
-		LTITaskID:            "12345",
-		LTIParamsTask:        "param1,param2",
-		Collaboration:        1,
-		PinnedSessionMinutes: 30,
-		PNETLabsType:         cms_client.PNETLabsTypeDefault,
-		PNETLabsPath:         "/path/to/labs",
-		PNETTestPath:         "/path/to/test",
-		IsDefault:            false,
+		Name:           "Test LTIRouting",
+		LTITitle:       "Test Title",
+		LTIDescription: "Test Description",
+		LTITaskID:      "12345",
+		LTIParamsTask:  "param1,param2",
+		Collaboration:  1,
+		PNETLabsType:   cms_client.PNETLabsTypeDefault,
+		PNETLabsPath:   "/path/to/labs",
+		PNETTestPath:   "/path/to/test",
+		IsDefault:      false,
 	}
 
 	expectedCode := 200

@@ -11,8 +11,7 @@ type LTIRoutingSecret struct {
 	LTIDescription string `gorm:"type:varchar(255);column:lti_description" json:"lti_description"`
 	LTIParamsTask  string `gorm:"type:varchar(255);column:lti_params_task" json:"lti_params_task"`
 	// Параметры
-	Collaboration        int `gorm:"type:int;column:collaboration" json:"collaboration"`
-	PinnedSessionMinutes int `gorm:"type:int;column:pinned_session_minutes" json:"pinned_session_minutes"`
+	Collaboration int `gorm:"type:int;column:collaboration" json:"collaboration"`
 	// The type of PNETLabsType, cms_client.PNETLabsTypeDefault
 	// enum: default,curl,sso
 	PNETLabsType string `gorm:"type:varchar(255);column:pnet_labs_type" json:"pnet_labs_type"`

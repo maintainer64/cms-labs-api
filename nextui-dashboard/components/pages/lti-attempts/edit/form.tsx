@@ -117,11 +117,16 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
               label={AuthProviderAttempt.FieldStatus}
               selectedKeys={[values.status || '']}
               onChange={handleChange('status')}
+              description={
+                AuthProviderAttempt.FieldStatusValues[
+                  values.status as keyof typeof AuthProviderAttempt.FieldStatusValues
+                ]?.split('||')[1] || ''
+              }
             >
-              <SelectItem key='pending'>pending</SelectItem>
-              <SelectItem key='active'>active</SelectItem>
-              <SelectItem key='completed'>completed</SelectItem>
-              <SelectItem key='failed'>failed</SelectItem>
+              <SelectItem key='pending'>{AuthProviderAttempt?.FieldStatusValues?.pending}</SelectItem>
+              <SelectItem key='active'>{AuthProviderAttempt?.FieldStatusValues?.active}</SelectItem>
+              <SelectItem key='terminating'>{AuthProviderAttempt?.FieldStatusValues?.terminating}</SelectItem>
+              <SelectItem key='completed'>{AuthProviderAttempt?.FieldStatusValues?.completed}</SelectItem>
             </Select>
             {initialValues.roomId && (
               <Input

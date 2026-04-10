@@ -119,6 +119,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		return u.PreparedResponseByAttempt(&attempt)
 	}
 	attempt = models.LTIAttempt{}
+	attempt.Status = models.AttemptStatusPending
 	attempt.UserID = u.user.UserID()
 	// Set LTIRoutingSecretID
 	attempt.LTIRoutingID = route.ID

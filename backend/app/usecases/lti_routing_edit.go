@@ -10,21 +10,20 @@ type LTIRoutingEditUC struct {
 }
 
 type LTIRoutingEditInputDTO struct {
-	ID                   uint   `json:"id"`
-	Name                 string `json:"name"`
-	LTITitle             string `json:"lti_title"`
-	LTIDescription       string `json:"lti_description"`
-	LTITaskID            string `json:"lti_task_id"`
-	LTICourseID          string `json:"lti_course_id"`
-	LTISubID             string `json:"lti_sub_id"`
-	LTIParamsTask        string `json:"lti_params_task"`
-	Collaboration        int    `json:"collaboration"`
-	PinnedSessionMinutes int    `json:"pinned_session_minutes"`
-	PNETLabsType         string `json:"pnet_labs_type"`
-	PNETLabsPath         string `json:"pnet_labs_path"`
-	PNETTestPath         string `json:"pnet_test_path"`
-	PNETServerID         uint   `json:"pnet_server_id"`
-	IsDefault            bool   `json:"is_default"`
+	ID             uint   `json:"id"`
+	Name           string `json:"name"`
+	LTITitle       string `json:"lti_title"`
+	LTIDescription string `json:"lti_description"`
+	LTITaskID      string `json:"lti_task_id"`
+	LTICourseID    string `json:"lti_course_id"`
+	LTISubID       string `json:"lti_sub_id"`
+	LTIParamsTask  string `json:"lti_params_task"`
+	Collaboration  int    `json:"collaboration"`
+	PNETLabsType   string `json:"pnet_labs_type"`
+	PNETLabsPath   string `json:"pnet_labs_path"`
+	PNETTestPath   string `json:"pnet_test_path"`
+	PNETServerID   uint   `json:"pnet_server_id"`
+	IsDefault      bool   `json:"is_default"`
 }
 
 type LTIRoutingEditRequest struct {
@@ -56,7 +55,6 @@ func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOu
 	entity.LTISubID = dto.LTISubID
 	entity.LTIParamsTask = dto.LTIParamsTask
 	entity.Collaboration = dto.Collaboration
-	entity.PinnedSessionMinutes = dto.PinnedSessionMinutes
 	entity.PNETLabsType = dto.PNETLabsType
 	entity.PNETLabsPath = dto.PNETLabsPath
 	entity.PNETTestPath = dto.PNETTestPath

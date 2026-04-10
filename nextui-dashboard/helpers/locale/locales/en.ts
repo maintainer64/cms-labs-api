@@ -272,6 +272,16 @@ const en = {
     FieldPNETServer: 'Pnet server',
     FieldExpiredAt: 'Expired at',
     FieldStatus: 'Status',
+    FieldStatusValues: {
+      pending: 'Pending',
+      pendingDescription: 'Attempt created but not yet assigned to a server',
+      active: 'Active',
+      activeDescription: 'Server confirmed and working on the attempt',
+      terminating: 'Terminating',
+      terminatingDescription: 'Termination requested, waiting for server cleanup',
+      completed: 'Completed',
+      completedDescription: 'Server confirmed completion of all processes'
+    },
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
@@ -374,7 +384,6 @@ const en = {
     FieldLTIParamsTask: 'Query LTI course element',
     SectionActionParams: 'Action when connecting',
     FieldCollaboration: 'Number of people to work together',
-    FieldPinnedSessionMinutes: 'Pinned session on minutes',
     FieldPNETLabsType: 'Type connection',
     FieldPNETLabsTypeDefault: 'Default',
     FieldPNETLabsTypeDefaultDescription: 'Send params to other service no validation',
