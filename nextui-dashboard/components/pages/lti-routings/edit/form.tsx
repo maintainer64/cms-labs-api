@@ -206,7 +206,7 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsType}
                     selectedKeys={[values.pnetLabsType ?? '']}
-                    onSelectionChange={(keys) => setFieldValue('pnet_labs_type', keys.currentKey || 'default')}
+                    onSelectionChange={(keys) => setFieldValue('pnetLabsType', keys.currentKey || 'default')}
                   >
                     {routingTypes.map((type) => (
                       <SelectItem key={type.key} description={type.description}>
