@@ -51,20 +51,10 @@ export const LtiRoutingLabsType = () => {
       description: LTIRouting.FieldPNETLabsTypeDefaultDescription
     },
     {
-      key: 'curl',
-      label: LTIRouting.FieldPNETLabsTypeCurl,
-      description: LTIRouting.FieldPNETLabsTypeCurlDescription
-    },
-    {
       key: 'sso',
       label: LTIRouting.FieldPNETLabsTypeSSO,
       description: LTIRouting.FieldPNETLabsTypeSSODescription
     },
-    {
-      key: 'clabgate',
-      label: LTIRouting.FieldPNETLabsTypeClabgate,
-      description: LTIRouting.FieldPNETLabsTypeClabgateDescription
-    }
   ];
 };
 
