@@ -47,7 +47,11 @@ export const LTIAttemptCreate = () => {
   if (response.isLoading) return <Loading size='md' />;
   if (response.error)
     return (
-      <ErrorModal title={LTIAttemptRoom.ErrorPageTitle} description={response?.error?.data?.message || response?.error?.message}>
+      <ErrorModal
+        title={LTIAttemptRoom.ErrorPageTitle}
+        // @ts-ignore
+        description={response?.error?.data?.message || response?.error?.message}
+      >
         <Button onPress={() => response.refetch()} href='#' variant='light' color='primary'>
           {LTIAttemptRoom.ErrorPageRefresh}
         </Button>

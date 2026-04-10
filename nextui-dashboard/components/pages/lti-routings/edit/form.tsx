@@ -28,7 +28,6 @@ const defaultValues: CamelCasedPropertiesDeep<ModelsLTIRouting> = {
   ltiParamsTask: '',
   ltiTitle: '',
   name: '',
-  pinnedSessionMinutes: 0,
   pnetLabsType: 'default',
   pnetLabsPath: '',
   pnetTestPath: '',
@@ -54,7 +53,7 @@ export const LtiRoutingLabsType = () => {
       key: 'sso',
       label: LTIRouting.FieldPNETLabsTypeSSO,
       description: LTIRouting.FieldPNETLabsTypeSSODescription
-    },
+    }
   ];
 };
 
@@ -119,7 +118,6 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
           ltiSubId: values.ltiSubId,
           ltiTitle: values.ltiTitle,
           name: values.name,
-          pinnedSessionMinutes: values.pinnedSessionMinutes || 0,
           pnetLabsType: values.pnetLabsType,
           pnetLabsPath: values.pnetLabsPath,
           pnetTestPath: values.pnetTestPath,
@@ -184,13 +182,6 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     type='number'
                     value={(values.collaboration || 0).toString()}
                     onChange={handleChange('collaboration')}
-                  />
-                  <Input
-                    variant='bordered'
-                    label={LTIRouting.FieldPinnedSessionMinutes}
-                    type='number'
-                    value={(values.pinnedSessionMinutes || 0).toString()}
-                    onChange={handleChange('pinnedSessionMinutes')}
                   />
                   <Select
                     variant='bordered'

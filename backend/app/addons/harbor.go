@@ -3,13 +3,14 @@ package addons
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/goccy/go-json"
 
 	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
 	"gitlab.com/a10869/api-modules/shared/connection"

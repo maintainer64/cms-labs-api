@@ -2,11 +2,12 @@ package addons
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/goccy/go-json"
 
 	"github.com/h2non/gock"
 	"github.com/stretchr/testify/assert"

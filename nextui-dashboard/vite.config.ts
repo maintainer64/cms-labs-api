@@ -23,7 +23,7 @@ export default defineConfig({
 function setupProxy(): CommonServerOptions["proxy"] {
     return {
         "/api": {
-            target: "http://localhost:5000",
+            target: "https://auth-pre.k8s.cmslabs.ru",
             secure: false,
             changeOrigin: true,
         },

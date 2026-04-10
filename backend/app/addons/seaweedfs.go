@@ -3,7 +3,6 @@ package addons
 import (
 	"context"
 	"crypto/rand"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,6 +10,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/goccy/go-json"
 
 	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
 	"gitlab.com/a10869/api-modules/shared/connection"

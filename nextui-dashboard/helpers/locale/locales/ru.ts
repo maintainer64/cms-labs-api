@@ -273,6 +273,16 @@ const ru = {
     FieldPNETServer: 'Сервер',
     FieldExpiredAt: 'Закреплен до',
     FieldStatus: 'Статус',
+    FieldStatusValues: {
+      pending: 'Ожидание',
+      pendingDescription: 'Попытка создана, но еще не назначена на сервер',
+      active: 'Активен',
+      activeDescription: 'Сервер подтвердил и выполняет работу',
+      terminating: 'Завершается',
+      terminatingDescription: 'Запрошено завершение, ожидается очистка сервером',
+      completed: 'Завершена',
+      completedDescription: 'Сервер подтвердил завершение всех процессов'
+    },
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в',
     DeletePopup: {
@@ -375,7 +385,6 @@ const ru = {
     FieldLTIParamsTask: 'Query LTI для элемента курса',
     SectionActionParams: 'Действие при подключении',
     FieldCollaboration: 'Кол-во человек для совместной работы',
-    FieldPinnedSessionMinutes: 'Закрепить сессию в минутах',
     FieldPNETLabsType: 'Тип подключения',
     FieldPNETLabsTypeDefault: 'Прямое',
     FieldPNETLabsTypeDefaultDescription: 'Отправка параметров без верификации',

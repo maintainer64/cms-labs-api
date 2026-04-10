@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"encoding/json"
 	"testing"
+
+	"github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
 
