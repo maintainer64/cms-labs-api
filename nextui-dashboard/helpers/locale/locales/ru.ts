@@ -283,6 +283,10 @@ const ru = {
       completed: 'Завершена',
       completedDescription: 'Сервер подтвердил завершение всех процессов'
     },
+    FieldResult: 'Оценка',
+    FieldResultMaxScore: 'Макс. балл',
+    FieldResultCurrentScore: 'Текущий балл',
+    FieldResultDisplay: 'Комментарий',
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в',
     DeletePopup: {

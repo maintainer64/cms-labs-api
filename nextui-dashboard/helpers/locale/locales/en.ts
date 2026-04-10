@@ -282,6 +282,10 @@ const en = {
       completed: 'Completed',
       completedDescription: 'Server confirmed completion of all processes'
     },
+    FieldResult: 'Grade',
+    FieldResultMaxScore: 'Max Score',
+    FieldResultCurrentScore: 'Current Score',
+    FieldResultDisplay: 'Comment',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {
