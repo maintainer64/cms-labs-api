@@ -16,9 +16,15 @@ interface Props {
 export const LTIAttemptTableWrapper = ({ rows, isLoading, loadMore }: Props) => {
   const {
     locale: {
-      Tables: { LTIAttemptsTable }
+      Tables: { LTIAttemptsTable },
+      AuthProviderAttempt
     }
   } = useLanguageBrowser();
+  const locale = Object.fromEntries(
+    AuthProviderAttempt.FieldStatusValues.map((item) => {
+      return [item.key, item.value];
+    })
+  );
   return (
     <InfiniteScroll loadMore={loadMore} isLoading={isLoading}>
       <div className=' w-full flex flex-col gap-4'>
@@ -41,7 +47,8 @@ export const LTIAttemptTableWrapper = ({ rows, isLoading, loadMore }: Props) => 
                   <TableCell>
                     {RenderCell({
                       item,
-                      columnKey
+                      columnKey,
+                      locale
                     })}
                   </TableCell>
                 )}

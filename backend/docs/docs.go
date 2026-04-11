@@ -332,11 +332,6 @@ const docTemplate = `{
         },
         "/api/v1/rpc/lti_attempt.list_external": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "List lti_attempt. Only external servers",
                 "consumes": [
                     "application/json"
@@ -358,6 +353,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/usecases.LTIAttemptListRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -2977,9 +2979,6 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "pinned_session_minutes": {
-                    "type": "integer"
-                },
                 "pnet_labs_path": {
                     "type": "string"
                 },
@@ -4405,9 +4404,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                },
-                "pinned_session_minutes": {
-                    "type": "integer"
                 },
                 "pnet_labs_path": {
                     "type": "string"

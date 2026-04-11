@@ -325,11 +325,6 @@
         },
         "/api/v1/rpc/lti_attempt.list_external": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "List lti_attempt. Only external servers",
                 "consumes": [
                     "application/json"
@@ -351,6 +346,13 @@
                         "schema": {
                             "$ref": "#/definitions/usecases.LTIAttemptListRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Basic-токен, созданный клиентом",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -2970,9 +2972,6 @@
                 "name": {
                     "type": "string"
                 },
-                "pinned_session_minutes": {
-                    "type": "integer"
-                },
                 "pnet_labs_path": {
                     "type": "string"
                 },
@@ -4398,9 +4397,6 @@
                 },
                 "name": {
                     "type": "string"
-                },
-                "pinned_session_minutes": {
-                    "type": "integer"
                 },
                 "pnet_labs_path": {
                     "type": "string"

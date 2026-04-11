@@ -8,9 +8,10 @@ import { SquarePen } from 'lucide-react';
 interface Props {
   item: CamelCasedPropertiesDeep<ModelsLTIAttemptListItem>;
   columnKey: string | React.Key;
+  locale: any;
 }
 
-export const RenderCell = ({ item, columnKey }: Props) => {
+export const RenderCell = ({ item, columnKey, locale }: Props) => {
   switch (columnKey) {
     case 'id':
       return (
@@ -54,7 +55,7 @@ export const RenderCell = ({ item, columnKey }: Props) => {
     case 'status':
       return (
         <div>
-          <span>{item.status}</span>
+          <span>{locale?.[item.status] || item.status}</span>
         </div>
       );
     case 'actions':
