@@ -2878,6 +2878,9 @@ const docTemplate = `{
                 "status": {
                     "type": "string"
                 },
+                "synchronized_at": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "string"
                 },
@@ -2920,6 +2923,9 @@ const docTemplate = `{
                     "type": "object"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "synchronized_at": {
                     "type": "string"
                 },
                 "updated_at": {

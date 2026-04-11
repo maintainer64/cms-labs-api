@@ -245,6 +245,7 @@ export interface ModelsLTIAttempt {
   result?: object;
   room_id?: number;
   status: string;
+  synchronized_at?: string;
   updated_at: string;
   user_id?: number;
 }
@@ -259,6 +260,7 @@ export interface ModelsLTIAttemptListItem {
   pnet_server_name?: string;
   result?: object;
   status: string;
+  synchronized_at?: string;
   updated_at: string;
   user_email?: string;
   user_id?: number;

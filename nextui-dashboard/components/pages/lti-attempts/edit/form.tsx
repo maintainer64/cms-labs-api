@@ -30,7 +30,8 @@ const defaultValues: CamelCasedPropertiesDeep<ModelsLTIAttempt> = {
   userId: 0,
   updatedAt: '',
   status: '',
-  result: undefined
+  result: undefined,
+  synchronizedAt: ''
 };
 
 export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
@@ -233,6 +234,13 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
               label={AuthProviderAttempt.FieldLTIRoutingName}
               type='text'
               value={route?.name ?? ''}
+              isReadOnly
+            />
+            <Input
+              variant='bordered'
+              label={AuthProviderAttempt.FieldSynchronizedAt}
+              type='datetime-local'
+              value={dayjs(initialValues.synchronizedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input

@@ -24,8 +24,9 @@ func (di *DIContainer) LTIAttemptEditUC() *usecases.LTIAttemptEditUC {
 
 func (di *DIContainer) LTIAttemptEditBulkUC() *usecases.LTIAttemptEditBulkUC {
 	return &usecases.LTIAttemptEditBulkUC{
-		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
-		PNETServerQueries: di.Queries.PNETServerQueries,
+		LTIAttemptQueries:   di.Queries.LTIAttemptQueries,
+		PNETServerQueries:   di.Queries.PNETServerQueries,
+		TaskLTISyncResultUC: di.TaskLTISyncResultUC(),
 	}
 }
 

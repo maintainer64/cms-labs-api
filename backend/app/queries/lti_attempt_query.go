@@ -58,6 +58,15 @@ func (q *LTIAttemptQueries) GetByAttemptID(attemptID string) (models.LTIAttempt,
 	return entity, result.Error
 }
 
+func (q *LTIAttemptQueries) ListPendingSync() ([]models.LTIAttempt, error) {
+	var entities []models.LTIAttempt
+	result := q.DB.Where(
+		"synchronized_at IS NULL AND result IS NOT NULL",
+	)
+	result.Limit(MaxLimitCount).Offset(0).Order("updated_at desc").Find(&entities)
+	return entities, result.Error
+}
+
 func (q *LTIAttemptQueries) Upsert(entity *models.LTIAttempt) error {
 	if entity == nil {
 		return nil
@@ -137,7 +146,7 @@ func (q *LTIAttemptQueries) listFilter(search *LTIAttemptSearchParams, tx *gorm.
 	tx = tx.Table(
 		q.tableName(&models.LTIAttempt{}) + " AS lti_attempts",
 	).Select(
-		"lti_attempts.id, lti_attempts.attempt_id, lti_attempts.status, lti_attempts.result, lti_attempts.user_id, lti_attempts.pnet_server_id, lti_attempts.lti_routing_id, lti_attempts.created_at, lti_attempts.updated_at" +
+		"lti_attempts.id, lti_attempts.attempt_id, lti_attempts.status, lti_attempts.result, lti_attempts.user_id, lti_attempts.pnet_server_id, lti_attempts.lti_routing_id, lti_attempts.id, lti_attempts.synchronized_at, lti_attempts.created_at, lti_attempts.updated_at, " +
 			"user.email as user_email, user.name as user_name, pnet_servers.name as pnet_server_name, lti_routings.name as lti_routing_name",
 	).Joins(
 		"join " + q.tableName(&models.User{}) + " user on user.id = lti_attempts.user_id",

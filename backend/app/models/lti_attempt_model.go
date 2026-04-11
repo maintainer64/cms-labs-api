@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/datatypes"
 )
 
@@ -26,12 +28,13 @@ type LTIAttemptResult struct {
 
 // LTIAttemptBase struct to describe LTIAttempt object.
 type LTIAttemptBase struct {
-	AttemptID    string                                `gorm:"type:varchar(255)" json:"attempt_id" validate:"required"`
-	Status       string                                `gorm:"type:varchar(255)" json:"status" validate:"required"`
-	Result       *datatypes.JSONType[LTIAttemptResult] `gorm:"type:json" json:"result" swaggertype:"object"`
-	UserID       uint                                  `gorm:"type:int" json:"user_id"`
-	PNETServerID *uint                                 `gorm:"type:int" json:"pnet_server_id"`
-	LTIRoutingID uint                                  `gorm:"type:int" json:"lti_routing_id"`
+	AttemptID      string                                `gorm:"type:varchar(255)" json:"attempt_id" validate:"required"`
+	Status         string                                `gorm:"type:varchar(255)" json:"status" validate:"required"`
+	Result         *datatypes.JSONType[LTIAttemptResult] `gorm:"type:json" json:"result" swaggertype:"object"`
+	UserID         uint                                  `gorm:"type:int" json:"user_id"`
+	PNETServerID   *uint                                 `gorm:"type:int" json:"pnet_server_id"`
+	LTIRoutingID   uint                                  `gorm:"type:int" json:"lti_routing_id"`
+	SynchronizedAt *time.Time                            `gorm:"type:datetime(3)" json:"synchronized_at"`
 }
 
 func (a *LTIAttemptBase) SetStatus(status string) {
