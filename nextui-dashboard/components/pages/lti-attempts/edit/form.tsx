@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
-import { addToast, Button, Input, Select, SelectItem } from '@heroui/react';
+import React, { useState } from 'react';
+import { Accordion, AccordionItem, addToast, Button, Input, Select, SelectItem } from '@heroui/react';
 import { Formik } from 'formik';
 import { ModelsLTIAttempt } from '@/helpers/api';
 import useLanguageBrowser from '@/helpers/locale';
@@ -128,6 +128,73 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
               <SelectItem key='terminating'>{AuthProviderAttempt?.FieldStatusValues?.terminating}</SelectItem>
               <SelectItem key='completed'>{AuthProviderAttempt?.FieldStatusValues?.completed}</SelectItem>
             </Select>
+            <Accordion>
+              <AccordionItem
+                key='grade'
+                aria-label={AuthProviderAttempt.FieldResult}
+                title={AuthProviderAttempt.FieldResult}
+              >
+                <div className='flex flex-col gap-4'>
+                  <Input
+                    variant='bordered'
+                    label={AuthProviderAttempt.FieldResultMaxScore}
+                    type='number'
+                    value={
+                      values.result && typeof values.result === 'object'
+                        ? (values.result as any).maxScore?.toString() || ''
+                        : ''
+                    }
+                    onChange={(e) => {
+                      const newResult = {
+                        ...(values.result as object),
+                        maxScore: parseFloat(e.target.value) || 0,
+                        currentScore: (values.result as any)?.currentScore || 0,
+                        resultDisplay: (values.result as any)?.resultDisplay || ''
+                      };
+                      setFieldValue('result', newResult);
+                    }}
+                  />
+                  <Input
+                    variant='bordered'
+                    label={AuthProviderAttempt.FieldResultCurrentScore}
+                    type='number'
+                    value={
+                      values.result && typeof values.result === 'object'
+                        ? (values.result as any).currentScore?.toString() || ''
+                        : ''
+                    }
+                    onChange={(e) => {
+                      const newResult = {
+                        ...(values.result as object),
+                        maxScore: (values.result as any)?.maxScore || 0,
+                        currentScore: parseFloat(e.target.value) || 0,
+                        resultDisplay: (values.result as any)?.resultDisplay || ''
+                      };
+                      setFieldValue('result', newResult);
+                    }}
+                  />
+                  <Input
+                    variant='bordered'
+                    label={AuthProviderAttempt.FieldResultDisplay}
+                    type='text'
+                    value={
+                      values.result && typeof values.result === 'object'
+                        ? (values.result as any).resultDisplay?.toString() || ''
+                        : ''
+                    }
+                    onChange={(e) => {
+                      const newResult = {
+                        ...(values.result as object),
+                        maxScore: (values.result as any)?.maxScore || 0,
+                        currentScore: (values.result as any)?.currentScore || 0,
+                        resultDisplay: e.target.value
+                      };
+                      setFieldValue('result', newResult);
+                    }}
+                  />
+                </div>
+              </AccordionItem>
+            </Accordion>
             {initialValues.roomId && (
               <Input
                 variant='bordered'

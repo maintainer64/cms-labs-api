@@ -280,7 +280,6 @@ export interface ModelsLTIRouting {
   /** LTI Params */
   lti_title?: string;
   name?: string;
-  pinned_session_minutes?: number;
   pnet_labs_path?: string;
   /**
    * The type of PNETLabsType, cms_client.PNETLabsTypeDefault
@@ -865,7 +864,6 @@ export interface UsecasesLTIRoutingEditInputDTO {
   lti_task_id?: string;
   lti_title?: string;
   name?: string;
-  pinned_session_minutes?: number;
   pnet_labs_path?: string;
   pnet_labs_type?: string;
   pnet_server_id?: number;
