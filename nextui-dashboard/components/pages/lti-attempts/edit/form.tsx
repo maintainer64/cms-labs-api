@@ -117,16 +117,12 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
               label={AuthProviderAttempt.FieldStatus}
               selectedKeys={[values.status || '']}
               onChange={handleChange('status')}
-              description={
-                AuthProviderAttempt.FieldStatusValues[
-                  values.status as keyof typeof AuthProviderAttempt.FieldStatusValues
-                ]?.split('||')[1] || ''
-              }
             >
-              <SelectItem key='pending'>{AuthProviderAttempt?.FieldStatusValues?.pending}</SelectItem>
-              <SelectItem key='active'>{AuthProviderAttempt?.FieldStatusValues?.active}</SelectItem>
-              <SelectItem key='terminating'>{AuthProviderAttempt?.FieldStatusValues?.terminating}</SelectItem>
-              <SelectItem key='completed'>{AuthProviderAttempt?.FieldStatusValues?.completed}</SelectItem>
+              {AuthProviderAttempt.FieldStatusValues.map(({ key, value, description }) => (
+                <SelectItem key={key} description={description}>
+                  {value}
+                </SelectItem>
+              ))}
             </Select>
             <Accordion>
               <AccordionItem

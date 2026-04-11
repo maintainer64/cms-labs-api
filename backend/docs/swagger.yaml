@@ -464,8 +464,6 @@ definitions:
         type: string
       name:
         type: string
-      pinned_session_minutes:
-        type: integer
       pnet_labs_path:
         type: string
       pnet_labs_type:
@@ -1453,8 +1451,6 @@ definitions:
         type: string
       name:
         type: string
-      pinned_session_minutes:
-        type: integer
       pnet_labs_path:
         type: string
       pnet_labs_type:
@@ -2864,6 +2860,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/usecases.LTIAttemptListRequest'
+      - description: Basic-токен, созданный клиентом
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -2871,8 +2872,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/usecases.LTIAttemptListResponse'
-      security:
-      - ApiKeyAuth: []
       summary: list lti_attempt
       tags:
       - lti_attempt

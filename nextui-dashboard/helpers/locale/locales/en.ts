@@ -272,16 +272,28 @@ const en = {
     FieldPNETServer: 'Pnet server',
     FieldExpiredAt: 'Expired at',
     FieldStatus: 'Status',
-    FieldStatusValues: {
-      pending: 'Pending',
-      pendingDescription: 'Attempt created but not yet assigned to a server',
-      active: 'Active',
-      activeDescription: 'Server confirmed and working on the attempt',
-      terminating: 'Terminating',
-      terminatingDescription: 'Termination requested, waiting for server cleanup',
-      completed: 'Completed',
-      completedDescription: 'Server confirmed completion of all processes'
-    },
+    FieldStatusValues: [
+      {
+        key: 'pending',
+        value: 'Pending',
+        description: 'Attempt created but not yet assigned to a server'
+      },
+      {
+        key: 'active',
+        value: 'Active',
+        description: 'Server confirmed and working on the attempt'
+      },
+      {
+        key: 'terminating',
+        value: 'Terminating',
+        description: 'Termination requested, waiting for server cleanup'
+      },
+      {
+        key: 'completed',
+        value: 'Completed',
+        description: 'Server confirmed completion of all processes'
+      }
+    ],
     FieldResult: 'Grade',
     FieldResultMaxScore: 'Max Score',
     FieldResultCurrentScore: 'Current Score',

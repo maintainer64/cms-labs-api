@@ -11,10 +11,10 @@ type LTIAttemptEditUC struct {
 }
 
 type LTIAttemptEditInputDTO struct {
-	ID           uint                                         `json:"id"`
-	PNETServerID uint                                         `json:"pnet_server_id"`
-	Status       string                                       `json:"status" validate:"required"`
-	Result       *datatypes.JSONType[models.LTIAttemptResult] `json:"result" swaggertype:"object"`
+	ID           uint                     `json:"id"`
+	PNETServerID uint                     `json:"pnet_server_id"`
+	Status       string                   `json:"status" validate:"required"`
+	Result       *models.LTIAttemptResult `json:"result" swaggertype:"object"`
 }
 
 type LTIAttemptEditRequest struct {
@@ -43,7 +43,10 @@ func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOu
 	entity.ID = dto.ID
 	entity.PNETServerID = &dto.PNETServerID
 	entity.Status = dto.Status
-	entity.Result = dto.Result
+	if dto.Result != nil {
+		ltiResult := datatypes.NewJSONType(*dto.Result)
+		entity.Result = &ltiResult
+	}
 	err = u.LTIAttemptQueries.Upsert(&entity)
 	return LTIAttemptEditOutputDTO{ID: entity.ID}, err
 }

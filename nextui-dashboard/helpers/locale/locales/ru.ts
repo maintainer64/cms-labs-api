@@ -273,16 +273,28 @@ const ru = {
     FieldPNETServer: 'Сервер',
     FieldExpiredAt: 'Закреплен до',
     FieldStatus: 'Статус',
-    FieldStatusValues: {
-      pending: 'Ожидание',
-      pendingDescription: 'Попытка создана, но еще не назначена на сервер',
-      active: 'Активен',
-      activeDescription: 'Сервер подтвердил и выполняет работу',
-      terminating: 'Завершается',
-      terminatingDescription: 'Запрошено завершение, ожидается очистка сервером',
-      completed: 'Завершена',
-      completedDescription: 'Сервер подтвердил завершение всех процессов'
-    },
+    FieldStatusValues: [
+      {
+        key: 'pending',
+        value: 'Ожидание',
+        description: 'Попытка создана, но еще не назначена на сервер'
+      },
+      {
+        key: 'active',
+        value: 'Активен',
+        description: 'Сервер подтвердил и выполняет работу'
+      },
+      {
+        key: 'terminating',
+        value: 'Завершается',
+        description: 'Запрошено завершение, ожидается очистка сервером'
+      },
+      {
+        key: 'completed',
+        value: 'Завершена',
+        description: 'Сервер подтвердил завершение всех процессов'
+      }
+    ],
     FieldResult: 'Оценка',
     FieldResultMaxScore: 'Макс. балл',
     FieldResultCurrentScore: 'Текущий балл',
