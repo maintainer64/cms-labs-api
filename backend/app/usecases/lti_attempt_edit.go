@@ -54,6 +54,6 @@ func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOu
 	if err != nil {
 		return LTIAttemptEditOutputDTO{ID: entity.ID}, err
 	}
-	go u.LTISyncResultUC.SyncGradeToLTI(entity.AttemptID)
+	_ = u.LTISyncResultUC.SyncGradeToLTI(entity.AttemptID)
 	return LTIAttemptEditOutputDTO{ID: entity.ID}, err
 }
