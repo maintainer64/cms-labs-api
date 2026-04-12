@@ -26,6 +26,7 @@ func (di *DIContainer) LTIAttemptEditBulkUC() *usecases.LTIAttemptEditBulkUC {
 	return &usecases.LTIAttemptEditBulkUC{
 		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
 		PNETServerQueries: di.Queries.PNETServerQueries,
+		LTISyncResultUC:   di.TaskLTISyncResultUC(),
 	}
 }
 

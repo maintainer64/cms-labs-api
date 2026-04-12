@@ -299,6 +299,7 @@ const ru = {
     FieldResultMaxScore: 'Макс. балл',
     FieldResultCurrentScore: 'Текущий балл',
     FieldResultDisplay: 'Комментарий',
+    FieldSynchronizedAt: 'Отправлено в',
     FieldCreatedAt: 'Создан в',
     FieldUpdatedAt: 'Обновлен в',
     DeletePopup: {

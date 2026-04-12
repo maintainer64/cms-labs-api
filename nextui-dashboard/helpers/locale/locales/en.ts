@@ -298,6 +298,7 @@ const en = {
     FieldResultMaxScore: 'Max Score',
     FieldResultCurrentScore: 'Current Score',
     FieldResultDisplay: 'Comment',
+    FieldSynchronizedAt: 'Synchronized at',
     FieldCreatedAt: 'Created at',
     FieldUpdatedAt: 'Updated at',
     DeletePopup: {

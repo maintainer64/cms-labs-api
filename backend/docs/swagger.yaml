@@ -393,6 +393,8 @@ definitions:
         type: integer
       status:
         type: string
+      synchronized_at:
+        type: string
       updated_at:
         type: string
       user_id:
@@ -422,6 +424,8 @@ definitions:
       result:
         type: object
       status:
+        type: string
+      synchronized_at:
         type: string
       updated_at:
         type: string

@@ -8,6 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/tasks"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
@@ -15,6 +16,7 @@ import (
 type LTIAttemptEditBulkUC struct {
 	LTIAttemptQueries *queries.LTIAttemptQueries
 	PNETServerQueries *queries.PNETServerQueries
+	LTISyncResultUC   *tasks.LTISyncResultUC
 	xServiceId        string
 }
 
@@ -78,6 +80,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 		if attemptDTO.Result != nil {
 			attempt.Result = attemptDTO.Result
 		}
+		attempt.SynchronizedAt = nil
 		err = u.LTIAttemptQueries.Upsert(&attempt)
 		if err != nil {
 			log.Warn().Msg(fmt.Sprintf(
@@ -87,6 +90,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 			))
 			return LTIAttemptEditBulkOutputDTO{}, err
 		}
+		go u.LTISyncResultUC.SyncGradeToLTI(attemptDTO.AttemptID)
 		count++
 	}
 	activeAttempts, _ := u.LTIAttemptQueries.List(

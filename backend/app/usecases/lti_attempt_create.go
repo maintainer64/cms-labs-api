@@ -20,7 +20,7 @@ import (
 type LTIAttemptCreateUC struct {
 	LTIAttemptQueries     *queries.LTIAttemptQueries
 	LTIRoomQueries        *queries.LTIRoomQueries
-	LaunchData            lti_query.LaunchDataStorer
+	LaunchData            *lti_query.LTILaunchDataQueries
 	RoundQueuePoolQueries *queries.RoundQueuePoolQueries
 	LTIRoutingQueries     *queries.LTIRoutingQueries
 	PNETServerQueries     *queries.PNETServerQueries
@@ -104,6 +104,10 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		if err := u.LTIAttemptQueries.Upsert(&attempt); err != nil {
 			return LTIAttemptCreateOutputDTO{}, err
 		}
+		err = u.AttachAttemptAndLTIData(attempt.AttemptID, u.user.LastLaunchId)
+		if err != nil {
+			return LTIAttemptCreateOutputDTO{}, err
+		}
 		return u.PreparedResponseByAttempt(&attempt)
 	}
 	if attempt.ID != 0 {
@@ -138,6 +142,10 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		attempt.RoomID = &roomEntity.ID
 	}
 	if err := u.LTIAttemptQueries.Upsert(&attempt); err != nil {
+		return LTIAttemptCreateOutputDTO{}, err
+	}
+	err := u.AttachAttemptAndLTIData(attempt.AttemptID, u.user.LastLaunchId)
+	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
 	}
 	return u.PreparedResponseByAttempt(&attempt)
@@ -358,4 +366,42 @@ func (u *LTIAttemptCreateUC) SSOUrlGenerator(
 	)
 	nextUrl := pathUrl + "?extra=" + extra.Marshal()
 	return nextUrl, err
+}
+
+// AttachAttemptAndLTIData Связывает из текущего пользователя LTI данные с созданным переходом и попыткой
+func (u *LTIAttemptCreateUC) AttachAttemptAndLTIData(
+	attemptId string,
+	launchId string,
+) error {
+	launchData, err := u.LaunchData.Get(launchId)
+	if err != nil {
+		log.Info().Msg(
+			fmt.Sprintf(
+				"LTIAttemptCreateUC: AttachAttemptAndLTIData attemptId: %s launchId %s is error",
+				attemptId,
+				launchId,
+			),
+		)
+		return err
+	}
+	launchData.AttemptID = &attemptId
+	err = u.LaunchData.Upsert(&launchData)
+	if err != nil {
+		log.Info().Msg(
+			fmt.Sprintf(
+				"LTIAttemptCreateUC: AttachAttemptAndLTIData attemptId: %s launchId %s is error update",
+				attemptId,
+				launchId,
+			),
+		)
+		return err
+	}
+	log.Info().Msg(
+		fmt.Sprintf(
+			"LTIAttemptCreateUC: AttachAttemptAndLTIData attemptId: %s launchId %s complete",
+			attemptId,
+			launchId,
+		),
+	)
+	return nil
 }

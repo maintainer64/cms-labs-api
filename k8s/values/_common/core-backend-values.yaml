@@ -83,3 +83,29 @@ cronJobs:
           limits:
             memory: "250Mi"
             cpu: "200m"
+  grade-sync:
+    schedule: "*/3 * * * *"
+    singleOnly: true
+    commandDurationAlert: 300
+    commandMaxDuration: 600
+    backoffLimit: 3
+    initContainers:
+      - name: vault-init
+        image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
+        imageTag: latest
+        command: [ "bash", "-c" ]
+        args:
+          - |
+            fetch_secrets --path=addon --output=/var/run/secrets/app --filename=addon --formats=json
+            fetch_secrets --path=proxmox --output=/var/run/secrets/app --filename=proxmox --formats=json
+            fetch_secrets --path=backend --output=/var/run/secrets/app --formats=env
+    containers:
+      - name: proxmox-sync
+        args: [ "--task=grade_sync" ]
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "250Mi"
+            cpu: "200m"

@@ -2871,6 +2871,9 @@
                 "status": {
                     "type": "string"
                 },
+                "synchronized_at": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "string"
                 },
@@ -2913,6 +2916,9 @@
                     "type": "object"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "synchronized_at": {
                     "type": "string"
                 },
                 "updated_at": {

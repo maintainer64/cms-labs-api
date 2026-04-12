@@ -5,6 +5,7 @@ import "errors"
 type StartupFiberUC struct {
 	UserDefaultCreateUC *UserDefaultCreateUC
 	ProxmoxSyncUC       *ProxmoxSyncUC
+	LTISyncResultUC     *LTISyncResultUC
 }
 
 func (u *StartupFiberUC) Startup(taskName *string) (bool, error) {
@@ -15,6 +16,9 @@ func (u *StartupFiberUC) Startup(taskName *string) (bool, error) {
 	}
 	if *taskName == "proxmox_sync" {
 		return true, u.ProxmoxSyncUC.Execute()
+	}
+	if *taskName == "grade_sync" {
+		return true, u.LTISyncResultUC.Execute()
 	}
 	return false, errors.New("task is undefined")
 }

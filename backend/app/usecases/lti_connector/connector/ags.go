@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	json "github.com/goccy/go-json"
+	"gitlab.com/a10869/api-modules/backend/app/models"
 )
 
 // AGS implements Assignment & Grades Services functions.
@@ -46,13 +47,13 @@ const (
 
 // A Score represents a grade assigned by the tool and sent to the platform.
 type Score struct {
-	Timestamp        string  `json:"timestamp"`
-	ScoreGiven       float64 `json:"scoreGiven"`
-	ScoreMaximum     float64 `json:"scoreMaximum"`
-	Comment          string  `json:"comment"`
-	ActivityProgress string  `json:"activityProgress"`
-	GradingProgress  string  `json:"gradingProgress"`
-	UserID           string  `json:"userId"`
+	Timestamp        string  `json:"timestamp"`        // Время фиксации оценки (обычно в формате ISO 8601). Помогает отследить, когда именно был выставлен балл или произошло последнее обновление.
+	ScoreGiven       float64 `json:"scoreGiven"`       // Фактически набранный балл студента. Тип float64 позволяет передавать дробные значения.
+	ScoreMaximum     float64 `json:"scoreMaximum"`     // Максимально возможный балл за данное задание. Используется для вычисления процента успеваемости.
+	Comment          string  `json:"comment"`          // Текстовый отзыв или комментарий преподавателя к работе студента.
+	ActivityProgress string  `json:"activityProgress"` // Статус выполнения самого задания пользователем (например, ActivityCompleted).
+	GradingProgress  string  `json:"gradingProgress"`  // Текущий статус процесса оценивания (например, GradingFullyGraded). Показывает, является ли текущий балл окончательным.
+	UserID           string  `json:"userId"`           // Уникальный идентификатор студента, которому принадлежит оценка.
 }
 
 // A Result represents a grade assigned by the platform and retrieved by the tool.
@@ -443,4 +444,36 @@ func (a *AGS) DeleteLineItem(lineItemToDeleteEndpoint string) error {
 	}
 
 	return nil
+}
+
+func (a *AGS) CastStatusToActivity(status string) string {
+	if status == models.AttemptStatusPending {
+		return ActivityInitialized
+	}
+	if status == models.AttemptStatusActive {
+		return ActivityInProgress
+	}
+	if status == models.AttemptStatusTerminating {
+		return ActivityInProgress
+	}
+	if status == models.AttemptStatusCompleted {
+		return ActivityCompleted
+	}
+	return ActivityInitialized
+}
+
+func (a *AGS) CastStatusToGrade(status string) string {
+	if status == models.AttemptStatusPending {
+		return GradeNotReady
+	}
+	if status == models.AttemptStatusActive {
+		return GradingPending
+	}
+	if status == models.AttemptStatusTerminating {
+		return GradingFullyGraded
+	}
+	if status == models.AttemptStatusCompleted {
+		return GradingFullyGraded
+	}
+	return GradeNotReady
 }

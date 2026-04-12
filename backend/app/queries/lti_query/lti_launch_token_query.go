@@ -28,6 +28,15 @@ func (q *LTILaunchDataQueries) Get(id string) (models.LTILaunchData, error) {
 	return entity, result.Error
 }
 
+func (q *LTILaunchDataQueries) GetByAttemptId(id string) (models.LTILaunchData, error) {
+	var entity models.LTILaunchData
+	result := q.DB.First(&entity, "attempt_id = ?", id)
+	if result.Error != nil && result.Error.Error() == "record not found" {
+		return entity, jsonrpc.NewRpcError("user_not_found", "lti launch data has not found")
+	}
+	return entity, result.Error
+}
+
 func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 	if entity == nil {
 		return nil
@@ -45,15 +54,14 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 		entity.UpdatedAt = time.Now().UTC()
 		result := q.DB.Save(&entity)
 		return result.Error
-	} else {
-		// Create
-		q.Logger.Debug().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create: %+v", entity))
-		q.Logger.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create launch_id=%+v", entity.ID))
-		entity.CreatedAt = time.Now().UTC()
-		entity.UpdatedAt = time.Now().UTC()
-		result := q.DB.Create(entity)
-		return result.Error
 	}
+	// Create
+	q.Logger.Debug().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create: %+v", entity))
+	q.Logger.Info().Msg(fmt.Sprintf("LTILaunchDataQueries: entity create launch_id=%+v", entity.ID))
+	entity.CreatedAt = time.Now().UTC()
+	entity.UpdatedAt = time.Now().UTC()
+	result := q.DB.Create(entity)
+	return result.Error
 }
 
 // StoreLaunchData stores the JSON launch data associated with the supplied launch ID.

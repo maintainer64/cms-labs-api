@@ -10,6 +10,7 @@ func (di *DIContainer) TaskStartup() *tasks.StartupFiberUC {
 	return &tasks.StartupFiberUC{
 		UserDefaultCreateUC: di.TaskUserDefaultCreateUC(),
 		ProxmoxSyncUC:       di.TaskProxmoxSyncUC(),
+		LTISyncResultUC:     di.TaskLTISyncResultUC(),
 	}
 }
 
@@ -29,5 +30,13 @@ func (di *DIContainer) TaskProxmoxSyncUC() *tasks.ProxmoxSyncUC {
 		TargetQueries:         di.Queries.TargetQueries,
 		TargetRelationQueries: di.Queries.TargetRelationQueries,
 		Logger:                logs.NewZeroLogger(di.ZeroLogConf.SetName("tasks.ProxmoxSyncUC")),
+	}
+}
+
+func (di *DIContainer) TaskLTISyncResultUC() *tasks.LTISyncResultUC {
+	return &tasks.LTISyncResultUC{
+		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
+		LTIConnectorAPI:   di.LTIProtocolDatastoreConfig(),
+		Logger:            logs.NewZeroLogger(di.ZeroLogConf.SetName("tasks.LTISyncResultUC")),
 	}
 }

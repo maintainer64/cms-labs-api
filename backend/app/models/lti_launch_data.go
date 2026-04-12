@@ -6,6 +6,7 @@ import "time"
 type LTILaunchDataBase struct {
 	ID        string    `gorm:"type:varchar(255)" json:"id"`
 	LTIFormID uint      `json:"lti_form_id"`
+	AttemptID *string   `gorm:"type:varchar(255)" json:"attempt_id"` // FK LTIAttempt
 	CreatedAt time.Time `gorm:"type:datetime(3)" json:"created_at" validate:"required"`
 	UpdatedAt time.Time `gorm:"type:datetime(3)" json:"updated_at" validate:"required"`
 }
