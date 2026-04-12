@@ -47,6 +47,7 @@ func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOu
 		ltiResult := datatypes.NewJSONType(*dto.Result)
 		entity.Result = &ltiResult
 	}
+	entity.SynchronizedAt = nil
 	err = u.LTIAttemptQueries.Upsert(&entity)
 	return LTIAttemptEditOutputDTO{ID: entity.ID}, err
 }
