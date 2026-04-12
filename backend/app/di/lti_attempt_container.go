@@ -19,6 +19,7 @@ func (di *DIContainer) LTIAttemptCreateUC() *usecases.LTIAttemptCreateUC {
 func (di *DIContainer) LTIAttemptEditUC() *usecases.LTIAttemptEditUC {
 	return &usecases.LTIAttemptEditUC{
 		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
+		LTISyncResultUC:   di.TaskLTISyncResultUC(),
 	}
 }
 
