@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/google/uuid"
 	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 
 	"gitlab.com/a10869/api-modules/shared/cms_client"
@@ -123,6 +124,7 @@ func (u *LTIAttemptCreateUC) Execute(dto LTIAttemptCreateInputDTO) (LTIAttemptCr
 		return u.PreparedResponseByAttempt(&attempt)
 	}
 	attempt = models.LTIAttempt{}
+	attempt.AttemptID = uuid.New().String()
 	attempt.Status = models.AttemptStatusPending
 	attempt.UserID = u.user.UserID()
 	// Set LTIRoutingSecretID
