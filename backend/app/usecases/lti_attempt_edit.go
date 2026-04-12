@@ -3,11 +3,13 @@ package usecases
 import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"gitlab.com/a10869/api-modules/backend/app/usecases/tasks"
 	"gorm.io/datatypes"
 )
 
 type LTIAttemptEditUC struct {
 	LTIAttemptQueries *queries.LTIAttemptQueries
+	LTISyncResultUC   *tasks.LTISyncResultUC
 }
 
 type LTIAttemptEditInputDTO struct {
@@ -49,5 +51,9 @@ func (u *LTIAttemptEditUC) Execute(dto LTIAttemptEditInputDTO) (LTIAttemptEditOu
 	}
 	entity.SynchronizedAt = nil
 	err = u.LTIAttemptQueries.Upsert(&entity)
+	if err != nil {
+		return LTIAttemptEditOutputDTO{ID: entity.ID}, err
+	}
+	go u.LTISyncResultUC.SyncGradeToLTI(entity.AttemptID)
 	return LTIAttemptEditOutputDTO{ID: entity.ID}, err
 }
