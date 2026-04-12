@@ -61,7 +61,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 	if err != nil {
 		return LTIAttemptEditBulkOutputDTO{}, err
 	}
-	var count uint = 0
+	attemptIds := make([]string, len(dto.Models))
 	for _, attemptDTO := range dto.Models {
 		attempt, err := u.LTIAttemptQueries.GetByAttemptID(attemptDTO.AttemptID)
 		if err != nil {
@@ -90,8 +90,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 			))
 			return LTIAttemptEditBulkOutputDTO{}, err
 		}
-		go u.LTISyncResultUC.SyncGradeToLTI(attemptDTO.AttemptID)
-		count++
+		attemptIds = append(attemptIds, attemptDTO.AttemptID)
 	}
 	activeAttempts, _ := u.LTIAttemptQueries.List(
 		&queries.LTIAttemptSearchParams{
@@ -119,5 +118,11 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 	if err != nil {
 		return LTIAttemptEditBulkOutputDTO{}, err
 	}
-	return LTIAttemptEditBulkOutputDTO{Count: count}, err
+	// Тут можно подумать над упрощением
+	for _, attemptId := range attemptIds {
+		err = u.LTISyncResultUC.SyncGradeToLTI(
+			attemptId,
+		)
+	}
+	return LTIAttemptEditBulkOutputDTO{Count: uint(len(attemptIds))}, err
 }
