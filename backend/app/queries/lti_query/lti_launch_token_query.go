@@ -30,7 +30,7 @@ func (q *LTILaunchDataQueries) Get(id string) (models.LTILaunchData, error) {
 
 func (q *LTILaunchDataQueries) GetByAttemptId(id string) (models.LTILaunchData, error) {
 	var entity models.LTILaunchData
-	result := q.DB.First(&entity, "attempt_id = ?", id)
+	result := q.DB.Where("attempt_id = ?", id).Order(`created_at desc`).First(&entity)
 	if result.Error != nil && result.Error.Error() == "record not found" {
 		return entity, jsonrpc.NewRpcError("user_not_found", "lti launch data has not found")
 	}
