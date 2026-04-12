@@ -53,7 +53,7 @@ func (u *LTISyncResultUC) SyncGradeToLTI(attemptId string) error {
 	}
 	u.Logger.Info().Msgf("LTISyncResultUC: syncing grade for attempt_id=%s, maxScore=%f, currentScore=%f, comment=%s",
 		attempt.AttemptID, result.MaxScore, result.CurrentScore, result.ResultDisplay)
-	conn, err := u.LTIConnectorAPI.ConnectorByUserID(attempt.UserID)
+	conn, err := u.LTIConnectorAPI.ConnectorByAttemptID(attempt.AttemptID)
 	if err != nil {
 		return err
 	}

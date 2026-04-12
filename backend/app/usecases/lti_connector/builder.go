@@ -16,17 +16,8 @@ type LTIConnectorAPI struct {
 	*zerolog.Logger
 }
 
-func (c *LTIConnectorAPI) ConnectorByUserID(userID uint) (*connector.Connector, error) {
-	userEntity, err := c.UserQueries.Get(userID)
-	if err != nil {
-		return nil, err
-	}
-	return c.ConnectorByLaunchID(userEntity.LastLaunchID)
-
-}
-
-func (c *LTIConnectorAPI) ConnectorByLaunchID(launchID string) (*connector.Connector, error) {
-	launchEntity, err := c.LTILaunchDataQueries.Get(launchID)
+func (c *LTIConnectorAPI) ConnectorByAttemptID(attemptId string) (*connector.Connector, error) {
+	launchEntity, err := c.LTILaunchDataQueries.GetByAttemptId(attemptId)
 	if err != nil {
 		return nil, err
 	}
