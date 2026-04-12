@@ -42,7 +42,7 @@ func (q *LTILaunchDataQueries) Upsert(entity *models.LTILaunchData) error {
 		return nil
 	}
 	entityDB := models.LTILaunchData{}
-	if entityDB.ID != "" {
+	if entity.ID != "" {
 		q.DB.Where("id = ?", entity.ID).Find(&entityDB)
 	}
 	if entityDB.ID != "" {
