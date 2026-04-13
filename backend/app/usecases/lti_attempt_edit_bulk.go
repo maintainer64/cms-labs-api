@@ -61,7 +61,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 	if err != nil {
 		return LTIAttemptEditBulkOutputDTO{}, err
 	}
-	attemptIds := make([]string, len(dto.Models))
+	attemptIds := make([]string, 0, len(dto.Models))
 	for _, attemptDTO := range dto.Models {
 		attempt, err := u.LTIAttemptQueries.GetByAttemptID(attemptDTO.AttemptID)
 		if err != nil {
@@ -120,7 +120,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 	}
 	// Тут можно подумать над упрощением
 	for _, attemptId := range attemptIds {
-		err = u.LTISyncResultUC.SyncGradeToLTI(
+		_ = u.LTISyncResultUC.SyncGradeToLTI(
 			attemptId,
 		)
 	}

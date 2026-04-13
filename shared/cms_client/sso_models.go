@@ -91,10 +91,8 @@ func (t *SSOTokenPublicData) JWTClaims() jwt.MapClaims {
 }
 
 const (
-	PNETLabsTypeDefault  = "default"
-	PNETLabsTypeCurl     = "curl"
-	PNETLabsTypeSSO      = "sso"
-	PNETLabsTypeClabgate = "clabgate"
+	PNETLabsTypeDefault = "default"
+	PNETLabsTypeSSO     = "sso"
 )
 
 type SSOTokenPublicExtraParams struct {
