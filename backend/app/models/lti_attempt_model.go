@@ -32,7 +32,7 @@ type LTIAttemptBase struct {
 	Status         string                                `gorm:"type:varchar(255)" json:"status" validate:"required"`
 	Result         *datatypes.JSONType[LTIAttemptResult] `gorm:"type:json" json:"result" swaggertype:"object"`
 	UserID         uint                                  `gorm:"type:int" json:"user_id"`
-	PNETServerID   *uint                                 `gorm:"type:int" json:"pnet_server_id"`
+	ServerID       *uint                                 `gorm:"type:int" json:"server_id"`
 	LTIRoutingID   uint                                  `gorm:"type:int" json:"lti_routing_id"`
 	SynchronizedAt *time.Time                            `gorm:"type:datetime(3)" json:"synchronized_at"`
 }
@@ -69,7 +69,7 @@ type LTIAttemptListItem struct {
 	LTIAttemptBase
 	UserEmail      string `json:"user_email"`
 	UserName       string `json:"user_name"`
-	PNETServerName string `json:"pnet_server_name"`
+	ServerName     string `json:"server_name"`
 	LTIRoutingName string `json:"lti_routing_name"`
 }
 

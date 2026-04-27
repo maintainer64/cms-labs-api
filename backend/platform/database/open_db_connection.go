@@ -20,7 +20,7 @@ type Queries struct {
 	*lti_query.LTILaunchDataQueries
 	*queries.UserQueries
 	*queries.UserPasswordQueries
-	*queries.PNETServerQueries
+	*queries.ServerQueries
 	*queries.RoundQueuePoolQueries
 	*queries.LTIRoutingQueries
 	*queries.LTIAttemptQueries
@@ -51,7 +51,7 @@ func OpenDBConnection(l *zerolog.Logger) (*Queries, error) {
 		LTILaunchDataQueries:  &lti_query.LTILaunchDataQueries{DB: db, Logger: l},
 		UserQueries:           &queries.UserQueries{DB: db, Logger: l},
 		UserPasswordQueries:   &queries.UserPasswordQueries{DB: db, Logger: l},
-		PNETServerQueries:     &queries.PNETServerQueries{DB: db, Logger: l},
+		ServerQueries:         &queries.ServerQueries{DB: db, Logger: l},
 		RoundQueuePoolQueries: &queries.RoundQueuePoolQueries{DB: db, Logger: l},
 		LTIRoutingQueries:     &queries.LTIRoutingQueries{DB: db, Logger: l},
 		LTIAttemptQueries:     &queries.LTIAttemptQueries{DB: db, Logger: l},

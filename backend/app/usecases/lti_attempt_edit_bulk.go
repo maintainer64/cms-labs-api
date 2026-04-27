@@ -15,7 +15,7 @@ import (
 
 type LTIAttemptEditBulkUC struct {
 	LTIAttemptQueries *queries.LTIAttemptQueries
-	PNETServerQueries *queries.PNETServerQueries
+	ServerQueries     *queries.ServerQueries
 	LTISyncResultUC   *tasks.LTISyncResultUC
 	xServiceId        string
 }
@@ -57,7 +57,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 	if u.xServiceId == "" {
 		return LTIAttemptEditBulkOutputDTO{}, errors.New("not authorized service")
 	}
-	serverEntity, err := u.PNETServerQueries.GetByClientId(u.xServiceId)
+	serverEntity, err := u.ServerQueries.GetByClientId(u.xServiceId)
 	if err != nil {
 		return LTIAttemptEditBulkOutputDTO{}, err
 	}
@@ -68,7 +68,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 			log.Warn().Msg(fmt.Sprintf("LTIAttemptEditBulkUC: LTI attempt id %s not found", attemptDTO.AttemptID))
 			continue
 		}
-		if attempt.PNETServerID != nil && *attempt.PNETServerID != serverEntity.ID {
+		if attempt.ServerID != nil && *attempt.ServerID != serverEntity.ID {
 			log.Warn().Msg(fmt.Sprintf(
 				"LTIAttemptEditBulkUC: LTI attempt id %s is not owned by service %s",
 				attemptDTO.AttemptID,
@@ -101,9 +101,9 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 		},
 	)
 	log.Info().Msg(fmt.Sprintf("LTIAttemptEditBulkUC: Update %s last online status and count attempts/user %d", u.xServiceId, len(activeAttempts)))
-	err = u.PNETServerQueries.DB.Transaction(
+	err = u.ServerQueries.DB.Transaction(
 		func(tx *gorm.DB) error {
-			serverEntity, err := u.PNETServerQueries.GetByClientId(u.xServiceId)
+			serverEntity, err := u.ServerQueries.GetByClientId(u.xServiceId)
 			if err != nil {
 				return err
 			}

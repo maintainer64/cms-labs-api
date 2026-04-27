@@ -66,7 +66,7 @@ var (
 
 type SSOAuthorizeUC struct {
 	TokenAttemptQueries *queries.TokenAttemptQueries
-	PNETServerQueries   *queries.PNETServerQueries
+	ServerQueries       *queries.ServerQueries
 	RoleQueries         *queries.RoleQueries
 	*zerolog.Logger
 }
@@ -83,7 +83,7 @@ func (u *SSOAuthorizeUC) Execute(inputDTO SSOAuthorizeInputDTO) (*SSOAuthorizeOu
 		attemptNonce = uuid.New().String()
 	}
 	u.Logger.Info().Msg(fmt.Sprintf("authorize sso authorize with clientID %s and userID %v", inputDTO.ClientID, inputDTO.UserID))
-	server, err := u.PNETServerQueries.GetByClientId(inputDTO.ClientID)
+	server, err := u.ServerQueries.GetByClientId(inputDTO.ClientID)
 	if err != nil {
 		return nil, err
 	}

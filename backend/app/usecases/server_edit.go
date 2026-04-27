@@ -5,12 +5,12 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/queries"
 )
 
-type PNETServerEditUC struct {
-	PNETServerQueries *queries.PNETServerQueries
-	RoleQueries       *queries.RoleQueries
+type ServerEditUC struct {
+	ServerQueries *queries.ServerQueries
+	RoleQueries   *queries.RoleQueries
 }
 
-type PNETServerEditInputDTO struct {
+type ServerEditInputDTO struct {
 	ID                   uint   `json:"id"`
 	ClientID             string `json:"client_id"`
 	Type                 string `json:"type" validate:"required"`
@@ -24,26 +24,26 @@ type PNETServerEditInputDTO struct {
 	Token                string `json:"token"`
 }
 
-type PNETServerEditRequest struct {
-	JSONRPC string                 `json:"jsonrpc" default:"2.0" required:"true"`
-	Method  string                 `json:"method" default:"server.upsert" required:"true"`
-	Params  PNETServerEditInputDTO `json:"params,omitempty"`
-	ID      string                 `json:"id,omitempty" default:"1" required:"true"`
+type ServerEditRequest struct {
+	JSONRPC string             `json:"jsonrpc" default:"2.0" required:"true"`
+	Method  string             `json:"method" default:"server.upsert" required:"true"`
+	Params  ServerEditInputDTO `json:"params,omitempty"`
+	ID      string             `json:"id,omitempty" default:"1" required:"true"`
 }
 
-type PNETServerEditOutputDTO struct {
+type ServerEditOutputDTO struct {
 	ID uint `json:"id" required:"true"`
 }
 
-type PNETServerEditResponse struct {
-	JSONRPC string                  `json:"jsonrpc" default:"2.0" required:"true"`
-	Result  PNETServerEditOutputDTO `json:"result,omitempty"`
-	Error   interface{}             `json:"error,omitempty"`
-	ID      string                  `json:"id,omitempty" default:"1" required:"true"`
+type ServerEditResponse struct {
+	JSONRPC string              `json:"jsonrpc" default:"2.0" required:"true"`
+	Result  ServerEditOutputDTO `json:"result,omitempty"`
+	Error   interface{}         `json:"error,omitempty"`
+	ID      string              `json:"id,omitempty" default:"1" required:"true"`
 }
 
-func (u *PNETServerEditUC) Execute(dto PNETServerEditInputDTO) (PNETServerEditOutputDTO, error) {
-	entity := &models.PNETServer{}
+func (u *ServerEditUC) Execute(dto ServerEditInputDTO) (ServerEditOutputDTO, error) {
+	entity := &models.Server{}
 	entity.ID = dto.ID
 	entity.ClientID = dto.ClientID
 	entity.Type = dto.Type
@@ -56,10 +56,10 @@ func (u *PNETServerEditUC) Execute(dto PNETServerEditInputDTO) (PNETServerEditOu
 	if dto.Token != "" {
 		entity.Token = dto.Token
 	}
-	err := u.PNETServerQueries.Upsert(entity)
+	err := u.ServerQueries.Upsert(entity)
 	if err != nil {
-		return PNETServerEditOutputDTO{}, err
+		return ServerEditOutputDTO{}, err
 	}
 	err = u.RoleQueries.SetByServerId(entity.ID, dto.Roles)
-	return PNETServerEditOutputDTO{ID: entity.ID}, err
+	return ServerEditOutputDTO{ID: entity.ID}, err
 }

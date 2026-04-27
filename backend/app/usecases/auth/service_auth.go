@@ -11,7 +11,7 @@ import (
 )
 
 type ServiceAuthorizeUC struct {
-	PNETServerQueries *queries.PNETServerQueries
+	ServerQueries *queries.ServerQueries
 	*zerolog.Logger
 }
 
@@ -37,7 +37,7 @@ func (u *ServiceAuthorizeUC) Execute(c *jsonrpc.Ctx) error {
 	}
 	username := credentials[0]
 	password := credentials[1]
-	serverModel, err := u.PNETServerQueries.GetByClientId(username)
+	serverModel, err := u.ServerQueries.GetByClientId(username)
 	if err != nil {
 		u.Logger.Info().Msg(fmt.Sprintf("Error getting client basic auth model by username: %v", username))
 		return ServiceNotPermissions

@@ -97,10 +97,9 @@ const (
 
 type SSOTokenPublicExtraParams struct {
 	AttemptID string `json:"attempt_id"`
-	// enumeration PNETLabsTypeDefault...
-	PNETLabsType string `json:"pnet_labs_type"`
-	PNETLabsPath string `json:"pnet_labs_path"`
-	PNETTestPath string `json:"pnet_test_path"`
+	LabsType  string `json:"labs_type"`
+	LabsPath  string `json:"labs_path"`
+	TestPath  string `json:"test_path"`
 }
 
 func (t *SSOTokenPublicExtraParams) Marshal() string {

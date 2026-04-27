@@ -15,15 +15,15 @@ type RoundQueuePoolBase struct {
 }
 
 type RoundQueuePoolSecret struct {
-	PNETServerID uint `gorm:"type:int" json:"pnet_server_id"`
+	ServerID uint `gorm:"type:int" json:"server_id"`
 }
 
 type RoundQueuePoolListItem struct {
 	Base
-	PNETServerBase
+	ServerBase
 }
 
-// TableName переопределяет название таблицы для PNETServerListItem на `pnet_servers`
+// TableName overrides table name for RoundQueuePoolListItem to `round_queue_pools`
 func (RoundQueuePoolListItem) TableName() string {
 	return "round_queue_pools"
 }

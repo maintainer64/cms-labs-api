@@ -24,7 +24,7 @@ type KubernetesAddonService struct {
 	Config              *connection.AddonConfig
 	VaultClient         vault.ClientInterface
 	TokenAttemptQueries *queries.TokenAttemptQueries
-	PNETServerQueries   *queries.PNETServerQueries
+	ServerQueries       *queries.ServerQueries
 	UserQueries         *queries.UserQueries
 	TargetQueries       *queries.TargetQueries
 }
@@ -166,17 +166,17 @@ func (s *KubernetesAddonService) CreateByEmail(ctx context.Context, email string
 }
 
 func (s *KubernetesAddonService) getServerId() uint {
-	server, err := s.PNETServerQueries.GetByClientId(models.ServerTypeKubernetes)
+	server, err := s.ServerQueries.GetByClientId(models.ServerTypeKubernetes)
 	if err == nil && server.ID != 0 {
 		return server.ID
 	}
-	entityDB := models.PNETServer{}
+	entityDB := models.Server{}
 	entityDB.Name = "Внутренний сервис k8s"
 	entityDB.Type = models.ServerTypeKubernetes
 	entityDB.ClientID = models.ServerTypeKubernetes
 	entityDB.CreatedAt = time.Now().UTC()
 	entityDB.UpdatedAt = time.Now().UTC()
-	_ = s.PNETServerQueries.Upsert(&entityDB)
+	_ = s.ServerQueries.Upsert(&entityDB)
 	return entityDB.ID
 }
 

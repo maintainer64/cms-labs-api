@@ -22,7 +22,7 @@ func (q *RoundQueuePoolQueries) tableName(object interface{}) string {
 	return stmt.Schema.Table
 }
 
-type RoundQueuePoolPnetListItem struct {
+type RoundQueuePoolServerListItem struct {
 	ID          uint      `gorm:"primaryKey" json:"id"`
 	Name        string    `gorm:"type:varchar(255)" json:"name"`
 	Type        string    `gorm:"type:varchar(255)" json:"type" validate:"required"`
@@ -39,17 +39,17 @@ func (q *RoundQueuePoolQueries) Get(id uint) (models.RoundQueuePool, error) {
 	return entity, result.Error
 }
 
-func (q *RoundQueuePoolQueries) UpsertQueueByPnetServerIds(ids []uint) error {
-	q.Logger.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries upsert queue by pnet-server-ids: count %+v", len(ids)))
+func (q *RoundQueuePoolQueries) UpsertQueueByServerIds(ids []uint) error {
+	q.Logger.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries upsert queue by server-ids: count %+v", len(ids)))
 	var entities []models.RoundQueuePool
-	for index, pnetServerId := range ids {
+	for index, serverId := range ids {
 		entity := models.RoundQueuePool{}
 		entity.CreatedAt = time.Now().UTC()
 		entity.UpdatedAt = time.Now().UTC()
 		entity.ConnectedAt = time.Now().UTC().Add(time.Duration(index-len(ids)) * time.Minute)
 		entity.LastUsed = false
 		entity.IsActive = true
-		entity.PNETServerID = pnetServerId
+		entity.ServerID = serverId
 		entity.Type = models.RoundQueuePoolTypePNET
 		entities = append(entities, entity)
 	}
@@ -67,19 +67,19 @@ func (q *RoundQueuePoolQueries) UpsertQueueByPnetServerIds(ids []uint) error {
 	return err
 }
 
-func (q *RoundQueuePoolQueries) List() ([]RoundQueuePoolPnetListItem, error) {
-	var entities []RoundQueuePoolPnetListItem
+func (q *RoundQueuePoolQueries) List() ([]RoundQueuePoolServerListItem, error) {
+	var entities []RoundQueuePoolServerListItem
 	query := q.DB.Table(
 		q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools",
 	).Select(
-		"pnet_servers.id, pnet_servers.name, round_queue_pools.type, round_queue_pools.last_used, round_queue_pools.connected_at",
+		"servers.id, servers.name, round_queue_pools.type, round_queue_pools.last_used, round_queue_pools.connected_at",
 	).Joins(
-		"join "+q.tableName(&models.PNETServer{})+" pnet_servers on pnet_servers.id = round_queue_pools.pnet_server_id",
+		"join "+q.tableName(&models.Server{})+" servers on servers.id = round_queue_pools.server_id",
 	).Where(
 		"round_queue_pools.type = ?",
 		models.RoundQueuePoolTypePNET,
 	)
-	query = models.PNETServeIsRealActive(query)
+	query = models.ServerIsRealActive(query)
 	query = query.Limit(MaxLimitCount).Offset(0).Order("round_queue_pools.connected_at asc")
 	if err := query.Scan(&entities).Error; err != nil {
 		return entities, err
@@ -109,7 +109,6 @@ func (q *RoundQueuePoolQueries) GetNextByType(poolType string) (models.RoundQueu
 func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string) (models.RoundQueuePool, error) {
 	var entities []models.RoundQueuePool
 	q.Logger.Info().Msg(fmt.Sprintf("RoundQueuePoolQueries get next pool item from queue by type: %+v", poolType))
-	// Получаем последнюю сущность last_used = true
 	selectCurrentDistribution := tx.Table(
 		q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools",
 	).Select(
@@ -121,7 +120,6 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		"round_queue_pools.last_used = ?",
 		true,
 	).Limit(1)
-	// Получаем следующую сущность для распределения относительно времени
 	selectNextDistribution := tx.Table(
 		q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools",
 	).Select(
@@ -132,10 +130,10 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 			"round_queue_pools.connected_at, "+
 			"round_queue_pools.last_used, "+
 			"round_queue_pools.is_active, "+
-			"round_queue_pools.pnet_server_id",
+			"round_queue_pools.server_id",
 	).Joins(
-		"join "+q.tableName(&models.PNETServer{})+" pnet_servers on pnet_servers.id = round_queue_pools.pnet_server_id",
-		q.tableName(&models.PNETServer{}),
+		"join "+q.tableName(&models.Server{})+" servers on servers.id = round_queue_pools.server_id",
+		q.tableName(&models.Server{}),
 	).Where(
 		"round_queue_pools.type = ?",
 		poolType,
@@ -149,7 +147,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		"round_queue_pools.connected_at > (?)",
 		selectCurrentDistribution,
 	)
-	selectNextDistribution = models.PNETServeIsRealActive(selectNextDistribution)
+	selectNextDistribution = models.ServerIsRealActive(selectNextDistribution)
 	selectNextDistribution = selectNextDistribution.Limit(1).Offset(0).Order(
 		"round_queue_pools.connected_at asc",
 	)
@@ -166,15 +164,14 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		entity := entities[0]
 		q.Logger.Info().Msg(
 			fmt.Sprintf(
-				"RoundQueuePoolQueries success get id: %+v, pnetServerId: %+v, pool item from queue by type: %+v",
+				"RoundQueuePoolQueries success get id: %+v, serverId: %+v, pool item from queue by type: %+v",
 				entity.ID,
-				entity.PNETServerID,
+				entity.ServerID,
 				entity.Type,
 			),
 		)
 		return entity, nil
 	}
-	// Get first entity on distribution
 	selectFirstDistribution := tx.Table(q.tableName(&models.RoundQueuePool{})+" AS round_queue_pools").Select(
 		"round_queue_pools.id, "+
 			"round_queue_pools.created_at, "+
@@ -183,9 +180,9 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 			"round_queue_pools.connected_at, "+
 			"round_queue_pools.last_used, "+
 			"round_queue_pools.is_active, "+
-			"round_queue_pools.pnet_server_id",
+			"round_queue_pools.server_id",
 	).Joins(
-		"join "+q.tableName(&models.PNETServer{})+" pnet_servers on pnet_servers.id = round_queue_pools.pnet_server_id",
+		"join "+q.tableName(&models.Server{})+" servers on servers.id = round_queue_pools.server_id",
 	).Where(
 		"round_queue_pools.type = ?",
 		poolType,
@@ -193,7 +190,7 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		"round_queue_pools.is_active = ?",
 		true,
 	)
-	selectFirstDistribution = models.PNETServeIsRealActive(selectFirstDistribution)
+	selectFirstDistribution = models.ServerIsRealActive(selectFirstDistribution)
 	selectFirstDistribution = selectFirstDistribution.Limit(1).Offset(0).Order(
 		"round_queue_pools.connected_at asc",
 	)
@@ -210,9 +207,9 @@ func (q *RoundQueuePoolQueries) nextPoolItemByType(tx *gorm.DB, poolType string)
 		entity := entities[0]
 		q.Logger.Info().Msg(
 			fmt.Sprintf(
-				"RoundQueuePoolQueries success get first entity id: %+v, pnetServerId: %+v, pool item from queue by type: %+v",
+				"RoundQueuePoolQueries success get first entity id: %+v, serverId: %+v, pool item from queue by type: %+v",
 				entity.ID,
-				entity.PNETServerID,
+				entity.ServerID,
 				entity.Type,
 			),
 		)

@@ -16,7 +16,7 @@ func (di *DIContainer) FactoryAddonService() *addons.FactoryAddonService {
 		Config:              configs.AppConfig.AddonsConfig,
 		VaultClient:         di.NewVaultClient(),
 		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
-		PNETServerQueries:   di.Queries.PNETServerQueries,
+		ServerQueries:       di.Queries.ServerQueries,
 		UserQueries:         di.Queries.UserQueries,
 		TargetQueries:       di.Queries.TargetQueries,
 		IssId:               "",

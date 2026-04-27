@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
 /*
@@ -137,7 +138,7 @@ export interface AuthSwaggerSSOTokenPublicData {
   /** Iss. Идентификатор эмитента токена */
   iss?: string;
   /** K8S type */
-  'k8s:access_type'?: string;
+  "k8s:access_type"?: string;
   /** LastLaunchId. ID пользователя SSO через LMS систему */
   last_launch_id?: string;
   /** Name. Полное ФИО пользователя */
@@ -241,9 +242,9 @@ export interface ModelsLTIAttempt {
   created_at: string;
   id?: number;
   lti_routing_id?: number;
-  pnet_server_id?: number;
   result?: object;
   room_id?: number;
+  server_id?: number;
   status: string;
   synchronized_at?: string;
   updated_at: string;
@@ -256,9 +257,9 @@ export interface ModelsLTIAttemptListItem {
   id?: number;
   lti_routing_id?: number;
   lti_routing_name?: string;
-  pnet_server_id?: number;
-  pnet_server_name?: string;
   result?: object;
+  server_id?: number;
+  server_name?: string;
   status: string;
   synchronized_at?: string;
   updated_at: string;
@@ -273,6 +274,12 @@ export interface ModelsLTIRouting {
   created_at: string;
   id?: number;
   is_default?: boolean;
+  labs_path?: string;
+  /**
+   * The type of PNETLabsType, cms_client.PNETLabsTypeDefault
+   * enum: default,curl,sso
+   */
+  labs_type?: string;
   lti_course_id?: string;
   lti_description?: string;
   lti_params_task?: string;
@@ -282,14 +289,8 @@ export interface ModelsLTIRouting {
   /** LTI Params */
   lti_title?: string;
   name?: string;
-  pnet_labs_path?: string;
-  /**
-   * The type of PNETLabsType, cms_client.PNETLabsTypeDefault
-   * enum: default,curl,sso
-   */
-  pnet_labs_type?: string;
-  pnet_server_id?: number;
-  pnet_test_path?: string;
+  server_id?: number;
+  test_path?: string;
   updated_at: string;
 }
 
@@ -300,7 +301,15 @@ export interface ModelsLTIRoutingListItem {
   updated_at: string;
 }
 
-export interface ModelsPNETServer {
+export interface ModelsRole {
+  code?: string;
+  created_at: string;
+  id?: number;
+  name?: string;
+  updated_at: string;
+}
+
+export interface ModelsServer {
   client_id?: string;
   created_at: string;
   id?: number;
@@ -311,14 +320,14 @@ export interface ModelsPNETServer {
   minutes_for_disconnect?: number;
   name?: string;
   token?: string;
-  /** enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes */
+  /** enumeration: pnet, openid, k8s */
   type?: string;
   unit_rate?: number;
   updated_at: string;
   url?: string;
 }
 
-export interface ModelsPNETServerListItem {
+export interface ModelsServerListItem {
   created_at: string;
   id?: number;
   is_active?: boolean;
@@ -327,19 +336,11 @@ export interface ModelsPNETServerListItem {
   max_count_users_limit?: number;
   minutes_for_disconnect?: number;
   name?: string;
-  /** enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes */
+  /** enumeration: pnet, openid, k8s */
   type?: string;
   unit_rate?: number;
   updated_at: string;
   url?: string;
-}
-
-export interface ModelsRole {
-  code?: string;
-  created_at: string;
-  id?: number;
-  name?: string;
-  updated_at: string;
 }
 
 export interface ModelsServiceCard {
@@ -431,7 +432,15 @@ export interface QueriesLTIAttemptSearchParams {
   user_ids?: number[];
 }
 
-export interface QueriesPNETServerQueriesListDTO {
+export interface QueriesRoundQueuePoolServerListItem {
+  connected_at: string;
+  id?: number;
+  last_used: boolean;
+  name?: string;
+  type: string;
+}
+
+export interface QueriesServerQueriesListDTO {
   limit?: number;
   offset?: number;
   /**
@@ -448,19 +457,11 @@ export interface QueriesPNETServerQueriesListDTO {
   types?: string[];
 }
 
-export interface QueriesRoundQueuePoolPnetListItem {
-  connected_at: string;
-  id?: number;
-  last_used: boolean;
-  name?: string;
-  type: string;
+export interface ServerQueueServerQueueListOutputDTO {
+  model: QueriesRoundQueuePoolServerListItem[];
 }
 
-export interface RoundQueuePoolPnetRoundQueuePoolPnetListOutputDTO {
-  model: QueriesRoundQueuePoolPnetListItem[];
-}
-
-export interface RoundQueuePoolPnetRoundQueuePoolPnetListRequest {
+export interface ServerQueueServerQueueListRequest {
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
@@ -470,18 +471,18 @@ export interface RoundQueuePoolPnetRoundQueuePoolPnetListRequest {
   params?: any;
 }
 
-export interface RoundQueuePoolPnetRoundQueuePoolPnetListResponse {
+export interface ServerQueueServerQueueListResponse {
   error?: any;
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: RoundQueuePoolPnetRoundQueuePoolPnetListOutputDTO;
+  result?: ServerQueueServerQueueListOutputDTO;
 }
 
-export type RoundQueuePoolPnetRoundQueuePoolPnetUpsertOutputDTO = object;
+export type ServerQueueServerQueueUpsertOutputDTO = object;
 
-export interface RoundQueuePoolPnetRoundQueuePoolPnetUpsertRequest {
+export interface ServerQueueServerQueueUpsertRequest {
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
@@ -491,13 +492,13 @@ export interface RoundQueuePoolPnetRoundQueuePoolPnetUpsertRequest {
   params?: any;
 }
 
-export interface RoundQueuePoolPnetRoundQueuePoolPnetUpsertResponse {
+export interface ServerQueueServerQueueUpsertResponse {
   error?: any;
   /** @default "1" */
   id?: string;
   /** @default "2.0" */
   jsonrpc?: string;
-  result?: RoundQueuePoolPnetRoundQueuePoolPnetUpsertOutputDTO;
+  result?: ServerQueueServerQueueUpsertOutputDTO;
 }
 
 export type TypesJsonStore = Record<string, any>;
@@ -754,8 +755,8 @@ export interface UsecasesLTIAttemptEditBulkResponse {
 
 export interface UsecasesLTIAttemptEditInputDTO {
   id?: number;
-  pnet_server_id?: number;
   result?: object;
+  server_id?: number;
   status: string;
 }
 
@@ -859,6 +860,8 @@ export interface UsecasesLTIRoutingEditInputDTO {
   collaboration?: number;
   id?: number;
   is_default?: boolean;
+  labs_path?: string;
+  labs_type?: string;
   lti_course_id?: string;
   lti_description?: string;
   lti_params_task?: string;
@@ -866,10 +869,8 @@ export interface UsecasesLTIRoutingEditInputDTO {
   lti_task_id?: string;
   lti_title?: string;
   name?: string;
-  pnet_labs_path?: string;
-  pnet_labs_type?: string;
-  pnet_server_id?: number;
-  pnet_test_path?: string;
+  server_id?: number;
+  test_path?: string;
 }
 
 export interface UsecasesLTIRoutingEditOutputDTO {
@@ -952,123 +953,6 @@ export interface UsecasesLTIRoutingListResponse {
   result?: UsecasesLTIRoutingListOutputDTO;
 }
 
-export interface UsecasesPNETServerDeleteInputDTO {
-  id?: number;
-}
-
-export interface UsecasesPNETServerDeleteRequest {
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  /** @default "server.list" */
-  method?: string;
-  params?: UsecasesPNETServerDeleteInputDTO;
-}
-
-export interface UsecasesPNETServerDeleteResponse {
-  error?: any;
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  result?: UsecasesPNETServerDeleteInputDTO;
-}
-
-export interface UsecasesPNETServerEditInputDTO {
-  client_id?: string;
-  id?: number;
-  is_active?: boolean;
-  max_count_users_limit?: number;
-  minutes_for_disconnect?: number;
-  name: string;
-  roles?: number[];
-  token?: string;
-  type: string;
-  unit_rate?: number;
-  url: string;
-}
-
-export interface UsecasesPNETServerEditOutputDTO {
-  id?: number;
-}
-
-export interface UsecasesPNETServerEditRequest {
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  /** @default "server.upsert" */
-  method?: string;
-  params?: UsecasesPNETServerEditInputDTO;
-}
-
-export interface UsecasesPNETServerEditResponse {
-  error?: any;
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  result?: UsecasesPNETServerEditOutputDTO;
-}
-
-export interface UsecasesPNETServerGetInputDTO {
-  id?: number;
-}
-
-export interface UsecasesPNETServerGetOutputDTO {
-  model?: ModelsPNETServer;
-  roles?: number[];
-}
-
-export interface UsecasesPNETServerGetRequest {
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  /** @default "server.get" */
-  method?: string;
-  params?: UsecasesPNETServerGetInputDTO;
-}
-
-export interface UsecasesPNETServerGetResponse {
-  error?: any;
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  result?: UsecasesPNETServerGetOutputDTO;
-}
-
-export interface UsecasesPNETServerListModel {
-  model: ModelsPNETServerListItem;
-  roles?: number[];
-}
-
-export interface UsecasesPNETServerListOutputDTO {
-  model: UsecasesPNETServerListModel[];
-  total_count: number;
-}
-
-export interface UsecasesPNETServerListRequest {
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  /** @default "server.list" */
-  method?: string;
-  params?: QueriesPNETServerQueriesListDTO;
-}
-
-export interface UsecasesPNETServerListResponse {
-  error?: any;
-  /** @default "1" */
-  id?: string;
-  /** @default "2.0" */
-  jsonrpc?: string;
-  result?: UsecasesPNETServerListOutputDTO;
-}
-
 export interface UsecasesRoleDeleteInputDTO {
   id: number;
 }
@@ -1145,6 +1029,123 @@ export interface UsecasesRoleListResponse {
   /** @default "2.0" */
   jsonrpc?: string;
   result?: UsecasesRoleListOutputDTO;
+}
+
+export interface UsecasesServerDeleteInputDTO {
+  id?: number;
+}
+
+export interface UsecasesServerDeleteRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "server.list" */
+  method?: string;
+  params?: UsecasesServerDeleteInputDTO;
+}
+
+export interface UsecasesServerDeleteResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesServerDeleteInputDTO;
+}
+
+export interface UsecasesServerEditInputDTO {
+  client_id?: string;
+  id?: number;
+  is_active?: boolean;
+  max_count_users_limit?: number;
+  minutes_for_disconnect?: number;
+  name: string;
+  roles?: number[];
+  token?: string;
+  type: string;
+  unit_rate?: number;
+  url: string;
+}
+
+export interface UsecasesServerEditOutputDTO {
+  id?: number;
+}
+
+export interface UsecasesServerEditRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "server.upsert" */
+  method?: string;
+  params?: UsecasesServerEditInputDTO;
+}
+
+export interface UsecasesServerEditResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesServerEditOutputDTO;
+}
+
+export interface UsecasesServerGetInputDTO {
+  id?: number;
+}
+
+export interface UsecasesServerGetOutputDTO {
+  model?: ModelsServer;
+  roles?: number[];
+}
+
+export interface UsecasesServerGetRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "server.get" */
+  method?: string;
+  params?: UsecasesServerGetInputDTO;
+}
+
+export interface UsecasesServerGetResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesServerGetOutputDTO;
+}
+
+export interface UsecasesServerListModel {
+  model: ModelsServerListItem;
+  roles?: number[];
+}
+
+export interface UsecasesServerListOutputDTO {
+  model: UsecasesServerListModel[];
+  total_count: number;
+}
+
+export interface UsecasesServerListRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "server.list" */
+  method?: string;
+  params?: QueriesServerQueriesListDTO;
+}
+
+export interface UsecasesServerListResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesServerListOutputDTO;
 }
 
 export interface UsecasesServiceCardDeleteInputDTO {

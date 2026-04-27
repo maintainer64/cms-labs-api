@@ -11,7 +11,7 @@ func (di *DIContainer) authTokenManager(db *database.Queries) *auth.TokenManager
 	return &auth.TokenManager{
 		UserQueries:         db.UserQueries,
 		RoleQueries:         db.RoleQueries,
-		PNETServerQueries:   db.PNETServerQueries,
+		ServerQueries:       db.ServerQueries,
 		UserPasswordQueries: db.UserPasswordQueries,
 		TokenAttemptQueries: db.TokenAttemptQueries,
 	}
@@ -25,7 +25,7 @@ func (di *DIContainer) SSOTokenUC() *auth.SSOTokenUC {
 	return &auth.SSOTokenUC{
 		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
 		TokenManager:        di.authTokenManager(di.Queries),
-		PNETServerQueries:   di.Queries.PNETServerQueries,
+		ServerQueries:       di.Queries.ServerQueries,
 		Logger:              logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.SSOTokenUC")),
 	}
 }
@@ -33,14 +33,14 @@ func (di *DIContainer) SSOTokenUC() *auth.SSOTokenUC {
 func (di *DIContainer) SSOIntrospectUC() *auth.SSOIntrospectUC {
 	return &auth.SSOIntrospectUC{
 		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
-		PNETServerQueries:   di.Queries.PNETServerQueries,
+		ServerQueries:       di.Queries.ServerQueries,
 	}
 }
 
 func (di *DIContainer) SSOAuthorizeUC() *auth.SSOAuthorizeUC {
 	return &auth.SSOAuthorizeUC{
 		TokenAttemptQueries: di.Queries.TokenAttemptQueries,
-		PNETServerQueries:   di.Queries.PNETServerQueries,
+		ServerQueries:       di.Queries.ServerQueries,
 		RoleQueries:         di.Queries.RoleQueries,
 		Logger:              logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.SSOAuthorizeUC")),
 	}
@@ -56,8 +56,8 @@ func (di *DIContainer) SSOJwksUC() *auth.SSOJwksUC {
 
 func (di *DIContainer) ServiceAuthorizeUC() *auth.ServiceAuthorizeUC {
 	return &auth.ServiceAuthorizeUC{
-		PNETServerQueries: di.Queries.PNETServerQueries,
-		Logger:            logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.ServiceAuthorizeUC")),
+		ServerQueries: di.Queries.ServerQueries,
+		Logger:        logs.NewZeroLogger(di.ZeroLogConf.SetName("auth.ServiceAuthorizeUC")),
 	}
 }
 

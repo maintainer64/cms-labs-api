@@ -11,7 +11,7 @@ func (di *DIContainer) LTIAttemptCreateUC() *usecases.LTIAttemptCreateUC {
 		LaunchData:            di.Queries.LTILaunchDataQueries,
 		RoundQueuePoolQueries: di.Queries.RoundQueuePoolQueries,
 		LTIRoutingQueries:     di.Queries.LTIRoutingQueries,
-		PNETServerQueries:     di.Queries.PNETServerQueries,
+		ServerQueries:         di.Queries.ServerQueries,
 		UserQueries:           di.Queries.UserQueries,
 	}
 }
@@ -26,7 +26,7 @@ func (di *DIContainer) LTIAttemptEditUC() *usecases.LTIAttemptEditUC {
 func (di *DIContainer) LTIAttemptEditBulkUC() *usecases.LTIAttemptEditBulkUC {
 	return &usecases.LTIAttemptEditBulkUC{
 		LTIAttemptQueries: di.Queries.LTIAttemptQueries,
-		PNETServerQueries: di.Queries.PNETServerQueries,
+		ServerQueries:     di.Queries.ServerQueries,
 		LTISyncResultUC:   di.TaskLTISyncResultUC(),
 	}
 }

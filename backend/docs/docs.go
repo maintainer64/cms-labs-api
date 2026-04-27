@@ -728,7 +728,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Delete pnet_server. Roles: [admin]",
+                "description": "Delete server. Roles: [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -738,15 +738,15 @@ const docTemplate = `{
                 "tags": [
                     "server"
                 ],
-                "summary": "delete pnet_server",
+                "summary": "delete server",
                 "parameters": [
                     {
-                        "description": "pnet_server id",
+                        "description": "server id",
                         "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerDeleteRequest"
+                            "$ref": "#/definitions/usecases.ServerDeleteRequest"
                         }
                     }
                 ],
@@ -754,7 +754,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerDeleteResponse"
+                            "$ref": "#/definitions/usecases.ServerDeleteResponse"
                         }
                     }
                 }
@@ -767,7 +767,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get pnet_server. Roles: [admin, instructor]",
+                "description": "get server. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -777,15 +777,15 @@ const docTemplate = `{
                 "tags": [
                     "server"
                 ],
-                "summary": "get pnet_server",
+                "summary": "get server",
                 "parameters": [
                     {
-                        "description": "pnet_server id",
+                        "description": "server id",
                         "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerGetRequest"
+                            "$ref": "#/definitions/usecases.ServerGetRequest"
                         }
                     }
                 ],
@@ -793,7 +793,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerGetResponse"
+                            "$ref": "#/definitions/usecases.ServerGetResponse"
                         }
                     }
                 }
@@ -806,7 +806,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "List pnet_server. Roles: [admin, instructor]",
+                "description": "List server. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -816,15 +816,15 @@ const docTemplate = `{
                 "tags": [
                     "server"
                 ],
-                "summary": "list pnet_server",
+                "summary": "list server",
                 "parameters": [
                     {
-                        "description": "pnet_server list info",
+                        "description": "server list info",
                         "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerListRequest"
+                            "$ref": "#/definitions/usecases.ServerListRequest"
                         }
                     }
                 ],
@@ -832,7 +832,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerListResponse"
+                            "$ref": "#/definitions/usecases.ServerListResponse"
                         }
                     }
                 }
@@ -845,7 +845,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create pnet_server. Roles [admin]",
+                "description": "Create server. Roles [admin]",
                 "consumes": [
                     "application/json"
                 ],
@@ -855,15 +855,15 @@ const docTemplate = `{
                 "tags": [
                     "server"
                 ],
-                "summary": "create pnet_server",
+                "summary": "create server",
                 "parameters": [
                     {
-                        "description": "pnet_server form info",
+                        "description": "server form info",
                         "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerEditRequest"
+                            "$ref": "#/definitions/usecases.ServerEditRequest"
                         }
                     }
                 ],
@@ -871,7 +871,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/usecases.PNETServerEditResponse"
+                            "$ref": "#/definitions/usecases.ServerEditResponse"
                         }
                     }
                 }
@@ -884,7 +884,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "List pnet_server_queue. Roles: [admin, instructor]",
+                "description": "List server_queue. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -894,7 +894,7 @@ const docTemplate = `{
                 "tags": [
                     "server_queue"
                 ],
-                "summary": "list pnet_server_queue",
+                "summary": "list server_queue",
                 "parameters": [
                     {
                         "description": "request",
@@ -902,7 +902,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListRequest"
+                            "$ref": "#/definitions/server_queue.ServerQueueListRequest"
                         }
                     }
                 ],
@@ -910,7 +910,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse"
+                            "$ref": "#/definitions/server_queue.ServerQueueListResponse"
                         }
                     }
                 }
@@ -923,7 +923,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create pnet_server_queue. Roles: [admin, instructor]",
+                "description": "Create server_queue. Roles: [admin, instructor]",
                 "consumes": [
                     "application/json"
                 ],
@@ -933,7 +933,7 @@ const docTemplate = `{
                 "tags": [
                     "server_queue"
                 ],
-                "summary": "create pnet_server_queue",
+                "summary": "create server_queue",
                 "parameters": [
                     {
                         "description": "request",
@@ -941,7 +941,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest"
+                            "$ref": "#/definitions/server_queue.ServerQueueUpsertRequest"
                         }
                     }
                 ],
@@ -949,7 +949,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse"
+                            "$ref": "#/definitions/server_queue.ServerQueueUpsertResponse"
                         }
                     }
                 }
@@ -2866,13 +2866,13 @@ const docTemplate = `{
                 "lti_routing_id": {
                     "type": "integer"
                 },
-                "pnet_server_id": {
-                    "type": "integer"
-                },
                 "result": {
                     "type": "object"
                 },
                 "room_id": {
+                    "type": "integer"
+                },
+                "server_id": {
                     "type": "integer"
                 },
                 "status": {
@@ -2913,14 +2913,14 @@ const docTemplate = `{
                 "lti_routing_name": {
                     "type": "string"
                 },
-                "pnet_server_id": {
-                    "type": "integer"
-                },
-                "pnet_server_name": {
-                    "type": "string"
-                },
                 "result": {
                     "type": "object"
+                },
+                "server_id": {
+                    "type": "integer"
+                },
+                "server_name": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
@@ -2962,6 +2962,13 @@ const docTemplate = `{
                 "is_default": {
                     "type": "boolean"
                 },
+                "labs_path": {
+                    "type": "string"
+                },
+                "labs_type": {
+                    "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,curl,sso",
+                    "type": "string"
+                },
                 "lti_course_id": {
                     "type": "string"
                 },
@@ -2985,17 +2992,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "pnet_labs_path": {
-                    "type": "string"
-                },
-                "pnet_labs_type": {
-                    "description": "The type of PNETLabsType, cms_client.PNETLabsTypeDefault\nenum: default,curl,sso",
-                    "type": "string"
-                },
-                "pnet_server_id": {
+                "server_id": {
                     "type": "integer"
                 },
-                "pnet_test_path": {
+                "test_path": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -3024,7 +3024,31 @@ const docTemplate = `{
                 }
             }
         },
-        "models.PNETServer": {
+        "models.Role": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Server": {
             "type": "object",
             "required": [
                 "created_at",
@@ -3062,7 +3086,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes",
+                    "description": "enumeration: pnet, openid, k8s",
                     "type": "string"
                 },
                 "unit_rate": {
@@ -3076,7 +3100,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.PNETServerListItem": {
+        "models.ServerListItem": {
             "type": "object",
             "required": [
                 "created_at",
@@ -3108,7 +3132,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "description": "enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes",
+                    "description": "enumeration: pnet, openid, k8s",
                     "type": "string"
                 },
                 "unit_rate": {
@@ -3118,30 +3142,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Role": {
-            "type": "object",
-            "required": [
-                "created_at",
-                "updated_at"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -3432,7 +3432,32 @@ const docTemplate = `{
                 }
             }
         },
-        "queries.PNETServerQueriesListDTO": {
+        "queries.RoundQueuePoolServerListItem": {
+            "type": "object",
+            "required": [
+                "connected_at",
+                "last_used",
+                "type"
+            ],
+            "properties": {
+                "connected_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_used": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "queries.ServerQueriesListDTO": {
             "type": "object",
             "properties": {
                 "limit": {
@@ -3460,32 +3485,7 @@ const docTemplate = `{
                 }
             }
         },
-        "queries.RoundQueuePoolPnetListItem": {
-            "type": "object",
-            "required": [
-                "connected_at",
-                "last_used",
-                "type"
-            ],
-            "properties": {
-                "connected_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "last_used": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO": {
+        "server_queue.ServerQueueListOutputDTO": {
             "type": "object",
             "required": [
                 "model"
@@ -3494,12 +3494,12 @@ const docTemplate = `{
                 "model": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/queries.RoundQueuePoolPnetListItem"
+                        "$ref": "#/definitions/queries.RoundQueuePoolServerListItem"
                     }
                 }
             }
         },
-        "round_queue_pool_pnet.RoundQueuePoolPnetListRequest": {
+        "server_queue.ServerQueueListRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -3517,7 +3517,7 @@ const docTemplate = `{
                 "params": {}
             }
         },
-        "round_queue_pool_pnet.RoundQueuePoolPnetListResponse": {
+        "server_queue.ServerQueueListResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -3530,14 +3530,14 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO"
+                    "$ref": "#/definitions/server_queue.ServerQueueListOutputDTO"
                 }
             }
         },
-        "round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO": {
+        "server_queue.ServerQueueUpsertOutputDTO": {
             "type": "object"
         },
-        "round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest": {
+        "server_queue.ServerQueueUpsertRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -3555,7 +3555,7 @@ const docTemplate = `{
                 "params": {}
             }
         },
-        "round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse": {
+        "server_queue.ServerQueueUpsertResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -3568,7 +3568,7 @@ const docTemplate = `{
                     "default": "2.0"
                 },
                 "result": {
-                    "$ref": "#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO"
+                    "$ref": "#/definitions/server_queue.ServerQueueUpsertOutputDTO"
                 }
             }
         },
@@ -4146,11 +4146,11 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "pnet_server_id": {
-                    "type": "integer"
-                },
                 "result": {
                     "type": "object"
+                },
+                "server_id": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
@@ -4390,6 +4390,12 @@ const docTemplate = `{
                 "is_default": {
                     "type": "boolean"
                 },
+                "labs_path": {
+                    "type": "string"
+                },
+                "labs_type": {
+                    "type": "string"
+                },
                 "lti_course_id": {
                     "type": "string"
                 },
@@ -4411,16 +4417,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "pnet_labs_path": {
-                    "type": "string"
-                },
-                "pnet_labs_type": {
-                    "type": "string"
-                },
-                "pnet_server_id": {
+                "server_id": {
                     "type": "integer"
                 },
-                "pnet_test_path": {
+                "test_path": {
                     "type": "string"
                 }
             }
@@ -4592,273 +4592,6 @@ const docTemplate = `{
                 }
             }
         },
-        "usecases.PNETServerDeleteInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.PNETServerDeleteRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "server.list"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.PNETServerDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.PNETServerDeleteResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.PNETServerDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.PNETServerEditInputDTO": {
-            "type": "object",
-            "required": [
-                "name",
-                "type",
-                "url"
-            ],
-            "properties": {
-                "client_id": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "max_count_users_limit": {
-                    "type": "integer"
-                },
-                "minutes_for_disconnect": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "token": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "unit_rate": {
-                    "type": "integer"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.PNETServerEditOutputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.PNETServerEditRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "server.upsert"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.PNETServerEditInputDTO"
-                }
-            }
-        },
-        "usecases.PNETServerEditResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.PNETServerEditOutputDTO"
-                }
-            }
-        },
-        "usecases.PNETServerGetInputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.PNETServerGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "model": {
-                    "$ref": "#/definitions/models.PNETServer"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "usecases.PNETServerGetRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "server.get"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.PNETServerGetInputDTO"
-                }
-            }
-        },
-        "usecases.PNETServerGetResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.PNETServerGetOutputDTO"
-                }
-            }
-        },
-        "usecases.PNETServerListModel": {
-            "type": "object",
-            "required": [
-                "model"
-            ],
-            "properties": {
-                "model": {
-                    "$ref": "#/definitions/models.PNETServerListItem"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "usecases.PNETServerListOutputDTO": {
-            "type": "object",
-            "required": [
-                "model",
-                "total_count"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/usecases.PNETServerListModel"
-                    }
-                },
-                "total_count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "usecases.PNETServerListRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "server.list"
-                },
-                "params": {
-                    "$ref": "#/definitions/queries.PNETServerQueriesListDTO"
-                }
-            }
-        },
-        "usecases.PNETServerListResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.PNETServerListOutputDTO"
-                }
-            }
-        },
         "usecases.RoleDeleteInputDTO": {
             "type": "object",
             "required": [
@@ -5021,6 +4754,273 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.RoleListOutputDTO"
+                }
+            }
+        },
+        "usecases.ServerDeleteInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServerDeleteRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ServerDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.ServerDeleteResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServerDeleteInputDTO"
+                }
+            }
+        },
+        "usecases.ServerEditInputDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "type",
+                "url"
+            ],
+            "properties": {
+                "client_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "max_count_users_limit": {
+                    "type": "integer"
+                },
+                "minutes_for_disconnect": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "token": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "unit_rate": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.ServerEditOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServerEditRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.upsert"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ServerEditInputDTO"
+                }
+            }
+        },
+        "usecases.ServerEditResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServerEditOutputDTO"
+                }
+            }
+        },
+        "usecases.ServerGetInputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServerGetOutputDTO": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.Server"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "usecases.ServerGetRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.get"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.ServerGetInputDTO"
+                }
+            }
+        },
+        "usecases.ServerGetResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServerGetOutputDTO"
+                }
+            }
+        },
+        "usecases.ServerListModel": {
+            "type": "object",
+            "required": [
+                "model"
+            ],
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/models.ServerListItem"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "usecases.ServerListOutputDTO": {
+            "type": "object",
+            "required": [
+                "model",
+                "total_count"
+            ],
+            "properties": {
+                "model": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.ServerListModel"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.ServerListRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "server.list"
+                },
+                "params": {
+                    "$ref": "#/definitions/queries.ServerQueriesListDTO"
+                }
+            }
+        },
+        "usecases.ServerListResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.ServerListOutputDTO"
                 }
             }
         },
