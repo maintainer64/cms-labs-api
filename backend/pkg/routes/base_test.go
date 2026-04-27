@@ -133,7 +133,7 @@ func (f *TestHTTP) AuthorizationUser(userID uint, serverID *uint) string {
 }
 
 func (f *TestHTTP) AuthorizationServiceBasic() (string, string) {
-	entity := models.PNETServer{}
+	entity := models.Server{}
 	entity.Type = models.ServerTypeOpenID
 	entity.Name = uuid.New().String() + "_server"
 	entity.Url = "https://localhost"

@@ -28,7 +28,7 @@ type FactoryAddonService struct {
 	Config              *connection.AddonsConfig
 	VaultClient         vault.ClientInterface
 	TokenAttemptQueries *queries.TokenAttemptQueries
-	PNETServerQueries   *queries.PNETServerQueries
+	ServerQueries       *queries.ServerQueries
 	UserQueries         *queries.UserQueries
 	TargetQueries       *queries.TargetQueries
 	IssId               string
@@ -69,7 +69,7 @@ func (f *FactoryAddonService) NewAddonService(cfg *connection.AddonConfig) Addon
 			Config:              cfg,
 			VaultClient:         f.VaultClient,
 			TokenAttemptQueries: f.TokenAttemptQueries,
-			PNETServerQueries:   f.PNETServerQueries,
+			ServerQueries:       f.ServerQueries,
 			UserQueries:         f.UserQueries,
 			TargetQueries:       f.TargetQueries,
 		}

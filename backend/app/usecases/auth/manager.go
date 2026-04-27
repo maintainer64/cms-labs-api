@@ -19,7 +19,7 @@ import (
 type TokenManager struct {
 	UserQueries         *queries.UserQueries
 	RoleQueries         *queries.RoleQueries
-	PNETServerQueries   *queries.PNETServerQueries
+	ServerQueries       *queries.ServerQueries
 	UserPasswordQueries *queries.UserPasswordQueries
 	TokenAttemptQueries *queries.TokenAttemptQueries
 }
@@ -98,9 +98,9 @@ func (m *TokenManager) NewJWTByUserId(
 	if err != nil {
 		return nil, err
 	}
-	var serverModel models.PNETServer
+	var serverModel models.Server
 	if serverID != nil {
-		serverModel, _ = m.PNETServerQueries.Get(*serverID)
+		serverModel, _ = m.ServerQueries.Get(*serverID)
 	}
 	rolesJWT, err := m.JWTRolesByUserId(userModel.ID)
 	if err != nil {

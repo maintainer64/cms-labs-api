@@ -8,17 +8,17 @@ import (
 	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
-// PNETServerQueueUpsert func for update on new queue RoundRobin.
-// @Description Create pnet_server_queue. Roles: [admin, instructor]
-// @Summary create pnet_server_queue
+// ServerQueueUpsert func for update on new queue RoundRobin.
+// @Description Create server_queue. Roles: [admin, instructor]
+// @Summary create server_queue
 // @Tags server_queue
 // @Accept json
 // @Produce json
-// @Param object body round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest true "request"
-// @Success 200 {object} round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse
+// @Param object body server_queue.ServerQueueUpsertRequest true "request"
+// @Success 200 {object} server_queue.ServerQueueUpsertResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/server_queue.upsert [post]
-func PNETServerQueueUpsert(c *jsonrpc.Ctx) (interface{}, error) {
+func ServerQueueUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
@@ -31,7 +31,7 @@ func PNETServerQueueUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 		return nil, err
 	}
 	defer container.Close()
-	uc := container.PnetServerChangeDistributionUC()
+	uc := container.ServerChangeDistributionUC()
 	err = uc.Execute()
 	if err != nil {
 		return nil, err
@@ -39,17 +39,17 @@ func PNETServerQueueUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 	return true, nil
 }
 
-// PNETServerQueueList func for list distribution queue
-// @Description List pnet_server_queue. Roles: [admin, instructor]
-// @Summary list pnet_server_queue
+// ServerQueueList func for list distribution queue
+// @Description List server_queue. Roles: [admin, instructor]
+// @Summary list server_queue
 // @Tags server_queue
 // @Accept json
 // @Produce json
-// @Param object body round_queue_pool_pnet.RoundQueuePoolPnetListRequest true "request"
-// @Success 200 {object} round_queue_pool_pnet.RoundQueuePoolPnetListResponse
+// @Param object body server_queue.ServerQueueListRequest true "request"
+// @Success 200 {object} server_queue.ServerQueueListResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/server_queue.list [post]
-func PNETServerQueueList(c *jsonrpc.Ctx) (interface{}, error) {
+func ServerQueueList(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
@@ -62,7 +62,7 @@ func PNETServerQueueList(c *jsonrpc.Ctx) (interface{}, error) {
 		return nil, err
 	}
 	defer container.Close()
-	uc := container.PnetServerListDistributionUC()
+	uc := container.ServerListDistributionUC()
 	output, err := uc.Execute()
 	return output, err
 }

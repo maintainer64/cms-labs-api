@@ -23,7 +23,7 @@ i INT DEFAULT 0;
     WHILE
 i < num_servers
         DO
-            INSERT INTO core_pnet_servers (created_at, updated_at, name, url, is_active, minutes_for_disconnect,
+            INSERT INTO core_servers (created_at, updated_at, name, url, is_active, minutes_for_disconnect,
                                            max_count_users_limit, last_online_status, last_count_users, unit_rate,
                                            token)
             VALUES (NOW(), NOW(), CONCAT('Server ', i), CONCAT('http://server', i, '.example.com'), 1,

@@ -19,10 +19,10 @@ type LTIRoutingEditInputDTO struct {
 	LTISubID       string `json:"lti_sub_id"`
 	LTIParamsTask  string `json:"lti_params_task"`
 	Collaboration  int    `json:"collaboration"`
-	PNETLabsType   string `json:"pnet_labs_type"`
-	PNETLabsPath   string `json:"pnet_labs_path"`
-	PNETTestPath   string `json:"pnet_test_path"`
-	PNETServerID   uint   `json:"pnet_server_id"`
+	LabsType       string `json:"labs_type"`
+	LabsPath       string `json:"labs_path"`
+	TestPath       string `json:"test_path"`
+	ServerID       uint   `json:"server_id"`
 	IsDefault      bool   `json:"is_default"`
 }
 
@@ -55,10 +55,10 @@ func (u *LTIRoutingEditUC) Execute(dto LTIRoutingEditInputDTO) (LTIRoutingEditOu
 	entity.LTISubID = dto.LTISubID
 	entity.LTIParamsTask = dto.LTIParamsTask
 	entity.Collaboration = dto.Collaboration
-	entity.PNETLabsType = dto.PNETLabsType
-	entity.PNETLabsPath = dto.PNETLabsPath
-	entity.PNETTestPath = dto.PNETTestPath
-	entity.PNETServerID = dto.PNETServerID
+	entity.LabsType = dto.LabsType
+	entity.LabsPath = dto.LabsPath
+	entity.TestPath = dto.TestPath
+	entity.ServerID = dto.ServerID
 	entity.IsDefault = dto.IsDefault
 	err := u.LTIRoutingQueries.Upsert(entity)
 	return LTIRoutingEditOutputDTO{ID: entity.ID}, err

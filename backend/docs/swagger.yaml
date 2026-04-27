@@ -385,11 +385,11 @@ definitions:
         type: integer
       lti_routing_id:
         type: integer
-      pnet_server_id:
-        type: integer
       result:
         type: object
       room_id:
+        type: integer
+      server_id:
         type: integer
       status:
         type: string
@@ -417,12 +417,12 @@ definitions:
         type: integer
       lti_routing_name:
         type: string
-      pnet_server_id:
-        type: integer
-      pnet_server_name:
-        type: string
       result:
         type: object
+      server_id:
+        type: integer
+      server_name:
+        type: string
       status:
         type: string
       synchronized_at:
@@ -452,6 +452,13 @@ definitions:
         type: integer
       is_default:
         type: boolean
+      labs_path:
+        type: string
+      labs_type:
+        description: |-
+          The type of PNETLabsType, cms_client.PNETLabsTypeDefault
+          enum: default,curl,sso
+        type: string
       lti_course_id:
         type: string
       lti_description:
@@ -468,16 +475,9 @@ definitions:
         type: string
       name:
         type: string
-      pnet_labs_path:
-        type: string
-      pnet_labs_type:
-        description: |-
-          The type of PNETLabsType, cms_client.PNETLabsTypeDefault
-          enum: default,curl,sso
-        type: string
-      pnet_server_id:
+      server_id:
         type: integer
-      pnet_test_path:
+      test_path:
         type: string
       updated_at:
         type: string
@@ -499,7 +499,23 @@ definitions:
     - created_at
     - updated_at
     type: object
-  models.PNETServer:
+  models.Role:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - created_at
+    - updated_at
+    type: object
+  models.Server:
     properties:
       client_id:
         type: string
@@ -522,7 +538,7 @@ definitions:
       token:
         type: string
       type:
-        description: 'enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes'
+        description: 'enumeration: pnet, openid, k8s'
         type: string
       unit_rate:
         type: integer
@@ -534,7 +550,7 @@ definitions:
     - created_at
     - updated_at
     type: object
-  models.PNETServerListItem:
+  models.ServerListItem:
     properties:
       created_at:
         type: string
@@ -553,29 +569,13 @@ definitions:
       name:
         type: string
       type:
-        description: 'enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes'
+        description: 'enumeration: pnet, openid, k8s'
         type: string
       unit_rate:
         type: integer
       updated_at:
         type: string
       url:
-        type: string
-    required:
-    - created_at
-    - updated_at
-    type: object
-  models.Role:
-    properties:
-      code:
-        type: string
-      created_at:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updated_at:
         type: string
     required:
     - created_at
@@ -776,7 +776,24 @@ definitions:
           type: integer
         type: array
     type: object
-  queries.PNETServerQueriesListDTO:
+  queries.RoundQueuePoolServerListItem:
+    properties:
+      connected_at:
+        type: string
+      id:
+        type: integer
+      last_used:
+        type: boolean
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - connected_at
+    - last_used
+    - type
+    type: object
+  queries.ServerQueriesListDTO:
     properties:
       limit:
         type: integer
@@ -799,33 +816,16 @@ definitions:
           type: string
         type: array
     type: object
-  queries.RoundQueuePoolPnetListItem:
-    properties:
-      connected_at:
-        type: string
-      id:
-        type: integer
-      last_used:
-        type: boolean
-      name:
-        type: string
-      type:
-        type: string
-    required:
-    - connected_at
-    - last_used
-    - type
-    type: object
-  round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO:
+  server_queue.ServerQueueListOutputDTO:
     properties:
       model:
         items:
-          $ref: '#/definitions/queries.RoundQueuePoolPnetListItem'
+          $ref: '#/definitions/queries.RoundQueuePoolServerListItem'
         type: array
     required:
     - model
     type: object
-  round_queue_pool_pnet.RoundQueuePoolPnetListRequest:
+  server_queue.ServerQueueListRequest:
     properties:
       id:
         default: "1"
@@ -838,7 +838,7 @@ definitions:
         type: string
       params: {}
     type: object
-  round_queue_pool_pnet.RoundQueuePoolPnetListResponse:
+  server_queue.ServerQueueListResponse:
     properties:
       error: {}
       id:
@@ -848,11 +848,11 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListOutputDTO'
+        $ref: '#/definitions/server_queue.ServerQueueListOutputDTO'
     type: object
-  round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO:
+  server_queue.ServerQueueUpsertOutputDTO:
     type: object
-  round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest:
+  server_queue.ServerQueueUpsertRequest:
     properties:
       id:
         default: "1"
@@ -865,7 +865,7 @@ definitions:
         type: string
       params: {}
     type: object
-  round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse:
+  server_queue.ServerQueueUpsertResponse:
     properties:
       error: {}
       id:
@@ -875,7 +875,7 @@ definitions:
         default: "2.0"
         type: string
       result:
-        $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertOutputDTO'
+        $ref: '#/definitions/server_queue.ServerQueueUpsertOutputDTO'
     type: object
   types.JsonStore:
     additionalProperties: true
@@ -1270,10 +1270,10 @@ definitions:
     properties:
       id:
         type: integer
-      pnet_server_id:
-        type: integer
       result:
         type: object
+      server_id:
+        type: integer
       status:
         type: string
     required:
@@ -1441,6 +1441,10 @@ definitions:
         type: integer
       is_default:
         type: boolean
+      labs_path:
+        type: string
+      labs_type:
+        type: string
       lti_course_id:
         type: string
       lti_description:
@@ -1455,13 +1459,9 @@ definitions:
         type: string
       name:
         type: string
-      pnet_labs_path:
-        type: string
-      pnet_labs_type:
-        type: string
-      pnet_server_id:
+      server_id:
         type: integer
-      pnet_test_path:
+      test_path:
         type: string
     type: object
   usecases.LTIRoutingEditOutputDTO:
@@ -1578,188 +1578,6 @@ definitions:
       result:
         $ref: '#/definitions/usecases.LTIRoutingListOutputDTO'
     type: object
-  usecases.PNETServerDeleteInputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.PNETServerDeleteRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: server.list
-        type: string
-      params:
-        $ref: '#/definitions/usecases.PNETServerDeleteInputDTO'
-    type: object
-  usecases.PNETServerDeleteResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.PNETServerDeleteInputDTO'
-    type: object
-  usecases.PNETServerEditInputDTO:
-    properties:
-      client_id:
-        type: string
-      id:
-        type: integer
-      is_active:
-        type: boolean
-      max_count_users_limit:
-        type: integer
-      minutes_for_disconnect:
-        type: integer
-      name:
-        type: string
-      roles:
-        items:
-          type: integer
-        type: array
-      token:
-        type: string
-      type:
-        type: string
-      unit_rate:
-        type: integer
-      url:
-        type: string
-    required:
-    - name
-    - type
-    - url
-    type: object
-  usecases.PNETServerEditOutputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.PNETServerEditRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: server.upsert
-        type: string
-      params:
-        $ref: '#/definitions/usecases.PNETServerEditInputDTO'
-    type: object
-  usecases.PNETServerEditResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.PNETServerEditOutputDTO'
-    type: object
-  usecases.PNETServerGetInputDTO:
-    properties:
-      id:
-        type: integer
-    type: object
-  usecases.PNETServerGetOutputDTO:
-    properties:
-      model:
-        $ref: '#/definitions/models.PNETServer'
-      roles:
-        items:
-          type: integer
-        type: array
-    type: object
-  usecases.PNETServerGetRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: server.get
-        type: string
-      params:
-        $ref: '#/definitions/usecases.PNETServerGetInputDTO'
-    type: object
-  usecases.PNETServerGetResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.PNETServerGetOutputDTO'
-    type: object
-  usecases.PNETServerListModel:
-    properties:
-      model:
-        $ref: '#/definitions/models.PNETServerListItem'
-      roles:
-        items:
-          type: integer
-        type: array
-    required:
-    - model
-    type: object
-  usecases.PNETServerListOutputDTO:
-    properties:
-      model:
-        items:
-          $ref: '#/definitions/usecases.PNETServerListModel'
-        type: array
-      total_count:
-        type: integer
-    required:
-    - model
-    - total_count
-    type: object
-  usecases.PNETServerListRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: server.list
-        type: string
-      params:
-        $ref: '#/definitions/queries.PNETServerQueriesListDTO'
-    type: object
-  usecases.PNETServerListResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.PNETServerListOutputDTO'
-    type: object
   usecases.RoleDeleteInputDTO:
     properties:
       id:
@@ -1872,6 +1690,188 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/usecases.RoleListOutputDTO'
+    type: object
+  usecases.ServerDeleteInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.ServerDeleteRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.list
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ServerDeleteInputDTO'
+    type: object
+  usecases.ServerDeleteResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServerDeleteInputDTO'
+    type: object
+  usecases.ServerEditInputDTO:
+    properties:
+      client_id:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      max_count_users_limit:
+        type: integer
+      minutes_for_disconnect:
+        type: integer
+      name:
+        type: string
+      roles:
+        items:
+          type: integer
+        type: array
+      token:
+        type: string
+      type:
+        type: string
+      unit_rate:
+        type: integer
+      url:
+        type: string
+    required:
+    - name
+    - type
+    - url
+    type: object
+  usecases.ServerEditOutputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.ServerEditRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.upsert
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ServerEditInputDTO'
+    type: object
+  usecases.ServerEditResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServerEditOutputDTO'
+    type: object
+  usecases.ServerGetInputDTO:
+    properties:
+      id:
+        type: integer
+    type: object
+  usecases.ServerGetOutputDTO:
+    properties:
+      model:
+        $ref: '#/definitions/models.Server'
+      roles:
+        items:
+          type: integer
+        type: array
+    type: object
+  usecases.ServerGetRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.get
+        type: string
+      params:
+        $ref: '#/definitions/usecases.ServerGetInputDTO'
+    type: object
+  usecases.ServerGetResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServerGetOutputDTO'
+    type: object
+  usecases.ServerListModel:
+    properties:
+      model:
+        $ref: '#/definitions/models.ServerListItem'
+      roles:
+        items:
+          type: integer
+        type: array
+    required:
+    - model
+    type: object
+  usecases.ServerListOutputDTO:
+    properties:
+      model:
+        items:
+          $ref: '#/definitions/usecases.ServerListModel'
+        type: array
+      total_count:
+        type: integer
+    required:
+    - model
+    - total_count
+    type: object
+  usecases.ServerListRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: server.list
+        type: string
+      params:
+        $ref: '#/definitions/queries.ServerQueriesListDTO'
+    type: object
+  usecases.ServerListResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.ServerListOutputDTO'
     type: object
   usecases.ServiceCardDeleteInputDTO:
     properties:
@@ -3102,144 +3102,144 @@ paths:
     post:
       consumes:
       - application/json
-      description: 'Delete pnet_server. Roles: [admin]'
+      description: 'Delete server. Roles: [admin]'
       parameters:
-      - description: pnet_server id
+      - description: server id
         in: body
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerDeleteRequest'
+          $ref: '#/definitions/usecases.ServerDeleteRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.PNETServerDeleteResponse'
+            $ref: '#/definitions/usecases.ServerDeleteResponse'
       security:
       - ApiKeyAuth: []
-      summary: delete pnet_server
+      summary: delete server
       tags:
       - server
   /api/v1/rpc/server.get:
     post:
       consumes:
       - application/json
-      description: 'get pnet_server. Roles: [admin, instructor]'
+      description: 'get server. Roles: [admin, instructor]'
       parameters:
-      - description: pnet_server id
+      - description: server id
         in: body
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerGetRequest'
+          $ref: '#/definitions/usecases.ServerGetRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.PNETServerGetResponse'
+            $ref: '#/definitions/usecases.ServerGetResponse'
       security:
       - ApiKeyAuth: []
-      summary: get pnet_server
+      summary: get server
       tags:
       - server
   /api/v1/rpc/server.list:
     post:
       consumes:
       - application/json
-      description: 'List pnet_server. Roles: [admin, instructor]'
+      description: 'List server. Roles: [admin, instructor]'
       parameters:
-      - description: pnet_server list info
+      - description: server list info
         in: body
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerListRequest'
+          $ref: '#/definitions/usecases.ServerListRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.PNETServerListResponse'
+            $ref: '#/definitions/usecases.ServerListResponse'
       security:
       - ApiKeyAuth: []
-      summary: list pnet_server
+      summary: list server
       tags:
       - server
   /api/v1/rpc/server.upsert:
     post:
       consumes:
       - application/json
-      description: Create pnet_server. Roles [admin]
+      description: Create server. Roles [admin]
       parameters:
-      - description: pnet_server form info
+      - description: server form info
         in: body
         name: object
         required: true
         schema:
-          $ref: '#/definitions/usecases.PNETServerEditRequest'
+          $ref: '#/definitions/usecases.ServerEditRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/usecases.PNETServerEditResponse'
+            $ref: '#/definitions/usecases.ServerEditResponse'
       security:
       - ApiKeyAuth: []
-      summary: create pnet_server
+      summary: create server
       tags:
       - server
   /api/v1/rpc/server_queue.list:
     post:
       consumes:
       - application/json
-      description: 'List pnet_server_queue. Roles: [admin, instructor]'
+      description: 'List server_queue. Roles: [admin, instructor]'
       parameters:
       - description: request
         in: body
         name: object
         required: true
         schema:
-          $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListRequest'
+          $ref: '#/definitions/server_queue.ServerQueueListRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetListResponse'
+            $ref: '#/definitions/server_queue.ServerQueueListResponse'
       security:
       - ApiKeyAuth: []
-      summary: list pnet_server_queue
+      summary: list server_queue
       tags:
       - server_queue
   /api/v1/rpc/server_queue.upsert:
     post:
       consumes:
       - application/json
-      description: 'Create pnet_server_queue. Roles: [admin, instructor]'
+      description: 'Create server_queue. Roles: [admin, instructor]'
       parameters:
       - description: request
         in: body
         name: object
         required: true
         schema:
-          $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertRequest'
+          $ref: '#/definitions/server_queue.ServerQueueUpsertRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/round_queue_pool_pnet.RoundQueuePoolPnetUpsertResponse'
+            $ref: '#/definitions/server_queue.ServerQueueUpsertResponse'
       security:
       - ApiKeyAuth: []
-      summary: create pnet_server_queue
+      summary: create server_queue
       tags:
       - server_queue
   /api/v1/rpc/service_card.delete:

@@ -146,12 +146,12 @@ func (q *LTIAttemptQueries) listFilter(search *LTIAttemptSearchParams, tx *gorm.
 	tx = tx.Table(
 		q.tableName(&models.LTIAttempt{}) + " AS lti_attempts",
 	).Select(
-		"lti_attempts.id, lti_attempts.attempt_id, lti_attempts.status, lti_attempts.result, lti_attempts.user_id, lti_attempts.pnet_server_id, lti_attempts.lti_routing_id, lti_attempts.id, lti_attempts.synchronized_at, lti_attempts.created_at, lti_attempts.updated_at, " +
-			"user.email as user_email, user.name as user_name, pnet_servers.name as pnet_server_name, lti_routings.name as lti_routing_name",
+		"lti_attempts.id, lti_attempts.attempt_id, lti_attempts.status, lti_attempts.result, lti_attempts.user_id, lti_attempts.server_id, lti_attempts.lti_routing_id, lti_attempts.id, lti_attempts.synchronized_at, lti_attempts.created_at, lti_attempts.updated_at, " +
+			"user.email as user_email, user.name as user_name, servers.name as server_name, lti_routings.name as lti_routing_name",
 	).Joins(
 		"join " + q.tableName(&models.User{}) + " user on user.id = lti_attempts.user_id",
 	).Joins(
-		"join " + q.tableName(&models.PNETServer{}) + " pnet_servers on pnet_servers.id = lti_attempts.pnet_server_id",
+		"join " + q.tableName(&models.Server{}) + " servers on servers.id = lti_attempts.server_id",
 	).Joins(
 		"join " + q.tableName(&models.LTIRouting{}) + " lti_routings on lti_routings.id = lti_attempts.lti_routing_id",
 	)
@@ -163,7 +163,7 @@ func (q *LTIAttemptQueries) listFilter(search *LTIAttemptSearchParams, tx *gorm.
 		tx = tx.Where("lti_attempts.attempt_id IN (?)", search.AttemptIds)
 	}
 	if len(search.ServerClientIds) > 0 {
-		tx = tx.Where("pnet_servers.client_id IN (?)", search.ServerClientIds)
+		tx = tx.Where("servers.client_id IN (?)", search.ServerClientIds)
 	}
 	if len(search.Statuses) > 0 {
 		tx = tx.Where("lti_attempts.status IN (?)", search.Statuses)
@@ -213,8 +213,8 @@ func (q *LTIAttemptQueries) AllocatedServer(attemptID uint, roomID *uint, pnetSe
 		),
 	)
 	updateData := map[string]interface{}{
-		"pnet_server_id": pnetServerID,
-		"updated_at":     time.Now().UTC(),
+		"server_id":  pnetServerID,
+		"updated_at": time.Now().UTC(),
 	}
 
 	if roomID != nil && *roomID != 0 {

@@ -109,7 +109,7 @@ func TestSSOAuthorizeNotMatchRoles(t *testing.T) {
 	defer f.Close()
 
 	// OpenID server
-	server := models.PNETServer{}
+	server := models.Server{}
 	server.Type = models.ServerTypeOpenID
 	server.Name = uuid.New().String() + "_server"
 	server.Url = "https://localhost"
@@ -170,7 +170,7 @@ func TestSSOAuthorizeMatchRoles(t *testing.T) {
 	defer f.Close()
 
 	// OpenID server
-	server := models.PNETServer{}
+	server := models.Server{}
 	server.Type = models.ServerTypeOpenID
 	server.Name = uuid.New().String() + "_server"
 	server.Url = "https://localhost"
@@ -232,7 +232,7 @@ func TestSSOTokenByAuthCode(t *testing.T) {
 	defer f.Close()
 
 	authHeaderServer, clientID := f.AuthorizationServiceBasic()
-	server := models.PNETServer{}
+	server := models.Server{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
 
 	// Создаем тестового пользователя
@@ -349,7 +349,7 @@ func TestSSOTokenByAuthCodeWithPKCE(t *testing.T) {
 	defer f.Close()
 
 	authHeaderServer, clientID := f.AuthorizationServiceBasic()
-	server := models.PNETServer{}
+	server := models.Server{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
 
 	user := models.User{}
@@ -410,7 +410,7 @@ func TestSSOTokenByAuthCodeWithInvalidPKCE(t *testing.T) {
 	defer f.Close()
 
 	authHeaderServer, clientID := f.AuthorizationServiceBasic()
-	server := models.PNETServer{}
+	server := models.Server{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
 
 	user := models.User{}
@@ -467,7 +467,7 @@ func TestSSOTokenByAuthCodeWithMissingCodeVerifier(t *testing.T) {
 	defer f.Close()
 
 	authHeaderServer, clientID := f.AuthorizationServiceBasic()
-	server := models.PNETServer{}
+	server := models.Server{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
 
 	user := models.User{}
@@ -523,7 +523,7 @@ func TestSSOIntrospectValidToken(t *testing.T) {
 	defer f.Close()
 
 	authHeaderClient, clientID := f.AuthorizationServiceBasic()
-	server := models.PNETServer{}
+	server := models.Server{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
 	authHeader := f.AuthorizationUser(0, &server.ID)
 
@@ -556,7 +556,7 @@ func TestSSOUserInfo(t *testing.T) {
 	defer f.Close()
 
 	_, clientID := f.AuthorizationServiceBasic()
-	server := models.PNETServer{}
+	server := models.Server{}
 	f.DB.Where("client_id = ?", clientID).Find(&server)
 	user := models.User{}
 	user.Email = uuid.New().String() + "@admin.com"

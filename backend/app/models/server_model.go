@@ -13,11 +13,10 @@ const (
 	ServerTypeKubernetes = "k8s"
 )
 
-// PNETServerBase struct to describe PNETServer object.
-type PNETServerBase struct {
+type ServerBase struct {
 	Name string `gorm:"type:varchar(255)" json:"name"`
 	Url  string `gorm:"type:varchar(255)" json:"url"`
-	// enumeration: ServerTypePnet, ServerTypeOpenID, ServerTypeKubernetes
+	// enumeration: pnet, openid, k8s
 	Type                 string     `gorm:"type:varchar(255)" json:"type"`
 	IsActive             bool       `gorm:"type:bool" json:"is_active"`
 	MinutesForDisconnect int        `gorm:"type:int" json:"minutes_for_disconnect"`
@@ -27,17 +26,14 @@ type PNETServerBase struct {
 	UnitRate             int        `gorm:"type:int" json:"unit_rate"`
 }
 
-func (t *PNETServerBase) HasPrefixUrl(redirectUri string) bool {
-	// Очищаем redirectUri от http:// и https://
+func (t *ServerBase) HasPrefixUrl(redirectUri string) bool {
 	redirectUri = strings.TrimPrefix(redirectUri, "http://")
 	redirectUri = strings.TrimPrefix(redirectUri, "https://")
 
-	// Разделяем URL-адреса в t.Url по запятой или точке с запятой
 	urls := strings.FieldsFunc(t.Url, func(r rune) bool {
 		return r == ',' || r == ';'
 	})
 
-	// Проверяем каждый URL
 	for _, u := range urls {
 		url := strings.TrimSpace(u)
 		url = strings.TrimPrefix(url, "http://")
@@ -51,30 +47,29 @@ func (t *PNETServerBase) HasPrefixUrl(redirectUri string) bool {
 	return false
 }
 
-func PNETServeIsRealActive(db *gorm.DB) *gorm.DB {
-	return db.Where("pnet_servers.is_active = ?", true).
-		Where("pnet_servers.type = ?", ServerTypePnet).
-		Where("(UTC_TIMESTAMP() < DATE_ADD(pnet_servers.last_online_status, INTERVAL pnet_servers.minutes_for_disconnect MINUTE) OR pnet_servers.minutes_for_disconnect = 0)").
-		Where("(pnet_servers.last_count_users < pnet_servers.max_count_users_limit OR pnet_servers.max_count_users_limit = 0)")
+func ServerIsRealActive(db *gorm.DB) *gorm.DB {
+	return db.Where("servers.is_active = ?", true).
+		Where("servers.type = ?", ServerTypePnet).
+		Where("(UTC_TIMESTAMP() < DATE_ADD(servers.last_online_status, INTERVAL servers.minutes_for_disconnect MINUTE) OR servers.minutes_for_disconnect = 0)").
+		Where("(servers.last_count_users < servers.max_count_users_limit OR servers.max_count_users_limit = 0)")
 }
 
-type PNETServerSecret struct {
+type ServerSecret struct {
 	Token    string `gorm:"type:string" json:"token" valid:"required"`
 	ClientID string `gorm:"type:string" json:"client_id" valid:"required"`
 }
 
-type PNETServerListItem struct {
+type ServerListItem struct {
 	Base
-	PNETServerBase
+	ServerBase
 }
 
-// TableName переопределяет название таблицы для PNETServerListItem на `pnet_servers`
-func (PNETServerListItem) TableName() string {
-	return "pnet_servers"
+func (ServerListItem) TableName() string {
+	return "servers"
 }
 
-type PNETServer struct {
+type Server struct {
 	Base
-	PNETServerBase
-	PNETServerSecret
+	ServerBase
+	ServerSecret
 }

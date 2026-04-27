@@ -15,11 +15,11 @@ import (
 	"gitlab.com/a10869/api-modules/backend/app/models"
 )
 
-func TestV1PNETServerRouteGet(t *testing.T) {
+func TestV1ServerRouteGet(t *testing.T) {
 	description := "get server"
 	f := NewTestHTTP()
 	defer f.Close()
-	entity := models.PNETServer{}
+	entity := models.Server{}
 	entity.Name = "Server"
 	entity.Url = "https://localhost"
 	entity.Type = models.ServerTypePnet
@@ -41,14 +41,14 @@ func TestV1PNETServerRouteGet(t *testing.T) {
 		},
 		Authorization: authHeader,
 	})
-	bodyModel := usecases.PNETServerGetResponse{}
+	bodyModel := usecases.ServerGetResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, expectedCode, statusCode, description)
 	assert.Equal(t, entity.ID, bodyModel.Result.Model.ID, description)
 }
 
-func TestV1PNETServerRouteGetNotFound(t *testing.T) {
+func TestV1ServerRouteGetNotFound(t *testing.T) {
 	description := "not found pnet"
 	f := NewTestHTTP()
 	defer f.Close()
@@ -79,11 +79,11 @@ func TestV1PNETServerRouteGetNotFound(t *testing.T) {
 	assert.Equal(t, FiberJSON(expectedBody), body, description)
 }
 
-func TestV1PNETServerRouteSearch(t *testing.T) {
+func TestV1ServerRouteSearch(t *testing.T) {
 	f := NewTestHTTP()
 	defer f.Close()
 	now := time.Now().UTC()
-	entity := models.PNETServer{}
+	entity := models.Server{}
 	entity.Name = "Server " + uuid.New().String()
 	entity.Url = "https://localhost"
 	entity.Type = models.ServerTypePnet
@@ -95,7 +95,7 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 	entity.Token = uuid.New().String()
 	entity.ClientID = uuid.New().String()
 	f.DB.Create(&entity)
-	entity2 := models.PNETServer{}
+	entity2 := models.Server{}
 	entity2.Name = entity.Name
 	entity2.UnitRate = 10
 	entity2.Url = "https://anotherhost"
@@ -172,7 +172,7 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 			Params:        test.body,
 			Authorization: authHeader,
 		})
-		bodyModel := usecases.PNETServerListResponse{}
+		bodyModel := usecases.ServerListResponse{}
 		_ = json.Unmarshal([]byte(body), &bodyModel)
 		ids := make([]uint, 0)
 		for _, model := range bodyModel.Result.Model {
@@ -183,11 +183,11 @@ func TestV1PNETServerRouteSearch(t *testing.T) {
 	}
 }
 
-func TestV1PNETServerRouteDelete(t *testing.T) {
+func TestV1ServerRouteDelete(t *testing.T) {
 	f := NewTestHTTP()
 	defer f.Close()
 	now := time.Now().UTC()
-	entity := models.PNETServer{}
+	entity := models.Server{}
 	entity.Name = "Server " + uuid.New().String()
 	entity.Url = "https://localhost"
 	entity.Type = models.ServerTypePnet
@@ -208,12 +208,12 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 		expectedErr string
 	}{
 		{
-			description: "Successfully delete PNETServer",
+			description: "Successfully delete Server",
 			id:          entity.ID,
 			statusCode:  200,
 		},
 		{
-			description: "Fail to delete non-existent PNETServer",
+			description: "Fail to delete non-existent Server",
 			id:          999999,
 		},
 	}
@@ -228,28 +228,28 @@ func TestV1PNETServerRouteDelete(t *testing.T) {
 				Authorization: authHeader,
 			},
 		)
-		response := usecases.PNETServerDeleteResponse{}
+		response := usecases.ServerDeleteResponse{}
 		_ = json.Unmarshal([]byte(body), &response)
 		assert.Equal(t, 200, statusCode, test.description)
 		assert.Equal(t, test.id, response.Result.ID, test.description)
 
 		// Проверяем, что сервер успешно удален
-		var deletedEntity models.PNETServer
+		var deletedEntity models.Server
 		f.DB.First(&deletedEntity, test.id)
 		var idNotFound uint = 0
 		assert.Equal(t, idNotFound, deletedEntity.ID, test.description)
 	}
 }
 
-func TestV1PNETServerRouteCreate(t *testing.T) {
-	description := "Create new PNET server"
+func TestV1ServerRouteCreate(t *testing.T) {
+	description := "Create new server"
 	f := NewTestHTTP()
 	defer f.Close()
 	authHeader := f.AuthorizationUser(0, nil)
 
 	// Тестовые данные
 	now := time.Now().UTC()
-	entity := models.PNETServer{}
+	entity := models.Server{}
 
 	entity.Name = "Server " + uuid.New().String()
 	entity.Url = "https://localhost"
@@ -263,7 +263,7 @@ func TestV1PNETServerRouteCreate(t *testing.T) {
 
 	statusCode, body := f.Rpc(&TestRpcRequest{
 		Method: "server.upsert",
-		Params: usecases.PNETServerEditInputDTO{
+		Params: usecases.ServerEditInputDTO{
 			ClientID:             entity.ClientID,
 			Type:                 entity.Type,
 			Name:                 entity.Name,
@@ -276,14 +276,14 @@ func TestV1PNETServerRouteCreate(t *testing.T) {
 		Authorization: authHeader,
 	})
 
-	bodyModel := usecases.PNETServerEditResponse{}
+	bodyModel := usecases.ServerEditResponse{}
 	_ = json.Unmarshal([]byte(body), &bodyModel)
 
 	assert.Equal(t, statusCode, 200, description)
 	assert.Equal(t, true, bodyModel.Result.ID > 0, description)
 
 	// Проверка, что сервер действительно создан в базе данных
-	var createdEntity models.PNETServer
+	var createdEntity models.Server
 	f.DB.First(&createdEntity, bodyModel.Result.ID)
 	assert.Equal(t, entity.Name, createdEntity.Name, description)
 	assert.Equal(t, entity.Url, createdEntity.Url, description)

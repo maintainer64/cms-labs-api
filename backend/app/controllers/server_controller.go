@@ -10,17 +10,17 @@ import (
 	"gitlab.com/a10869/api-modules/shared/logs"
 )
 
-// PNETServerUpsert func for creates a new PNETServer.
-// @Description Create pnet_server. Roles [admin]
-// @Summary create pnet_server
+// ServerUpsert func for creates a new Server.
+// @Description Create server. Roles [admin]
+// @Summary create server
 // @Tags server
 // @Accept json
 // @Produce json
-// @Param object body usecases.PNETServerEditRequest true "pnet_server form info"
-// @Success 200 {object} usecases.PNETServerEditResponse
+// @Param object body usecases.ServerEditRequest true "server form info"
+// @Success 200 {object} usecases.ServerEditResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/server.upsert [post]
-func PNETServerUpsert(c *jsonrpc.Ctx) (interface{}, error) {
+func ServerUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
@@ -28,7 +28,7 @@ func PNETServerUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 	); err != nil {
 		return nil, err
 	}
-	dto := usecases.PNETServerEditInputDTO{}
+	dto := usecases.ServerEditInputDTO{}
 	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
 		return nil, err
@@ -38,12 +38,12 @@ func PNETServerUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 		return nil, err
 	}
 	defer container.Close()
-	uc := container.PNETServerEditUC()
+	uc := container.ServerEditUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return nil, err
 	}
-	ucDistribution := container.PnetServerChangeDistributionUC()
+	ucDistribution := container.ServerChangeDistributionUC()
 	err = ucDistribution.Execute()
 	if err != nil {
 		return nil, err
@@ -51,17 +51,17 @@ func PNETServerUpsert(c *jsonrpc.Ctx) (interface{}, error) {
 	return output, nil
 }
 
-// PNETServerList func for view of list PNETServer.
-// @Description List pnet_server. Roles: [admin, instructor]
-// @Summary list pnet_server
+// ServerList func for view of list Server.
+// @Description List server. Roles: [admin, instructor]
+// @Summary list server
 // @Tags server
 // @Accept json
 // @Produce json
-// @Param object body usecases.PNETServerListRequest true "pnet_server list info"
-// @Success 200 {object} usecases.PNETServerListResponse
+// @Param object body usecases.ServerListRequest true "server list info"
+// @Success 200 {object} usecases.ServerListResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/server.list [post]
-func PNETServerList(c *jsonrpc.Ctx) (interface{}, error) {
+func ServerList(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
@@ -69,7 +69,7 @@ func PNETServerList(c *jsonrpc.Ctx) (interface{}, error) {
 	); err != nil {
 		return nil, err
 	}
-	dto := queries.PNETServerQueriesListDTO{}
+	dto := queries.ServerQueriesListDTO{}
 	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
 		return nil, err
@@ -79,22 +79,22 @@ func PNETServerList(c *jsonrpc.Ctx) (interface{}, error) {
 		return nil, err
 	}
 	defer container.Close()
-	uc := container.PNETServerListUC()
+	uc := container.ServerListUC()
 	output, err := uc.Execute(dto)
 	return output, err
 }
 
-// PNETServerDelete func for delete PNETServer.
-// @Description Delete pnet_server. Roles: [admin]
-// @Summary delete pnet_server
+// ServerDelete func for delete Server.
+// @Description Delete server. Roles: [admin]
+// @Summary delete server
 // @Tags server
 // @Accept json
 // @Produce json
-// @Param object body usecases.PNETServerDeleteRequest true "pnet_server id"
-// @Success 200 {object} usecases.PNETServerDeleteResponse
+// @Param object body usecases.ServerDeleteRequest true "server id"
+// @Success 200 {object} usecases.ServerDeleteResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/server.delete [post]
-func PNETServerDelete(c *jsonrpc.Ctx) (interface{}, error) {
+func ServerDelete(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
@@ -102,7 +102,7 @@ func PNETServerDelete(c *jsonrpc.Ctx) (interface{}, error) {
 	); err != nil {
 		return nil, err
 	}
-	dto := usecases.PNETServerDeleteInputDTO{}
+	dto := usecases.ServerDeleteInputDTO{}
 	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
 		return nil, err
@@ -112,12 +112,12 @@ func PNETServerDelete(c *jsonrpc.Ctx) (interface{}, error) {
 		return nil, err
 	}
 	defer container.Close()
-	uc := container.PNETServerDeleteUC()
+	uc := container.ServerDeleteUC()
 	output, err := uc.Execute(dto)
 	if err != nil {
 		return nil, err
 	}
-	ucDistribution := container.PnetServerChangeDistributionUC()
+	ucDistribution := container.ServerChangeDistributionUC()
 	err = ucDistribution.Execute()
 	if err != nil {
 		return nil, err
@@ -125,17 +125,17 @@ func PNETServerDelete(c *jsonrpc.Ctx) (interface{}, error) {
 	return output, nil
 }
 
-// PNETServerGet func for full model PNETServer.
-// @Description get pnet_server. Roles: [admin, instructor]
-// @Summary get pnet_server
+// ServerGet func for full model Server.
+// @Description get server. Roles: [admin, instructor]
+// @Summary get server
 // @Tags server
 // @Accept json
 // @Produce json
-// @Param object body usecases.PNETServerGetRequest true "pnet_server id"
-// @Success 200 {object} usecases.PNETServerGetResponse
+// @Param object body usecases.ServerGetRequest true "server id"
+// @Success 200 {object} usecases.ServerGetResponse
 // @Security ApiKeyAuth
 // @Router /api/v1/rpc/server.get [post]
-func PNETServerGet(c *jsonrpc.Ctx) (interface{}, error) {
+func ServerGet(c *jsonrpc.Ctx) (interface{}, error) {
 	diLoggerConf := logs.NewZeroLoggerConf(c)
 	if _, err := auth.ExtractTokenMetadata(
 		c,
@@ -143,7 +143,7 @@ func PNETServerGet(c *jsonrpc.Ctx) (interface{}, error) {
 	); err != nil {
 		return nil, err
 	}
-	dto := usecases.PNETServerGetInputDTO{}
+	dto := usecases.ServerGetInputDTO{}
 	err := jsonrpc.ValidatorBase(c, &dto)
 	if err != nil {
 		return nil, err
@@ -153,7 +153,7 @@ func PNETServerGet(c *jsonrpc.Ctx) (interface{}, error) {
 		return nil, err
 	}
 	defer container.Close()
-	uc := container.PNETServerGetUC()
+	uc := container.ServerGetUC()
 	output, err := uc.Execute(dto)
 	return output, err
 }

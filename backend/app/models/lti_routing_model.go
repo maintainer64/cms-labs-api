@@ -14,11 +14,11 @@ type LTIRoutingSecret struct {
 	Collaboration int `gorm:"type:int;column:collaboration" json:"collaboration"`
 	// The type of PNETLabsType, cms_client.PNETLabsTypeDefault
 	// enum: default,curl,sso
-	PNETLabsType string `gorm:"type:varchar(255);column:pnet_labs_type" json:"pnet_labs_type"`
-	PNETLabsPath string `gorm:"type:varchar(255);column:pnet_labs_path" json:"pnet_labs_path"`
-	PNETTestPath string `gorm:"type:varchar(255);column:pnet_test_path" json:"pnet_test_path"`
-	PNETServerID uint   `gorm:"type:int;column:pnet_server_id" json:"pnet_server_id"`
-	IsDefault    bool   `gorm:"type:bool;column:is_default" json:"is_default"`
+	LabsType  string `gorm:"type:varchar(255);column:labs_type" json:"labs_type"`
+	LabsPath  string `gorm:"type:varchar(255);column:labs_path" json:"labs_path"`
+	TestPath  string `gorm:"type:varchar(255);column:test_path" json:"test_path"`
+	ServerID  uint   `gorm:"type:int;column:server_id" json:"server_id"`
+	IsDefault bool   `gorm:"type:bool;column:is_default" json:"is_default"`
 	// Автоматические
 	LTITaskID   string `gorm:"type:varchar(255);column:lti_task_id" json:"lti_task_id"`
 	LTICourseID string `gorm:"type:varchar(255);column:lti_course_id" json:"lti_course_id"`

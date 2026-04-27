@@ -4,11 +4,10 @@ import dayjs from 'dayjs';
 import { RolesChip } from '@/components/base-forms/roles';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
-import { PnetServerItem } from '@/helpers/queries/server/use-query-server-get';
-import { Cog, SquarePen } from 'lucide-react';
+import { ServerItem } from '@/helpers/queries/server/use-query-server-get';
 
 interface Props {
-  item: PnetServerItem;
+  item: ServerItem;
   columnKey: string | React.Key;
 }
 
@@ -24,7 +23,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
   const {
     locale: {
       Tables: {
-        PnetServersTable: { ColumnStatus, ColumnIndicator }
+        ServersTable: { ColumnStatus, ColumnIndicator }
       }
     }
   } = locale;
@@ -108,7 +107,7 @@ export const RenderCellWithLocale = (locale: any, { item, columnKey }: Props) =>
       return (
         <div className='flex items-center gap-4 '>
           <div>
-            <Link to={RoutesLocation.pnetServersEdit(item.id?.toString())}>
+            <Link to={RoutesLocation.serversEdit(item.id?.toString())}>
               <SquarePen className='w-5 h-5 stroke-[#969696]' />
             </Link>
           </div>

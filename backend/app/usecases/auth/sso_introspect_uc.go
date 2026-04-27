@@ -16,7 +16,7 @@ type SSOIntrospectInputDTO struct {
 
 type SSOIntrospectUC struct {
 	TokenAttemptQueries *queries.TokenAttemptQueries
-	PNETServerQueries   *queries.PNETServerQueries
+	ServerQueries       *queries.ServerQueries
 }
 
 func (u *SSOIntrospectUC) Execute(inputDTO SSOIntrospectInputDTO) (*SSOTokenIntrospect, error) {
@@ -51,7 +51,7 @@ func (u *SSOIntrospectUC) ByRefresh(inputDTO SSOIntrospectInputDTO) (*SSOTokenIn
 	if attempt.ServerID == nil {
 		return introspect, nil
 	}
-	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
+	server, err := u.ServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (u *SSOIntrospectUC) ByAccess(inputDTO SSOIntrospectInputDTO) (*SSOTokenInt
 	if attempt.ServerID == nil {
 		return introspect, nil
 	}
-	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
+	server, err := u.ServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return introspect, nil
 	}

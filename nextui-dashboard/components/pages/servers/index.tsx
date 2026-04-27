@@ -6,15 +6,15 @@ import useLanguageBrowser from '@/helpers/locale';
 import { CrumbsLayout } from '@/components/layout/crumbs';
 import { Link } from 'react-router-dom';
 import SearchInput from '@/components/sidebar/search-input';
-import { PnetServerTableWrapper } from '@/components/pages/pnet-servers/table/table';
+import { ServerTableWrapper } from '@/components/pages/servers/table/table';
 import { MapServerItem } from '@/helpers/queries/server/use-query-server-get';
 import { useInfinityServerList } from '@/helpers/queries/server/use-infinity-server-list';
 
-export const PnetServersList = () => {
+export const ServersList = () => {
   const { locale } = useLanguageBrowser();
   const {
     locale: {
-      Tables: { PnetServersTable }
+      Tables: { ServersTable }
     }
   } = useLanguageBrowser();
   const crumbs = [
@@ -26,7 +26,7 @@ export const PnetServersList = () => {
     {
       icon: <Server className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Servers,
-      href: RoutesLocation.pnetServers()
+      href: RoutesLocation.servers()
     },
     {
       icon: undefined,
@@ -40,18 +40,18 @@ export const PnetServersList = () => {
     response?.data?.pages.flatMap((p) => p?.model?.map((item) => MapServerItem(item.model, item.roles)) ?? []) || [];
   const totalCount = response.data?.pages[0]?.totalCount ?? 0;
   return (
-    <CrumbsLayout name={`${PnetServersTable.Title} (${totalCount})`} crumbs={crumbs}>
+    <CrumbsLayout name={`${ServersTable.Title} (${totalCount})`} crumbs={crumbs}>
       <>
         <div className='flex justify-between flex-wrap gap-4 items-center'>
           <div className='flex items-center gap-3 flex-nowrap w-full'>
             <SearchInput placeholder={PnetServersTable.SearchBar} setValue={setSearchTerm} />
-            <Link to={RoutesLocation.pnetServersCreate()}>
+            <Link to={RoutesLocation.serversCreate()}>
               <Button color='primary'>{PnetServersTable.ButtonAdd}</Button>
             </Link>
           </div>
         </div>
         <div className='max-w-[95rem] mx-auto w-full'>
-          <PnetServerTableWrapper
+          <ServerTableWrapper
             rows={rows}
             isLoading={response.isLoading}
             loadMore={response.fetchNextPage.bind(response.fetchNextPage)}

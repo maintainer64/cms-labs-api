@@ -10,15 +10,13 @@ import { Loading } from '@/components/scroll/loader';
 import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { PasswordInput } from '@/components/base-forms/password';
 import { RolesSelector } from '@/components/base-forms/roles';
-import { MapServerItem, PnetServerItem, useQueryServerGet } from '@/helpers/queries/server/use-query-server-get';
-import { useMutationServerUpsert } from '@/helpers/queries/server/use-mutation-server-upsert';
-import { useMutationServerDelete } from '@/helpers/queries/server/use-mutation-server-delete';
+import { MapServerItem, ServerItem, useQueryServerGet } from '@/helpers/queries/server/use-query-server-get';
 
 interface EditFormProps {
   id?: number;
 }
 
-const defaultValues: PnetServerItem = {
+const defaultValues: ServerItem = {
   clientId: '',
   type: 'pnet',
   createdAt: '',
@@ -35,9 +33,9 @@ const defaultValues: PnetServerItem = {
   roles: []
 };
 
-export const PnetServersEditForm = ({ id }: EditFormProps) => {
+export const ServersEditForm = ({ id }: EditFormProps) => {
   const {
-    locale: { PnetServers, Forms, Sidebar }
+    locale: { Servers, Forms, Sidebar }
   } = useLanguageBrowser();
   const navigate = useNavigate();
   const response = useQueryServerGet({ id });
@@ -75,8 +73,8 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
     }
   });
   const AuthProviderDeletePopup = useConfirmPopup({
-    title: PnetServers.DeletePopup.Title,
-    description: PnetServers.DeletePopup.Description,
+    title: Servers.DeletePopup.Title,
+    description: Servers.DeletePopup.Description,
     onConfirm: onDeleteMutation.mutate.bind(onDeleteMutation.mutate, { id })
   });
   if (response.isLoading) return <Loading size='md' />;
@@ -106,42 +104,42 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
           <div className='flex flex-col gap-4 mb-4'>
             <Input
               variant='bordered'
-              label={PnetServers.FieldID}
+              label={Servers.FieldID}
               type='number'
               value={(initialValues.id ?? 0).toString()}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={PnetServers.FieldName}
+              label={Servers.FieldName}
               type='text'
               value={values.name ?? ''}
               onChange={handleChange('name')}
             />
             <Input
               variant='bordered'
-              label={PnetServers.FieldURL}
+              label={Servers.FieldURL}
               type='url'
               value={values.url ?? ''}
               onChange={handleChange('url')}
             />
             <Input
               variant='bordered'
-              label={PnetServers.FieldClientID}
-              description={PnetServers.FieldClientIDDescription}
+              label={Servers.FieldClientID}
+              description={Servers.FieldClientIDDescription}
               type='text'
               value={values.clientId ?? ''}
               onChange={handleChange('clientId')}
             />
             <RolesSelector
-              label={PnetServers.FieldAllowedRoles}
-              description={PnetServers.FieldAllowedRolesDescription}
+              label={Servers.FieldAllowedRoles}
+              description={Servers.FieldAllowedRolesDescription}
               selectedKeys={values.roles ?? []}
               onSelectionChange={(keys) => setFieldValue('roles', Array.from(keys))}
             />
             <Select
               variant='bordered'
-              label={PnetServers.FieldType}
+              label={Servers.FieldType}
               selectedKeys={[values.type ?? '']}
               onSelectionChange={(keys) => setFieldValue('type', keys.currentKey || 'pnet')}
             >
@@ -150,43 +148,43 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
               <SelectItem key='k8s'>K8S</SelectItem>
             </Select>
             <Checkbox type='checkbox' defaultSelected={!!values.isActive} onChange={handleChange('isActive')}>
-              {PnetServers.FieldIsActive}
+              {Servers.FieldIsActive}
             </Checkbox>
             {values.type === 'pnet' && (
               <>
                 <Input
                   variant='bordered'
-                  label={PnetServers.FieldUnitRate}
+                  label={Servers.FieldUnitRate}
                   type='number'
                   value={(values.unitRate ?? '').toString()}
                   onChange={handleChange('unitRate')}
                 />
                 <Input
                   variant='bordered'
-                  label={PnetServers.FieldMinutesForDisconnect}
-                  description={PnetServers.DescriptionMinutesForDisconnect}
+                  label={Servers.FieldMinutesForDisconnect}
+                  description={Servers.DescriptionMinutesForDisconnect}
                   type='number'
                   value={(values.minutesForDisconnect ?? '').toString()}
                   onChange={handleChange('minutesForDisconnect')}
                 />
                 <Input
                   variant='bordered'
-                  label={PnetServers.FieldMaxCountUsers}
-                  description={PnetServers.DescriptionMaxCountUsers}
+                  label={Servers.FieldMaxCountUsers}
+                  description={Servers.DescriptionMaxCountUsers}
                   type='number'
                   value={(values.maxCountUsersLimit ?? '').toString()}
                   onChange={handleChange('maxCountUsersLimit')}
                 />
                 <Input
                   variant='bordered'
-                  label={PnetServers.FieldLastOnlineStatus}
+                  label={Servers.FieldLastOnlineStatus}
                   type='datetime-local'
                   value={dayjs(initialValues.lastOnlineStatus ?? '').format('YYYY-MM-DDTHH:mm')}
                   isReadOnly
                 />
                 <Input
                   variant='bordered'
-                  label={PnetServers.FieldLastCountUsers}
+                  label={Servers.FieldLastCountUsers}
                   type='number'
                   value={(initialValues.lastCountUsers ?? '').toString()}
                   isReadOnly
@@ -195,21 +193,21 @@ export const PnetServersEditForm = ({ id }: EditFormProps) => {
             )}
             <PasswordInput
               variant='bordered'
-              label={PnetServers.FieldToken}
+              label={Servers.FieldToken}
               type='password'
               value={values.token ?? ''}
               onChange={handleChange('token')}
             />
             <Input
               variant='bordered'
-              label={PnetServers.FieldCreatedAt}
+              label={Servers.FieldCreatedAt}
               type='datetime-local'
               value={dayjs(initialValues.createdAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly
             />
             <Input
               variant='bordered'
-              label={PnetServers.FieldUpdatedAt}
+              label={Servers.FieldUpdatedAt}
               type='datetime-local'
               value={dayjs(initialValues.updatedAt ?? '').format('YYYY-MM-DDTHH:mm')}
               isReadOnly

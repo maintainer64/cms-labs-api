@@ -31,7 +31,7 @@ const (
 type SSOTokenUC struct {
 	TokenAttemptQueries *queries.TokenAttemptQueries
 	TokenManager        *TokenManager
-	PNETServerQueries   *queries.PNETServerQueries
+	ServerQueries       *queries.ServerQueries
 	Logger              *zerolog.Logger
 	IssId               string
 }
@@ -127,9 +127,9 @@ func (u *SSOTokenUC) ByAuthCode(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken
 		return nil, err
 	}
 	if attempt.ServerID == nil || attempt.UserID == nil {
-		return nil, queries.PNETServerNotFoundError
+		return nil, queries.ServerNotFoundError
 	}
-	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
+	server, err := u.ServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +195,7 @@ func (u *SSOTokenUC) ByRefresh(inputDTO SSOTokenInputDTO) (*cms_client.SSOToken,
 		return u.TokenManager.NewJWTByUserId(u.IssId, *attempt.UserID, attempt.ServerID, &attempt)
 	}
 	u.Logger.Info().Msg(fmt.Sprintf("Token get by refresh token by server_id: %+v", attempt.ServerID))
-	server, err := u.PNETServerQueries.Get(*attempt.ServerID)
+	server, err := u.ServerQueries.Get(*attempt.ServerID)
 	if err != nil {
 		return nil, err
 	}
