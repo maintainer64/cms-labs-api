@@ -25,8 +25,24 @@ export const RoutesLocation = {
   targetsCreate: () => '/targets/create',
   ltiRedirect: () => '/lti-redirect',
   ltiRedirectCreate: () => '/lti-redirect/create',
-  ltiAttemptUser: (id = ':id') => `/lti-attempt/user/${id}`,
   ltiAttemptEdit: (id = ':id') => `/lti-attempt/edit/${id}`,
+  ltiAttempts: (params?: { userId?: number | number[]; statuses?: string[]; serverClientId?: string | string[] }) => {
+    const url = '/lti-attempts';
+    const searchParams = new URLSearchParams();
+    if (params?.userId) {
+      const ids = Array.isArray(params.userId) ? params.userId : [params.userId];
+      ids.forEach((id) => searchParams.append('userId', id.toString()));
+    }
+    if (params?.statuses?.length) {
+      params.statuses.forEach((s) => searchParams.append('statuses', s));
+    }
+    if (params?.serverClientId) {
+      const ids = Array.isArray(params.serverClientId) ? params.serverClientId : [params.serverClientId];
+      ids.forEach((id) => searchParams.append('serverClientId', id));
+    }
+    const query = searchParams.toString();
+    return query ? `${url}?${query}` : url;
+  },
   topologyView: (namespace = ':namespace') => `/topology/${namespace}`,
   topologyDevices: (namespace = ':namespace', device = ':device') => `/topology/${namespace}/devices/${device}`,
   topologyConnect: () => `/topology`,

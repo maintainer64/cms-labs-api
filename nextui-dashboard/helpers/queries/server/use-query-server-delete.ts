@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  type UsecasesPNETServerDeleteRequest,
-  type UsecasesPNETServerDeleteResponse
+  type UsecasesServerDeleteRequest,
+  type UsecasesServerDeleteResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesPNETServerDeleteRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesPNETServerDeleteResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesServerDeleteRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesServerDeleteResponse['result']>;
 
 export const useQueryServerDelete = (params: Params) => {
   return useQuery(

@@ -25,7 +25,7 @@ const defaultValues: CamelCasedPropertiesDeep<ModelsLTIAttempt> = {
   attemptId: '',
   createdAt: '',
   ltiRoutingId: 0,
-  pnetServerId: 0,
+  serverId: 0,
   roomId: 0,
   userId: 0,
   updatedAt: '',
@@ -64,7 +64,7 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
   });
   const onDeleteMutation = useMutationLtiAttemptDelete({
     onSuccess: () => {
-      navigate(RoutesLocation.ltiAttemptUser(initialValues.userId?.toString()), { replace: true });
+      navigate(RoutesLocation.ltiAttempts({ userId: initialValues.userId }), { replace: true });
       addToast({
         title: Forms.DeleteSuccess,
         color: 'success'
@@ -91,7 +91,7 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
       onSubmit={(values, formikHelpers) => {
         mutate({
           id: values.id,
-          pnetServerId: parseInt(values.pnetServerId?.toString() || ''),
+          serverId: parseInt(values.serverId?.toString() || ''),
           status: values.status,
           result: values.result
         });
@@ -110,8 +110,8 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
             <ServerInput
               variant='bordered'
               label={AuthProviderAttempt.FieldPNETServer}
-              value={(values.pnetServerId ?? '').toString()}
-              onChange={handleChange('pnetServerId')}
+              value={(values.serverId ?? '').toString()}
+              onChange={handleChange('serverId')}
             />
             <Select
               variant='bordered'

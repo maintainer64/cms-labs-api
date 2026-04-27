@@ -6,15 +6,15 @@ import {
   ClabgateJsonRpcPath,
   CoreJsonRpcPath,
   transportWithAuth,
-  UsecasesPNETServerGetRequest,
-  UsecasesPNETServerGetResponse
+  UsecasesServerGetRequest,
+  UsecasesServerGetResponse
 } from '@/helpers/api';
 import { TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '@/helpers/queries/base';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesPNETServerGetRequest['params']>;
-type Response = CamelCasedPropertiesDeep<UsecasesPNETServerGetResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesServerGetRequest['params']>;
+type Response = CamelCasedPropertiesDeep<UsecasesServerGetResponse['result']>;
 
 export const useMutationServerGet = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({

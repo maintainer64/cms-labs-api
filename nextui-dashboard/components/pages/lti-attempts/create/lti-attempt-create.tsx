@@ -18,7 +18,7 @@ import { ClipboardCopy, Undo2 } from 'lucide-react';
 export const LTIAttemptCreate = () => {
   const {
     locale: {
-      PnetServersQueue: { LTIAttemptRoom },
+      ServersQueue: { LTIAttemptRoom },
       Auth: { MainChangeLanguage }
     }
   } = useLanguageBrowser();

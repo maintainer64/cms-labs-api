@@ -10,7 +10,7 @@ import { RoutesLocation } from '@/components/routes';
 export const LTIAttemptConfirm = () => {
   const {
     locale: {
-      PnetServersQueue: { LTIAttemptRoom, LTIAttemptConfirm }
+      ServersQueue: { LTIAttemptRoom, LTIAttemptConfirm }
     }
   } = useLanguageBrowser();
   return (

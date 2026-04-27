@@ -4,16 +4,16 @@ Template auto generated with params from openapi.json
 import { useMutation } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
-  RoundQueuePoolPnetRoundQueuePoolPnetUpsertRequest,
-  RoundQueuePoolPnetRoundQueuePoolPnetUpsertResponse,
+  ServerQueueServerQueueUpsertRequest,
+  ServerQueueServerQueueUpsertResponse,
   transportWithAuth
 } from '@/helpers/api';
 import { TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '@/helpers/queries/base';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<RoundQueuePoolPnetRoundQueuePoolPnetUpsertRequest['params']>;
-type Response = CamelCasedPropertiesDeep<RoundQueuePoolPnetRoundQueuePoolPnetUpsertResponse['result']>;
+type Params = CamelCasedPropertiesDeep<ServerQueueServerQueueUpsertRequest['params']>;
+type Response = CamelCasedPropertiesDeep<ServerQueueServerQueueUpsertResponse['result']>;
 
 export const useMutationServerQueueUpsert = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({

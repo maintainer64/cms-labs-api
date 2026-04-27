@@ -28,10 +28,10 @@ const defaultValues: CamelCasedPropertiesDeep<ModelsLTIRouting> = {
   ltiParamsTask: '',
   ltiTitle: '',
   name: '',
-  pnetLabsType: 'default',
-  pnetLabsPath: '',
-  pnetTestPath: '',
-  pnetServerId: 0,
+  labsType: 'default',
+  labsPath: '',
+  testPath: '',
+  serverId: 0,
   isDefault: false,
   updatedAt: '',
   ltiTaskId: '',
@@ -118,10 +118,10 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
           ltiSubId: values.ltiSubId,
           ltiTitle: values.ltiTitle,
           name: values.name,
-          pnetLabsType: values.pnetLabsType,
-          pnetLabsPath: values.pnetLabsPath,
-          pnetTestPath: values.pnetTestPath,
-          pnetServerId: parseInt(values.pnetServerId?.toString() || '0'),
+          labsType: values.labsType,
+          labsPath: values.labsPath,
+          testPath: values.testPath,
+          serverId: parseInt(values.serverId?.toString() || '0'),
           isDefault: values.isDefault
         });
       }}
@@ -186,8 +186,8 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                   <Select
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsType}
-                    selectedKeys={[values.pnetLabsType ?? '']}
-                    onSelectionChange={(keys) => setFieldValue('pnetLabsType', keys.currentKey || 'default')}
+                    selectedKeys={[values.labsType ?? '']}
+                    onSelectionChange={(keys) => setFieldValue('labsType', keys.currentKey || 'default')}
                   >
                     {routingTypes.map((type) => (
                       <SelectItem key={type.key} description={type.description}>
@@ -196,25 +196,25 @@ export const LtiRoutingEditForm = ({ id }: EditFormProps) => {
                     ))}
                   </Select>
                   <LabsPathInput
-                    labsTypeUnl={values.pnetLabsType ?? 'default'}
+                    labsTypeUnl={values.labsType ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETLabsPath}
-                    value={values.pnetLabsPath ?? ''}
-                    onChange={handleChange('pnetLabsPath')}
+                    value={values.labsPath ?? ''}
+                    onChange={handleChange('labsPath')}
                   />
                   <TestsPathInput
-                    labsTypeUnl={values.pnetLabsType ?? 'default'}
+                    labsTypeUnl={values.labsType ?? 'default'}
                     variant='bordered'
                     label={LTIRouting.FieldPNETTestPath}
-                    value={values.pnetTestPath ?? ''}
-                    onChange={handleChange('pnetTestPath')}
+                    value={values.testPath ?? ''}
+                    onChange={handleChange('testPath')}
                   />
                   <ServerInput
                     variant='bordered'
                     defaultItems={[{ key: 0, value: LTIRouting.FieldPNETServerDefault }]}
                     label={LTIRouting.FieldPNETServer}
-                    value={values.pnetServerId?.toString() ?? ''}
-                    onChange={handleChange('pnetServerId')}
+                    value={values.serverId?.toString() ?? ''}
+                    onChange={handleChange('serverId')}
                   />
                 </div>
               </AccordionItem>

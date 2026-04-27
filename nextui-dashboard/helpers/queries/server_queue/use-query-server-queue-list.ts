@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  type RoundQueuePoolPnetRoundQueuePoolPnetListRequest,
-  type RoundQueuePoolPnetRoundQueuePoolPnetListResponse
+  type ServerQueueServerQueueListRequest,
+  type ServerQueueServerQueueListResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<RoundQueuePoolPnetRoundQueuePoolPnetListRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<RoundQueuePoolPnetRoundQueuePoolPnetListResponse['result']>;
+type Params = CamelCasedPropertiesDeep<ServerQueueServerQueueListRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<ServerQueueServerQueueListResponse['result']>;
 
 export const useQueryServerQueueList = (params: Params) => {
   return useQuery(

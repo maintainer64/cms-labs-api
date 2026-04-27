@@ -48,7 +48,20 @@ const en = {
     Cancel: 'Cancel',
     Delete: 'Delete',
     Close: 'Close',
-    ViewAll: 'View all'
+    ViewAll: 'View all',
+    Success: 'Success',
+    SaveSuccess: 'Saved successfully',
+    SaveError: 'Save error',
+    DeleteSuccess: 'Deleted successfully',
+    DeleteError: 'Delete error',
+    Selected: 'selected',
+    Clear: 'Clear',
+    Forms: {
+      SaveSuccess: 'Saved successfully',
+      SaveError: 'Save error',
+      DeleteSuccess: 'Deleted successfully',
+      DeleteError: 'Delete error'
+    }
   },
   LanguageSwitcher: {
     LanguageSwitch: 'Select language'
@@ -88,6 +101,13 @@ const en = {
       Title: 'LTI Attempts',
       TitleWidgetHome: 'Latest attempts',
       ButtonEdit: 'Edit',
+      ButtonAdd: 'Create',
+      SearchBar: 'Search',
+      FilterStatus: 'Status',
+      FilterUser: 'User',
+      FilterServer: 'Server',
+      BulkAction: 'Bulk Actions',
+      BulkTerminating: 'Terminate Selected',
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'USER', uid: 'user' },
@@ -119,7 +139,7 @@ const en = {
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
-    PnetServersTable: {
+    ServersTable: {
       Title: 'All Servers',
       ButtonAdd: 'Create',
       SearchBar: 'Search All Servers',
@@ -307,7 +327,7 @@ const en = {
         'When you delete it, the other systems will not be able to interact with the user. It is safe if the user has completed the work'
     }
   },
-  PnetServers: {
+  Servers: {
     FieldID: 'ID',
     FieldName: 'Name',
     FieldURL: 'URL',
@@ -368,7 +388,7 @@ const en = {
       Description: 'When you delete the service, it will no longer be displayed on the main screen'
     }
   },
-  PnetServersQueue: {
+  ServersQueue: {
     RoundRobinChart: {
       Title: 'PNET distribution'
     },

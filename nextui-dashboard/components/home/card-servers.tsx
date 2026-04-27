@@ -5,10 +5,10 @@ import useLanguageBrowser from '@/helpers/locale';
 import { Loading } from '@/components/scroll/loader';
 import { useInfinityServerList } from '@/helpers/queries/server/use-infinity-server-list';
 
-export const CardPnetServers = () => {
+export const CardServers = () => {
   const {
     locale: {
-      PnetServers: { StatsChart }
+      Servers: { StatsChart }
     }
   } = useLanguageBrowser();
   const [orderBy, setOrderBy] = useState('unitRate');
@@ -64,4 +64,4 @@ export const CardPnetServers = () => {
   );
 };
 
-export default CardPnetServers;
+export default CardServers;
