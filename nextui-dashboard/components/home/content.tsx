@@ -17,11 +17,7 @@ export const Content = () => {
       <div className='flex justify-center gap-4 xl:gap-6 lg:px-0 flex-wrap xl:flex-nowrap max-w-[90rem] mx-auto w-full'>
         <div className='mt-6 gap-6 flex flex-col w-full'>
           {/* ServersCharts */}
-          <ContentCardWrapperMain
-            title={Servers.StatsChart.Title}
-            link={RoutesLocation.servers()}
-            wrapChildren={true}
-          >
+          <ContentCardWrapperMain title={Servers.StatsChart.Title} link={RoutesLocation.servers()} wrapChildren={true}>
             <CardServers />
           </ContentCardWrapperMain>
           <ContentCardWrapperMain title={ServersQueue.RoundRobinChart.Title} wrapChildren={true}>

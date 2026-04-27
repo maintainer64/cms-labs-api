@@ -11,9 +11,11 @@ interface Props {
   isLoading?: boolean;
   isInitialLoading?: boolean;
   rows?: CamelCasedPropertiesDeep<ModelsLTIAttemptListItem>[];
+  selectedKeys?: Set<string | number>;
+  onSelectionChange?: (keys: Set<string | number>) => void;
 }
 
-export const LTIAttemptTableWrapper = ({ rows, isLoading, loadMore }: Props) => {
+export const LTIAttemptTableWrapper = ({ rows, isLoading, loadMore, selectedKeys, onSelectionChange }: Props) => {
   const {
     locale: {
       Tables: { LTIAttemptsTable },
@@ -25,10 +27,36 @@ export const LTIAttemptTableWrapper = ({ rows, isLoading, loadMore }: Props) => 
       return [item.key, item.value];
     })
   );
+
+  const handleSelectionChange = (keys: 'all' | Set<React.Key>) => {
+    if (keys === 'all') {
+      const allKeys = new Set<string | number>();
+      rows?.forEach((row) => {
+        if (row.id) allKeys.add(row.id);
+      });
+      onSelectionChange?.(allKeys);
+    } else {
+      onSelectionChange?.(
+        new Set(
+          Array.from(keys)
+            .map(String)
+            .map(Number)
+            .filter((n) => !isNaN(n))
+        )
+      );
+    }
+  };
+
   return (
     <InfiniteScroll loadMore={loadMore} isLoading={isLoading}>
       <div className=' w-full flex flex-col gap-4'>
-        <Table aria-label='LTI attempts table'>
+        <Table
+          aria-label='LTI attempts table'
+          selectionMode='multiple'
+          selectionBehavior='toggle'
+          selectedKeys={selectedKeys}
+          onSelectionChange={handleSelectionChange}
+        >
           <TableHeader columns={LTIAttemptsTable.Columns}>
             {(column) => (
               <TableColumn
@@ -42,7 +70,7 @@ export const LTIAttemptTableWrapper = ({ rows, isLoading, loadMore }: Props) => 
           </TableHeader>
           <TableBody items={rows ?? []}>
             {(item) => (
-              <TableRow>
+              <TableRow key={item.id}>
                 {(columnKey) => (
                   <TableCell>
                     {RenderCell({

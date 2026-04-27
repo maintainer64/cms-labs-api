@@ -48,7 +48,20 @@ const ru = {
     Cancel: 'Отмена',
     Delete: 'Удалить',
     Close: 'Закрыть',
-    ViewAll: 'Перейти'
+    ViewAll: 'Перейти',
+    Success: 'Успешно',
+    SaveSuccess: 'Успешно сохранено',
+    SaveError: 'Ошибка сохранения',
+    DeleteSuccess: 'Успешно удалено',
+    DeleteError: 'Ошибка удаления',
+    Selected: 'выбрано',
+    Clear: 'Очистить',
+    Forms: {
+      SaveSuccess: 'Успешно сохранено',
+      SaveError: 'Ошибка сохранения',
+      DeleteSuccess: 'Успешно удалено',
+      DeleteError: 'Ошибка удаления'
+    }
   },
   LanguageSwitcher: {
     LanguageSwitch: 'Выберите язык'
@@ -88,6 +101,13 @@ const ru = {
       Title: 'Попытки LTI',
       TitleWidgetHome: 'Последние попытки',
       ButtonEdit: 'Редактировать',
+      ButtonAdd: 'Создать',
+      SearchBar: 'Поиск',
+      FilterStatus: 'Статус',
+      FilterUser: 'Пользователь',
+      FilterServer: 'Сервер',
+      BulkAction: 'Массовые действия',
+      BulkTerminating: 'Завершить выбранные',
       Columns: [
         { name: 'ID', uid: 'id' },
         { name: 'ПОЛЬЗОВАТЕЛЬ', uid: 'user' },

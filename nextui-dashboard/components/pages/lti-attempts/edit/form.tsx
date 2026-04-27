@@ -64,7 +64,7 @@ export const LtiAttemptEditForm = ({ id }: EditFormProps) => {
   });
   const onDeleteMutation = useMutationLtiAttemptDelete({
     onSuccess: () => {
-      navigate(RoutesLocation.ltiAttemptUser(initialValues.userId?.toString()), { replace: true });
+      navigate(RoutesLocation.ltiAttempts({ userId: initialValues.userId }), { replace: true });
       addToast({
         title: Forms.DeleteSuccess,
         color: 'success'

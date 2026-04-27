@@ -3,6 +3,7 @@ import { LTIAttemptTableWrapper } from '@/components/pages/lti-attempts/table/ta
 import useLanguageBrowser from '@/helpers/locale';
 import { ContentCardWrapperMain } from '@/components/home/card-wrapper';
 import { useQueryLtiAttemptList } from '@/helpers/queries/lti_attempt/use-query-lti-attempt-list';
+import { RoutesLocation } from '@/components/routes';
 
 export const CardLastAttempt = () => {
   const {
@@ -13,7 +14,10 @@ export const CardLastAttempt = () => {
   const response = useQueryLtiAttemptList({ limit: 10 });
   const items = response.data?.model || [];
   return (
-    <ContentCardWrapperMain title={LTIAttemptsTable.TitleWidgetHome} wrapChildren={false}>
+    <ContentCardWrapperMain
+      title={LTIAttemptsTable.TitleWidgetHome}
+      link={RoutesLocation.ltiAttempts({ statuses: ['pending', 'active', 'terminating'] })}
+    >
       <LTIAttemptTableWrapper isLoading={response.isLoading} rows={items} />
     </ContentCardWrapperMain>
   );

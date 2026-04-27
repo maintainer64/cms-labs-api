@@ -2,9 +2,9 @@ import React from 'react';
 import { LTIAttemptCreate } from '@/components/pages/lti-attempts/create/lti-attempt-create';
 import { Layout } from '@/components/layout/layout';
 import { LtiAttemptEdit } from '@/components/pages/lti-attempts/edit/lti-attempt-edit';
-import { LTIAttemptListByUser } from '@/components/pages/lti-attempts';
 import { LTIAttemptConfirm } from '@/components/pages/lti-attempts/create/lti-attempt-confirm';
 import { LTIAttemptSSO } from '@/components/pages/lti-attempts/create/lti-attempt-sso';
+import { LTIAttemptsListPage } from '@/components/pages/lti-attempts/list/lti-attempts-list';
 
 export const LTIAttemptsPageCreate = () => {
   return (
@@ -30,18 +30,18 @@ export const LTIAttemptPageConfirm = () => {
   );
 };
 
-export const LTIAttemptsPageUser = () => {
-  return (
-    <Layout>
-      <LTIAttemptListByUser />
-    </Layout>
-  );
-};
-
 export const LTIAttemptsPageEdit = () => {
   return (
     <Layout>
       <LtiAttemptEdit />
+    </Layout>
+  );
+};
+
+export const LTIAttemptsPage = () => {
+  return (
+    <Layout>
+      <LTIAttemptsListPage />
     </Layout>
   );
 };

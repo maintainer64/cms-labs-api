@@ -12,7 +12,7 @@ import {
   LTIAttemptPageConfirm,
   LTIAttemptsPageCreate,
   LTIAttemptsPageEdit,
-  LTIAttemptsPageUser
+  LTIAttemptsPage
 } from '@/app/(app)/lti-attempts/page';
 import { ServiceCardsPage, ServiceCardsPageEdit } from '@/app/(app)/service-cards/page';
 import { RolesListPage, RolesPageEdit } from '@/app/(app)/roles/page';
@@ -38,8 +38,8 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.ltiRoutingCreate()} element={<LTIRoutingPageEdit />} />
       <Route path={RoutesLocation.ltiRedirect()} element={<LTIAttemptPageConfirm />} />
       <Route path={RoutesLocation.ltiRedirectCreate()} element={<LTIAttemptsPageCreate />} />
-      <Route path={RoutesLocation.ltiAttemptUser()} element={<LTIAttemptsPageUser />} />
       <Route path={RoutesLocation.ltiAttemptEdit()} element={<LTIAttemptsPageEdit />} />
+      <Route path={RoutesLocation.ltiAttempts()} element={<LTIAttemptsPage />} />
       <Route path={RoutesLocation.servers()} element={<ServersPage />} />
       <Route path={RoutesLocation.serversEdit()} element={<ServersPageEdit />} />
       <Route path={RoutesLocation.serversCreate()} element={<ServersPageEdit />} />

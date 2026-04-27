@@ -3,7 +3,7 @@ import React from 'react';
 import { addToast, Button, Checkbox, Input } from '@heroui/react';
 import { Formik } from 'formik';
 import useLanguageBrowser from '@/helpers/locale';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import dayjs from 'dayjs';
 import { Loading } from '@/components/scroll/loader';
@@ -136,10 +136,11 @@ export const AccountsEditForm = ({ id }: EditFormProps) => {
               {Sidebar.Save}
             </Button>
             <Button
-              as={Link}
               variant='flat'
               color='secondary'
-              to={RoutesLocation.ltiAttemptUser(values.id?.toString())}
+              onPress={() => {
+                window.open(RoutesLocation.ltiAttempts({ userId: values.id }), '_blank');
+              }}
             >
               {UserForm.FieldRelationAttempts}
             </Button>

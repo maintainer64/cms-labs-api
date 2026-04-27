@@ -32,7 +32,7 @@ export const LtiAttemptEdit = () => {
     {
       icon: <BookPlus className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.LTIAttempts,
-      href: RoutesLocation.ltiAttemptUser(attempt?.userId?.toString() || '0')
+      href: RoutesLocation.ltiAttempts({ userId: attempt?.userId })
     },
     {
       icon: undefined,
