@@ -1,5 +1,5 @@
-import { Button, Select, SelectItem } from '@heroui/react';
-import React, { useState, useMemo } from 'react';
+import { addToast, Button, Select, SelectItem } from '@heroui/react';
+import React, { useMemo, useState } from 'react';
 import { BookPlus, House, Trash2 } from 'lucide-react';
 import { RoutesLocation } from '@/components/routes';
 import useLanguageBrowser from '@/helpers/locale';
@@ -9,13 +9,11 @@ import { useInfinityLtiAttemptList } from '@/helpers/queries/lti_attempt/use-inf
 import { AutoCompleteFull } from '@/components/base-forms/autocomplete';
 import { useQueryUserAutoComplete } from '@/helpers/queries/user/use-query-user-auto-complete';
 import { useQueryServerAutoComplete } from '@/helpers/queries/server/use-query-server-auto-complete';
-import { useMutationBulkAttemptTerminating } from '@/helpers/queries/lti_attempt/use-mutation-bulk-attempt-terminating';
 import { useMutationLtiAttemptDelete } from '@/helpers/queries/lti_attempt/use-mutation-lti-attempt-delete';
-import { addToast } from '@heroui/react';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 import { ModelsLTIAttemptListItem } from '@/helpers/api';
 import { useSearchParams } from 'react-router-dom';
-import {useMutationLtiAttemptUpdate} from "@/helpers/queries/lti_attempt/use-mutation-lti-attempt-update";
+import { useMutationLtiAttemptUpdate } from '@/helpers/queries/lti_attempt/use-mutation-lti-attempt-update';
 
 interface QueryParams {
   statuses: string[];
