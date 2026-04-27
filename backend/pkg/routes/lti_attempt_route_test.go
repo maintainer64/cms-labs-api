@@ -16,7 +16,7 @@ type ltiAttemptFixture struct {
 	f              *TestHTTP
 	authHeader     string
 	serverClientID string
-	server         models.PNETServer
+	server         models.Server
 	user           models.User
 	routing        models.LTIRouting
 	attempts       []models.LTIAttempt
@@ -26,11 +26,11 @@ func setupLTIAttemptFixture(f *TestHTTP) *ltiAttemptFixture {
 	f.DB.Where("id > ?", 0).Delete(&models.LTIAttempt{})
 	f.DB.Where("id > ?", 0).Delete(&models.User{})
 	f.DB.Where("id > ?", 0).Delete(&models.LTIRouting{})
-	f.DB.Where("id > ?", 0).Delete(&models.PNETServer{})
+	f.DB.Where("id > ?", 0).Delete(&models.Server{})
 
 	authHeader, serverClientID := f.AuthorizationServiceBasic()
 
-	var server models.PNETServer
+	var server models.Server
 	_ = f.DB.Where("client_id = ?", serverClientID).Find(&server)
 
 	user := models.User{}
@@ -43,7 +43,7 @@ func setupLTIAttemptFixture(f *TestHTTP) *ltiAttemptFixture {
 	routing.LTITitle = "Test Title"
 	f.DB.Create(&routing)
 
-	f.DB.Model(&models.PNETServer{}).Where("id > ?", 0)
+	f.DB.Model(&models.Server{}).Where("id > ?", 0)
 
 	attempts := []models.LTIAttempt{
 		{},
@@ -53,19 +53,19 @@ func setupLTIAttemptFixture(f *TestHTTP) *ltiAttemptFixture {
 	attempts[0].AttemptID = "attempt-active-1"
 	attempts[0].Status = models.AttemptStatusActive
 	attempts[0].UserID = user.ID
-	attempts[0].PNETServerID = &server.ID
+	attempts[0].ServerID = &server.ID
 	attempts[0].LTIRoutingID = routing.ID
 
 	attempts[1].AttemptID = "attempt-pending-1"
 	attempts[1].Status = models.AttemptStatusPending
 	attempts[1].UserID = user.ID
-	attempts[1].PNETServerID = &server.ID
+	attempts[1].ServerID = &server.ID
 	attempts[1].LTIRoutingID = routing.ID
 
 	attempts[2].AttemptID = "attempt-completed-1"
 	attempts[2].Status = models.AttemptStatusCompleted
 	attempts[2].UserID = user.ID
-	attempts[2].PNETServerID = &server.ID
+	attempts[2].ServerID = &server.ID
 	attempts[2].LTIRoutingID = routing.ID
 
 	for i := range attempts {
@@ -403,7 +403,7 @@ func TestV1LTIAttemptUpdateExternalNotOwnedAttempt(t *testing.T) {
 
 	fix := setupLTIAttemptFixture(f)
 
-	otherServer := models.PNETServer{}
+	otherServer := models.Server{}
 	otherServer.Type = models.ServerTypeOpenID
 	otherServer.Name = "Other Server"
 	otherServer.Url = "https://other-localhost"
@@ -416,7 +416,7 @@ func TestV1LTIAttemptUpdateExternalNotOwnedAttempt(t *testing.T) {
 	otherAttempt.AttemptID = "attempt-other-server"
 	otherAttempt.Status = models.AttemptStatusActive
 	otherAttempt.UserID = fix.user.ID
-	otherAttempt.PNETServerID = &otherServer.ID
+	otherAttempt.ServerID = &otherServer.ID
 	otherAttempt.LTIRoutingID = fix.routing.ID
 	f.DB.Create(&otherAttempt)
 
@@ -480,7 +480,7 @@ func TestV1LTIAttemptUpdateExternalStatusTransition(t *testing.T) {
 	pendingAttempt.AttemptID = "attempt-pending-transition"
 	pendingAttempt.Status = models.AttemptStatusPending
 	pendingAttempt.UserID = fix.user.ID
-	pendingAttempt.PNETServerID = &fix.server.ID
+	pendingAttempt.ServerID = &fix.server.ID
 	pendingAttempt.LTIRoutingID = fix.routing.ID
 	f.DB.Create(&pendingAttempt)
 

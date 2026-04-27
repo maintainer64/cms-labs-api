@@ -6,7 +6,7 @@ import HomePage from '@/app/(app)/home/page';
 import { AccountsPage, AccountsPageEdit, ProfilePagePasswordChange } from '@/app/(app)/accounts/page';
 import { RoutesLocation } from '@/components/routes';
 import { AuthProvidersPage, AuthProvidersPageEdit } from '@/app/(app)/auth-providers/page';
-import { PnetServersPage, PnetServersPageEdit } from '@/app/(app)/pnet-servers/page';
+import { ServersPage, ServersPageEdit } from '@/app/(app)/servers/page';
 import { LTIRoutingPage, LTIRoutingPageEdit } from '@/app/(app)/lti-routings/page';
 import {
   LTIAttemptPageConfirm,
@@ -40,9 +40,9 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.ltiRedirectCreate()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.ltiAttemptUser()} element={<LTIAttemptsPageUser />} />
       <Route path={RoutesLocation.ltiAttemptEdit()} element={<LTIAttemptsPageEdit />} />
-      <Route path={RoutesLocation.pnetServers()} element={<PnetServersPage />} />
-      <Route path={RoutesLocation.pnetServersEdit()} element={<PnetServersPageEdit />} />
-      <Route path={RoutesLocation.pnetServersCreate()} element={<PnetServersPageEdit />} />
+      <Route path={RoutesLocation.servers()} element={<ServersPage />} />
+      <Route path={RoutesLocation.serversEdit()} element={<ServersPageEdit />} />
+      <Route path={RoutesLocation.serversCreate()} element={<ServersPageEdit />} />
       <Route path={RoutesLocation.serviceCards()} element={<ServiceCardsPage />} />
       <Route path={RoutesLocation.serviceCardsEdit()} element={<ServiceCardsPageEdit />} />
       <Route path={RoutesLocation.serviceCardsCreate()} element={<ServiceCardsPageEdit />} />

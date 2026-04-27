@@ -1,41 +1,59 @@
+-- +migrate Up
 -- Rename pnet_servers table to servers and rename pnet_ prefix columns to server_/labs_/test_
--- 1. Rename table pnet_servers to servers
+
+SET foreign_key_checks = 0;
+
+-- Rename table pnet_servers to servers
 RENAME TABLE `{{.DB_TABLE_PREFIX}}pnet_servers` TO `{{.DB_TABLE_PREFIX}}servers`;
 
--- 2. Rename columns in lti_routings (pnet_ -> server_/labs_/test_)
+-- Rename columns in lti_routings (pnet_ -> server_/labs_/test_)
 ALTER TABLE `{{.DB_TABLE_PREFIX}}lti_routings`
     CHANGE COLUMN `pnet_server_id` `server_id` bigint unsigned,
     CHANGE COLUMN `pnet_labs_type` `labs_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     CHANGE COLUMN `pnet_labs_path` `labs_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     CHANGE COLUMN `pnet_test_path` `test_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- 3. Rename column in lti_attempts (pnet_server_id -> server_id)
+-- Rename column in lti_attempts (pnet_server_id -> server_id)
 ALTER TABLE `{{.DB_TABLE_PREFIX}}lti_attempts`
     CHANGE COLUMN `pnet_server_id` `server_id` bigint unsigned;
 
--- 4. Rename column in round_queue_pools (pnet_server_id -> server_id)
+-- Rename column in round_queue_pools (pnet_server_id -> server_id)
 ALTER TABLE `{{.DB_TABLE_PREFIX}}round_queue_pools`
     CHANGE COLUMN `pnet_server_id` `server_id` bigint unsigned;
 
--- 5. Update indexes (drop old, create new)
+-- Rename column in role_relations (server_id already has correct name)
+-- No need to rename, just update FK later
+
+-- Update index name
 ALTER TABLE `{{.DB_TABLE_PREFIX}}round_queue_pools`
-    DROP INDEX IF EXISTS `idx_{{.DB_TABLE_PREFIX}}round_queue_pools_pnet_server_id`,
+    DROP INDEX `idx_{{.DB_TABLE_PREFIX}}round_queue_pools_pnet_server_id`,
     ADD INDEX `idx_{{.DB_TABLE_PREFIX}}round_queue_pools_server_id` (`server_id`);
 
--- 6. Update foreign keys
-ALTER TABLE `{{.DB_TABLE_PREFIX}}lti_routings`
-    DROP FOREIGN KEY IF EXISTS `lti_routings_ibfk_1`,
-    ADD CONSTRAINT `lti_routings_ibfk_server` FOREIGN KEY (`server_id`) REFERENCES `{{.DB_TABLE_PREFIX}}servers` (`id`) ON DELETE CASCADE;
+SET foreign_key_checks = 1;
 
-ALTER TABLE `{{.DB_TABLE_PREFIX}}lti_attempts`
-    DROP FOREIGN KEY IF EXISTS `lti_attempts_ibfk_2`,
-    ADD CONSTRAINT `lti_attempts_ibfk_server` FOREIGN KEY (`server_id`) REFERENCES `{{.DB_TABLE_PREFIX}}servers` (`id`) ON DELETE SET NULL;
+-- +migrate Down
+SET foreign_key_checks = 0;
+
+-- Rename columns back in round_queue_pools
+ALTER TABLE `{{.DB_TABLE_PREFIX}}round_queue_pools`
+    DROP INDEX `idx_{{.DB_TABLE_PREFIX}}round_queue_pools_server_id`,
+    ADD INDEX `idx_{{.DB_TABLE_PREFIX}}round_queue_pools_pnet_server_id` (`pnet_server_id`);
 
 ALTER TABLE `{{.DB_TABLE_PREFIX}}round_queue_pools`
-    DROP FOREIGN KEY IF EXISTS `round_queue_pools_ibfk_1`,
-    ADD CONSTRAINT `round_queue_pools_ibfk_server` FOREIGN KEY (`server_id`) REFERENCES `{{.DB_TABLE_PREFIX}}servers` (`id`) ON DELETE CASCADE;
+    CHANGE COLUMN `server_id` `pnet_server_id` bigint unsigned;
 
--- 7. Update role_relations foreign key
-ALTER TABLE `{{.DB_TABLE_PREFIX}}role_relations`
-    DROP FOREIGN KEY IF EXISTS `{{.DB_TABLE_PREFIX}}_role_relations_ibfk_server`,
-    ADD CONSTRAINT `{{.DB_TABLE_PREFIX}}_role_relations_ibfk_server` FOREIGN KEY (`server_id`) REFERENCES `{{.DB_TABLE_PREFIX}}servers` (`id`) ON DELETE CASCADE;
+-- Rename columns back in lti_attempts
+ALTER TABLE `{{.DB_TABLE_PREFIX}}lti_attempts`
+    CHANGE COLUMN `server_id` `pnet_server_id` bigint unsigned;
+
+-- Rename columns back in lti_routings
+ALTER TABLE `{{.DB_TABLE_PREFIX}}lti_routings`
+    CHANGE COLUMN `server_id` `pnet_server_id` bigint unsigned,
+    CHANGE COLUMN `labs_type` `pnet_labs_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    CHANGE COLUMN `labs_path` `pnet_labs_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    CHANGE COLUMN `test_path` `pnet_test_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Rename table back
+RENAME TABLE `{{.DB_TABLE_PREFIX}}servers` TO `{{.DB_TABLE_PREFIX}}pnet_servers`;
+
+SET foreign_key_checks = 1;

@@ -4,24 +4,24 @@ Template auto generated with params from openapi.json
 import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
-  ModelsPNETServer,
+  ModelsServer,
   transportWithAuth,
-  type UsecasesPNETServerGetRequest,
-  type UsecasesPNETServerGetResponse
+  type UsecasesServerGetRequest,
+  type UsecasesServerGetResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesPNETServerGetRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesPNETServerGetResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesServerGetRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesServerGetResponse['result']>;
 
-export interface PnetServerItem extends CamelCasedPropertiesDeep<ModelsPNETServer> {
+export interface ServerItem extends CamelCasedPropertiesDeep<ModelsServer> {
   roles?: Array<number>;
   token?: string;
 }
 
-export function MapServerItem(server?: CamelCasedPropertiesDeep<ModelsPNETServer>, roles?: Array<number>) {
-  if (!server) return {} as PnetServerItem;
-  const newModel = server as PnetServerItem;
+export function MapServerItem(server?: CamelCasedPropertiesDeep<ModelsServer>, roles?: Array<number>) {
+  if (!server) return {} as ServerItem;
+  const newModel = server as ServerItem;
   newModel.roles = roles;
   return newModel;
 }

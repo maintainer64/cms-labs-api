@@ -29,9 +29,9 @@ func TestV1LTIRoutingCreate(t *testing.T) {
 		LTITaskID:      "12345",
 		LTIParamsTask:  "param1,param2",
 		Collaboration:  1,
-		PNETLabsType:   cms_client.PNETLabsTypeDefault,
-		PNETLabsPath:   "/path/to/labs",
-		PNETTestPath:   "/path/to/test",
+		LabsType:       cms_client.PNETLabsTypeDefault,
+		LabsPath:       "/path/to/labs",
+		TestPath:       "/path/to/test",
 		IsDefault:      false,
 	}
 

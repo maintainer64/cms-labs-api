@@ -3,19 +3,19 @@ import React from 'react';
 import { RenderCellWithLocale } from './render-cell';
 import useLanguageBrowser from '@/helpers/locale';
 import InfiniteScroll from '@/components/scroll/infinity-scroll';
-import { PnetServerItem } from '@/helpers/queries/server/use-query-server-get';
+import { ServerItem } from '@/helpers/queries/server/use-query-server-get';
 
-interface PnetServerTableWrapperProps {
+interface ServerTableWrapperProps {
   loadMore?: () => void;
   isLoading?: boolean;
   isInitialLoading?: boolean;
-  rows?: PnetServerItem[];
+  rows?: ServerItem[];
 }
 
-export const PnetServerTableWrapper = ({ rows, isLoading, loadMore }: PnetServerTableWrapperProps) => {
+export const ServerTableWrapper = ({ rows, isLoading, loadMore }: ServerTableWrapperProps) => {
   const {
     locale: {
-      Tables: { PnetServersTable }
+      Tables: { ServersTable }
     }
   } = useLanguageBrowser();
   const RenderCell = RenderCellWithLocale.bind(RenderCellWithLocale, useLanguageBrowser());
@@ -23,7 +23,7 @@ export const PnetServerTableWrapper = ({ rows, isLoading, loadMore }: PnetServer
     <InfiniteScroll loadMore={loadMore} isLoading={isLoading}>
       <div className=' w-full flex flex-col gap-4'>
         <Table aria-label='Users table'>
-          <TableHeader columns={PnetServersTable.Columns}>
+          <TableHeader columns={ServersTable.Columns}>
             {(column) => (
               <TableColumn
                 key={column.uid}
