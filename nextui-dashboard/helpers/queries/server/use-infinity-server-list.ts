@@ -5,14 +5,14 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  type UsecasesPNETServerListRequest,
-  type UsecasesPNETServerListResponse
+  type UsecasesServerListRequest,
+  type UsecasesServerListResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 import { RpcTransport } from '@/helpers/api/core/request';
 
-type Params = CamelCasedPropertiesDeep<UsecasesPNETServerListRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesPNETServerListResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesServerListRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesServerListResponse['result']>;
 
 export const useInfinityServerList = (params?: Params) => {
   return useInfiniteQuery({

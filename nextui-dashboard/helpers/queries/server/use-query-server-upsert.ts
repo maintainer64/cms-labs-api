@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  type UsecasesPNETServerEditRequest,
-  type UsecasesPNETServerEditResponse
+  type UsecasesServerEditRequest,
+  type UsecasesServerEditResponse
 } from '@/helpers/api';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesPNETServerEditRequest['params']> & object;
-type Response = CamelCasedPropertiesDeep<UsecasesPNETServerEditResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesServerEditRequest['params']> & object;
+type Response = CamelCasedPropertiesDeep<UsecasesServerEditResponse['result']>;
 
 export const useQueryServerUpsert = (params: Params) => {
   return useQuery(

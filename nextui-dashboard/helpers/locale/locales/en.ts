@@ -119,7 +119,7 @@ const en = {
         { name: 'ACTIONS', uid: 'actions' }
       ]
     },
-    PnetServersTable: {
+    ServersTable: {
       Title: 'All Servers',
       ButtonAdd: 'Create',
       SearchBar: 'Search All Servers',
@@ -307,7 +307,7 @@ const en = {
         'When you delete it, the other systems will not be able to interact with the user. It is safe if the user has completed the work'
     }
   },
-  PnetServers: {
+  Servers: {
     FieldID: 'ID',
     FieldName: 'Name',
     FieldURL: 'URL',
@@ -368,7 +368,7 @@ const en = {
       Description: 'When you delete the service, it will no longer be displayed on the main screen'
     }
   },
-  PnetServersQueue: {
+  ServersQueue: {
     RoundRobinChart: {
       Title: 'PNET distribution'
     },

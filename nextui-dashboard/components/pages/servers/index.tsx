@@ -44,9 +44,9 @@ export const ServersList = () => {
       <>
         <div className='flex justify-between flex-wrap gap-4 items-center'>
           <div className='flex items-center gap-3 flex-nowrap w-full'>
-            <SearchInput placeholder={PnetServersTable.SearchBar} setValue={setSearchTerm} />
+            <SearchInput placeholder={ServersTable.SearchBar} setValue={setSearchTerm} />
             <Link to={RoutesLocation.serversCreate()}>
-              <Button color='primary'>{PnetServersTable.ButtonAdd}</Button>
+              <Button color='primary'>{ServersTable.ButtonAdd}</Button>
             </Link>
           </div>
         </div>

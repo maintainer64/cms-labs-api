@@ -36,10 +36,10 @@ export const RenderCell = ({ item, columnKey, locale }: Props) => {
       );
     case 'server':
       return (
-        <Link to={RoutesLocation.pnetServersEdit(item.pnetServerId?.toString())}>
+        <Link to={RoutesLocation.serversEdit(item.serverId?.toString())}>
           <div>
             <div>
-              <span>{item.pnetServerName}</span>
+              <span>{item.serverName}</span>
             </div>
           </div>
         </Link>

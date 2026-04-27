@@ -119,7 +119,7 @@ const ru = {
         { name: 'ДЕЙСТВИЕ', uid: 'actions' }
       ]
     },
-    PnetServersTable: {
+    ServersTable: {
       Title: 'Все серверы',
       ButtonAdd: 'Создать',
       SearchBar: 'Поиск серверов',
@@ -308,7 +308,7 @@ const ru = {
         'При удалении остальные системы не смогут взаимодействовать с пользователем. Безопасно, если пользователь завершил работу'
     }
   },
-  PnetServers: {
+  Servers: {
     FieldID: 'ID',
     FieldName: 'Название',
     FieldURL: 'URL',
@@ -369,7 +369,7 @@ const ru = {
       Description: 'При удалении сервис перестанет отображаться на главном экране'
     }
   },
-  PnetServersQueue: {
+  ServersQueue: {
     RoundRobinChart: {
       Title: 'PNET распределение'
     },

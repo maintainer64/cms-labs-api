@@ -5,6 +5,7 @@ import { RolesChip } from '@/components/base-forms/roles';
 import { Link } from 'react-router-dom';
 import { RoutesLocation } from '@/components/routes';
 import { ServerItem } from '@/helpers/queries/server/use-query-server-get';
+import { SquarePen } from 'lucide-react';
 
 interface Props {
   item: ServerItem;

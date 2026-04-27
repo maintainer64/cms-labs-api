@@ -11,6 +11,8 @@ import { useConfirmPopup } from '@/components/hooks/useDeletePopup';
 import { PasswordInput } from '@/components/base-forms/password';
 import { RolesSelector } from '@/components/base-forms/roles';
 import { MapServerItem, ServerItem, useQueryServerGet } from '@/helpers/queries/server/use-query-server-get';
+import { useMutationServerUpsert } from '@/helpers/queries/server/use-mutation-server-upsert';
+import { useMutationServerDelete } from '@/helpers/queries/server/use-mutation-server-delete';
 
 interface EditFormProps {
   id?: number;
@@ -42,7 +44,7 @@ export const ServersEditForm = ({ id }: EditFormProps) => {
   const initialValues = MapServerItem(response.data?.model, response.data?.roles) ?? defaultValues;
   const { mutate } = useMutationServerUpsert({
     onSuccess: (data) => {
-      navigate(RoutesLocation.pnetServersEdit(data?.id?.toString() || ''), { replace: true });
+      navigate(RoutesLocation.serversEdit(data?.id?.toString() || ''), { replace: true });
       addToast({
         title: Forms.SaveSuccess,
         color: 'success'
@@ -58,7 +60,7 @@ export const ServersEditForm = ({ id }: EditFormProps) => {
   });
   const onDeleteMutation = useMutationServerDelete({
     onSuccess: () => {
-      navigate(RoutesLocation.pnetServers(), { replace: true });
+      navigate(RoutesLocation.servers(), { replace: true });
       addToast({
         title: Forms.DeleteSuccess,
         color: 'success'

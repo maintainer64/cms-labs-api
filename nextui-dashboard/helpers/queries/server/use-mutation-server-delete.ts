@@ -6,15 +6,15 @@ import {
   ClabgateJsonRpcPath,
   CoreJsonRpcPath,
   transportWithAuth,
-  UsecasesPNETServerDeleteRequest,
-  UsecasesPNETServerDeleteResponse
+  UsecasesServerDeleteRequest,
+  UsecasesServerDeleteResponse
 } from '@/helpers/api';
 import { TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '@/helpers/queries/base';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesPNETServerDeleteRequest['params']>;
-type Response = CamelCasedPropertiesDeep<UsecasesPNETServerDeleteResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesServerDeleteRequest['params']>;
+type Response = CamelCasedPropertiesDeep<UsecasesServerDeleteResponse['result']>;
 
 export const useMutationServerDelete = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({

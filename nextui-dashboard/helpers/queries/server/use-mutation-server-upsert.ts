@@ -5,15 +5,15 @@ import { useMutation } from '@tanstack/react-query';
 import {
   CoreJsonRpcPath,
   transportWithAuth,
-  UsecasesPNETServerEditRequest,
-  UsecasesPNETServerEditResponse
+  UsecasesServerEditRequest,
+  UsecasesServerEditResponse
 } from '@/helpers/api';
 import { TMutationCustomOptions } from '@/helpers/queries/types';
 import queryClient from '@/helpers/queries/base';
 import { CamelCasedPropertiesDeep } from 'type-fest';
 
-type Params = CamelCasedPropertiesDeep<UsecasesPNETServerEditRequest['params']>;
-type Response = CamelCasedPropertiesDeep<UsecasesPNETServerEditResponse['result']>;
+type Params = CamelCasedPropertiesDeep<UsecasesServerEditRequest['params']>;
+type Response = CamelCasedPropertiesDeep<UsecasesServerEditResponse['result']>;
 
 export const useMutationServerUpsert = (options: TMutationCustomOptions<Response, Params> = {}) => {
   return useMutation<Response, unknown, Params>({

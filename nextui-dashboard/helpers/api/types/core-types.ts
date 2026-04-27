@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
 /*
@@ -138,7 +137,7 @@ export interface AuthSwaggerSSOTokenPublicData {
   /** Iss. Идентификатор эмитента токена */
   iss?: string;
   /** K8S type */
-  "k8s:access_type"?: string;
+  'k8s:access_type'?: string;
   /** LastLaunchId. ID пользователя SSO через LMS систему */
   last_launch_id?: string;
   /** Name. Полное ФИО пользователя */

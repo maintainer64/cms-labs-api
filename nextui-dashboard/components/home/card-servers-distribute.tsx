@@ -3,7 +3,7 @@ import Chart, { Props } from 'react-apexcharts';
 import { Loading } from '@/components/scroll/loader';
 import { useQueryServerQueueList } from '@/helpers/queries/server_queue/use-query-server-queue-list';
 import { CamelCasedPropertiesDeep } from 'type-fest';
-import { QueriesRoundQueuePoolPnetListItem } from '@/helpers/api';
+import { QueriesRoundQueuePoolServerListItem } from '@/helpers/api';
 
 interface serversSeriesProps {
   name: string;
@@ -11,7 +11,7 @@ interface serversSeriesProps {
 }
 
 const serversName = (
-  model: Array<CamelCasedPropertiesDeep<QueriesRoundQueuePoolPnetListItem>>
+  model: Array<CamelCasedPropertiesDeep<QueriesRoundQueuePoolServerListItem>>
 ): [serversSeriesProps[], number] => {
   const series: serversSeriesProps[] = [];
   const seriesLabel: Set<number> = new Set();
@@ -37,7 +37,7 @@ const serversName = (
   });
   return [series, seriesLabel.size];
 };
-export const CardPnetServersDistribute = () => {
+export const CardServersDistribute = () => {
   const response = useQueryServerQueueList({});
   if (response.isLoading) return <Loading size='md' />;
   const servers = response.data?.model || [];
@@ -113,4 +113,4 @@ export const CardPnetServersDistribute = () => {
   return <Chart {...chartData} />;
 };
 
-export default CardPnetServersDistribute;
+export default CardServersDistribute;

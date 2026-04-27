@@ -49,10 +49,10 @@ export const SidebarWrapper = () => {
                 href={RoutesLocation.accounts()}
               />
               <SidebarItem
-                isActive={pathname === RoutesLocation.pnetServers()}
+                isActive={pathname === RoutesLocation.servers()}
                 title={locale.Sidebar.Servers}
                 icon={<Server className='w-5 h-5 stroke-[#969696]' />}
-                href={RoutesLocation.pnetServers()}
+                href={RoutesLocation.servers()}
               />
               <SidebarItem
                 isActive={pathname === RoutesLocation.targets()}

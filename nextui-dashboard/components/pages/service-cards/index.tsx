@@ -24,7 +24,7 @@ export const ServiceCardsList = () => {
     {
       icon: <Server className='w-5 h-5 stroke-[#969696]' />,
       name: locale.Sidebar.Servers,
-      href: RoutesLocation.pnetServers()
+      href: RoutesLocation.servers()
     },
     {
       icon: <ScrollText className='w-5 h-5 stroke-[#969696]' />,
