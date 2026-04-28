@@ -2,11 +2,6 @@ package usecases
 
 import (
 	"fmt"
-	"os"
-	"path"
-	"path/filepath"
-	"strconv"
-	"strings"
 
 	"github.com/rs/zerolog/log"
 
@@ -21,82 +16,95 @@ type PnetServerPingUC struct {
 	*zerolog.Logger
 }
 
-// FilterClearOldExternalUnlFiles - получение списка файлов, которые нужно удалить
-func (u *PnetServerPingUC) FilterClearOldExternalUnlFiles(osFilePaths, activeFilePaths []string) []string {
-	// Создаем быстрый поиска разрешенных файлов
-	allowedFiles := make(map[string]bool)
-	for _, f := range activeFilePaths {
-		// Файл состоит из пути .../external/filename
-		// Оставляем в allowedFiles только filename
-		filePathDB := strings.TrimPrefix(f, pathOptUNetLab)
-		prefix := path.Join("/", pathExternal)
-		if !strings.HasPrefix(filePathDB, prefix) {
-			continue
-		}
-		allowedFiles[filepath.Base(filePathDB)] = true
-	}
-	removeFilePaths := make([]string, 0)
-	for _, filePath := range osFilePaths {
-		file := filepath.Base(filePath)
-		if allowedFiles[file] {
-			continue
-		}
-		removeFilePaths = append(removeFilePaths, filePath)
-	}
-	return removeFilePaths
-}
-
-// ClearOldExternalUnlFiles - очистка старых файлов, у которых нет активной сессии
-func (u *PnetServerPingUC) ClearOldExternalUnlFiles(activeFilePaths []string) error {
-	osFilePaths := make([]string, 0)
-	files, err := os.ReadDir(path.Join(pathOptUNetLab, pathExternal))
-	if err != nil {
-		log.Warn().Msg(fmt.Sprintf("ClearOldExternalUnlFiles: failed to read directory: %v", err))
-		return fmt.Errorf("failed to read directory: %v", err)
-	}
-	// Получаем все файлы из external директории
-	for _, file := range files {
-		if file.IsDir() {
-			continue
-		}
-		osFilePaths = append(osFilePaths, path.Join(pathOptUNetLab, pathExternal, file.Name()))
-	}
-	removeFilePaths := u.FilterClearOldExternalUnlFiles(osFilePaths, activeFilePaths)
-	for _, filePath := range removeFilePaths {
-		if err := os.Remove(filePath); err != nil {
-			log.Warn().Msg(fmt.Sprintf("ClearOldExternalUnlFiles: failed to remove file %s: %v", filePath, err))
-		}
-	}
-	return nil
-}
-
 // Execute - функция отправки активных сессий лабораторных работ
 func (u *PnetServerPingUC) Execute() error {
 	labs, err := u.LabSessionQuery.GetRunningLabs()
 	if err != nil {
-		log.Warn().Msg(fmt.Sprintf("Get running labs failed: %v", err))
-		return err
+		return fmt.Errorf("get running labs: %w", err)
 	}
-	var attempts []cms_client.PnetServerPingAttemptDTO
-	var activeFilePaths []string
+
+	// Преобразуем в словарь по номеру попытки
+	labsByAttempt := make(map[string]queries.LabSessionRunningLabs, len(labs))
 	for _, lab := range labs {
-		externalUserId, _ := strconv.ParseUint(lab.Name, 10, 32)
-		attempt := cms_client.PnetServerPingAttemptDTO{
-			AttemptID: lab.LabSessionLID,
-			UserEmail: lab.Email,
-			UserID:    uint(externalUserId),
-		}
-		attempts = append(attempts, attempt)
-		activeFilePaths = append(activeFilePaths, lab.LabSessionPath)
+		labsByAttempt[lab.LabSessionLID] = lab
 	}
-	response, err := u.CMSClient.PnetServerPing(
-		&cms_client.PNETServerPingInputDTO{
-			Attempts: attempts,
+	log.Info().Msgf("Found %d running lab PNET", len(labsByAttempt))
+
+	allAttempts, err := u.CMSClient.ListAttempts(
+		cms_client.ListAttemptsParams{
+			Limit:    5000,
+			Offset:   0,
+			Statuses: []string{"pending", "active", "terminating"},
 		},
 	)
-	if response != nil {
-		u.Logger.Info().Msg(fmt.Sprintf("Ping server response count: %d", response.Count))
+	if err != nil {
+		return fmt.Errorf("list attempts: %w", err)
 	}
-	_ = u.ClearOldExternalUnlFiles(activeFilePaths)
-	return err
+	log.Info().Msgf("Found %d attempts CMS", len(allAttempts))
+
+	var updateList []cms_client.UpdateAttemptParams
+
+	for _, attempt := range allAttempts {
+		cmsRequest := cms_client.UpdateAttemptParams{
+			AttemptID: attempt.AttemptID,
+			Status:    "active",
+		}
+		// Если статус completed - ничего не делаем
+		if attempt.Status == "completed" {
+			log.Info().Msgf(
+				"Attempt %s id=%d completed, skipping",
+				attempt.AttemptID,
+				attempt.AttemptNumber,
+			)
+			continue
+		}
+		_, exists := labsByAttempt[attempt.AttemptID]
+		// Нет сервера с таким номером попытки
+		if !exists {
+			// Если pending — запрос ещё мог не дойти
+			if attempt.Status == "pending" {
+				log.Info().Msgf(
+					"No server found for attempt %s (id=%d), but pending",
+					attempt.AttemptID,
+					attempt.AttemptNumber,
+				)
+				continue
+			}
+			log.Info().Msgf(
+				"No server found for attempt %s (id=%d)",
+				attempt.AttemptID,
+				attempt.AttemptNumber,
+			)
+			cmsRequest.Status = "completed"
+			updateList = append(updateList, cmsRequest)
+			continue
+		}
+		// Если terminating — останавливаем и удаляем сервер
+		if attempt.Status == "terminating" {
+			log.Info().Msgf(
+				"Stopping server for terminating attempt %s (id=%d)",
+				attempt.AttemptID,
+				attempt.AttemptNumber,
+			)
+			// TODO: Здесь должно быть удаление сервера
+			delete(labsByAttempt, attempt.AttemptID)
+			updateList = append(updateList, cmsRequest)
+			continue
+		}
+		// Для всех остальных статусов — отправляем активное состояние
+		log.Info().Msgf("Sending active state for attempt %s (status=%s)", attempt.AttemptID, attempt.Status)
+		updateList = append(updateList, cmsRequest)
+	}
+
+	if len(updateList) == 0 {
+		log.Info().Msg("Nothing to update")
+		return nil
+	}
+
+	log.Info().Msgf("Updating %d attempts", len(updateList))
+	_, err = u.CMSClient.UpdateAttempts(updateList)
+	if err != nil {
+		return fmt.Errorf("update attempts: %w", err)
+	}
+	return nil
 }
