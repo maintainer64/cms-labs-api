@@ -71,6 +71,7 @@ type LTIAttemptListItem struct {
 	UserName       string `json:"user_name"`
 	ServerName     string `json:"server_name"`
 	LTIRoutingName string `json:"lti_routing_name"`
+	LabsPath       string `json:"labs_path"`
 }
 
 // TableName переопределяет название таблицы для LTIAttemptListItem на `lti_attempts`
