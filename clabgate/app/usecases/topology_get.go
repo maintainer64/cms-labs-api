@@ -8,9 +8,9 @@ import (
 
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
-	"gitlab.com/a10869/api-modules/clabgate/app/queries/topology"
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"gopkg.in/yaml.v3"
 )
 
 type TopologiesGetUC struct {
@@ -31,8 +31,9 @@ type TopologiesGetRequest struct {
 }
 
 type TopologiesGetOutputDTO struct {
-	Topology *topology.Topology `json:"topology"`
-	WebUrl   string             `json:"web_url"`
+	Topology    string                   `json:"topology"`
+	Deployments []queries.DeploymentInfo `json:"deployments,omitempty"`
+	Services    []queries.ServiceInfo    `json:"services,omitempty"`
 }
 
 type TopologiesGetResponse struct {
@@ -51,29 +52,40 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 	if u.user == nil {
 		return TopologiesGetOutputDTO{}, errors.New("not logged in")
 	}
-	username := u.KubernetesAdminQuery.NormalizeEntityName(u.user.Username)
-	namespace := u.KubernetesAdminQuery.NormalizeEntityName(dto.Namespace)
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,
-	) && !strings.HasPrefix(namespace, username+"-") {
+	) && !strings.HasPrefix(dto.Namespace, "jup-"+u.user.Username+"-") {
 		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("user_not_allow_topology", "user not allow connect topology")
 	}
 	ctx := context.Background()
-	u.Logger.Error().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML namespace: %v", dto.Namespace))
+	u.Logger.Info().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML namespace: %v", dto.Namespace))
 	yamlContent, err := u.KubernetesAdminQuery.GetTopologyYAML(ctx, dto.Namespace)
-	if err != nil {
+
+	var containerlabContent string
+	if err == nil && len(yamlContent) > 0 {
+		var topoData map[string]interface{}
+		if err := yaml.Unmarshal(yamlContent, &topoData); err == nil {
+			if spec, ok := topoData["spec"].(map[string]interface{}); ok {
+				if definition, ok := spec["definition"].(map[string]interface{}); ok {
+					if clab, ok := definition["containerlab"].(string); ok {
+						containerlabContent = clab
+					}
+				}
+			}
+		}
+	} else {
 		u.Logger.Error().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML error: %v", err))
 	}
-	u.Logger.Debug().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML content: %v", string(yamlContent)))
-	u.Logger.Info().Msg("TopologiesGetUC: GetTopologyYAML content")
-	topologyContent, err := topology.Convert(yamlContent)
-	if err != nil {
-		u.Logger.Error().Msg(fmt.Sprintf("TopologiesGetUC: Unmarshal topology error: %v by namespace: %v", err, dto.Namespace))
-	}
-	webUrl, _ := u.KubernetesAdminQuery.GetSecretByName(ctx, namespace, queries.GitlabWebUrlDeploy)
+
+	u.Logger.Debug().Msg(fmt.Sprintf("TopologiesGetUC: containerlab content length: %d", len(containerlabContent)))
+
+	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, dto.Namespace)
+	services, _ := u.KubernetesAdminQuery.GetServicesInfo(ctx, dto.Namespace)
+
 	return TopologiesGetOutputDTO{
-		Topology: topologyContent,
-		WebUrl:   webUrl,
+		Topology:    containerlabContent,
+		Deployments: deployments,
+		Services:    services,
 	}, nil
 }

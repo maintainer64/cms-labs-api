@@ -16,162 +16,6 @@
     },
     "basePath": "/clabgate/api",
     "paths": {
-        "/clabgate/api/v1/rpc/container.get": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Describe device topology",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Device"
-                ],
-                "summary": "describe device topology",
-                "parameters": [
-                    {
-                        "description": "topology namespace",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.ContainerGetRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.ContainersGetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/clabgate/api/v1/rpc/task.list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "List tasks. Roles: [admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "task"
-                ],
-                "summary": "list tasks",
-                "parameters": [
-                    {
-                        "description": "tasks list info",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TaskListRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TaskListResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/clabgate/api/v1/rpc/topology.create": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "create personal topology. Roles: [student, admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Topology"
-                ],
-                "summary": "create personal topologies",
-                "parameters": [
-                    {
-                        "description": "create params",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TopologyCreateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TopologyCreateResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/clabgate/api/v1/rpc/topology.delete": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "delete personal topology. Roles: [student, admin, instructor]",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Topology"
-                ],
-                "summary": "delete personal topologies",
-                "parameters": [
-                    {
-                        "description": "delete params",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TopologyDeleteRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecases.TopologyDeleteResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/clabgate/api/v1/rpc/topology.get": {
             "post": {
                 "security": [
@@ -210,312 +54,40 @@
                     }
                 }
             }
-        },
-        "/clabgate/api/v1/tokens/yaml": {
-            "get": {
-                "description": "Token cluster. Roles: any",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Token"
-                ],
-                "summary": "token cluster yaml",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
-        "queries.TaskCodeRegistryItem": {
+        "queries.DeploymentInfo": {
             "type": "object",
             "properties": {
-                "full_path": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "namespace_suffix": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "topology.TopologiesEdge": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/topology.TopologiesEdgeData"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "source": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "topology.TopologiesEdgeData": {
-            "type": "object",
-            "properties": {
-                "source": {
-                    "$ref": "#/definitions/topology.TopologiesEdgeDataItem"
-                },
-                "target": {
-                    "$ref": "#/definitions/topology.TopologiesEdgeDataItem"
-                }
-            }
-        },
-        "topology.TopologiesEdgeDataItem": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "label": {
-                    "type": "string"
-                },
                 "name": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "topology.TopologiesNode": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/topology.TopologiesNodeDataItem"
-                },
-                "icon": {
-                    "description": "Icon enum:cloud,router,server,switch,desktop",
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "label": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "topology.TopologiesNodeDataItem": {
-            "type": "object",
-            "properties": {
-                "icon": {
-                    "description": "Icon enum:cloud,router,server,switch,desktop",
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "kind": {
-                    "type": "string"
-                },
-                "label": {
-                    "type": "string"
-                },
-                "startup": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "topology.Topology": {
-            "type": "object",
-            "properties": {
-                "direction": {
-                    "type": "string"
-                },
-                "edges": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/topology.TopologiesEdge"
-                    }
-                },
-                "nodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/topology.TopologiesNode"
-                    }
-                }
-            }
-        },
-        "usecases.ContainerGetInputDTO": {
-            "type": "object",
-            "properties": {
-                "deployment": {
-                    "type": "string"
-                },
-                "namespace": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.ContainerGetItem": {
-            "type": "object",
-            "properties": {
-                "connect_url": {
-                    "type": "string"
-                },
-                "label": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "namespace": {
-                    "type": "string"
-                },
-                "pod": {
                     "type": "string"
                 },
                 "ready": {
-                    "type": "boolean"
+                    "type": "string"
                 },
-                "restart_count": {
+                "restarts": {
                     "type": "integer"
                 },
-                "session_id": {
-                    "type": "string"
-                },
-                "startup": {
-                    "type": "string"
-                },
                 "status": {
-                    "description": "Status enum: running,waiting,terminated,unknown",
+                    "type": "string"
+                }
+            }
+        },
+        "queries.ServiceInfo": {
+            "type": "object",
+            "properties": {
+                "cluster_ip": {
+                    "type": "string"
+                },
+                "external_ip": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 },
                 "type": {
-                    "description": "Type enum: containerlab,default",
                     "type": "string"
-                }
-            }
-        },
-        "usecases.ContainerGetOutputDTO": {
-            "type": "object",
-            "properties": {
-                "containers": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/usecases.ContainerGetItem"
-                    }
-                }
-            }
-        },
-        "usecases.ContainerGetRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "container.get"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.ContainerGetInputDTO"
-                }
-            }
-        },
-        "usecases.ContainersGetResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.ContainerGetOutputDTO"
-                }
-            }
-        },
-        "usecases.TaskListInputDTO": {
-            "type": "object"
-        },
-        "usecases.TaskListOutputDTO": {
-            "type": "object",
-            "required": [
-                "model"
-            ],
-            "properties": {
-                "model": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/queries.TaskCodeRegistryItem"
-                    }
-                }
-            }
-        },
-        "usecases.TaskListRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "tasks.list"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.TaskListInputDTO"
-                }
-            }
-        },
-        "usecases.TaskListResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.TaskListOutputDTO"
                 }
             }
         },
@@ -530,10 +102,19 @@
         "usecases.TopologiesGetOutputDTO": {
             "type": "object",
             "properties": {
-                "topology": {
-                    "$ref": "#/definitions/topology.Topology"
+                "deployments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queries.DeploymentInfo"
+                    }
                 },
-                "web_url": {
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queries.ServiceInfo"
+                    }
+                },
+                "topology": {
                     "type": "string"
                 }
             }
@@ -572,133 +153,6 @@
                 },
                 "result": {
                     "$ref": "#/definitions/usecases.TopologiesGetOutputDTO"
-                }
-            }
-        },
-        "usecases.TopologyCreateInputDTO": {
-            "type": "object",
-            "properties": {
-                "redeploy": {
-                    "type": "boolean"
-                },
-                "task_id": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecases.TopologyCreateOutputDTO": {
-            "type": "object",
-            "properties": {
-                "deploy_created": {
-                    "type": "boolean"
-                },
-                "namespace": {
-                    "type": "string"
-                },
-                "namespace_created": {
-                    "type": "boolean"
-                },
-                "user_created": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "usecases.TopologyCreateRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "topology.create"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.TopologyCreateInputDTO"
-                }
-            }
-        },
-        "usecases.TopologyCreateResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.TopologyCreateOutputDTO"
-                }
-            }
-        },
-        "usecases.TopologyDeleteInputDTO": {
-            "type": "object",
-            "properties": {
-                "namespaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "usecases.TopologyDeleteOutputDTO": {
-            "type": "object",
-            "properties": {
-                "namespaces": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "usecases.TopologyDeleteRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "method": {
-                    "type": "string",
-                    "default": "topology.delete"
-                },
-                "params": {
-                    "$ref": "#/definitions/usecases.TopologyDeleteInputDTO"
-                }
-            }
-        },
-        "usecases.TopologyDeleteResponse": {
-            "type": "object",
-            "properties": {
-                "error": {},
-                "id": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "jsonrpc": {
-                    "type": "string",
-                    "default": "2.0"
-                },
-                "result": {
-                    "$ref": "#/definitions/usecases.TopologyDeleteOutputDTO"
                 }
             }
         }
