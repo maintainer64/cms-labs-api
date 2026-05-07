@@ -52,7 +52,7 @@ deployments:
             cpu: "200m"
         startupProbe:
           httpGet:
-            path: /api/docs/index.html
+            path: /clabgate/api/docs/index.html
             port: http
           timeoutSeconds: 1
           periodSeconds: 10
@@ -60,7 +60,7 @@ deployments:
           failureThreshold: 12
         livenessProbe:
           httpGet:
-            path: /api/docs/index.html
+            path: /clabgate/api/docs/index.html
             port: http
           timeoutSeconds: 1
           periodSeconds: 10
@@ -68,7 +68,7 @@ deployments:
           failureThreshold: 6
         readinessProbe:
           httpGet:
-            path: /api/docs/index.html
+            path: /clabgate/api/docs/index.html
             port: http
           timeoutSeconds: 1
           periodSeconds: 10
