@@ -8,7 +8,6 @@ import (
 func FiberRoutes(app *fiber.App) {
 	// Routes.
 	SwaggerRoute(app)
-	V1TokenRoute(app)
 	V1RpcRoute(app)
 	jsonrpc.EmptyRoutes(app)
 }

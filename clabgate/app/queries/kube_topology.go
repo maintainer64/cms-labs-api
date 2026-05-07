@@ -3,11 +3,60 @@ package queries
 import (
 	"context"
 	"fmt"
+	"strings"
 
+	"github.com/rs/zerolog"
+	"gitlab.com/a10869/api-modules/shared/logs"
+	"gopkg.in/yaml.v3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	yaml "sigs.k8s.io/yaml/goyaml.v3"
+	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 )
+
+type DeploymentInfo struct {
+	Name     string `json:"name"`
+	Status   string `json:"status"`
+	Restarts int32  `json:"restarts"`
+	Ready    string `json:"ready"`
+}
+
+type ServiceInfo struct {
+	Name       string `json:"name"`
+	Type       string `json:"type"`
+	ExternalIP string `json:"external_ip,omitempty"`
+	ClusterIP  string `json:"cluster_ip"`
+}
+
+type KubernetesAdminQuery struct {
+	clientset     *kubernetes.Clientset
+	dynamicClient dynamic.Interface
+	*zerolog.Logger
+}
+
+// NewKubernetesAdmin создает клиент Kubernetes из in-cluster serviceaccount
+func NewKubernetesAdmin(zeroLogConf *logs.ZeroLoggerConf) (*KubernetesAdminQuery, error) {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create in-cluster config: %v", err)
+	}
+
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create kubernetes clientset: %v", err)
+	}
+	dynamicClient, err := dynamic.NewForConfig(config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create kubernetes dynamicClient: %v", err)
+	}
+
+	return &KubernetesAdminQuery{
+		clientset:     clientset,
+		dynamicClient: dynamicClient,
+		Logger:        logs.NewZeroLogger(zeroLogConf),
+	}, nil
+}
 
 // GetTopologyYAML возвращает YAML-представление конкретной топологии (CRD)
 func (k *KubernetesAdminQuery) GetTopologyYAML(ctx context.Context, namespace string) ([]byte, error) {
@@ -15,30 +64,100 @@ func (k *KubernetesAdminQuery) GetTopologyYAML(ctx context.Context, namespace st
 		return []byte{}, fmt.Errorf("namespace is required")
 	}
 
-	// GroupVersionResource (GVR) на основе анализа YAML
 	gvr := schema.GroupVersionResource{
-		Group:    "clabernetes.containerlab.dev", // Из apiVersion
-		Version:  "v1alpha1",                     // Из apiVersion
-		Resource: "topologies",                   // Plural от kind "Topology"
+		Group:    "clabernetes.containerlab.dev",
+		Version:  "v1alpha1",
+		Resource: "topologies",
 	}
 
-	// Получаем список объектов Topology в указанном namespace
 	list, err := k.dynamicClient.Resource(gvr).Namespace(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return []byte{}, fmt.Errorf("failed to list Topologies in namespace %s: %v", namespace, err)
 	}
 
-	// Проверяем, есть ли элементы в списке
 	if len(list.Items) == 0 {
 		return []byte{}, fmt.Errorf("no Topology found in namespace %s", namespace)
 	}
 
 	for _, unstructuredObj := range list.Items {
-		// Конвертируем Unstructured в YAML
 		yamlData, err := yaml.Marshal(unstructuredObj.Object)
 		if err == nil {
 			return yamlData, nil
 		}
 	}
-	return []byte{}, fmt.Errorf("failed to marshal Topology to YAML: %v", err)
+	return []byte{}, fmt.Errorf("failed to marshal Topology to YAML")
+}
+
+// GetDeploymentsInfo возвращает информацию о deployments в namespace
+func (k *KubernetesAdminQuery) GetDeploymentsInfo(ctx context.Context, namespace string) ([]DeploymentInfo, error) {
+	deployments, err := k.clientset.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list deployments in namespace %s: %v", namespace, err)
+	}
+
+	var result []DeploymentInfo
+	for _, deploy := range deployments.Items {
+		status := "Ready"
+		if deploy.Status.ReadyReplicas != deploy.Status.Replicas {
+			status = "NotReady"
+		}
+
+		var restarts int32 = 0
+		pods, err := k.clientset.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{
+			LabelSelector: metav1.FormatLabelSelector(deploy.Spec.Selector),
+		})
+		if err == nil {
+			for _, pod := range pods.Items {
+				for _, cs := range pod.Status.ContainerStatuses {
+					restarts += cs.RestartCount
+				}
+			}
+		}
+
+		ready := fmt.Sprintf("%d/%d", deploy.Status.ReadyReplicas, *deploy.Spec.Replicas)
+		result = append(result, DeploymentInfo{
+			Name:     deploy.Name,
+			Status:   status,
+			Restarts: restarts,
+			Ready:    ready,
+		})
+	}
+	return result, nil
+}
+
+// GetServicesInfo возвращает информацию о services типа LoadBalancer в namespace
+func (k *KubernetesAdminQuery) GetServicesInfo(ctx context.Context, namespace string) ([]ServiceInfo, error) {
+	services, err := k.clientset.CoreV1().Services(namespace).List(ctx, metav1.ListOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list services in namespace %s: %v", namespace, err)
+	}
+
+	var result []ServiceInfo
+	for _, svc := range services.Items {
+		if svc.Spec.Type != "LoadBalancer" {
+			continue
+		}
+
+		externalIP := ""
+		if svc.Status.LoadBalancer.Ingress != nil && len(svc.Status.LoadBalancer.Ingress) > 0 {
+			var ips []string
+			for _, ingress := range svc.Status.LoadBalancer.Ingress {
+				if ingress.IP != "" {
+					ips = append(ips, ingress.IP)
+				}
+				if ingress.Hostname != "" {
+					ips = append(ips, ingress.Hostname)
+				}
+			}
+			externalIP = strings.Join(ips, ",")
+		}
+
+		result = append(result, ServiceInfo{
+			Name:       svc.Name,
+			Type:       string(svc.Spec.Type),
+			ExternalIP: externalIP,
+			ClusterIP:  svc.Spec.ClusterIP,
+		})
+	}
+	return result, nil
 }

@@ -25,3 +25,17 @@ frontend-deploy:
     name: front-${CI_COMMIT_REF_SLUG}
   variables:
     DEPLOY_NAME: front
+
+clabgate-deploy:
+  stage: deploy
+  extends:
+    - .deploy-kubectl
+    - .releases-branch
+  image: $KUBECTL_IMAGE
+  needs:
+    - clabgate-build-docker
+    - version
+  environment:
+    name: clabgate-${CI_COMMIT_REF_SLUG}
+  variables:
+    DEPLOY_NAME: clabgate

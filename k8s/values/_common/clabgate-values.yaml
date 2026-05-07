@@ -1,0 +1,76 @@
+services:
+  clabgate:
+    ports:
+      - name: http
+        protocol: TCP
+        port: 80
+        targetPort: http
+
+serviceAccount:
+  clabgate:
+    clusterRole:
+      name: clabgate
+      rules:
+        - apiGroups: [ "clabernetes.containerlab.dev" ]
+          resources: [ "topologies" ]
+          verbs: [ "get", "list" ]
+        - apiGroups: [ "apps" ]
+          resources: [ "deployments" ]
+          verbs: [ "get", "list" ]
+        - apiGroups: [ "" ]
+          resources: [ "pods" ]
+          verbs: [ "get", "list" ]
+        - apiGroups: [ "" ]
+          resources: [ "services" ]
+          verbs: [ "get", "list" ]
+        - apiGroups: [ "" ]
+          resources: [ "secrets" ]
+          verbs: [ "get", "list" ]
+
+deployments:
+  clabgate:
+    replicas: 1
+    initContainers:
+      - name: vault-init
+        image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
+        imageTag: latest
+        command: [ "bash", "-c" ]
+        args:
+          - |
+            fetch_secrets --path=clabgate --output=/var/run/secrets/app --formats=env
+    containers:
+      - name: clabgate
+        ports:
+          - name: http
+            containerPort: 8080
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "250Mi"
+            cpu: "200m"
+        startupProbe:
+          httpGet:
+            path: /api/docs/index.html
+            port: http
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 12
+        livenessProbe:
+          httpGet:
+            path: /api/docs/index.html
+            port: http
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /api/docs/index.html
+            port: http
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 2

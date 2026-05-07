@@ -2907,6 +2907,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "labs_path": {
+                    "type": "string"
+                },
                 "lti_routing_id": {
                     "type": "integer"
                 },

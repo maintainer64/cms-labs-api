@@ -1,193 +1,26 @@
 basePath: /clabgate/api
 definitions:
-  queries.TaskCodeRegistryItem:
+  queries.DeploymentInfo:
     properties:
-      full_path:
-        type: string
-      id:
-        type: string
-      namespace_suffix:
-        type: string
-      title:
-        type: string
-    type: object
-  topology.TopologiesEdge:
-    properties:
-      data:
-        $ref: '#/definitions/topology.TopologiesEdgeData'
-      id:
-        type: string
-      source:
-        type: string
-      target:
-        type: string
-      type:
-        type: string
-    type: object
-  topology.TopologiesEdgeData:
-    properties:
-      source:
-        $ref: '#/definitions/topology.TopologiesEdgeDataItem'
-      target:
-        $ref: '#/definitions/topology.TopologiesEdgeDataItem'
-    type: object
-  topology.TopologiesEdgeDataItem:
-    properties:
-      id:
-        type: string
-      label:
-        type: string
       name:
-        type: string
-      type:
-        type: string
-    type: object
-  topology.TopologiesNode:
-    properties:
-      data:
-        $ref: '#/definitions/topology.TopologiesNodeDataItem'
-      icon:
-        description: Icon enum:cloud,router,server,switch,desktop
-        type: string
-      id:
-        type: string
-      label:
-        type: string
-      type:
-        type: string
-    type: object
-  topology.TopologiesNodeDataItem:
-    properties:
-      icon:
-        description: Icon enum:cloud,router,server,switch,desktop
-        type: string
-      id:
-        type: string
-      kind:
-        type: string
-      label:
-        type: string
-      startup:
-        type: string
-      type:
-        type: string
-    type: object
-  topology.Topology:
-    properties:
-      direction:
-        type: string
-      edges:
-        items:
-          $ref: '#/definitions/topology.TopologiesEdge'
-        type: array
-      nodes:
-        items:
-          $ref: '#/definitions/topology.TopologiesNode'
-        type: array
-    type: object
-  usecases.ContainerGetInputDTO:
-    properties:
-      deployment:
-        type: string
-      namespace:
-        type: string
-    type: object
-  usecases.ContainerGetItem:
-    properties:
-      connect_url:
-        type: string
-      label:
-        type: string
-      name:
-        type: string
-      namespace:
-        type: string
-      pod:
         type: string
       ready:
-        type: boolean
-      restart_count:
+        type: string
+      restarts:
         type: integer
-      session_id:
-        type: string
-      startup:
-        type: string
       status:
-        description: 'Status enum: running,waiting,terminated,unknown'
+        type: string
+    type: object
+  queries.ServiceInfo:
+    properties:
+      cluster_ip:
+        type: string
+      external_ip:
+        type: string
+      name:
         type: string
       type:
-        description: 'Type enum: containerlab,default'
         type: string
-    type: object
-  usecases.ContainerGetOutputDTO:
-    properties:
-      containers:
-        items:
-          $ref: '#/definitions/usecases.ContainerGetItem'
-        type: array
-    type: object
-  usecases.ContainerGetRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: container.get
-        type: string
-      params:
-        $ref: '#/definitions/usecases.ContainerGetInputDTO'
-    type: object
-  usecases.ContainersGetResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.ContainerGetOutputDTO'
-    type: object
-  usecases.TaskListInputDTO:
-    type: object
-  usecases.TaskListOutputDTO:
-    properties:
-      model:
-        items:
-          $ref: '#/definitions/queries.TaskCodeRegistryItem'
-        type: array
-    required:
-    - model
-    type: object
-  usecases.TaskListRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: tasks.list
-        type: string
-      params:
-        $ref: '#/definitions/usecases.TaskListInputDTO'
-    type: object
-  usecases.TaskListResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.TaskListOutputDTO'
     type: object
   usecases.TopologiesGetInputDTO:
     properties:
@@ -196,9 +29,15 @@ definitions:
     type: object
   usecases.TopologiesGetOutputDTO:
     properties:
+      deployments:
+        items:
+          $ref: '#/definitions/queries.DeploymentInfo'
+        type: array
+      services:
+        items:
+          $ref: '#/definitions/queries.ServiceInfo'
+        type: array
       topology:
-        $ref: '#/definitions/topology.Topology'
-      web_url:
         type: string
     type: object
   usecases.TopologiesGetRequest:
@@ -227,92 +66,6 @@ definitions:
       result:
         $ref: '#/definitions/usecases.TopologiesGetOutputDTO'
     type: object
-  usecases.TopologyCreateInputDTO:
-    properties:
-      redeploy:
-        type: boolean
-      task_id:
-        type: string
-      username:
-        type: string
-    type: object
-  usecases.TopologyCreateOutputDTO:
-    properties:
-      deploy_created:
-        type: boolean
-      namespace:
-        type: string
-      namespace_created:
-        type: boolean
-      user_created:
-        type: boolean
-    type: object
-  usecases.TopologyCreateRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: topology.create
-        type: string
-      params:
-        $ref: '#/definitions/usecases.TopologyCreateInputDTO'
-    type: object
-  usecases.TopologyCreateResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.TopologyCreateOutputDTO'
-    type: object
-  usecases.TopologyDeleteInputDTO:
-    properties:
-      namespaces:
-        items:
-          type: string
-        type: array
-    type: object
-  usecases.TopologyDeleteOutputDTO:
-    properties:
-      namespaces:
-        items:
-          type: string
-        type: array
-    type: object
-  usecases.TopologyDeleteRequest:
-    properties:
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      method:
-        default: topology.delete
-        type: string
-      params:
-        $ref: '#/definitions/usecases.TopologyDeleteInputDTO'
-    type: object
-  usecases.TopologyDeleteResponse:
-    properties:
-      error: {}
-      id:
-        default: "1"
-        type: string
-      jsonrpc:
-        default: "2.0"
-        type: string
-      result:
-        $ref: '#/definitions/usecases.TopologyDeleteOutputDTO'
-    type: object
 info:
   contact:
     email: your@mail.com
@@ -325,102 +78,6 @@ info:
   title: Clabernetes Gate API
   version: "1.0"
 paths:
-  /clabgate/api/v1/rpc/container.get:
-    post:
-      consumes:
-      - application/json
-      description: Describe device topology
-      parameters:
-      - description: topology namespace
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.ContainerGetRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.ContainersGetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: describe device topology
-      tags:
-      - Device
-  /clabgate/api/v1/rpc/task.list:
-    post:
-      consumes:
-      - application/json
-      description: 'List tasks. Roles: [admin, instructor]'
-      parameters:
-      - description: tasks list info
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TaskListRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.TaskListResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: list tasks
-      tags:
-      - task
-  /clabgate/api/v1/rpc/topology.create:
-    post:
-      consumes:
-      - application/json
-      description: 'create personal topology. Roles: [student, admin, instructor]'
-      parameters:
-      - description: create params
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TopologyCreateRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.TopologyCreateResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: create personal topologies
-      tags:
-      - Topology
-  /clabgate/api/v1/rpc/topology.delete:
-    post:
-      consumes:
-      - application/json
-      description: 'delete personal topology. Roles: [student, admin, instructor]'
-      parameters:
-      - description: delete params
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/usecases.TopologyDeleteRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/usecases.TopologyDeleteResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: delete personal topologies
-      tags:
-      - Topology
   /clabgate/api/v1/rpc/topology.get:
     post:
       consumes:
@@ -445,21 +102,6 @@ paths:
       summary: list tasks
       tags:
       - Topology
-  /clabgate/api/v1/tokens/yaml:
-    get:
-      consumes:
-      - application/json
-      description: 'Token cluster. Roles: any'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: token cluster yaml
-      tags:
-      - Token
 securityDefinitions:
   ApiKeyAuth:
     in: header
