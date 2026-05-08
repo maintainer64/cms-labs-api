@@ -29,6 +29,7 @@ serviceAccount:
 
 deployments:
   clabgate:
+    serviceAccountName: clabgate
     replicas: 1
     initContainers:
       - name: vault-init
