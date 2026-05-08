@@ -4,8 +4,10 @@ definitions:
     properties:
       name:
         type: string
-      ready:
-        type: string
+      ready_replicas:
+        type: integer
+      replicas:
+        type: integer
       restarts:
         type: integer
       status:
@@ -16,7 +18,9 @@ definitions:
       cluster_ip:
         type: string
       external_ip:
-        type: string
+        items:
+          type: string
+        type: array
       name:
         type: string
       type:

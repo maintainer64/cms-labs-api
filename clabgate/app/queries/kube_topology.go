@@ -3,7 +3,6 @@ package queries
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/logs"
@@ -16,17 +15,18 @@ import (
 )
 
 type DeploymentInfo struct {
-	Name     string `json:"name"`
-	Status   string `json:"status"`
-	Restarts int32  `json:"restarts"`
-	Ready    string `json:"ready"`
+	Name          string `json:"name"`
+	Status        string `json:"status"`
+	Restarts      int32  `json:"restarts"`
+	ReadyReplicas int32  `json:"ready_replicas"`
+	Replicas      *int32 `json:"replicas"`
 }
 
 type ServiceInfo struct {
-	Name       string `json:"name"`
-	Type       string `json:"type"`
-	ExternalIP string `json:"external_ip,omitempty"`
-	ClusterIP  string `json:"cluster_ip"`
+	Name       string   `json:"name"`
+	Type       string   `json:"type"`
+	ExternalIP []string `json:"external_ip,omitempty"`
+	ClusterIP  string   `json:"cluster_ip"`
 }
 
 type KubernetesAdminQuery struct {
@@ -114,12 +114,12 @@ func (k *KubernetesAdminQuery) GetDeploymentsInfo(ctx context.Context, namespace
 			}
 		}
 
-		ready := fmt.Sprintf("%d/%d", deploy.Status.ReadyReplicas, *deploy.Spec.Replicas)
 		result = append(result, DeploymentInfo{
-			Name:     deploy.Name,
-			Status:   status,
-			Restarts: restarts,
-			Ready:    ready,
+			Name:          deploy.Name,
+			Status:        status,
+			Restarts:      restarts,
+			ReadyReplicas: deploy.Status.ReadyReplicas,
+			Replicas:      deploy.Spec.Replicas,
 		})
 	}
 	return result, nil
@@ -138,18 +138,13 @@ func (k *KubernetesAdminQuery) GetServicesInfo(ctx context.Context, namespace st
 			continue
 		}
 
-		externalIP := ""
+		externalIP := make([]string, 0)
 		if svc.Status.LoadBalancer.Ingress != nil && len(svc.Status.LoadBalancer.Ingress) > 0 {
-			var ips []string
 			for _, ingress := range svc.Status.LoadBalancer.Ingress {
 				if ingress.IP != "" {
-					ips = append(ips, ingress.IP)
-				}
-				if ingress.Hostname != "" {
-					ips = append(ips, ingress.Hostname)
+					externalIP = append(externalIP, ingress.IP)
 				}
 			}
-			externalIP = strings.Join(ips, ",")
 		}
 
 		result = append(result, ServiceInfo{
