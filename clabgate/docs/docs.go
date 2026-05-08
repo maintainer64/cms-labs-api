@@ -70,8 +70,11 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "ready": {
-                    "type": "string"
+                "ready_replicas": {
+                    "type": "integer"
+                },
+                "replicas": {
+                    "type": "integer"
                 },
                 "restarts": {
                     "type": "integer"
@@ -88,7 +91,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "external_ip": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "name": {
                     "type": "string"
