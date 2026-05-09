@@ -44,8 +44,5 @@ export const RoutesLocation = {
     return query ? `${url}?${query}` : url;
   },
   topologyView: (namespace = ':namespace') => `/topology/${namespace}`,
-  topologyDevices: (namespace = ':namespace', device = ':device') => `/topology/${namespace}/devices/${device}`,
-  topologyConnect: () => `/topology`,
-  docsTopologyKubectl: () => `/docs/kubectl`,
   home: () => '/'
 };

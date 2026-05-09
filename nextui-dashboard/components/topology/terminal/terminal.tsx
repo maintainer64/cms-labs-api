@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScreenSize } from 'use-screen-size';
-import '@xterm/xterm/css/xterm.css';
 import { TerminalActionFunc, TerminalClient } from './service/context';
-import { RoutesLocation } from '@/components/routes';
 import { SmartLink } from '@/components/navbar/smartLink';
-import { useTerminal } from '@/components/topology/terminal/service/hook';
 import { Chip, Tooltip } from '@heroui/react';
 import useLanguageBrowser from '@/helpers/locale';
-import { terminalStatusToColor } from '@/components/topology/terminal/types';
+import { useReactFlow } from '@xyflow/react';
+import { RFNodeTopology } from '@/components/topology/objectTypes/types';
+import copy from 'copy-to-clipboard';
 
 interface KubernetesTerminalProps {
   node: TerminalClient;
@@ -32,13 +31,11 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
     height: 300
   });
 
-  const terminalRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   // Инициализация терминала и подключение
-  const { terminalService, container } = useTerminal({
-    terminalRef: terminalRef,
-    node: node
-  });
+  const { getNode } = useReactFlow();
+  // @ts-ignore
+  const nodeRF: RFNodeTopology = getNode(node.id);
 
   // Обработчики drag
   const handleMouseDown = useCallback(
@@ -101,7 +98,6 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
           width: Math.max(300, startWidth + (e.clientX - startX)),
           height: Math.max(200, startHeight + (e.clientY - startY))
         });
-        terminalService.current?.fit?.();
       };
 
       const onMouseUp = () => {
@@ -116,6 +112,9 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
   );
 
   if (!node.isVisible) return null;
+
+  const externalIp = nodeRF?.data?.data?.serviceExternalIp?.[0];
+  const shellUrl = nodeRF?.data?.data?.shellUrl;
 
   return (
     <div
@@ -138,26 +137,20 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
         className='flex items-center justify-between bg-slate-800 bg-opacity-70 px-3 py-2 cursor-move'
         onMouseDown={handleMouseDown}
       >
-        <Tooltip
-          content={
-            <>
-              <p>{container.ready ? Terminal.ReadyStatus : Terminal.NotReadyStatus}</p>
-              <p>
-                {Terminal.Restarts}: {container.restartCount}
-              </p>
-            </>
-          }
-        >
+        <Tooltip content={<p>{nodeRF?.data.data?.serviceHealthy ? Terminal.ReadyStatus : Terminal.NotReadyStatus}</p>}>
           <Chip
-            color={terminalStatusToColor(container.status)}
+            color={nodeRF.data.data?.serviceHealthy ? 'success' : 'warning'}
             variant='dot'
             radius='none'
             size='sm'
             classNames={{
               base: 'border-none text-white'
             }}
+            onClick={() => {
+              externalIp && copy(externalIp);
+            }}
           >
-            {container.label} ({container.name})
+            {nodeRF.data.label}&nbsp;{externalIp}
           </Chip>
         </Tooltip>
         <div className='flex space-x-2'>
@@ -169,7 +162,7 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
             {node.isOpacity ? '◉' : '◎'}
           </button>
           <SmartLink
-            to={RoutesLocation.topologyDevices(node.namespace, node.id)}
+            to={shellUrl}
             className='text-slate-300 hover:text-blue-400 cursor-pointer'
             title='Open in new window'
           >
@@ -184,11 +177,13 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
           </button>
         </div>
       </div>
-      <div
-        ref={terminalRef}
-        className='w-full h-full'
-        style={{ height: `calc(100% - 40px)`, backgroundColor: 'black' }}
-      />
+      {shellUrl && (
+        <iframe
+          className='w-full h-full'
+          style={{ height: `calc(100% - 40px)`, backgroundColor: 'black' }}
+          src={shellUrl}
+        ></iframe>
+      )}
       <div
         className='absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-blue-500 opacity-0 hover:opacity-100'
         onMouseDown={handleResize}

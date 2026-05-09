@@ -8,6 +8,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': resolve(__dirname),
+            '@srl-labs/clab-ui': resolve(__dirname, '/node_modules/@srl-labs/clab-ui')
         },
     },
     define: {
@@ -23,12 +24,12 @@ export default defineConfig({
 function setupProxy(): CommonServerOptions["proxy"] {
     return {
         "/api": {
-            target: "https://auth-pre.k8s.cmslabs.ru",
+            target: "https://auth.k8s-pre.cmslabs.ru",
             secure: false,
             changeOrigin: true,
         },
         "/clabgate/api/": {
-            target: "http://localhost:5000",
+            target: "https://auth.k8s-pre.cmslabs.ru",
             secure: false,
             changeOrigin: true,
         }

@@ -1,10 +1,10 @@
-import { Handle as HandleComponent, Position } from '@xyflow/react';
+import { Handle as HandleComponent, Node, NodeProps, Position } from '@xyflow/react';
 import React from 'react';
-import { TopologyTopologiesNode } from '@/helpers/api';
 import ImageIcon from '@/components/topology/icons';
-import { CamelCasedPropertiesDeep } from 'type-fest';
+import { NodeDataItem } from '@/components/topology/objectTypes/types';
 
-export const nodeTypeDefault = ({ data }: CamelCasedPropertiesDeep<TopologyTopologiesNode>) => {
+// @ts-ignore
+export const nodeTypeDefault = ({ data }: NodeProps<Node<NodeDataItem>>) => {
   return (
     <div
       className='
