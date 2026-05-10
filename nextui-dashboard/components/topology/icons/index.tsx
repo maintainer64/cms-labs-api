@@ -4,6 +4,7 @@ import { DesktopIcon } from './Desktop';
 import { ServerIcon } from './Server';
 import { CloudIcon } from './Cloud';
 import { ReactNode } from 'react';
+import { UnknownIcon } from '@/components/topology/icons/Unknown';
 
 const iconComponents: Record<string, ReactNode> = {
   router: <RouterIcon />,
@@ -20,7 +21,7 @@ const getIconRelevant = (icon?: string): ReactNode => {
   if (iconKey in iconComponents) {
     return iconComponents[iconKey];
   }
-  return <div className='size-6 bg-gray-200 dark:bg-gray-700 rounded-full' />;
+  return <UnknownIcon />;
 };
 
 interface Props {

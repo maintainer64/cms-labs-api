@@ -10,14 +10,13 @@ import { ServersPage, ServersPageEdit } from '@/app/(app)/servers/page';
 import { LTIRoutingPage, LTIRoutingPageEdit } from '@/app/(app)/lti-routings/page';
 import {
   LTIAttemptPageConfirm,
+  LTIAttemptsPage,
   LTIAttemptsPageCreate,
-  LTIAttemptsPageEdit,
-  LTIAttemptsPage
+  LTIAttemptsPageEdit
 } from '@/app/(app)/lti-attempts/page';
 import { ServiceCardsPage, ServiceCardsPageEdit } from '@/app/(app)/service-cards/page';
 import { RolesListPage, RolesPageEdit } from '@/app/(app)/roles/page';
-import { TopologyDevicePageView, TopologyPageConnect, TopologyPageView } from '@/app/(app)/topology/page';
-import { DocsKubectlTopology } from '@/app/(docs)/page';
+import TopologyPageView from '@/app/(app)/topology/page';
 import { TargetsPage, TargetsPageEdit } from '@/app/(app)/targets/page';
 
 const RoutesAdmin = () => {
@@ -50,9 +49,6 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.targetsEdit()} element={<TargetsPageEdit />} />
       <Route path={RoutesLocation.targetsCreate()} element={<TargetsPageEdit />} />
       <Route path={RoutesLocation.topologyView()} element={<TopologyPageView />} />
-      <Route path={RoutesLocation.topologyDevices()} element={<TopologyDevicePageView />} />
-      <Route path={RoutesLocation.topologyConnect()} element={<TopologyPageConnect />} />
-      <Route path={RoutesLocation.docsTopologyKubectl()} element={<DocsKubectlTopology />} />
       <Route path={RoutesLocation.login()} element={<LoginPage />} />
       <Route path={RoutesLocation.language()} element={<LanguagePage />} />
       <Route path={RoutesLocation.home()} element={<HomePage />} />

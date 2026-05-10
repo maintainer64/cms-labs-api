@@ -3,16 +3,16 @@ import React, { useEffect } from 'react';
 import { Background, Controls, ReactFlow } from '@xyflow/react';
 import { edgeTypes, nodeTypes } from './objectTypes';
 import { getLayoutElements } from './autoLayout';
-import { RFEdgeTopology, RFNodeTopology } from '@/components/topology/objectTypes/types';
+import { RFNodeTopology } from '@/components/topology/objectTypes/types';
 import { HorizontalInfiniteLoader } from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
-import { useParamsConnectTopology } from '@/components/topology/utils';
 import { TerminalActionFunc } from '@/components/topology/terminal/service/context';
 import useLanguageBrowser from '@/helpers/locale';
-import { InfoModalBlock } from '@/components/layout/infoModalBlock';
 import useThemeBrowser from '@/components/navbar/useTheme';
 import { useQueryTopologyGet } from '@/helpers/queries/topology/use-query-topology-get';
+import { useParams } from 'react-router-dom';
+import { parseTopology } from '@/components/topology/objectTypes/parse';
 
 interface TopologyFlowVisualizationProps {
   dispatch?: TerminalActionFunc;
@@ -25,23 +25,17 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
       Topology: { Connect }
     }
   } = useLanguageBrowser();
-  const { namespace } = useParamsConnectTopology();
+  const { namespace } = useParams();
   const queryTopology = useQueryTopologyGet({ namespace });
   useEffect(() => {
+    // @ts-ignore
     window.document.title = namespace;
     return () => {
       window.document.title = 'CMS LABS';
     };
   }, []);
-  const initNodes = (queryTopology.data?.topology?.nodes ?? []) as RFNodeTopology[];
-  const initEdges = (queryTopology.data?.topology?.edges ?? []) as RFEdgeTopology[];
-  const object = getLayoutElements(
-    initNodes,
-    initEdges,
-    (queryTopology.data?.topology?.direction || 'TB') as 'TB' | 'LR'
-  );
   if (queryTopology.isLoading) return <HorizontalInfiniteLoader />;
-  if (queryTopology.error) {
+  if (queryTopology.error || queryTopology.data === undefined) {
     // @ts-ignore
     const errMsg = queryTopology?.error?.data?.message || Connect.Error;
     return (
@@ -52,23 +46,13 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
       </ErrorModal>
     );
   }
-  if (!queryTopology.data?.topology) {
-    return (
-      <>
-        <HorizontalInfiniteLoader />
-        <InfoModalBlock
-          title={Connect.WaitModalTitle}
-          href={queryTopology.data?.webUrl}
-          description={Connect.WaitModalDescription}
-          buttonText={Connect.WaitModalButtonText}
-        />
-      </>
-    );
-  }
+  const parsedTopology = parseTopology(queryTopology.data);
+  const object = getLayoutElements(parsedTopology.nodes, parsedTopology.edges, parsedTopology.direction);
   return (
     <ReactFlow
       colorMode={theme}
       nodes={object.nodes}
+      // @ts-ignore
       edges={object.edges}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
@@ -76,9 +60,7 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
         dispatch?.({
           type: 'ADD_CLIENT',
           payload: {
-            id: node.id,
-            namespace: namespace,
-            name: node.data.label
+            id: node.id
           }
         });
         dispatch?.({

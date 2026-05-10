@@ -254,6 +254,7 @@ export interface ModelsLTIAttemptListItem {
   attempt_id: string;
   created_at: string;
   id?: number;
+  labs_path?: string;
   lti_routing_id?: number;
   lti_routing_name?: string;
   result?: object;

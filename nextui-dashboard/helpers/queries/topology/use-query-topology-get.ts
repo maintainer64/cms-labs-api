@@ -3,7 +3,7 @@ Template auto generated with params from openapi.json
 */
 import { useQuery } from '@tanstack/react-query';
 import {
-  CoreJsonRpcPath,
+  ClabgateJsonRpcPath,
   transportWithAuth,
   type UsecasesTopologiesGetRequest,
   type UsecasesTopologiesGetResponse
@@ -15,8 +15,10 @@ type Response = CamelCasedPropertiesDeep<UsecasesTopologiesGetResponse['result']
 
 export const useQueryTopologyGet = (params: Params) => {
   return useQuery(
-    transportWithAuth.getQueryOptions<Response, Params>(CoreJsonRpcPath, 'topology.get', params, {
+    transportWithAuth.getQueryOptions<Response, Params>(ClabgateJsonRpcPath, 'topology.get', params, {
       retry: 3,
+      refetchOnWindowFocus: true,
+      refetchInterval: 30000, // 30 seconds
       enabled: !!params.namespace
     })
   );

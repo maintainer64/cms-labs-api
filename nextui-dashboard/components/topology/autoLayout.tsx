@@ -1,9 +1,13 @@
 'use client';
-import { Edge, Node } from '@xyflow/react';
 import dagre from 'dagre';
-import { defaultStyleEdge, defaultStyleNodes } from '@/components/topology/objectTypes/types';
+import {
+  defaultStyleEdge,
+  defaultStyleNodes,
+  RFEdgeTopology,
+  RFNodeTopology
+} from '@/components/topology/objectTypes/types';
 
-export const getLayoutElements = (nodes: Node[], edges: Edge[], direction: 'TB' | 'LR' = 'TB') => {
+export const getLayoutElements = (nodes: RFNodeTopology[], edges: RFEdgeTopology[], direction: 'TB' | 'LR' = 'TB') => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({

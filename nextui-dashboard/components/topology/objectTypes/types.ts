@@ -1,11 +1,53 @@
 import { Edge as RFEdge, Node as RFNode } from '@xyflow/react';
-import { TopologyTopologiesEdge, TopologyTopologiesNode } from '@/helpers/api';
 import { CSSProperties } from 'react';
-import { CamelCasedPropertiesDeep } from 'type-fest';
 
-export type RFNodeTopology = RFNode<CamelCasedPropertiesDeep<TopologyTopologiesNode>>;
+export interface Edge {
+  data?: EdgeData;
+  id?: string;
+  source?: string;
+  target?: string;
+  type?: string; // 'default'
+}
 
-export type RFEdgeTopology = RFEdge<CamelCasedPropertiesDeep<TopologyTopologiesEdge>>;
+export interface EdgeData {
+  source?: EdgeDataItem;
+  target?: EdgeDataItem;
+}
+
+export interface EdgeDataItem {
+  id?: string;
+  label?: string;
+  name?: string;
+  type?: string;
+}
+
+export interface Node {
+  data?: NodeDataItem;
+  /** Icon enum:cloud,router,server,switch,desktop */
+  icon?: string; // .labels.flow_icon или kind
+  id?: string; // название ноды
+  label?: string; // .labels.flow_label или название ноды
+  type?: string; // 'default'
+}
+
+export interface NodeDataItem {
+  /** Icon enum:cloud,router,server,switch,desktop */
+  icon?: string; // .labels.flow_icon или kind
+  id?: string; // название ноды
+  kind?: string; // .kind
+  label?: string; // .name
+  type?: string; // 'default'
+  serviceExternalIp?: string[];
+  serviceClusterIp?: string;
+  serviceHealthy?: boolean;
+  shellUrl?: string;
+}
+
+// @ts-ignore
+export type RFNodeTopology = RFNode<Node>;
+
+// @ts-ignore
+export type RFEdgeTopology = RFEdge<Edge>;
 
 export const defaultStyleNodes: CSSProperties = {
   width: 'auto',

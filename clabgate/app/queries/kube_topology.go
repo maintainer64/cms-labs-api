@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/shared/logs"
 	"gopkg.in/yaml.v3"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
@@ -28,6 +29,13 @@ type ServiceInfo struct {
 	ExternalIP []string `json:"external_ip,omitempty"`
 	ClusterIP  string   `json:"cluster_ip"`
 }
+
+type TTYDInfo struct {
+	Name string `json:"name"`
+	Url  string `json:"url"`
+}
+
+const ClabgateApiTopology = `/clabgate/api/v1/topology`
 
 type KubernetesAdminQuery struct {
 	clientset     *kubernetes.Clientset
@@ -155,4 +163,37 @@ func (k *KubernetesAdminQuery) GetServicesInfo(ctx context.Context, namespace st
 		})
 	}
 	return result, nil
+}
+
+// GetTTYDInfo возвращает информацию о сервисах, у которых есть порт ttyd:7681
+func (k *KubernetesAdminQuery) GetTTYDInfo(ctx context.Context, username string, attemptNumber string) ([]TTYDInfo, error) {
+	namespace := fmt.Sprintf("jup-%s-%s", username, attemptNumber)
+	services, err := k.clientset.CoreV1().Services(namespace).List(ctx, metav1.ListOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list services in namespace %s: %v", namespace, err)
+	}
+
+	var result []TTYDInfo
+	for _, svc := range services.Items {
+		if !hasTTYDPort(svc.Spec.Ports) {
+			continue
+		}
+
+		result = append(result, TTYDInfo{
+			Name: svc.Name,
+			Url:  fmt.Sprintf("%s/%s/%s/%s", ClabgateApiTopology, username, attemptNumber, svc.Name),
+		})
+	}
+
+	return result, nil
+}
+
+// hasTTYDPort проверяет наличие порта с именем "ttyd" и номером 7681
+func hasTTYDPort(ports []corev1.ServicePort) bool {
+	for _, port := range ports {
+		if port.Name == "ttyd" && port.Port == 7681 {
+			return true
+		}
+	}
+	return false
 }

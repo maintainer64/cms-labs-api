@@ -1,23 +1,13 @@
 export interface TerminalClient {
   id: string;
-  name?: string;
   index: number;
   isVisible: boolean;
-  namespace?: string;
   isOpacity: boolean;
   zIndex: number;
 }
 
-export interface ShellFrame {
-  Op: string;
-  SessionID?: string;
-  Data?: string;
-  Cols?: number;
-  Rows?: number;
-}
-
 type TerminalAction =
-  | { type: 'ADD_CLIENT'; payload: { id: string; namespace?: string; name?: string } }
+  | { type: 'ADD_CLIENT'; payload: { id: string } }
   | { type: 'REMOVE_CLIENT'; payload: { id: string } }
   | { type: 'TOGGLE_VISIBILITY'; payload: { id: string; onChange?: (visibility?: boolean) => void } }
   | { type: 'TOGGLE_OPACITY'; payload: { id: string } }
@@ -36,7 +26,7 @@ export const terminalInitialState: TerminalState = {
 export function terminalReducer(state: TerminalState, action: TerminalAction): TerminalState {
   switch (action.type) {
     case 'ADD_CLIENT': {
-      const { id, namespace, name } = action.payload;
+      const { id } = action.payload;
       if (state.clients.some((c) => c.id === id)) return state;
 
       return {
@@ -45,11 +35,9 @@ export function terminalReducer(state: TerminalState, action: TerminalAction): T
           ...state.clients,
           {
             id,
-            name,
             index: state.clients.length,
             isVisible: false,
             isOpacity: false,
-            namespace,
             zIndex: state.clients.length + 1
           }
         ]

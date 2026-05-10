@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/rs/zerolog"
 	"gitlab.com/a10869/api-modules/clabgate/app/queries"
@@ -20,7 +19,8 @@ type TopologiesGetUC struct {
 }
 
 type TopologiesGetInputDTO struct {
-	Namespace string `json:"namespace"`
+	Username      string `json:"username"`
+	AttemptNumber string `json:"attempt_number"`
 }
 
 type TopologiesGetRequest struct {
@@ -34,6 +34,7 @@ type TopologiesGetOutputDTO struct {
 	Topology    string                   `json:"topology"`
 	Deployments []queries.DeploymentInfo `json:"deployments,omitempty"`
 	Services    []queries.ServiceInfo    `json:"services,omitempty"`
+	TTYD        []queries.TTYDInfo       `json:"ttyd,omitempty"`
 }
 
 type TopologiesGetResponse struct {
@@ -55,12 +56,13 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,
-	) && !strings.HasPrefix(dto.Namespace, "jup-"+u.user.Username+"-") {
+	) && dto.Username != u.user.Username {
 		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("user_not_allow_topology", "user not allow connect topology")
 	}
 	ctx := context.Background()
-	u.Logger.Info().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML namespace: %v", dto.Namespace))
-	yamlContent, err := u.KubernetesAdminQuery.GetTopologyYAML(ctx, dto.Namespace)
+	u.Logger.Info().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML by attempt: %v", dto.AttemptNumber))
+	namespace := fmt.Sprintf("jup-%s-%s", dto.Username, dto.AttemptNumber)
+	yamlContent, err := u.KubernetesAdminQuery.GetTopologyYAML(ctx, namespace)
 
 	var containerlabContent string
 	if err == nil && len(yamlContent) > 0 {
@@ -80,12 +82,14 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 
 	u.Logger.Debug().Msg(fmt.Sprintf("TopologiesGetUC: containerlab content length: %d", len(containerlabContent)))
 
-	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, dto.Namespace)
-	services, _ := u.KubernetesAdminQuery.GetServicesInfo(ctx, dto.Namespace)
+	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, namespace)
+	services, _ := u.KubernetesAdminQuery.GetServicesInfo(ctx, namespace)
+	ttyd, _ := u.KubernetesAdminQuery.GetTTYDInfo(ctx, dto.Username, dto.AttemptNumber)
 
 	return TopologiesGetOutputDTO{
 		Topology:    containerlabContent,
 		Deployments: deployments,
 		Services:    services,
+		TTYD:        ttyd,
 	}, nil
 }
