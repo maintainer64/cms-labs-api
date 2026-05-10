@@ -180,7 +180,7 @@ export const KubernetesTerminal = ({ node, dispatch }: KubernetesTerminalProps) 
       {shellUrl && (
         <iframe
           className='w-full h-full'
-          style={{ height: `calc(100% - 40px)`, backgroundColor: 'white' }}
+          style={{ height: `calc(100% - 40px)`, backgroundColor: 'black' }}
           src={shellUrl}
         ></iframe>
       )}
