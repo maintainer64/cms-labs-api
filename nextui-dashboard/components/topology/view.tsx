@@ -4,7 +4,7 @@ import { Background, Controls, ReactFlow } from '@xyflow/react';
 import { edgeTypes, nodeTypes } from './objectTypes';
 import { getLayoutElements } from './autoLayout';
 import { RFNodeTopology } from '@/components/topology/objectTypes/types';
-import { HorizontalInfiniteLoader } from '@/components/scroll/loader';
+import {Loading} from '@/components/scroll/loader';
 import { ErrorModal } from '@/components/pages/auth/error';
 import { Button } from '@heroui/react';
 import { TerminalActionFunc } from '@/components/topology/terminal/service/context';
@@ -13,6 +13,7 @@ import useThemeBrowser from '@/components/navbar/useTheme';
 import { useQueryTopologyGet } from '@/helpers/queries/topology/use-query-topology-get';
 import { useParams } from 'react-router-dom';
 import { parseTopology } from '@/components/topology/objectTypes/parse';
+import AuthLoadingWrapper from "@/components/pages/auth/loader";
 
 interface TopologyFlowVisualizationProps {
   dispatch?: TerminalActionFunc;
@@ -25,16 +26,16 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
       Topology: { Connect }
     }
   } = useLanguageBrowser();
-  const { namespace } = useParams();
-  const queryTopology = useQueryTopologyGet({ namespace });
+  const { username, attemptNumber } = useParams();
+  const queryTopology = useQueryTopologyGet({ username, attemptNumber });
   useEffect(() => {
     // @ts-ignore
-    window.document.title = namespace;
+    window.document.title = `${username}-${attemptNumber}`;
     return () => {
       window.document.title = 'CMS LABS';
     };
   }, []);
-  if (queryTopology.isLoading) return <HorizontalInfiniteLoader />;
+  if (queryTopology.isLoading) return <AuthLoadingWrapper/>;
   if (queryTopology.error || queryTopology.data === undefined) {
     // @ts-ignore
     const errMsg = queryTopology?.error?.data?.message || Connect.Error;

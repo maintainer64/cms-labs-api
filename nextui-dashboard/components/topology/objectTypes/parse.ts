@@ -1,10 +1,16 @@
 import * as yaml from 'js-yaml';
 import type { Edge, EdgeData, Node, NodeDataItem, RFEdgeTopology, RFNodeTopology } from './types';
 import { CamelCasedPropertiesDeep } from 'type-fest';
-import type { QueriesDeploymentInfo, QueriesServiceInfo, UsecasesTopologiesGetOutputDTO } from '@/helpers/api';
+import type {
+  QueriesDeploymentInfo,
+  QueriesServiceInfo,
+  QueriesTTYDInfo,
+  UsecasesTopologiesGetOutputDTO
+} from '@/helpers/api';
 
 type Response = CamelCasedPropertiesDeep<UsecasesTopologiesGetOutputDTO>;
 type Service = CamelCasedPropertiesDeep<QueriesServiceInfo>;
+type TTYD = CamelCasedPropertiesDeep<QueriesTTYDInfo>;
 type Deployment = CamelCasedPropertiesDeep<QueriesDeploymentInfo>;
 
 // ─── Вспомогательные типы ───────────────────────────────────────────────────
@@ -57,6 +63,10 @@ function findService(services: Service[], name: string): Service | undefined {
   return services.find((n) => n.name === name);
 }
 
+function findTTYD(ttyds: TTYD[], name: string): TTYD | undefined {
+  return ttyds.find((n) => (n.name || '').startsWith(`${name}-`) || n.name === name);
+}
+
 // ─── Основная функция ───────────────────────────────────────────────────────
 
 export function parseTopology(response: Response): ParsedTopology {
@@ -77,6 +87,7 @@ export function parseTopology(response: Response): ParsedTopology {
 
     const deployment = findDeployment(response.deployments || [], nodeName);
     const service = findService(response.services || [], nodeName);
+    const ttyd = findTTYD(response.ttyd || [], nodeName);
 
     const dataItem: NodeDataItem = {
       id: nodeName,
@@ -87,7 +98,7 @@ export function parseTopology(response: Response): ParsedTopology {
       serviceExternalIp: service?.externalIp,
       serviceClusterIp: service?.clusterIp,
       serviceHealthy: deployment?.status === 'Ready',
-      shellUrl: service?.shellUrl
+      shellUrl: ttyd?.url
     };
 
     const nodePayload: Node = {

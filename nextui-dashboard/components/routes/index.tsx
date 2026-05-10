@@ -43,6 +43,6 @@ export const RoutesLocation = {
     const query = searchParams.toString();
     return query ? `${url}?${query}` : url;
   },
-  topologyView: (namespace = ':namespace') => `/topology/${namespace}`,
+  topologyView: (username = ':username', attemptNumber = ':attemptNumber') => `/topology/${username}/${attemptNumber}`,
   home: () => '/'
 };

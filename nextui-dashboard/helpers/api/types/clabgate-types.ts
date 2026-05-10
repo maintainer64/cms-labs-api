@@ -24,14 +24,21 @@ export interface QueriesServiceInfo {
   type?: string;
 }
 
+export interface QueriesTTYDInfo {
+  name?: string;
+  url?: string;
+}
+
 export interface UsecasesTopologiesGetInputDTO {
-  namespace?: string;
+  attempt_number?: string;
+  username?: string;
 }
 
 export interface UsecasesTopologiesGetOutputDTO {
   deployments?: QueriesDeploymentInfo[];
   services?: QueriesServiceInfo[];
   topology?: string;
+  ttyd?: QueriesTTYDInfo[];
 }
 
 export interface UsecasesTopologiesGetRequest {
