@@ -104,10 +104,24 @@ const docTemplate = `{
                 }
             }
         },
+        "queries.TTYDInfo": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "usecases.TopologiesGetInputDTO": {
             "type": "object",
             "properties": {
-                "namespace": {
+                "attempt_number": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -129,6 +143,12 @@ const docTemplate = `{
                 },
                 "topology": {
                     "type": "string"
+                },
+                "ttyd": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queries.TTYDInfo"
+                    }
                 }
             }
         },

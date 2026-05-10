@@ -181,7 +181,7 @@ func (k *KubernetesAdminQuery) GetTTYDInfo(ctx context.Context, username string,
 
 		result = append(result, TTYDInfo{
 			Name: svc.Name,
-			Url:  fmt.Sprintf("%s/%s/%s/%s", ClabgateApiTopology, username, attemptNumber, svc.Name),
+			Url:  fmt.Sprintf("%s/%s/%s/%s/", ClabgateApiTopology, username, attemptNumber, svc.Name),
 		})
 	}
 

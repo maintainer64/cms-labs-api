@@ -26,9 +26,18 @@ definitions:
       type:
         type: string
     type: object
+  queries.TTYDInfo:
+    properties:
+      name:
+        type: string
+      url:
+        type: string
+    type: object
   usecases.TopologiesGetInputDTO:
     properties:
-      namespace:
+      attempt_number:
+        type: string
+      username:
         type: string
     type: object
   usecases.TopologiesGetOutputDTO:
@@ -43,6 +52,10 @@ definitions:
         type: array
       topology:
         type: string
+      ttyd:
+        items:
+          $ref: '#/definitions/queries.TTYDInfo'
+        type: array
     type: object
   usecases.TopologiesGetRequest:
     properties:

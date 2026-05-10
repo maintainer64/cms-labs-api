@@ -97,10 +97,24 @@
                 }
             }
         },
+        "queries.TTYDInfo": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "usecases.TopologiesGetInputDTO": {
             "type": "object",
             "properties": {
-                "namespace": {
+                "attempt_number": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -122,6 +136,12 @@
                 },
                 "topology": {
                     "type": "string"
+                },
+                "ttyd": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queries.TTYDInfo"
+                    }
                 }
             }
         },

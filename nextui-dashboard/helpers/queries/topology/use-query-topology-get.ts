@@ -19,7 +19,7 @@ export const useQueryTopologyGet = (params: Params) => {
       retry: 3,
       refetchOnWindowFocus: true,
       refetchInterval: 30000, // 30 seconds
-      enabled: !!params.namespace
+      enabled: !!params.username && !!params.attemptNumber
     })
   );
 };
