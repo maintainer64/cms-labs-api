@@ -12,7 +12,9 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/remotecommand"
 )
 
 type DeploymentInfo struct {
@@ -40,6 +42,7 @@ const ClabgateApiTopology = `/clabgate/api/v1/topology`
 type KubernetesAdminQuery struct {
 	clientset     *kubernetes.Clientset
 	dynamicClient dynamic.Interface
+	config        *rest.Config
 	*zerolog.Logger
 }
 
@@ -62,6 +65,7 @@ func NewKubernetesAdmin(zeroLogConf *logs.ZeroLoggerConf) (*KubernetesAdminQuery
 	return &KubernetesAdminQuery{
 		clientset:     clientset,
 		dynamicClient: dynamicClient,
+		config:        config,
 		Logger:        logs.NewZeroLogger(zeroLogConf),
 	}, nil
 }
@@ -196,4 +200,49 @@ func hasTTYDPort(ports []corev1.ServicePort) bool {
 		}
 	}
 	return false
+}
+
+// RestartPod выполняет exec kill 1 в контейнере пода
+func (k *KubernetesAdminQuery) RestartPod(ctx context.Context, namespace, podName string) error {
+	if namespace == "" || podName == "" {
+		return fmt.Errorf("namespace and podName are required")
+	}
+
+	req := k.clientset.CoreV1().RESTClient().Post().
+		Resource("pods").
+		Name(podName).
+		Namespace(namespace).
+		SubResource("exec").
+		VersionedParams(&corev1.PodExecOptions{
+			Command:   []string{"kill", "1"},
+			Container: podName,
+			Stdin:     false,
+			Stdout:    true,
+			Stderr:    true,
+			TTY:       false,
+		}, scheme.ParameterCodec)
+
+	exec, err := remotecommand.NewSPDYExecutor(k.config, "POST", req.URL())
+	if err != nil {
+		return fmt.Errorf("failed to create executor: %v", err)
+	}
+
+	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
+		Stdin:  nil,
+		Stdout: nil,
+		Stderr: nil,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to execute kill 1: %v", err)
+	}
+
+	return nil
+}
+
+// DeletePod удаляет под
+func (k *KubernetesAdminQuery) DeletePod(ctx context.Context, namespace, podName string) error {
+	if namespace == "" || podName == "" {
+		return fmt.Errorf("namespace and podName are required")
+	}
+	return k.clientset.CoreV1().Pods(namespace).Delete(ctx, podName, metav1.DeleteOptions{})
 }

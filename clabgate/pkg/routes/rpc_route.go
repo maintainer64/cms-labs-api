@@ -10,4 +10,5 @@ import (
 func V1RpcRoute(a *fiber.App) {
 	rpc := jsonrpc.NewJsonRPCServer("/clabgate/api/v1/rpc", a)
 	rpc.Method("topology.get", controllers.TopologyGet)
+	rpc.Method("node.action", controllers.NodeAction)
 }

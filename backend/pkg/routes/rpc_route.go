@@ -14,7 +14,6 @@ func V1RpcRoute(a *fiber.App) {
 	rpc.Method("lti_attempt.list", controllers.LTIAttemptList)
 	rpc.Method("lti_attempt.delete", controllers.LTIAttemptDelete)
 	rpc.Method("lti_attempt.get", controllers.LTIAttemptGet)
-	rpc.Method("lti_attempt.get", controllers.LTIAttemptGet)
 	rpc.Method("lti_attempt.list_external", controllers.LTIAttemptListExternal)
 	rpc.Method("lti_attempt.update_external", controllers.LTIAttemptUpdateExternal)
 	rpc.Method("auth_provider.upsert", controllers.AuthProviderUpsert)

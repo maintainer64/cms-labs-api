@@ -11,11 +11,6 @@ import (
 	"gitlab.com/a10869/api-modules/shared/cms_client"
 )
 
-const (
-	pathOptUNetLab = "/opt/unetlab/labs"
-	pathExternal   = "external"
-)
-
 type LabCreateInputDTO struct {
 	Extra   string `json:"extra"`
 	UserPod int    `json:"user_pod"`
