@@ -207,9 +207,9 @@ func hasTTYDPort(ports []corev1.ServicePort) bool {
 }
 
 // RestartPod выполняет exec kill 1 в контейнере пода
-func (k *KubernetesAdminQuery) RestartPod(ctx context.Context, namespace, podName string) error {
-	if namespace == "" || podName == "" {
-		return fmt.Errorf("namespace and podName are required")
+func (k *KubernetesAdminQuery) RestartPod(ctx context.Context, namespace, podName string, containerName string) error {
+	if namespace == "" || podName == "" || containerName == "" {
+		return fmt.Errorf("namespace and podName and containerName are required")
 	}
 
 	req := k.clientset.CoreV1().RESTClient().Post().
@@ -219,7 +219,7 @@ func (k *KubernetesAdminQuery) RestartPod(ctx context.Context, namespace, podNam
 		SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
 			Command:   []string{"kill", "1"},
-			Container: podName,
+			Container: containerName,
 			Stdin:     false,
 			Stdout:    true,
 			Stderr:    true,

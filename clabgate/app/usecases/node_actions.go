@@ -72,9 +72,14 @@ func (u *NodeActionsUC) Execute(dto NodeActionInputDTO) (NodeActionOutputDTO, er
 		pod := u.GetPodByNode(&deployments, action.Node)
 		switch action.Action {
 		case "restart":
-			if err := u.KubernetesAdminQuery.RestartPod(ctx, namespace, pod); err != nil {
+			if err := u.KubernetesAdminQuery.RestartPod(ctx, namespace, pod, action.Node); err != nil {
 				u.Logger.Error().Err(err).Msg(
-					fmt.Sprintf("failed to restart pod %s with namespace %s", action.Node, namespace),
+					fmt.Sprintf(
+						"failed to restart pod %s, container %s with namespace %s",
+						pod,
+						action.Node,
+						namespace,
+					),
 				)
 			} else {
 				count++
@@ -82,7 +87,7 @@ func (u *NodeActionsUC) Execute(dto NodeActionInputDTO) (NodeActionOutputDTO, er
 		case "wipe":
 			if err := u.KubernetesAdminQuery.DeletePod(ctx, namespace, pod); err != nil {
 				u.Logger.Error().Err(err).Msg(
-					fmt.Sprintf("failed to wipe pod %s with namespace %s", action.Node, namespace),
+					fmt.Sprintf("failed to wipe pod %s with namespace %s", pod, namespace),
 				)
 			} else {
 				count++
