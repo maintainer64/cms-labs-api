@@ -106,4 +106,5 @@ func (u *NodeActionsUC) GetPodByNode(deployments *[]queries.DeploymentInfo, node
 			return deployment.PodNameLast
 		}
 	}
+	return ""
 }
