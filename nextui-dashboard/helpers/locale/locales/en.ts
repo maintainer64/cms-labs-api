@@ -559,21 +559,13 @@ const en = {
   },
   Topology: {
     Menu: {
-      OpenLogs: 'Open logs topology',
-      RestartTopology: 'Restart topology',
-      RestartTopologyTitle: 'Restart topology',
-      RestartTopologyDescription:
-        'The initial settings for the topology are applied, all connections are reset, and the updated system configuration is raised',
-      CopyTokenModal: {
-        Title: 'Copied',
-        Description: 'Access token copied to clipboard'
-      },
-      ConnectToKubectl: 'Connect to kubectl',
-      ConnectToKubectlTitle: 'Manual of connection to system',
-      RemoveTopology: 'Remove topology',
-      RemoveTopologyTitle: 'Remove topology',
-      RemoveTopologyDescription: 'Delete topology and all resources associated with it?',
-      RemoveTopologyDescriptionSuccess: 'Topology success removed'
+      Topology: 'Topology',
+      RestartAllDevicesTitle: 'Reboot all devices',
+      RestartAllDevicesDescription: 'Reboot all devices. The settings saved in the router remain',
+      HardResetAllDevicesTitle: 'Reset topology',
+      HardResetAllDevicesDescription: 'All devices inside the topology will reset to their original state',
+      Success: 'Topology successfully executed commands',
+      Error: 'Topology did not execute commands'
     },
     Connect: {
       Error: 'Internal error',

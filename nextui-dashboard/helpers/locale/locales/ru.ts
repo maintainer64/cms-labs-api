@@ -560,21 +560,13 @@ const ru = {
   },
   Topology: {
     Menu: {
-      OpenLogs: 'Открыть логи топологии',
-      RestartTopology: 'Перезагрузить топологию',
-      RestartTopologyTitle: 'Перезагрузить топологию',
-      RestartTopologyDescription:
-        'Происходит применение исходных настроект для топологии, сбрасываются все подключения, поднимается обновленная конфигурация системы',
-      CopyTokenModal: {
-        Title: 'Скопировано',
-        Description: 'Токен доступа скопирован в буфер обмена'
-      },
-      ConnectToKubectl: 'Подключиться к kubectl',
-      ConnectToKubectlTitle: 'Инструкция для подключения к kubectl',
-      RemoveTopology: 'Удалить топологию',
-      RemoveTopologyTitle: 'Удалить топологию',
-      RemoveTopologyDescription: 'Удалить топологию и все ресурсы связанные с ней?',
-      RemoveTopologyDescriptionSuccess: 'Топология успешно удалена'
+      Topology: 'Топология',
+      RestartAllDevicesTitle: 'Перезагрузка всех устройств',
+      RestartAllDevicesDescription: 'Настройки сохраненные в маршрутизаторе - остаются',
+      HardResetAllDevicesTitle: 'Сбросить топологию',
+      HardResetAllDevicesDescription: 'Все устройства внутри топологии сбросятся до первоначального состояния',
+      Success: 'Топология успешно выполнила команды',
+      Error: 'Топология не выполнила команды'
     },
     Connect: {
       Error: 'Внутренняя ошибка',
