@@ -1,6 +1,7 @@
 package queries
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 
@@ -209,8 +210,10 @@ func hasTTYDPort(ports []corev1.ServicePort) bool {
 // RestartPod выполняет exec kill 1 в контейнере пода
 func (k *KubernetesAdminQuery) RestartPod(ctx context.Context, namespace, podName string, containerName string) error {
 	if namespace == "" || podName == "" || containerName == "" {
-		return fmt.Errorf("namespace and podName and containerName are required")
+		return fmt.Errorf("namespace, podName and containerName are required")
 	}
+
+	var stdout, stderr bytes.Buffer
 
 	req := k.clientset.CoreV1().RESTClient().Post().
 		Resource("pods").
@@ -218,7 +221,7 @@ func (k *KubernetesAdminQuery) RestartPod(ctx context.Context, namespace, podNam
 		Namespace(namespace).
 		SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
-			Command:   []string{"kill", "1"},
+			Command:   []string{"/bin/sh", "-c", "kill 1"},
 			Container: containerName,
 			Stdin:     false,
 			Stdout:    true,
@@ -226,20 +229,16 @@ func (k *KubernetesAdminQuery) RestartPod(ctx context.Context, namespace, podNam
 			TTY:       false,
 		}, scheme.ParameterCodec)
 
-	exec, err := remotecommand.NewSPDYExecutor(k.config, "POST", req.URL())
+	executor, err := remotecommand.NewSPDYExecutor(k.config, "POST", req.URL())
 	if err != nil {
-		return fmt.Errorf("failed to create executor: %v", err)
+		return fmt.Errorf("failed to create executor: %w", err)
 	}
 
-	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
+	_ = executor.StreamWithContext(ctx, remotecommand.StreamOptions{
 		Stdin:  nil,
-		Stdout: nil,
-		Stderr: nil,
+		Stdout: &stdout,
+		Stderr: &stderr,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to execute kill 1: %v", err)
-	}
-
 	return nil
 }
 
