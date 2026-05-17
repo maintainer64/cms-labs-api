@@ -17,7 +17,7 @@ type NodeActionsUC struct {
 }
 
 type NodeActionItem struct {
-	Nodes string `json:"node"`
+	Node string `json:"node"`
 	// enum: wipe,restart
 	Action string `json:"action"`
 }
@@ -65,21 +65,24 @@ func (u *NodeActionsUC) Execute(dto NodeActionInputDTO) (NodeActionOutputDTO, er
 	u.Logger.Info().Msg(fmt.Sprintf("NodeActionsUC: action by attempt: %v", dto.AttemptNumber))
 	namespace := fmt.Sprintf("jup-%s-%s", dto.Username, dto.AttemptNumber)
 
+	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, namespace)
+
 	var count int
 	for _, action := range dto.Actions {
+		pod := u.GetPodByNode(&deployments, action.Node)
 		switch action.Action {
 		case "restart":
-			if err := u.KubernetesAdminQuery.RestartPod(ctx, namespace, action.Nodes); err != nil {
+			if err := u.KubernetesAdminQuery.RestartPod(ctx, namespace, pod); err != nil {
 				u.Logger.Error().Err(err).Msg(
-					fmt.Sprintf("failed to restart pod %s with namespace %s", action.Nodes, namespace),
+					fmt.Sprintf("failed to restart pod %s with namespace %s", action.Node, namespace),
 				)
 			} else {
 				count++
 			}
 		case "wipe":
-			if err := u.KubernetesAdminQuery.DeletePod(ctx, namespace, action.Nodes); err != nil {
+			if err := u.KubernetesAdminQuery.DeletePod(ctx, namespace, pod); err != nil {
 				u.Logger.Error().Err(err).Msg(
-					fmt.Sprintf("failed to wipe pod %s with namespace %s", action.Nodes, namespace),
+					fmt.Sprintf("failed to wipe pod %s with namespace %s", action.Node, namespace),
 				)
 			} else {
 				count++
@@ -92,4 +95,15 @@ func (u *NodeActionsUC) Execute(dto NodeActionInputDTO) (NodeActionOutputDTO, er
 	return NodeActionOutputDTO{
 		Count: count,
 	}, nil
+}
+
+func (u *NodeActionsUC) GetPodByNode(deployments *[]queries.DeploymentInfo, node string) string {
+	if deployments == nil {
+		return ""
+	}
+	for _, deployment := range *deployments {
+		if deployment.Name == node {
+			return deployment.PodNameLast
+		}
+	}
 }

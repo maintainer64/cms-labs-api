@@ -19,6 +19,7 @@ import (
 
 type DeploymentInfo struct {
 	Name          string `json:"name"`
+	PodNameLast   string `json:"-"`
 	Status        string `json:"status"`
 	Restarts      int32  `json:"restarts"`
 	ReadyReplicas int32  `json:"ready_replicas"`
@@ -115,6 +116,7 @@ func (k *KubernetesAdminQuery) GetDeploymentsInfo(ctx context.Context, namespace
 		}
 
 		var restarts int32 = 0
+		var podNameLast string = ""
 		pods, err := k.clientset.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{
 			LabelSelector: metav1.FormatLabelSelector(deploy.Spec.Selector),
 		})
@@ -122,12 +124,14 @@ func (k *KubernetesAdminQuery) GetDeploymentsInfo(ctx context.Context, namespace
 			for _, pod := range pods.Items {
 				for _, cs := range pod.Status.ContainerStatuses {
 					restarts += cs.RestartCount
+					podNameLast = pod.Name
 				}
 			}
 		}
 
 		result = append(result, DeploymentInfo{
 			Name:          deploy.Name,
+			PodNameLast:   podNameLast,
 			Status:        status,
 			Restarts:      restarts,
 			ReadyReplicas: deploy.Status.ReadyReplicas,
