@@ -586,12 +586,17 @@ const en = {
     },
     Terminal: {
       ReadyStatus: 'Ready',
-      NotReadyStatus: 'Not ready',
-      Restarts: 'Restarts',
-      ConnectionError: 'Connection error',
-      TerminalConnected: 'Terminal connected',
-      ConnectionClosed: 'Connection closed',
-      UnknownReason: 'Unknown reason'
+      NotReadyStatus: 'Not ready'
+    },
+    Modal: {
+      Terminal: 'Terminal',
+      TerminalTooltip: 'Open terminal for device access via universal interface',
+      Reboot: 'Reboot',
+      RebootTooltip: 'Reboots frozen device. Saved router settings remain',
+      HardReset: 'Clear',
+      HardResetTooltip: 'Hard reset node to initial state',
+      Success: 'The device successfully executed the command',
+      Error: 'The device did not execute the command'
     }
   }
 };

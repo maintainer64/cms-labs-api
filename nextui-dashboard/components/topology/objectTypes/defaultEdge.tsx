@@ -71,14 +71,17 @@ export const edgeTypeDefault = ({ id, source, target, markerEnd, style, data }: 
   // Позиции лейблов (20% от длины линии с каждого конца)
   const sourceLabelPos = getLabelPosition(sx, sy, tx, ty);
   const targetLabelPos = getReverseLabelPosition(sx, sy, tx, ty);
-
+  // @ts-ignore
+  const sourceData = data?.data?.source;
+  // @ts-ignore
+  const targetData = data?.data?.target;
   return (
     <>
       <path id={id} className='react-flow__edge-path' d={edgePath} markerEnd={markerEnd} style={style} />
       {/* Лейбл для source */}
-      <EdgeLabel x={sourceLabelPos.x} y={sourceLabelPos.y} label={data?.source?.name || data?.source?.label} />
+      <EdgeLabel x={sourceLabelPos.x} y={sourceLabelPos.y} label={sourceData?.name || sourceData?.label} />
       {/* Лейбл для target */}
-      <EdgeLabel x={targetLabelPos.x} y={targetLabelPos.y} label={data?.target?.name || data?.target?.label} />
+      <EdgeLabel x={targetLabelPos.x} y={targetLabelPos.y} label={targetData?.name || targetData?.label} />
     </>
   );
 };

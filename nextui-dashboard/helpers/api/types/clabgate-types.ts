@@ -29,6 +29,41 @@ export interface QueriesTTYDInfo {
   url?: string;
 }
 
+export interface UsecasesNodeActionInputDTO {
+  actions?: UsecasesNodeActionItem[];
+  attempt_number?: string;
+  username?: string;
+}
+
+export interface UsecasesNodeActionItem {
+  /** enum: wipe,restart */
+  action?: string;
+  node?: string;
+}
+
+export interface UsecasesNodeActionOutputDTO {
+  count?: number;
+}
+
+export interface UsecasesNodeActionRequest {
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  /** @default "nodes.action" */
+  method?: string;
+  params?: UsecasesNodeActionInputDTO;
+}
+
+export interface UsecasesNodeActionResponse {
+  error?: any;
+  /** @default "1" */
+  id?: string;
+  /** @default "2.0" */
+  jsonrpc?: string;
+  result?: UsecasesNodeActionOutputDTO;
+}
+
 export interface UsecasesTopologiesGetInputDTO {
   attempt_number?: string;
   username?: string;

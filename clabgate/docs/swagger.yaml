@@ -33,6 +33,56 @@ definitions:
       url:
         type: string
     type: object
+  usecases.NodeActionInputDTO:
+    properties:
+      actions:
+        items:
+          $ref: '#/definitions/usecases.NodeActionItem'
+        type: array
+      attempt_number:
+        type: string
+      username:
+        type: string
+    type: object
+  usecases.NodeActionItem:
+    properties:
+      action:
+        description: 'enum: wipe,restart'
+        type: string
+      node:
+        type: string
+    type: object
+  usecases.NodeActionOutputDTO:
+    properties:
+      count:
+        type: integer
+    type: object
+  usecases.NodeActionRequest:
+    properties:
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      method:
+        default: nodes.action
+        type: string
+      params:
+        $ref: '#/definitions/usecases.NodeActionInputDTO'
+    type: object
+  usecases.NodeActionResponse:
+    properties:
+      error: {}
+      id:
+        default: "1"
+        type: string
+      jsonrpc:
+        default: "2.0"
+        type: string
+      result:
+        $ref: '#/definitions/usecases.NodeActionOutputDTO'
+    type: object
   usecases.TopologiesGetInputDTO:
     properties:
       attempt_number:
@@ -95,6 +145,30 @@ info:
   title: Clabernetes Gate API
   version: "1.0"
 paths:
+  /clabgate/api/v1/rpc/node.action:
+    post:
+      consumes:
+      - application/json
+      description: 'Restart or wipe pods. Roles: [admin, instructor, student]'
+      parameters:
+      - description: node action
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/usecases.NodeActionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecases.NodeActionResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: node action
+      tags:
+      - Node
   /clabgate/api/v1/rpc/topology.get:
     post:
       consumes:

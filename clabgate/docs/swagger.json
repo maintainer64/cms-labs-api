@@ -16,6 +16,45 @@
     },
     "basePath": "/clabgate/api",
     "paths": {
+        "/clabgate/api/v1/rpc/node.action": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Restart or wipe pods. Roles: [admin, instructor, student]",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Node"
+                ],
+                "summary": "node action",
+                "parameters": [
+                    {
+                        "description": "node action",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecases.NodeActionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/usecases.NodeActionResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/clabgate/api/v1/rpc/topology.get": {
             "post": {
                 "security": [
@@ -105,6 +144,80 @@
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "usecases.NodeActionInputDTO": {
+            "type": "object",
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usecases.NodeActionItem"
+                    }
+                },
+                "attempt_number": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.NodeActionItem": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "description": "enum: wipe,restart",
+                    "type": "string"
+                },
+                "node": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecases.NodeActionOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "usecases.NodeActionRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "method": {
+                    "type": "string",
+                    "default": "nodes.action"
+                },
+                "params": {
+                    "$ref": "#/definitions/usecases.NodeActionInputDTO"
+                }
+            }
+        },
+        "usecases.NodeActionResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "id": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "jsonrpc": {
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "result": {
+                    "$ref": "#/definitions/usecases.NodeActionOutputDTO"
                 }
             }
         },

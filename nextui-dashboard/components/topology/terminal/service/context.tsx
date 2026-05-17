@@ -1,5 +1,6 @@
 export interface TerminalClient {
   id: string;
+  label?: string;
   index: number;
   isVisible: boolean;
   isOpacity: boolean;
@@ -7,26 +8,36 @@ export interface TerminalClient {
 }
 
 type TerminalAction =
-  | { type: 'ADD_CLIENT'; payload: { id: string } }
+  | { type: 'ADD_CLIENT'; payload: { id: string; label?: string } }
   | { type: 'REMOVE_CLIENT'; payload: { id: string } }
   | { type: 'TOGGLE_VISIBILITY'; payload: { id: string; onChange?: (visibility?: boolean) => void } }
   | { type: 'TOGGLE_OPACITY'; payload: { id: string } }
-  | { type: 'BRING_TO_FRONT'; payload: { id: string } };
+  | { type: 'BRING_TO_FRONT'; payload: { id: string } }
+  | { type: 'SHOW_NODE_ACTIONS_MODAL'; payload: { id: string; label?: string; x: number; y: number } }
+  | { type: 'HIDE_NODE_ACTIONS_MODAL' };
 
 export type TerminalActionFunc = (action: TerminalAction) => void;
 
 interface TerminalState {
   clients: TerminalClient[];
+  selectedNodeId: string | null;
+  selectedNodeLabel: string | null;
+  selectedNodeX: number;
+  selectedNodeY: number;
 }
 
 export const terminalInitialState: TerminalState = {
-  clients: []
+  clients: [],
+  selectedNodeId: null,
+  selectedNodeLabel: null,
+  selectedNodeX: 0,
+  selectedNodeY: 0
 };
 
 export function terminalReducer(state: TerminalState, action: TerminalAction): TerminalState {
   switch (action.type) {
     case 'ADD_CLIENT': {
-      const { id } = action.payload;
+      const { id, label } = action.payload;
       if (state.clients.some((c) => c.id === id)) return state;
 
       return {
@@ -35,6 +46,7 @@ export function terminalReducer(state: TerminalState, action: TerminalAction): T
           ...state.clients,
           {
             id,
+            label,
             index: state.clients.length,
             isVisible: false,
             isOpacity: false,
@@ -71,40 +83,52 @@ export function terminalReducer(state: TerminalState, action: TerminalAction): T
       const { id } = action.payload;
       const currentClients = [...state.clients];
 
-      // Находим индекс клиента, который нужно вывести на передний план
       const activeIndex = currentClients.findIndex((c) => c.id === id);
       if (activeIndex === -1) return state;
 
-      // Сортируем клиентов по текущему zIndex
       const sortedClients = [...currentClients].sort((a, b) => a.zIndex - b.zIndex);
 
-      // Находим текущий zIndex активного клиента
       const activeZIndex = currentClients[activeIndex].zIndex;
 
-      // Если клиент уже на переднем плане, ничего не делаем
       if (activeZIndex === sortedClients[sortedClients.length - 1]?.zIndex) {
         return state;
       }
 
-      // Перераспределяем zIndex
       let currentZ = 1;
       const updatedClients = sortedClients.map((client) => {
         if (client.id === id) {
-          // Активному клиенту даем максимальный zIndex
           return { ...client, zIndex: sortedClients.length };
         }
-        // Остальным распределяем по порядку
         return { ...client, zIndex: currentZ++ };
       });
 
       return {
         ...state,
         clients: updatedClients.sort((a, b) => {
-          // Восстанавливаем исходный порядок клиентов
           const aIndex = currentClients.findIndex((c) => c.id === a.id);
           const bIndex = currentClients.findIndex((c) => c.id === b.id);
           return aIndex - bIndex;
         })
+      };
+    }
+
+    case 'SHOW_NODE_ACTIONS_MODAL': {
+      return {
+        ...state,
+        selectedNodeId: action.payload.id,
+        selectedNodeLabel: action.payload.label || null,
+        selectedNodeX: action.payload.x,
+        selectedNodeY: action.payload.y
+      };
+    }
+
+    case 'HIDE_NODE_ACTIONS_MODAL': {
+      return {
+        ...state,
+        selectedNodeId: null,
+        selectedNodeLabel: null,
+        selectedNodeX: 0,
+        selectedNodeY: 0
       };
     }
 

@@ -59,5 +59,4 @@ func V1RpcRoute(a *fiber.App) {
 	rpc.Method("target.upsert", controllers.TargetUpsert)
 	rpc.Method("target.user_delete", controllers.TargetUserDelete)
 	rpc.Method("target.user_upsert", controllers.TargetUserUpsert)
-
 }
