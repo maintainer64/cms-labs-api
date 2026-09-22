@@ -97,11 +97,23 @@ TEST_PATH
   "max_score": 10,
   "current_score": 8,
   "result_display": "8 из 10 проверок выполнено",
-  "report": "Краткий Markdown-отчёт"
+  "report": "Краткий Markdown-отчёт",
+  "tasks": [
+    {
+      "title": "Проверка SSH",
+      "description": "Маршрутизатор принимает SSH-подключения",
+      "logs": [
+        {"node": "r1", "namespace": "lab-example", "message": "Соединение установлено"}
+      ],
+      "complete": true
+    }
+  ]
 }
 ```
 
-Reconciler валидирует диапазон оценки, добавляет стабильный `check_id` и последние 64 КиБ логов, передаёт результат через существующий `lti_attempt.update_external`, а CMS синхронизирует его с Moodle через AGS. CMS идемпотентно принимает повтор того же `check_id`; успешная доставка также помечается annotation на Job. Нулевая оценка допустима и отправляется в LMS.
+`tasks` опционален, поэтому старые checker images остаются совместимыми. Новые checker images и отдельные реализации лабораторных находятся в репозитории [`github.com/maintainer64/cms-labs-checker`](https://github.com/maintainer64/cms-labs-checker). `TEST_PATH` выбирает зарегистрированный пакет проверки, а при пустом значении используется basename `LAB_PATH`.
+
+Reconciler валидирует диапазон оценки, добавляет стабильный `check_id` и последние 64 КиБ сырых логов Pod, передаёт результат через существующий `lti_attempt.update_external`, а CMS синхронизирует его с Moodle через AGS. CMS идемпотентно принимает повтор того же `check_id`; успешная доставка также помечается annotation на Job. Нулевая оценка допустима и отправляется в LMS.
 
 ### Конфигурация
 

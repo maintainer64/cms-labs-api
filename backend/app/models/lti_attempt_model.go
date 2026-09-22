@@ -23,10 +23,27 @@ type LTIAttemptResult struct {
 	CurrentScore float64 `json:"current_score"` // Текущий полученный балл
 	// Текстовый результат или фидбек
 	// Называем универсально Comment или Feedback, так как там может быть и текст, и URL
-	ResultDisplay string `json:"result_display"`
-	CheckID       string `json:"check_id,omitempty"`
-	Report        string `json:"report,omitempty"`
-	Logs          string `json:"logs,omitempty"`
+	ResultDisplay string           `json:"result_display"`
+	CheckID       string           `json:"check_id,omitempty"`
+	Report        string           `json:"report,omitempty"`
+	Logs          string           `json:"logs,omitempty"`
+	Tasks         []LTICheckerTask `json:"tasks,omitempty"`
+}
+
+// LTICheckerLog is a structured, student-visible message produced by one
+// laboratory check. Raw process output is stored separately in Logs.
+type LTICheckerLog struct {
+	Node      string `json:"node,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
+	Message   string `json:"message"`
+}
+
+// LTICheckerTask describes one independently reported laboratory check.
+type LTICheckerTask struct {
+	Title       string          `json:"title"`
+	Description string          `json:"description,omitempty"`
+	Logs        []LTICheckerLog `json:"logs,omitempty"`
+	Complete    bool            `json:"complete"`
 }
 
 // LTIAttemptBase struct to describe LTIAttempt object.

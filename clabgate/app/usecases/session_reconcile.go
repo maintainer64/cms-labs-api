@@ -13,12 +13,39 @@ import (
 )
 
 type checkerGrade struct {
-	MaxScore      float64 `json:"max_score"`
-	CurrentScore  float64 `json:"current_score"`
-	ResultDisplay string  `json:"result_display"`
-	Report        string  `json:"report,omitempty"`
-	CheckID       string  `json:"check_id"`
-	Logs          string  `json:"logs,omitempty"`
+	MaxScore      float64       `json:"max_score"`
+	CurrentScore  float64       `json:"current_score"`
+	ResultDisplay string        `json:"result_display"`
+	Report        string        `json:"report,omitempty"`
+	CheckID       string        `json:"check_id"`
+	Logs          string        `json:"logs,omitempty"`
+	Tasks         []checkerTask `json:"tasks,omitempty"`
+}
+
+type checkerTask struct {
+	Title       string       `json:"title"`
+	Description string       `json:"description,omitempty"`
+	Logs        []checkerLog `json:"logs,omitempty"`
+	Complete    bool         `json:"complete"`
+}
+
+type checkerLog struct {
+	Node      string `json:"node,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
+	Message   string `json:"message"`
+}
+
+func decodeCheckerGrade(payload, checkID, logs string) (checkerGrade, error) {
+	grade := checkerGrade{}
+	if err := json.Unmarshal([]byte(payload), &grade); err != nil {
+		return checkerGrade{}, fmt.Errorf("decode checker result: %w", err)
+	}
+	if grade.MaxScore <= 0 || grade.CurrentScore < 0 || grade.CurrentScore > grade.MaxScore || strings.TrimSpace(grade.ResultDisplay) == "" {
+		return checkerGrade{}, fmt.Errorf("invalid checker grade: score=%g/%g result_display=%q", grade.CurrentScore, grade.MaxScore, grade.ResultDisplay)
+	}
+	grade.CheckID = checkID
+	grade.Logs = logs
+	return grade, nil
 }
 
 // Reconcile synchronizes the CMS attempt lifecycle with Kubernetes, which is the
@@ -36,17 +63,11 @@ func (u *SessionsUC) Reconcile(ctx context.Context) (int, error) {
 			return 0, fmt.Errorf("read checker results for %s: %w", session.AttemptID, resultErr)
 		}
 		for _, result := range results {
-			grade := checkerGrade{}
-			if decodeErr := json.Unmarshal([]byte(result.Payload), &grade); decodeErr != nil {
+			grade, decodeErr := decodeCheckerGrade(result.Payload, result.CheckID, result.Logs)
+			if decodeErr != nil {
 				u.Logger.Error().Err(decodeErr).Str("job", result.JobName).Msg("decode checker result")
 				continue
 			}
-			if grade.MaxScore <= 0 || grade.CurrentScore < 0 || grade.CurrentScore > grade.MaxScore || strings.TrimSpace(grade.ResultDisplay) == "" {
-				u.Logger.Error().Str("job", result.JobName).Msg("checker returned an invalid grade")
-				continue
-			}
-			grade.CheckID = result.CheckID
-			grade.Logs = result.Logs
 			count, updateErr := u.CMSClient.UpdateAttempts([]cms_client.UpdateAttemptParams{{
 				AttemptID: result.AttemptID,
 				Status:    "active",

@@ -130,7 +130,7 @@ It checks all production-relevant boundaries:
 - `session.open` exchanges a short-lived grant for a scoped cookie and reaches
   the namespace-local Jupyter Service;
 - `session.check` creates a Job and CMS receives a new `check_id`, score,
-  report and bounded Pod logs.
+  report, structured per-task logs and bounded raw Pod logs.
 
 The successful run on 2026-09-22 returned score `9/10`, report
 `kind end-to-end smoke passed`, and checker Pod logs. Clabernetes Topology

@@ -11,8 +11,9 @@ release; later collaboration work must not weaken its isolation model.
   Clabernetes topology, JupyterLab, checker jobs, status and deletion.
 - `CMS_TASK_URL` is a full GitLab or GitHub project URL, for example
   `https://github.com/group/task-collection`. `labs_path` is a directory inside
-  that project. `test_path` is optional/reserved and is not used to fetch
-  manifests or to decide whether the checker is available.
+  that project. `test_path` is optional, is never fetched or executed by
+  Clabgate, and is forwarded to the trusted checker image as a compile-time
+  registry selector.
 - A CMS attempt stays `pending` while resources are being provisioned. It becomes
   `active` only after Clabgate observes the topology (when present) and Jupyter
   Deployment as ready. Kubernetes is the runtime source of truth.
@@ -83,6 +84,12 @@ Jupyter Pods and checker Pods set `automountServiceAccountToken: false`.
 Jupyter gets only its PVC. Checker is a network/topology check in this release
 and does not mount the RWO notebook PVC.
 
+Laboratory checks live in the separate `github.com/maintainer64/cms-labs-checker`
+repository. Each `labs/<name>` package implements the stable `LabChecker`
+interface and owns its `_test.go` files. The packages are linked into one static
+binary through an explicit registry; Go plugins are deliberately avoided because
+their compiler/dependency ABI requirements make container releases fragile.
+
 ## Checker result contract
 
 The checker writes one JSON object to `/dev/termination-log`:
@@ -92,7 +99,13 @@ The checker writes one JSON object to `/dev/termination-log`:
   "max_score": 10,
   "current_score": 8,
   "result_display": "8/10 checks passed",
-  "report": "Optional Markdown summary"
+  "report": "Optional Markdown summary",
+  "tasks": [{
+    "title": "SSH connectivity",
+    "description": "Router accepts SSH connections",
+    "logs": [{"node": "r1", "message": "connected"}],
+    "complete": true
+  }]
 }
 ```
 
@@ -105,7 +118,8 @@ Kubernetes TTL controller.
 ## Production gates
 
 - Unit tests cover GitLab/GitHub path handling, manifest ordering/allow-list, readiness
-  transitions and workspace grant validation.
+  transitions, workspace grant validation, checker selection and each registered
+  laboratory implementation.
 - `go test ./...`, frontend typecheck/lint/build and Helm rendering pass.
 - RBAC includes only namespaced session resources, Namespace lifecycle and the
   Lease used for leader election.

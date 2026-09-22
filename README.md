@@ -15,6 +15,11 @@
 - `ghcr.io/maintainer64/cms-labs-api/clabgate`;
 - `ghcr.io/maintainer64/cms-labs-api/frontend`.
 
+Проверки лабораторных изолированы в отдельном Go-репозитории
+[`cms-labs-checker`](https://github.com/maintainer64/cms-labs-checker). Он
+публикует единый образ `ghcr.io/maintainer64/cms-labs-checker`, внутри которого
+каждая лабораторная имеет собственный пакет и unit-тесты.
+
 Переиспользуемый Helm chart публикуется при Git tag `vX.Y.Z`:
 
 ```bash
