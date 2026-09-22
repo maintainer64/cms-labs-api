@@ -9,6 +9,22 @@ repo_root=$(CDPATH='' cd -- "$(dirname "$0")/../.." && pwd)
 cookie_jar=$(mktemp "${TMPDIR:-/tmp}/cms-labs-cookie.XXXXXX")
 trap 'rm -f "$cookie_jar"' EXIT HUP INT TERM
 
+fail() {
+  title=$1
+  message=$2
+  printf '::error title=%s::%s\n' "$title" "$message" >&2
+  exit 1
+}
+
+assert_equal() {
+  actual=$1
+  expected=$2
+  title=$3
+  if test "$actual" != "$expected"; then
+    fail "$title" "expected $expected, got $actual"
+  fi
+}
+
 kubectl wait --for=condition=Available deployment/clabgate deployment/front deployment/smoke-mock \
   -n cms-labs-system --context "$context" --timeout=90s >/dev/null
 kubectl wait --for=condition=Available deployment/jupyter \
@@ -21,19 +37,38 @@ desired_replicas=$(kubectl get deployment/clabgate -n cms-labs-system \
   --context "$context" -o jsonpath='{.spec.replicas}')
 available_replicas=$(kubectl get deployment/clabgate -n cms-labs-system \
   --context "$context" -o jsonpath='{.status.availableReplicas}')
-test "$desired_replicas" = 2
-test "$available_replicas" = 2
+assert_equal "$desired_replicas" 2 "Unexpected Clabgate replica count"
+assert_equal "$available_replicas" 2 "Clabgate replicas are not available"
 
-holder=$(kubectl get lease clabgate-session-reconciler -n cms-labs-system \
-  --context "$context" -o jsonpath='{.spec.holderIdentity}')
-test -n "$holder"
+attempt=0
+holder=
+while test -z "$holder"; do
+  holder=$(kubectl get lease clabgate-session-reconciler -n cms-labs-system \
+    --context "$context" -o jsonpath='{.spec.holderIdentity}' 2>/dev/null || true)
+  attempt=$((attempt + 1))
+  if test "$attempt" -ge 30; then
+    fail "Clabgate leader was not elected" "Lease has no holder after 30 seconds"
+  fi
+  test -n "$holder" || sleep 1
+done
 
-state=$(curl --noproxy '*' --fail-with-body --silent --show-error "$base_url/api/state")
-test "$(printf '%s' "$state" | jq -r '.status')" = active
+attempt=0
+while :; do
+  state=$(curl --noproxy '*' --fail-with-body --silent --show-error "$base_url/api/state")
+  attempt_status=$(printf '%s' "$state" | jq -r '.status')
+  if test "$attempt_status" = active; then
+    break
+  fi
+  attempt=$((attempt + 1))
+  if test "$attempt" -ge 30; then
+    fail "CMS attempt did not become active" "last status: $attempt_status"
+  fi
+  sleep 1
+done
 
 unauthorized=$(curl --noproxy '*' --silent --show-error --output /dev/null --write-out '%{http_code}' \
   "$base_url/clabgate/workspace/$session_id/")
-test "$unauthorized" = 401
+assert_equal "$unauthorized" 401 "Unauthenticated workspace request was not rejected"
 
 token=$(cd "$repo_root/clabgate" && \
   GOCACHE="${TMPDIR:-/tmp}/cms-labs-go-cache" go run ./e2e/token -env-file ../backend/.env.test)
@@ -58,8 +93,7 @@ while :; do
   fi
   attempt=$((attempt + 1))
   if test "$attempt" -ge 30; then
-    printf '%s\n' 'checker result was not delivered to CMS within 30 seconds' >&2
-    exit 1
+    fail "Checker result was not delivered" "CMS check_id did not change within 30 seconds"
   fi
   sleep 1
 done
@@ -72,8 +106,7 @@ if ! printf '%s' "$state" | jq -e '
   .result.tasks[0].logs[0].message == "context is available"
 ' >/dev/null; then
   compact_state=$(printf '%s' "$state" | jq -c '{status, result}')
-  printf '::error title=Invalid checker result::Expected structured checker result, got %s\n' "$compact_state" >&2
-  exit 1
+  fail "Invalid checker result" "expected structured checker result, got $compact_state"
 fi
 
 open_response=$(curl --noproxy '*' --fail-with-body --silent --show-error \
@@ -83,13 +116,17 @@ open_response=$(curl --noproxy '*' --fail-with-body --silent --show-error \
 open_url=$(printf '%s' "$open_response" | jq -er '.result.url')
 exchange_status=$(curl --noproxy '*' --silent --show-error --cookie-jar "$cookie_jar" \
   --output /dev/null --write-out '%{http_code}' "$base_url$open_url")
-test "$exchange_status" = 303
+assert_equal "$exchange_status" 303 "Workspace grant exchange did not redirect"
 workspace_cookie=$(awk '$6 == "clabgate_workspace" {print $7}' "$cookie_jar")
-test -n "$workspace_cookie"
+if test -z "$workspace_cookie"; then
+  fail "Workspace cookie is missing" "grant exchange did not set clabgate_workspace"
+fi
 workspace=$(curl --noproxy '*' --fail-with-body --silent --show-error \
   -H "Cookie: clabgate_workspace=$workspace_cookie" \
   "$base_url/clabgate/workspace/$session_id/")
-printf '%s' "$workspace" | grep -q 'workspace ready'
+if ! printf '%s' "$workspace" | grep -q 'workspace ready'; then
+  fail "Workspace response is invalid" "expected workspace ready marker"
+fi
 
 printf 'smoke passed: leader=%s job=%s check_id=%s score=%s\n' \
   "$holder" "$job_name" "$check_id" "$(printf '%s' "$state" | jq -r '.result.result_display')"
