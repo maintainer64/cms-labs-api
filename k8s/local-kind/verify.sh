@@ -64,11 +64,17 @@ while :; do
   sleep 1
 done
 
-test "$(printf '%s' "$state" | jq -r '.result.current_score')" = 9
-test -n "$(printf '%s' "$state" | jq -r '.result.report // ""')"
-test -n "$(printf '%s' "$state" | jq -r '.result.logs // ""')"
-test "$(printf '%s' "$state" | jq -r '.result.tasks[0].complete')" = true
-test "$(printf '%s' "$state" | jq -r '.result.tasks[0].logs[0].message')" = "context is available"
+if ! printf '%s' "$state" | jq -e '
+  .result.current_score == 9 and
+  (.result.report | length > 0) and
+  (.result.logs | length > 0) and
+  .result.tasks[0].complete == true and
+  .result.tasks[0].logs[0].message == "context is available"
+' >/dev/null; then
+  compact_state=$(printf '%s' "$state" | jq -c '{status, result}')
+  printf '::error title=Invalid checker result::Expected structured checker result, got %s\n' "$compact_state" >&2
+  exit 1
+fi
 
 open_response=$(curl --noproxy '*' --fail-with-body --silent --show-error \
   -H "$authorization" -H 'Content-Type: application/json' \
