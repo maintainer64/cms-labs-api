@@ -12,7 +12,7 @@ workflow:
         DOCKER_PATH_BRANCH: pre
         K8S_CONFIG: ${K8S_CONFIG_PRE}
         K8S_NAMESPACE: cms-labs
-    - if: $CI_COMMIT_REF_SLUG == "master"
+    - if: $CI_COMMIT_REF_SLUG == "main"
       variables:
         TAG: prod
         DOCKER_PATH_BRANCH: master

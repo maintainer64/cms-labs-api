@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 
 	"github.com/rs/zerolog"
 	"gorm.io/driver/mysql"

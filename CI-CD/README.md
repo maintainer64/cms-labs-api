@@ -1,180 +1,61 @@
-# Документация CI/CD Pipeline
+# GitHub CI/CD
 
-Этот документ предоставляет обзор конфигурации CI/CD pipeline для проекта. Pipeline предназначен для автоматизации
-процессов тестирования, сборки и развертывания приложения. Он настроен с использованием GitLab CI/CD и включает этапы
-для тестирования, сборки Docker-образов и развертывания в различные среды.
+Актуальный pipeline находится в `.github/workflows`. Старый `.gitlab-ci.yml` сохранён только на переходный период и не является источником истины.
 
-## Содержание
+## Проверки pull request
 
-1. [Обзор Pipeline](#обзор-pipeline)
-2. [Переменные](#переменные)
-3. [Этапы](#этапы)
-4. [Задачи](#задачи)
-5. [Правила Workflow](#правила-workflow)
-6. [Диаграммы](#диаграммы)
-7. [Docker files](#docker-files)
+- `CI / Go lint` — `golangci-lint`, форматирование и синхронизация Go workspace;
+- `CI / Go test` — MySQL 9.1, миграции backend и PNETLab addon, тесты и coverage artifact;
+- `CI / Frontend lint, types and build` — ESLint, TypeScript, Prettier и production build;
+- `CI / Helm validation` — lint всех конфигураций `pre` и `master`;
+- `Kubernetes E2E / Session lifecycle on kind` — одноразовый Kubernetes в Docker, две реплики Clabgate, Clabernetes, Jupyter workspace, checker и обратная отправка оценки в mock CMS;
+- `CodeQL` — анализ Go и JavaScript/TypeScript.
 
-## Обзор Pipeline
+E2E не использует production kubeconfig: кластер `kind` создаётся внутри GitHub-hosted runner и удаляется вместе с runner после job. При ошибке workflow печатает Kubernetes events, describe и логи контейнеров.
 
-Pipeline разделен на несколько этапов:
+## Образы
 
-- **Тестирование**: Запускает проверки безопасности, pre-commit хуки и модульные тесты.
-- **Сборка**: Собирает бинарные файлы приложения и Docker-образы.
-- **Развертывание**: Развертывает приложение в указанной среде.
+Workflow `Container images` проверяет Docker build в pull request и после push публикует в GHCR:
 
-Pipeline запускается на основе событий веток или merge request'ов. Различные среды (например, `stage`, `pre`, `master`)
-имеют специфические конфигурации и цели развертывания.
-
-## Переменные
-
-Pipeline использует несколько переменных для настройки процесса сборки и развертывания:
-
-```yaml
-variables:
-  DOCKER_IMAGE: docker:27.5
-  REGISTRY_PATH: a10869/api-modules
-  GO_BASE_CI_IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/base"
-  DOCS_CI_IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/docs"
-  BACKEND_CI_IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/backend/${DOCKER_PATH_BRANCH}"
-  CLABGATE_CI_IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/clabgate/${DOCKER_PATH_BRANCH}"
-  FRONTEND_CI_IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/frontend/${DOCKER_PATH_BRANCH}"
+```text
+ghcr.io/maintainer64/cms-labs-api/backend
+ghcr.io/maintainer64/cms-labs-api/clabgate
+ghcr.io/maintainer64/cms-labs-api/frontend
 ```
 
-## Этапы
+Для каждой ветки создаётся одноимённый tag (`main`, `pre`, `stage`), для каждого commit — `sha-<short-sha>`, для Git tag `v1.2.3` — `v1.2.3`. Default branch также получает `latest`. Вместе с опубликованными образами BuildKit генерирует provenance и SBOM.
 
-Pipeline состоит из следующих этапов:
+Workflow использует стандартный `GITHUB_TOKEN`; отдельный пароль GHCR не нужен. Если образы должны скачиваться Kubernetes без `imagePullSecret`, GitHub Packages нужно сделать public.
 
-1. **.pre**: Предварительные задачи (если есть).
-2. **test**: Запуск тестов и проверок безопасности.
-3. **build**: Сборка приложения и Docker-образов.
-4. **deploy**: Развертывание приложения в целевой среде.
-5. **.post**: Пост-задачи (если есть).
+## Helm OCI chart
 
-## Задачи
+При push Git tag `vX.Y.Z` workflow `Helm OCI chart` проверяет, упаковывает и публикует `k8s/base-chart` с той же SemVer-версией:
 
-### Этап тестирования
-
-#### `check-security`
-
-- **Описание**: Запускает проверки безопасности с использованием пользовательского скрипта.
-- **Образ**: `$BUILDER_GO_IMAGE`
-- **Скрипт**: `make security`
-
-#### `check-pre-commit`
-
-- **Описание**: Запускает pre-commit хуки.
-- **Образ**: `$BUILDER_GO_IMAGE`
-- **Скрипт**: `make pre_commit`
-
-#### `golang-test`
-
-- **Описание**: Запускает модульные тесты на Go и генерирует отчеты о покрытии.
-- **Образ**: `$BUILDER_GO_IMAGE`
-- **Сервисы**: База данных MySQL для тестирования.
-- **Скрипт**: `make test`
-- **Артефакты**: Отчеты о покрытии и результаты тестов JUnit.
-
-### Этап сборки
-
-#### `core-build`
-
-- **Описание**: Собирает backend приложение.
-- **Образ**: `$BUILDER_GO_IMAGE`
-- **Скрипт**: `make build`
-- **Артефакты**: Собранные бинарные файлы.
-
-#### `core-build-docker`
-
-- **Описание**: Собирает и загружает Docker-образ для backend.
-- **Образ**: `$DOCKER_IMAGE`
-- **Скрипт**: Собирает и загружает Docker-образ в реестр.
-
-#### `frontend-build`
-
-- **Описание**: Собирает frontend приложение.
-- **Образ**: `$BUILDER_GO_IMAGE`
-- **Скрипт**: `yarn build`
-- **Артефакты**: Собранные frontend ассеты.
-
-#### `frontend-build-docker`
-
-- **Описание**: Собирает и загружает Docker-образ для frontend.
-- **Образ**: `$DOCKER_IMAGE`
-- **Скрипт**: Собирает и загружает Docker-образ в реестр.
-
-#### `docs-build`
-
-- **Описание**: Собирает и загружает Docker-образ для документации.
-- **Образ**: `$DOCKER_IMAGE`
-- **Скрипт**: Собирает и загружает Docker-образ в реестр.
-
-#### `pnet-lab-addon-build`
-
-- **Описание**: Собирает пакет дополнения PNet Lab.
-- **Образ**: `$BUILDER_GO_IMAGE`
-- **Скрипт**: Собирает и упаковывает дополнение, затем загружает его в реестр.
-
-### Этап развертывания
-
-#### `core-deploy`
-
-- **Описание**: Развертывает backend приложение.
-- **Образ**: `$DOCKER_IMAGE`
-- **Скрипт**: Подключается к целевому серверу через SSH и запускает `docker-compose up -d`.
-
-#### `frontend-deploy`
-
-- **Описание**: Развертывает frontend приложение.
-- **Образ**: `$DOCKER_IMAGE`
-- **Скрипт**: Подключается к целевому серверу через SSH и запускает `docker-compose up -d`.
-
-#### `docs-deploy`
-
-- **Описание**: Развертывает документацию.
-- **Образ**: `$DOCKER_IMAGE`
-- **Скрипт**: Подключается к целевому серверу через SSH и запускает `docker-compose up -d`.
-
-## Правила Workflow
-
-Pipeline использует правила workflow для определения, какие переменные с префиксами будут запускать одинаковый процесс с
-разными переменными в зависимости от ветки:
-
-```yaml
-workflow:
-  rules:
-    - if: $CI_COMMIT_REF_SLUG == "stage"
-      variables:
-        DOCKER_PATH_BRANCH: stage
-        SENTRY_DEPLOY_ENVIRONMENT: stage
-        SSH_USER: "${STAGE_SSH_USER}"
-        SSH_HOST: "${STAGE_SSH_HOST}"
-        SSH_PORT: "${STAGE_SSH_PORT}"
-        SSH_PRIVATE_KEY: "${STAGE_SSH_PRIVATE_KEY}"
-    - if: $CI_COMMIT_REF_SLUG == "pre"
-      variables:
-        DOCKER_PATH_BRANCH: pre
-        SENTRY_DEPLOY_ENVIRONMENT: pre
-        SSH_USER: "${PRE_SSH_USER}"
-        SSH_HOST: "${PRE_SSH_HOST}"
-        SSH_PORT: "${PRE_SSH_PORT}"
-        SSH_PRIVATE_KEY: "${PRE_SSH_PRIVATE_KEY}"
-    - if: $CI_COMMIT_REF_SLUG == "master"
-      variables:
-        DOCKER_PATH_BRANCH: master
-        SENTRY_DEPLOY_ENVIRONMENT: prod
-        SSH_USER: "${MASTER_SSH_USER}"
-        SSH_HOST: "${MASTER_SSH_HOST}"
-        SSH_PORT: "${MASTER_SSH_PORT}"
-        SSH_PRIVATE_KEY: "${MASTER_SSH_PRIVATE_KEY}"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+```bash
+helm pull oci://ghcr.io/maintainer64/cms-labs-api/charts/universal-chart --version X.Y.Z
+helm upgrade --install core-backend \
+  oci://ghcr.io/maintainer64/cms-labs-api/charts/universal-chart \
+  --version X.Y.Z \
+  --values k8s/values/_common/_common.yaml \
+  --values k8s/values/_common/core-backend-values.yaml \
+  --values k8s/values/master/core-backend-values.yaml
 ```
 
-## Диаграммы
+Для повторной публикации без Git tag workflow можно запустить вручную с SemVer в `chart_version`.
 
-### Схема Pipeline
+## PNETLab Debian package
 
-![](01.jpg)
+`PNETLab addon package` запускается вручную для существующего Git tag — достаточно указать `release_tag`. `pnetlab-inject.zip` хранится в репозитории (`pnetlabaddon/pnetlabaddon/etc/pnetlabaddon/pnetlab-inject.zip`) и попадает внутрь Debian-пакета. Workflow собирает `pnetlabaddon.deb` и прикладывает к GitHub Release оба ассета: `pnetlabaddon.deb` и `pnetlab-inject.zip`.
 
-## Docker files
+Установленный addon обновляется из GitHub Releases:
 
-[Подробнее про docker](docker.md)
+```bash
+./updater.sh                         # latest release
+./updater.sh --package-version v1.2.3
+```
+
+## Обновления зависимостей
+
+Dependabot раз в неделю проверяет GitHub Actions, все Go modules, frontend npm/yarn зависимости и Docker base images. Версии Actions в workflow зафиксированы точными release tags, а обновления приходят отдельными pull request.
+
+Инструкция первичной настройки репозитория, branch protection, GHCR и environments: [GITHUB.md](GITHUB.md).

@@ -1,0 +1,65 @@
+name: PNETLab addon package
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing repository tag (for example v1.2.3)
+        type: string
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pnetlab-addon-${{ inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    name: Build and attach Debian package
+    runs-on: ubuntu-24.04
+    env:
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: "1.24.4"
+          cache-dependency-path: |
+            go.work.sum
+            pnetlabaddon/go.sum
+            shared/go.sum
+      - name: Validate release tag
+        run: |
+          git rev-parse --verify "refs/tags/$RELEASE_TAG"
+          if ! printf '%s' "$RELEASE_TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$'; then
+            echo "release_tag must be v-prefixed SemVer" >&2
+            exit 1
+          fi
+      - name: Check inject asset present
+        run: |
+          test -s pnetlabaddon/pnetlabaddon/etc/pnetlabaddon/pnetlab-inject.zip \
+            || { echo "pnetlab-inject.zip missing, commit it to pnetlabaddon/pnetlabaddon/etc/pnetlabaddon/" >&2; exit 1; }
+      - name: Build Debian package
+        run: |
+          make -C pnetlabaddon build
+          chmod -R 0755 pnetlabaddon/pnetlabaddon
+          dpkg-deb --build pnetlabaddon/pnetlabaddon "$RUNNER_TEMP/pnetlabaddon.deb"
+          dpkg-deb --info "$RUNNER_TEMP/pnetlabaddon.deb"
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: pnetlabaddon-${{ inputs.release_tag }}
+          path: ${{ runner.temp }}/pnetlabaddon.deb
+          if-no-files-found: error
+          retention-days: 30
+      - name: Create or update GitHub Release
+        run: |
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --verify-tag --generate-notes --title "$RELEASE_TAG"
+          fi
+          gh release upload "$RELEASE_TAG" "$RUNNER_TEMP/pnetlabaddon.deb" --clobber
+          gh release upload "$RELEASE_TAG" pnetlabaddon/pnetlabaddon/etc/pnetlabaddon/pnetlab-inject.zip --clobber

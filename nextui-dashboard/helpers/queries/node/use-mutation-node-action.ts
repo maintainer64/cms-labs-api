@@ -19,7 +19,7 @@ export const useMutationNodeAction = (options: TMutationCustomOptions<Response, 
   return useMutation<Response, unknown, Params>({
     // @ts-expect-error: return nullable value
     mutationFn: (params: Params) => {
-      if (!params?.attemptNumber || !params?.username || !params?.actions) return null;
+      if ((!params?.sessionId && (!params?.attemptNumber || !params?.username)) || !params?.actions) return null;
       return transportWithAuth.rpc(ClabgateJsonRpcPath, {
         method: 'node.action',
         params: params

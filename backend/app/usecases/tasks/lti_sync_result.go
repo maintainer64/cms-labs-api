@@ -3,10 +3,10 @@ package tasks
 import (
 	"time"
 
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/lti_connector"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/lti_connector/connector"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector/connector"
 )
 
 type LTISyncResultUC struct {
@@ -47,7 +47,8 @@ func (u *LTISyncResultUC) SyncGradeToLTI(attemptId string) error {
 		return nil
 	}
 	result := attempt.Result.Data()
-	if !(result.CurrentScore > 0 && result.MaxScore > 0 && result.ResultDisplay != "") {
+	// A zero score is still a valid grade and must be delivered to the LMS.
+	if !(result.CurrentScore >= 0 && result.CurrentScore <= result.MaxScore && result.MaxScore > 0 && result.ResultDisplay != "") {
 		u.Logger.Info().Msgf("LTISyncResultUC: syncing grade for attempt_id=%s is empty model", attempt.AttemptID)
 		return nil
 	}

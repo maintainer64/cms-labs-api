@@ -41,6 +41,53 @@ server {
         proxy_set_header X-Forwarded-Proto $forwarded_proto;
     }
 
+    # Internal authorization subrequest for both HTTP and WebSocket workspace traffic.
+    location = /_clabgate_workspace_verify {
+        internal;
+        set $target_host ${CLABGATE_SERVICE};
+        proxy_pass $target_host/clabgate/workspace-auth/verify;
+        proxy_pass_request_body off;
+        proxy_set_header Content-Length "";
+        proxy_set_header X-Original-URI $request_uri;
+        proxy_set_header Cookie $http_cookie;
+    }
+
+    # Exchanges a short-lived grant for a scoped HttpOnly workspace cookie.
+    location /clabgate/workspace-auth/ {
+        set $target_host ${CLABGATE_SERVICE};
+        proxy_pass $target_host;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
+    # Per-attempt JupyterLab. Every request is authorized before nginx resolves
+    # and contacts the namespace-local Service.
+    location ~ ^/clabgate/workspace/([0-9a-f-]+)(/.*)?$ {
+        set $workspace_session $1;
+        set $workspace_target http://jupyter.lab-$workspace_session.svc.cluster.local:8888;
+
+        auth_request /_clabgate_workspace_verify;
+
+        proxy_pass $workspace_target$request_uri;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade           $http_upgrade;
+        proxy_set_header Connection        "upgrade";
+        proxy_connect_timeout               1800s;
+        proxy_send_timeout                  1800s;
+        proxy_read_timeout                  1800s;
+        proxy_buffering                     off;
+        proxy_cache                         off;
+
+        proxy_set_header Host              $host;
+        proxy_set_header X-Scheme          $scheme;
+        proxy_set_header X-Original-URI    $request_uri;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
     # Проксирование /clabgate/api/v1/topology/:username/:attemptNumber/:service
     # → http://:service.jup-:username-:attemptNumber.svc.cluster.local:7681
     location ~ ^/clabgate/api/v1/topology/([^/]+)/([^/]+)/([^/]+)(/.*)? {

@@ -1,0 +1,213 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cms-labs-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: clabgate
+  namespace: cms-labs-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clabgate-smoke-jwt
+  namespace: cms-labs-system
+data:
+  public.pem: |
+    -----BEGIN PUBLIC KEY-----
+    MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA3PlI3Ja4t9PX6koq46Eb
+    G3AnIVbGWm8LH1vSXyNahUv0pd1KBFRZMVSY5nxFtdBQ6XLyd+K5Wn32hIqljwrG
+    PxHUrswH9uDVXbWISh+XfYMHd9Mn6eYFIeSo3MzmnUhNy2FTdvsRsZqfZuI1u4Wd
+    nC/Pvd5Q8l5dMczZ5zJQ6X1IgYxEZxcD93ghTFO8MR4jYYsd2fG+XvYaBHlTLTYh
+    IaHnPne4ZYy6kLJxEtFCWkvAArU7EcVf7kMb8nBUegj23TH4D7gRViMSjsmmWQe0
+    3quqOsbsndcminZWqCK11EL7vnBIXAcOKlJOdulJiVbU+vQnAxfwPeqi8qTYz4Un
+    rVIf9XyJNq8vCscovp/oBtICy7MECPb+sRlWukdOosEhenj1DWlAgFl3XmdElh4U
+    15/UWrVxhrp+G6S3s7z3euoO8Aqh3Kv619OyW/xc+Dyxe5oPb8O42gAgW+0YggG7
+    7fqyUCpy3Jm1htjOurS642mYAnWrkTRHOIRtp0623WTjGHa6y8OkmZ2RlIOVlXdH
+    vxNGUIEX2BAlu/kNrjTetZHILYhBPAZ4AZwEEVMpHQO8RZtEqSSJaiY1bX6FMmpy
+    18GYUqGHFYX1yic3OOVuTUBujaLaAs3hqkHtgrYp3KsCQfGKjEPEO0ldkDjGeAbr
+    Er6AyP/AcV+0hsAFm1rWK8UCAwEAAQ==
+    -----END PUBLIC KEY-----
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clabgate-local-smoke
+rules:
+  - apiGroups: ["clabernetes.containerlab.dev"]
+    resources: ["topologies"]
+    verbs: ["get", "list", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["namespaces", "pods", "pods/exec", "services", "persistentvolumeclaims", "configmaps"]
+    verbs: ["get", "list", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "create", "update", "patch", "delete"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: clabgate-local-smoke
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: clabgate-local-smoke
+subjects:
+  - kind: ServiceAccount
+    name: clabgate
+    namespace: cms-labs-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smoke-mock
+  namespace: cms-labs-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: smoke-mock}
+  template:
+    metadata:
+      labels: {app: smoke-mock}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: mock
+          image: cms-labs/smoke-mock:local
+          imagePullPolicy: Never
+          ports: [{name: http, containerPort: 8080}]
+          readinessProbe:
+            httpGet: {path: /healthz, port: http}
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {cpu: 100m, memory: 64Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smoke-mock
+  namespace: cms-labs-system
+spec:
+  selector: {app: smoke-mock}
+  ports: [{name: http, port: 8080, targetPort: http}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clabgate
+  namespace: cms-labs-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: clabgate}
+  template:
+    metadata:
+      labels: {app: clabgate}
+    spec:
+      serviceAccountName: clabgate
+      containers:
+        - name: clabgate
+          image: cms-labs/clabgate:local
+          imagePullPolicy: Never
+          ports: [{name: http, containerPort: 8080}]
+          env:
+            - {name: STAGE_STATUS, value: prod}
+            - {name: DEBUG, value: "false"}
+            - {name: SERVER_HOST, value: 0.0.0.0}
+            - {name: SERVER_PORT, value: "8080"}
+            - {name: SERVER_READ_TIMEOUT, value: "60"}
+            - {name: CMS_URL, value: "http://smoke-mock.cms-labs-system.svc.cluster.local:8080"}
+            - {name: CMS_LOGIN, value: k8s}
+            - {name: CMS_PASSWORD, value: smoke-secret}
+            - {name: CMS_TASK_URL, value: "http://smoke-mock.cms-labs-system.svc.cluster.local:8080/group/tasks"}
+            - {name: CMS_TASK_BRANCH, value: master}
+            - {name: JUPYTER_IMAGE, value: "cms-labs/jupyter-smoke:local"}
+            - {name: JUPYTER_STORAGE_SIZE, value: 128Mi}
+            - {name: WORKSPACE_AUTH_SECRET, value: local-smoke-secret-local-smoke-secret}
+            - {name: CHECKER_IMAGE, value: "cms-labs/checker-smoke:local"}
+            - {name: SESSION_RECONCILE_INTERVAL_SECONDS, value: "2"}
+            - name: JWT_SECRET_KEY_PUBLIC
+              valueFrom:
+                configMapKeyRef: {name: clabgate-smoke-jwt, key: public.pem}
+            - name: POD_NAME
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
+            - name: POD_NAMESPACE
+              valueFrom: {fieldRef: {fieldPath: metadata.namespace}}
+          startupProbe:
+            httpGet: {path: /clabgate/api/docs/index.html, port: http}
+            failureThreshold: 30
+            periodSeconds: 2
+          readinessProbe:
+            httpGet: {path: /clabgate/api/docs/index.html, port: http}
+            periodSeconds: 2
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clabgate
+  namespace: cms-labs-system
+spec:
+  selector: {app: clabgate}
+  ports: [{name: http, port: 80, targetPort: http}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  namespace: cms-labs-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: front}
+  template:
+    metadata:
+      labels: {app: front}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: front
+          image: cms-labs/front:local
+          imagePullPolicy: Never
+          ports: [{name: http, containerPort: 80}]
+          env:
+            - {name: SYSTEM_DNS, value: "10.96.0.10"}
+            - {name: CMS_CORE_SERVICE, value: "http://smoke-mock.cms-labs-system.svc.cluster.local:8080"}
+            - {name: CLABGATE_SERVICE, value: "http://clabgate.cms-labs-system.svc.cluster.local:80"}
+            - {name: SSL_CONF, value: ""}
+          startupProbe:
+            httpGet: {path: /, port: http}
+            failureThreshold: 30
+            periodSeconds: 2
+          readinessProbe:
+            httpGet: {path: /, port: http}
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            failureThreshold: 6
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {cpu: 200m, memory: 128Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front
+  namespace: cms-labs-system
+spec:
+  type: NodePort
+  selector: {app: front}
+  ports:
+    - {name: http, port: 80, targetPort: http, nodePort: 30080}

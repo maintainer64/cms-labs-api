@@ -1,3 +1,3 @@
-module gitlab.com/a10869/api-modules/nextui-dashboard
+module github.com/maintainer64/cms-labs-api/nextui-dashboard
 
 go 1.24.4

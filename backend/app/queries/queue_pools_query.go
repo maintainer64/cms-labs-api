@@ -6,8 +6,8 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 	gorm "gorm.io/gorm"
 )
 

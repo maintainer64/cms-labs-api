@@ -1,0 +1,64 @@
+name: Helm OCI chart
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      chart_version:
+        description: SemVer chart version without the v prefix
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: helm-chart-${{ github.ref }}-${{ inputs.chart_version }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish Helm OCI chart
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: azure/setup-helm@v5.0.1
+      - id: version
+        name: Resolve chart version
+        env:
+          INPUT_VERSION: ${{ inputs.chart_version }}
+        run: |
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="$INPUT_VERSION"
+          fi
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$'; then
+            echo "chart version must be SemVer, got: $version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Lint and package
+        env:
+          CHART_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          helm lint ./k8s/base-chart
+          mkdir -p "$RUNNER_TEMP/chart"
+          helm package ./k8s/base-chart \
+            --destination "$RUNNER_TEMP/chart" \
+            --version "$CHART_VERSION" \
+            --app-version "$GITHUB_SHA"
+      - name: Login to GHCR
+        env:
+          HELM_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$HELM_PASSWORD" | helm registry login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+      - name: Publish chart
+        run: helm push "$RUNNER_TEMP/chart/universal-chart-${{ steps.version.outputs.version }}.tgz" oci://ghcr.io/${{ github.repository }}/charts
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: universal-chart-${{ steps.version.outputs.version }}
+          path: ${{ runner.temp }}/chart/*.tgz
+          if-no-files-found: error
+          retention-days: 30

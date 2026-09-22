@@ -1,4 +1,4 @@
-FROM docker.io/library/alpine:latest
+FROM docker.io/library/alpine:3.24.2
 
 WORKDIR /app
 # Copy binary and config files from /build to root folder of scratch container.

@@ -1,0 +1,139 @@
+package usecases
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"strconv"
+	"strings"
+
+	"github.com/maintainer64/cms-labs-api/clabgate/app/queries"
+	"github.com/maintainer64/cms-labs-api/clabgate/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
+)
+
+type checkerGrade struct {
+	MaxScore      float64 `json:"max_score"`
+	CurrentScore  float64 `json:"current_score"`
+	ResultDisplay string  `json:"result_display"`
+	Report        string  `json:"report,omitempty"`
+	CheckID       string  `json:"check_id"`
+	Logs          string  `json:"logs,omitempty"`
+}
+
+// Reconcile synchronizes the CMS attempt lifecycle with Kubernetes, which is the
+// source of truth for runtime sessions. It replaces the old JupyterHub idle checker.
+func (u *SessionsUC) Reconcile(ctx context.Context) (int, error) {
+	sessions, err := u.KubernetesAdminQuery.ListSessions(ctx, "", configs.AppConfig.Session.WorkspacePrefix)
+	if err != nil {
+		return 0, fmt.Errorf("list Kubernetes sessions: %w", err)
+	}
+	sessionsByAttempt := make(map[string]queries.SessionRecord, len(sessions))
+	for _, session := range sessions {
+		sessionsByAttempt[session.AttemptID] = session
+		results, resultErr := u.KubernetesAdminQuery.PendingCheckerResults(ctx, session.Namespace)
+		if resultErr != nil {
+			return 0, fmt.Errorf("read checker results for %s: %w", session.AttemptID, resultErr)
+		}
+		for _, result := range results {
+			grade := checkerGrade{}
+			if decodeErr := json.Unmarshal([]byte(result.Payload), &grade); decodeErr != nil {
+				u.Logger.Error().Err(decodeErr).Str("job", result.JobName).Msg("decode checker result")
+				continue
+			}
+			if grade.MaxScore <= 0 || grade.CurrentScore < 0 || grade.CurrentScore > grade.MaxScore || strings.TrimSpace(grade.ResultDisplay) == "" {
+				u.Logger.Error().Str("job", result.JobName).Msg("checker returned an invalid grade")
+				continue
+			}
+			grade.CheckID = result.CheckID
+			grade.Logs = result.Logs
+			count, updateErr := u.CMSClient.UpdateAttempts([]cms_client.UpdateAttemptParams{{
+				AttemptID: result.AttemptID,
+				Status:    "active",
+				Result:    grade,
+			}})
+			if updateErr != nil {
+				return 0, fmt.Errorf("publish checker result for %s: %w", result.AttemptID, updateErr)
+			}
+			if count != 1 {
+				return 0, fmt.Errorf("publish checker result for %s: CMS updated %d attempts", result.AttemptID, count)
+			}
+			if markErr := u.KubernetesAdminQuery.MarkCheckerResultSynced(ctx, result.Namespace, result.JobName); markErr != nil {
+				return 0, fmt.Errorf("mark checker result %s synced: %w", result.JobName, markErr)
+			}
+		}
+	}
+
+	attempts, err := u.CMSClient.ListAttempts(cms_client.ListAttemptsParams{
+		Statuses: []string{"pending", "active", "terminating"},
+		Limit:    5000,
+	})
+	if err != nil {
+		return 0, fmt.Errorf("list CMS attempts: %w", err)
+	}
+
+	updated := 0
+	for _, attempt := range attempts {
+		session, sessionExists := sessionsByAttempt[attempt.AttemptID]
+		switch attempt.Status {
+		case "pending":
+			if !sessionExists || session.Phase == queries.SessionPhasePending || session.Phase == queries.SessionPhaseProvisioning {
+				provisioned, provisionErr := u.ensureAttemptSession(
+					ctx, attempt, strconv.FormatInt(attempt.UserID, 10), attempt.UserName,
+				)
+				if provisionErr != nil {
+					u.Logger.Error().Err(provisionErr).Str("attempt_id", attempt.AttemptID).Msg("provision pending session")
+					continue
+				}
+				session = provisioned
+				sessionExists = true
+				sessionsByAttempt[attempt.AttemptID] = provisioned
+			}
+			if sessionExists && session.Phase == queries.SessionPhaseReady {
+				if phaseErr := u.KubernetesAdminQuery.MarkSessionPhase(ctx, session.Namespace, queries.SessionPhaseReady); phaseErr != nil {
+					return updated, fmt.Errorf("mark session %s ready: %w", attempt.AttemptID, phaseErr)
+				}
+				count, updateErr := u.CMSClient.UpdateAttempts([]cms_client.UpdateAttemptParams{{AttemptID: attempt.AttemptID, Status: "active"}})
+				if updateErr != nil {
+					return updated, fmt.Errorf("activate ready attempt %s: %w", attempt.AttemptID, updateErr)
+				}
+				if count != 1 {
+					return updated, fmt.Errorf("activate ready attempt %s: CMS updated %d attempts", attempt.AttemptID, count)
+				}
+				if phaseErr := u.KubernetesAdminQuery.MarkSessionPhase(ctx, session.Namespace, queries.SessionPhaseActive); phaseErr != nil {
+					return updated, fmt.Errorf("mark session %s active: %w", attempt.AttemptID, phaseErr)
+				}
+				updated++
+			}
+		case "active":
+			if !sessionExists {
+				count, updateErr := u.CMSClient.UpdateAttempts([]cms_client.UpdateAttemptParams{{AttemptID: attempt.AttemptID, Status: "completed"}})
+				if updateErr != nil {
+					return updated, fmt.Errorf("complete missing session %s: %w", attempt.AttemptID, updateErr)
+				}
+				updated += count
+			} else if session.Phase == queries.SessionPhasePending || session.Phase == queries.SessionPhaseProvisioning {
+				if _, provisionErr := u.ensureAttemptSession(ctx, attempt, strconv.FormatInt(attempt.UserID, 10), attempt.UserName); provisionErr != nil {
+					u.Logger.Error().Err(provisionErr).Str("attempt_id", attempt.AttemptID).Msg("repair active session")
+				}
+			} else if phaseErr := u.KubernetesAdminQuery.MarkSessionPhase(ctx, session.Namespace, queries.SessionPhaseActive); phaseErr != nil {
+				return updated, fmt.Errorf("mark session %s active: %w", attempt.AttemptID, phaseErr)
+			}
+		case "terminating":
+			if sessionExists {
+				if deleteErr := u.KubernetesAdminQuery.DeleteSession(ctx, attempt.AttemptID, "", true); deleteErr != nil {
+					u.Logger.Error().Err(deleteErr).Str("attempt_id", attempt.AttemptID).Msg("delete terminating session")
+				}
+				// Namespace deletion is asynchronous. Keep the CMS attempt terminating
+				// until a later list confirms that all namespaced resources are gone.
+				continue
+			}
+			count, updateErr := u.CMSClient.UpdateAttempts([]cms_client.UpdateAttemptParams{{AttemptID: attempt.AttemptID, Status: "completed"}})
+			if updateErr != nil {
+				return updated, fmt.Errorf("complete terminating attempt %s: %w", attempt.AttemptID, updateErr)
+			}
+			updated += count
+		}
+	}
+	return updated, nil
+}

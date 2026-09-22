@@ -1,1 +1,1 @@
-defaultImage: harbor.k8s.cmslabs.ru/svc_cms_labs/api-modules/clabgate/pre
+defaultImage: ghcr.io/maintainer64/cms-labs-api/clabgate

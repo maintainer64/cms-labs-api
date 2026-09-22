@@ -1,15 +1,31 @@
-# CMS Labs Urfu
+# CMS Labs API
 
-[![pipeline status](https://gitlab.com/a10869/api-modules/badges/master/pipeline.svg)](https://gitlab.com/a10869/api-modules/-/commits/master)
+[![CI](https://github.com/maintainer64/cms-labs-api/actions/workflows/ci.yml/badge.svg)](https://github.com/maintainer64/cms-labs-api/actions/workflows/ci.yml)
+[![Kubernetes E2E](https://github.com/maintainer64/cms-labs-api/actions/workflows/e2e.yml/badge.svg)](https://github.com/maintainer64/cms-labs-api/actions/workflows/e2e.yml)
+[![CodeQL](https://github.com/maintainer64/cms-labs-api/actions/workflows/codeql.yml/badge.svg)](https://github.com/maintainer64/cms-labs-api/actions/workflows/codeql.yml)
+[![Container images](https://github.com/maintainer64/cms-labs-api/actions/workflows/images.yml/badge.svg)](https://github.com/maintainer64/cms-labs-api/actions/workflows/images.yml)
+[![Helm OCI chart](https://github.com/maintainer64/cms-labs-api/actions/workflows/helm-chart.yml/badge.svg)](https://github.com/maintainer64/cms-labs-api/actions/workflows/helm-chart.yml)
 
-[![coverage report](https://gitlab.com/a10869/api-modules/badges/master/coverage.svg)](https://gitlab.com/a10869/api-modules/-/commits/master)
+Монорепозиторий CMS Labs: Go backend, Clabgate, PNETLab addon, frontend и Kubernetes-конфигурация.
+Основной адрес проекта: <https://github.com/maintainer64/cms-labs-api>.
 
-[![Latest Release](https://gitlab.com/a10869/api-modules/-/badges/release.svg)](https://gitlab.com/a10869/api-modules/-/releases)
+Контейнеры публикуются в GitHub Container Registry:
 
-## CI-CD:
+- `ghcr.io/maintainer64/cms-labs-api/backend`;
+- `ghcr.io/maintainer64/cms-labs-api/clabgate`;
+- `ghcr.io/maintainer64/cms-labs-api/frontend`.
+
+Переиспользуемый Helm chart публикуется при Git tag `vX.Y.Z`:
+
+```bash
+helm pull oci://ghcr.io/maintainer64/cms-labs-api/charts/universal-chart --version X.Y.Z
+```
+
+## CI/CD
 
 1. [Pipelines](CI-CD/README.md)
-2. [Docker files](CI-CD/docker.md)
+2. [Миграция и настройка GitHub](CI-CD/GITHUB.md)
+3. [Docker files](CI-CD/docker.md)
 
 ## Монорепозиторий для модулей:
 
@@ -18,6 +34,7 @@
 3. [PNET Lab Addon](pnetlabaddon/README.md)
 4. [Go-Lang Shared](shared)
 5. [Gen Model](gen/README.md)
+6. [Clabgate: Kubernetes-сессии без JupyterHub, граф зависимостей и план миграции](clabgate/README.md)
 
 ## Документация методов Swagger
 

@@ -1,8 +1,8 @@
 .PHONY: critic security lint test generate
 
 APP_NAME = shared
-CUR_DIR = $(PWD)
-BUILD_DIR = $(PWD)/build
+CUR_DIR = $(CURDIR)
+BUILD_DIR = $(CURDIR)/build
 
 critic:
 	gocritic check -enableAll ./...

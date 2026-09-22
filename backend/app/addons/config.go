@@ -3,9 +3,9 @@ package addons
 import (
 	"context"
 
-	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/connection"
+	"github.com/maintainer64/cms-labs-api/backend/app/addons/vault"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/connection"
 )
 
 type AddonOperationConfig struct {

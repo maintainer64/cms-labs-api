@@ -1,8 +1,8 @@
 package di
 
 import (
-	"gitlab.com/a10869/api-modules/backend/platform/database"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/maintainer64/cms-labs-api/backend/platform/database"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 type DIContainer struct {

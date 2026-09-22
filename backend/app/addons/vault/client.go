@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/vault/api"
+	"github.com/maintainer64/cms-labs-api/shared/connection"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/shared/connection"
 )
 
 func NewClient(cfg *connection.Vault, logger *zerolog.Logger) *Client {

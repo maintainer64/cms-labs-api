@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/tasks"
 	"github.com/rs/zerolog/log"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/tasks"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
@@ -62,6 +62,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 		return LTIAttemptEditBulkOutputDTO{}, err
 	}
 	attemptIds := make([]string, 0, len(dto.Models))
+	processed := 0
 	for _, attemptDTO := range dto.Models {
 		attempt, err := u.LTIAttemptQueries.GetByAttemptID(attemptDTO.AttemptID)
 		if err != nil {
@@ -74,6 +75,11 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 				attemptDTO.AttemptID,
 				u.xServiceId,
 			))
+			continue
+		}
+		if attemptDTO.Result != nil && attemptDTO.Result.Data().CheckID != "" && attempt.Result != nil &&
+			attempt.Result.Data().CheckID == attemptDTO.Result.Data().CheckID {
+			processed++
 			continue
 		}
 		attempt.SetStatus(attemptDTO.Status)
@@ -91,6 +97,7 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 			return LTIAttemptEditBulkOutputDTO{}, err
 		}
 		attemptIds = append(attemptIds, attemptDTO.AttemptID)
+		processed++
 	}
 	activeAttempts, _ := u.LTIAttemptQueries.List(
 		&queries.LTIAttemptSearchParams{
@@ -124,5 +131,5 @@ func (u *LTIAttemptEditBulkUC) Execute(dto LTIAttemptEditBulkInputDTO) (LTIAttem
 			attemptId,
 		)
 	}
-	return LTIAttemptEditBulkOutputDTO{Count: uint(len(attemptIds))}, err
+	return LTIAttemptEditBulkOutputDTO{Count: uint(processed)}, err
 }

@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/datatypes"
 
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases"
 )
 
 type ltiAttemptFixture struct {
@@ -395,6 +395,38 @@ func TestV1LTIAttemptUpdateExternalBulk(t *testing.T) {
 	assert.Equal(t, input.Models[1].Result.Data().MaxScore, attemptDB2.Result.Data().MaxScore)
 	assert.Equal(t, input.Models[1].Result.Data().CurrentScore, attemptDB2.Result.Data().CurrentScore)
 	assert.Equal(t, input.Models[1].Result.Data().ResultDisplay, attemptDB2.Result.Data().ResultDisplay)
+}
+
+func TestV1LTIAttemptUpdateExternalIsIdempotentByCheckID(t *testing.T) {
+	f := NewTestHTTP()
+	defer f.Close()
+
+	fix := setupLTIAttemptFixture(f)
+	first := datatypes.NewJSONType(models.LTIAttemptResult{
+		MaxScore: 10, CurrentScore: 8, ResultDisplay: "8/10", CheckID: "check-1", Report: "first report",
+	})
+	input := usecases.LTIAttemptEditBulkInputDTO{Models: []usecases.LTIAttemptEditBulkInput{{
+		AttemptID: fix.attempts[1].AttemptID, Status: models.AttemptStatusActive, Result: &first,
+	}}}
+
+	statusCode, _ := f.Rpc(&TestRpcRequest{Method: "lti_attempt.update_external", Params: input, Authorization: fix.authHeader})
+	assert.Equal(t, 200, statusCode)
+
+	replay := datatypes.NewJSONType(models.LTIAttemptResult{
+		MaxScore: 10, CurrentScore: 1, ResultDisplay: "must be ignored", CheckID: "check-1", Report: "replayed report",
+	})
+	input.Models[0].Result = &replay
+	statusCode, body := f.Rpc(&TestRpcRequest{Method: "lti_attempt.update_external", Params: input, Authorization: fix.authHeader})
+	response := usecases.LTIAttemptEditBulkResponse{}
+	_ = json.Unmarshal([]byte(body), &response)
+	assert.Equal(t, 200, statusCode)
+	assert.Equal(t, uint(1), response.Result.Count)
+
+	stored := models.LTIAttempt{}
+	f.DB.Where("attempt_id = ?", fix.attempts[1].AttemptID).First(&stored)
+	assert.Equal(t, "check-1", stored.Result.Data().CheckID)
+	assert.Equal(t, 8.0, stored.Result.Data().CurrentScore)
+	assert.Equal(t, "first report", stored.Result.Data().Report)
 }
 
 func TestV1LTIAttemptUpdateExternalNotOwnedAttempt(t *testing.T) {

@@ -5,9 +5,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 // FiberMiddleware provide Fiber's built-in middlewares.

@@ -1,4 +1,5 @@
 #!/bin/sh
+set -eu
 
 # Список разрешённых переменных (через пробел)
 ALLOWED_VARS="DB_TYPE DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DB_SSL_MODE DB_TABLE_PREFIX"
@@ -16,6 +17,10 @@ load_env_file() {
         var_name=$(echo "$line" | cut -d= -f1)
         # Проверяем, входит ли имя в список разрешённых
         if echo "$ALLOWED_VARS" | grep -qw "$var_name"; then
+          # Явно переданные CI/production переменные имеют приоритет над файлами.
+          if printenv "$var_name" >/dev/null 2>&1; then
+            continue
+          fi
           # Безопасный экспорт: используем export с подстановкой, но без eval
           # Убираем возможные кавычки вокруг значения (опционально)
           value=$(echo "$line" | cut -d= -f2-)
@@ -35,15 +40,19 @@ load_env_file ".env.test"
 load_env_file ".env"
 
 # Указываем директорию для сохранения измененных файлов
-output_dir="processed_migrations"
+output_dir="$(pwd)/processed_migrations"
+cleanup() {
+  rm -rf "$output_dir"
+}
+trap cleanup EXIT HUP INT TERM
 echo "DB_TABLE_PREFIX = $DB_TABLE_PREFIX | DB_NAME = $DB_NAME | DB_USER = $DB_USER | DB_HOST = $DB_HOST | DB_PORT = $DB_PORT"
 
 mkdir -p "$output_dir"
 
 # Функция для замены шаблона в файле
 replace_template() {
-  local input_file="$1"
-  local output_file="$2"
+  input_file="$1"
+  output_file="$2"
   cp "$input_file" "$output_file"
   if [ "$(uname)" = "Darwin" ]; then
       sed -i '' -e "s/{{.DB_TABLE_PREFIX}}/$DB_TABLE_PREFIX/g" "$output_file"
@@ -71,7 +80,7 @@ files_to_process="platform/migrations"
 for item in $files_to_process; do
   if [ -d "$item" ]; then
     find "$item" -type f \( -name '*.sql' -o -name '*.yml' \) | while read -r file; do
-      relative_path="${file#$item/}"
+      relative_path="${file#"$item"/}"
       output_file="$output_dir/$relative_path"
       mkdir -p "$(dirname "$output_file")"
       replace_template "$file" "$output_file"
@@ -99,5 +108,4 @@ elif [ "$command" = 's' ]; then
 else
     echo "⚡️ (Sql-Migrate) Type: <up | d | s> "
 fi
-cd - || exit
-rm -rf "$output_dir"
+cd - >/dev/null || exit

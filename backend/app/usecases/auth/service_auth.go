@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 )
 
 type ServiceAuthorizeUC struct {

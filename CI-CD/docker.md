@@ -45,7 +45,7 @@ services:
   core-backend:
     platform: linux/x86_64
     container_name: core-backend
-    image: registry.gitlab.com/a10869/api-modules/backend/stage:${VERSION}
+    image: ghcr.io/maintainer64/cms-labs-api/backend:${VERSION}
     networks:
       - cms-net
     environment:
@@ -91,7 +91,7 @@ services:
   clabgate:
     platform: linux/x86_64
     container_name: clabgate
-    image: registry.gitlab.com/a10869/api-modules/clabgate/stage:${VERSION}
+    image: ghcr.io/maintainer64/cms-labs-api/clabgate:${VERSION}
     networks:
       - cms-net
     environment:
@@ -102,15 +102,10 @@ services:
       SERVER_PORT: "5001"
       SERVER_READ_TIMEOUT: "60"
 
-      K8S_CONFIG: ""
-      K8S_NAMESPACE: "k8s-user"
-      K8S_KREW_CONFIG: ""
-      # Git settings
-      GITLAB_BASE_URL: "https://gitlab.com"
-      GITLAB_REPO_ID: "71495395"
-      GITLAB_ACCESS_KEY: "access_key"
-      GITLAB_TRIGGER_KEY: "trigger_key"
-      GITLAB_BRANCH: "main"
+      # Task catalog (GitLab or GitHub)
+      CMS_TASK_URL: "https://github.com/example/lab-tasks"
+      CMS_TASK_BRANCH: "main"
+      TASK_REPOSITORY_TOKEN: ""
 
 networks:
   cms-net:
@@ -154,7 +149,7 @@ services:
   core-frontend:
     platform: linux/x86_64
     container_name: core-frontend
-    image: registry.gitlab.com/a10869/api-modules/frontend/stage:${VERSION}
+    image: ghcr.io/maintainer64/cms-labs-api/frontend:${VERSION}
     networks:
       - cms-net
     ports:

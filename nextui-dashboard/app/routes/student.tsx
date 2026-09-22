@@ -6,6 +6,7 @@ import { RoutesLocation } from '@/components/routes';
 import { LTIAttemptsPageCreate } from '@/app/(app)/lti-attempts/page';
 import TopologyPageView from '@/app/(app)/topology/page';
 import { TargetsPage, TargetsPageEdit } from '@/app/(app)/targets/page';
+import SessionPage from '@/app/(app)/session/page';
 
 const RoutesStudent = () => {
   return (
@@ -19,6 +20,8 @@ const RoutesStudent = () => {
       <Route path={RoutesLocation.ltiRedirect()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.ltiRedirectCreate()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.topologyView()} element={<TopologyPageView />} />
+      <Route path={RoutesLocation.session()} element={<SessionPage />} />
+      <Route path={RoutesLocation.sessionTopology()} element={<TopologyPageView />} />
     </Routes>
   );
 };

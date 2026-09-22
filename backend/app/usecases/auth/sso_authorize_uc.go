@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 
 	"github.com/rs/zerolog"
 
 	"github.com/google/uuid"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
 )
 
 type SSOAuthorizeInputDTO struct {

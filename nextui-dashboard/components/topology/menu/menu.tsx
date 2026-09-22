@@ -26,13 +26,14 @@ export default function TopologyMenu() {
     navigate(RoutesLocation.language());
   }, [navigate]);
 
-  const { username, attemptNumber } = useParams();
-  const queryTopology = useQueryTopologyGet({ username, attemptNumber });
+  const { username, attemptNumber, sessionId } = useParams();
+  const queryTopology = useQueryTopologyGet({ username, attemptNumber, sessionId });
 
   const createAction = (action: string) => {
     return {
       username,
       attemptNumber,
+      sessionId,
       actions: queryTopology?.data?.deployments?.map((item) => {
         return {
           action: action,

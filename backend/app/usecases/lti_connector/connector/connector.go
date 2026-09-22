@@ -26,13 +26,13 @@ import (
 
 	json "github.com/goccy/go-json"
 
-	"gitlab.com/a10869/api-modules/shared/http_debug"
+	"github.com/maintainer64/cms-labs-api/shared/http_debug"
 
 	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/jwa"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
-	datastore "gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
+	datastore "github.com/maintainer64/cms-labs-api/backend/app/queries/lti_query"
 )
 
 var (

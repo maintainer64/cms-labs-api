@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
+	"github.com/maintainer64/cms-labs-api/shared/connection"
 	"github.com/rs/zerolog/log"
-	"gitlab.com/a10869/api-modules/shared/connection"
 )
 
 // NewHarborMemberService creates a new Harbor service instance.

@@ -7,14 +7,14 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/a10869/api-modules/shared/guacamole_client"
+	"github.com/maintainer64/cms-labs-api/shared/guacamole_client"
 
 	"github.com/rs/zerolog"
 
 	"github.com/google/uuid"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/models"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/queries"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/models"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
 )
 
 type SSOSecondFactorInputDTO struct {

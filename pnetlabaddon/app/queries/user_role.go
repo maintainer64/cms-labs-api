@@ -1,7 +1,7 @@
 package queries
 
 import (
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/models"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/models"
 	"gorm.io/gorm"
 )
 

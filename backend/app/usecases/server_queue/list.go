@@ -1,8 +1,8 @@
 package server_queue
 
 import (
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
 )
 
 type ServerQueueList struct {

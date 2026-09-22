@@ -3,10 +3,10 @@ package auth
 import (
 	"strings"
 
-	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
 
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 
 	fiber "github.com/gofiber/fiber/v2"
 	jwt "github.com/golang-jwt/jwt/v5"

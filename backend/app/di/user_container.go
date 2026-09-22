@@ -1,8 +1,8 @@
 package di
 
 import (
-	"gitlab.com/a10869/api-modules/backend/app/usecases"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/auth"
 )
 
 func (di *DIContainer) UserEditUC() *usecases.UserEditUC {

@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/maintainer64/cms-labs-api/shared/connection"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/shared/connection"
 
 	"gorm.io/gorm/schema"
 
-	_ "gitlab.com/a10869/api-modules/shared/logs"
+	_ "github.com/maintainer64/cms-labs-api/shared/logs"
 
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/configs"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

@@ -66,4 +66,4 @@
   only:
     - stage
     - pre
-    - master
+    - main

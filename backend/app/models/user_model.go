@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"gitlab.com/a10869/api-modules/backend/app/models/types"
+	"github.com/maintainer64/cms-labs-api/backend/app/models/types"
 )
 
 // UserBase struct to describe User object.

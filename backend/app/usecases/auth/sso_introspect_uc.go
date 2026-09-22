@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
 
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 )
 
 type SSOIntrospectInputDTO struct {

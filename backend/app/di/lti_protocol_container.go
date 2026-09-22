@@ -1,11 +1,11 @@
 package di
 
 import (
-	datastore "gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_launch"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_login"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	datastore "github.com/maintainer64/cms-labs-api/backend/app/queries/lti_query"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/lti_connector"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/lti_launch"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/lti_login"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 func (di *DIContainer) LTIProtocolDatastoreConfig() *lti_connector.LTIConnectorAPI {

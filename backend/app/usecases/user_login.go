@@ -3,13 +3,13 @@ package usecases
 import (
 	"fmt"
 
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries/lti_query"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/auth"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/ldap_client"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/ldap_client"
 )
 
 type UserLoginUC struct {

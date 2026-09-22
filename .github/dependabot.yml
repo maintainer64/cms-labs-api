@@ -1,0 +1,63 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: gomod
+    directory: /
+    schedule: &weekly
+      interval: weekly
+    groups: &go-groups
+      go-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: gomod
+    directory: /backend
+    schedule: *weekly
+    groups: *go-groups
+  - package-ecosystem: gomod
+    directory: /clabgate
+    schedule: *weekly
+    groups: *go-groups
+  - package-ecosystem: gomod
+    directory: /pnetlabaddon
+    schedule: *weekly
+    groups: *go-groups
+  - package-ecosystem: gomod
+    directory: /shared
+    schedule: *weekly
+    groups: *go-groups
+  - package-ecosystem: gomod
+    directory: /nextui-dashboard
+    schedule: *weekly
+    groups: *go-groups
+
+  - package-ecosystem: npm
+    directory: /nextui-dashboard
+    schedule: *weekly
+    groups:
+      frontend:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directory: /backend
+    schedule: *weekly
+  - package-ecosystem: docker
+    directory: /clabgate
+    schedule: *weekly
+  - package-ecosystem: docker
+    directory: /nextui-dashboard
+    schedule: *weekly
+  - package-ecosystem: docker
+    directory: /clabgate/e2e/checker
+    schedule: *weekly
+  - package-ecosystem: docker
+    directory: /clabgate/e2e/jupyter
+    schedule: *weekly
+  - package-ecosystem: docker
+    directory: /clabgate/e2e/mock
+    schedule: *weekly

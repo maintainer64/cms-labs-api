@@ -4,14 +4,14 @@ package main
 import (
 	fiber "github.com/gofiber/fiber/v2"
 	_ "github.com/joho/godotenv/autoload" // load .env file automatically
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
-	_ "gitlab.com/a10869/api-modules/pnetlabaddon/docs" // load API Docs files (Swagger)
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/middleware"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/routes"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/utils"
-	"gitlab.com/a10869/api-modules/shared/logs"
-	"gitlab.com/a10869/api-modules/shared/scheduler"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/di"
+	_ "github.com/maintainer64/cms-labs-api/pnetlabaddon/docs" // load API Docs files (Swagger)
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/pkg/middleware"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/pkg/routes"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/pkg/utils"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
+	"github.com/maintainer64/cms-labs-api/shared/scheduler"
 )
 
 // @title API

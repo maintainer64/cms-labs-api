@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 
-	"gitlab.com/a10869/api-modules/backend/app/models/types"
+	"github.com/maintainer64/cms-labs-api/backend/app/models/types"
 
 	"github.com/rs/zerolog"
 
-	"gitlab.com/a10869/api-modules/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
 	"gorm.io/gorm"
 )
 

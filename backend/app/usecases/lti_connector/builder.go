@@ -1,10 +1,10 @@
 package lti_connector
 
 import (
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	datastore "github.com/maintainer64/cms-labs-api/backend/app/queries/lti_query"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/lti_connector/connector"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	datastore "gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/lti_connector/connector"
 )
 
 // LTIConnectorAPI упрощает взаимодействие с бекендом LTI протокола

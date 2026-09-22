@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"gitlab.com/a10869/api-modules/backend/app/di"
-	"gitlab.com/a10869/api-modules/backend/app/usecases"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/maintainer64/cms-labs-api/backend/app/di"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/auth"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 // ServiceCardUpsert func for creates a new ServiceCard.

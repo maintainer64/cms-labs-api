@@ -1,3 +1,3 @@
-module gitlab.com/a10869/api-modules
+module github.com/maintainer64/cms-labs-api
 
 go 1.24.4

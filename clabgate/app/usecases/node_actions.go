@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/maintainer64/cms-labs-api/clabgate/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/clabgate/app/queries"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
 )
 
 type NodeActionsUC struct {
@@ -26,6 +26,7 @@ type NodeActionInputDTO struct {
 	Actions       []NodeActionItem `json:"actions"`
 	Username      string           `json:"username"`
 	AttemptNumber string           `json:"attempt_number"`
+	SessionID     string           `json:"session_id,omitempty"`
 }
 
 type NodeActionRequest struct {
@@ -58,12 +59,22 @@ func (u *NodeActionsUC) Execute(dto NodeActionInputDTO) (NodeActionOutputDTO, er
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,
-	) && dto.Username != u.user.Username {
+	) && dto.SessionID == "" && dto.Username != u.user.Username {
 		return NodeActionOutputDTO{}, errors.New("user not allow connect topology")
 	}
 	ctx := context.Background()
 	u.Logger.Info().Msg(fmt.Sprintf("NodeActionsUC: action by attempt: %v", dto.AttemptNumber))
 	namespace := fmt.Sprintf("jup-%s-%s", dto.Username, dto.AttemptNumber)
+	if dto.SessionID != "" {
+		session, err := u.KubernetesAdminQuery.GetSession(ctx, dto.SessionID, "")
+		if err != nil {
+			return NodeActionOutputDTO{}, err
+		}
+		if !isOperator(u.user) && session.OwnerID != u.user.Sub {
+			return NodeActionOutputDTO{}, errors.New("session belongs to another user")
+		}
+		namespace = session.Namespace
+	}
 
 	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, namespace)
 

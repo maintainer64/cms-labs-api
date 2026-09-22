@@ -2,7 +2,7 @@ package routes
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/controllers"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/controllers"
 )
 
 // V1TaskRoute func for describe group of task routes.

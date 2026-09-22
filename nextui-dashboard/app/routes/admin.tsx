@@ -18,6 +18,7 @@ import { ServiceCardsPage, ServiceCardsPageEdit } from '@/app/(app)/service-card
 import { RolesListPage, RolesPageEdit } from '@/app/(app)/roles/page';
 import TopologyPageView from '@/app/(app)/topology/page';
 import { TargetsPage, TargetsPageEdit } from '@/app/(app)/targets/page';
+import SessionPage from '@/app/(app)/session/page';
 
 const RoutesAdmin = () => {
   return (
@@ -49,6 +50,8 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.targetsEdit()} element={<TargetsPageEdit />} />
       <Route path={RoutesLocation.targetsCreate()} element={<TargetsPageEdit />} />
       <Route path={RoutesLocation.topologyView()} element={<TopologyPageView />} />
+      <Route path={RoutesLocation.session()} element={<SessionPage />} />
+      <Route path={RoutesLocation.sessionTopology()} element={<TopologyPageView />} />
       <Route path={RoutesLocation.login()} element={<LoginPage />} />
       <Route path={RoutesLocation.language()} element={<LanguagePage />} />
       <Route path={RoutesLocation.home()} element={<HomePage />} />

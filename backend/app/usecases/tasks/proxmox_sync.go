@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/connection"
+	"github.com/maintainer64/cms-labs-api/shared/proxmox_client"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/connection"
-	"gitlab.com/a10869/api-modules/shared/proxmox_client"
 	"gorm.io/datatypes"
 )
 

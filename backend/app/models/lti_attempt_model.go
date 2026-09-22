@@ -24,6 +24,9 @@ type LTIAttemptResult struct {
 	// Текстовый результат или фидбек
 	// Называем универсально Comment или Feedback, так как там может быть и текст, и URL
 	ResultDisplay string `json:"result_display"`
+	CheckID       string `json:"check_id,omitempty"`
+	Report        string `json:"report,omitempty"`
+	Logs          string `json:"logs,omitempty"`
 }
 
 // LTIAttemptBase struct to describe LTIAttempt object.
@@ -72,6 +75,7 @@ type LTIAttemptListItem struct {
 	ServerName     string `json:"server_name"`
 	LTIRoutingName string `json:"lti_routing_name"`
 	LabsPath       string `json:"labs_path"`
+	TestPath       string `json:"test_path"`
 }
 
 // TableName переопределяет название таблицы для LTIAttemptListItem на `lti_attempts`
