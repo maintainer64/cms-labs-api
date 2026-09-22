@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	json "github.com/goccy/go-json"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/usecases"
 )
 
 func TestV1ServiceCardCreate(t *testing.T) {

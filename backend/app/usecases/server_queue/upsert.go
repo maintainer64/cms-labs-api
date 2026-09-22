@@ -1,10 +1,10 @@
 package server_queue
 
 import (
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
 	"github.com/rs/zerolog"
 	funk "github.com/thoas/go-funk"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
 )
 
 type ServerQueueUpsert struct {

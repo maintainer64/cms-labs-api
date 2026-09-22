@@ -1,8 +1,8 @@
 .PHONY: clean critic security lint test build generate run
 
 APP_NAME = clabgate
-CUR_DIR = $(PWD)
-BUILD_DIR = $(PWD)/build
+CUR_DIR = $(CURDIR)
+BUILD_DIR = $(CURDIR)/build
 
 clean:
 	rm -rf ./build
@@ -22,7 +22,7 @@ test:
 
 build: clean
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -a -installsuffix cgo -o "$(BUILD_DIR)/$(APP_NAME)" main.go
-	cp -R $(PWD)/start.sh $(BUILD_DIR)
+	cp -R "$(CURDIR)/start.sh" "$(BUILD_DIR)"
 
 run: generate build
 	$(BUILD_DIR)/$(APP_NAME)

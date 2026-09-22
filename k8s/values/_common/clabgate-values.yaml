@@ -13,24 +13,27 @@ serviceAccount:
       rules:
         - apiGroups: [ "clabernetes.containerlab.dev" ]
           resources: [ "topologies" ]
-          verbs: [ "get", "list" ]
+          verbs: [ "get", "list", "create", "update", "patch", "delete" ]
         - apiGroups: [ "apps" ]
           resources: [ "deployments" ]
-          verbs: [ "get", "list" ]
+          verbs: [ "get", "list", "create", "update", "patch", "delete" ]
         - apiGroups: [ "" ]
-          resources: [ "pods", "pods/exec"]
-          verbs: [ "get", "list", "delete", "create"]
+          resources: [ "namespaces", "pods", "pods/exec", "services", "persistentvolumeclaims", "configmaps" ]
+          verbs: [ "get", "list", "create", "update", "patch", "delete" ]
         - apiGroups: [ "" ]
-          resources: [ "services" ]
-          verbs: [ "get", "list" ]
-        - apiGroups: [ "" ]
-          resources: [ "secrets" ]
-          verbs: [ "get", "list" ]
+          resources: [ "pods/log" ]
+          verbs: [ "get" ]
+        - apiGroups: [ "batch" ]
+          resources: [ "jobs" ]
+          verbs: [ "get", "list", "create", "update", "patch", "delete" ]
+        - apiGroups: [ "coordination.k8s.io" ]
+          resources: [ "leases" ]
+          verbs: [ "get", "list", "watch", "create", "update", "patch" ]
 
 deployments:
   clabgate:
     serviceAccountName: clabgate
-    replicas: 1
+    replicas: 2
     initContainers:
       - name: vault-init
         image: harbor.k8s.cmslabs.ru/svc_cms_labs/images/vault-inject
@@ -41,6 +44,15 @@ deployments:
             fetch_secrets --path=clabgate --output=/var/run/secrets/app --formats=env
     containers:
       - name: clabgate
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
         ports:
           - name: http
             containerPort: 8080

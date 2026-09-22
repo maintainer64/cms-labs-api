@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"gitlab.com/a10869/api-modules/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
 
 	"ariga.io/atlas-provider-gorm/gormschema"
 )

@@ -9,6 +9,7 @@
     "lint": "eslint app components helpers --report-unused-disable-directives --max-warnings 0",
     "types": "tsc --noEmit",
     "format": "prettier --write \"app/**/*.{ts,tsx,js,jsx,json,css}\" \"components/**/*.{ts,tsx,js,jsx,json,css}\" \"helpers/**/*.{ts,tsx,js,jsx,json,css}\"",
+    "format:check": "prettier --check \"app/**/*.{ts,tsx,js,jsx,json,css}\" \"components/**/*.{ts,tsx,js,jsx,json,css}\" \"helpers/**/*.{ts,tsx,js,jsx,json,css}\"",
     "serve": "serve dist",
     "generate": "node helpers/generate.mjs",
     "preview": "vite preview"

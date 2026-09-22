@@ -2,9 +2,9 @@ package di
 
 import (
 	resty "github.com/go-resty/resty/v2"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/pkg/configs"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/guacamole_client"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/guacamole_client"
 )
 
 var (

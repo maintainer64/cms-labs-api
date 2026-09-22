@@ -6,16 +6,16 @@ import (
 	"net/url"
 
 	"github.com/google/uuid"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 
-	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
 
 	json "github.com/goccy/go-json"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries/lti_query"
 	"github.com/ory/go-convenience/mapx"
 	"github.com/rs/zerolog/log"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/backend/app/queries/lti_query"
 )
 
 type LTIAttemptCreateUC struct {
@@ -331,15 +331,20 @@ func (u *LTIAttemptCreateUC) PreparedResponseByAttempt(attempt *models.LTIAttemp
 	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
 	}
-	nextUrl, err := u.SSOUrlGenerator(
-		pnetServer.Url,
-		cms_client.SSOTokenPublicExtraParams{
-			AttemptID: attempt.AttemptID,
-			LabsType:  ltiRoute.LabsType,
-			LabsPath:  ltiRoute.LabsPath,
-			TestPath:  ltiRoute.TestPath,
-		},
-	)
+	var nextUrl string
+	if pnetServer.Type == models.ServerTypeKubernetes {
+		nextUrl, err = url.JoinPath(pnetServer.Url, "/session", attempt.AttemptID)
+	} else {
+		nextUrl, err = u.SSOUrlGenerator(
+			pnetServer.Url,
+			cms_client.SSOTokenPublicExtraParams{
+				AttemptID: attempt.AttemptID,
+				LabsType:  ltiRoute.LabsType,
+				LabsPath:  ltiRoute.LabsPath,
+				TestPath:  ltiRoute.TestPath,
+			},
+		)
+	}
 	if err != nil {
 		return LTIAttemptCreateOutputDTO{}, err
 	}

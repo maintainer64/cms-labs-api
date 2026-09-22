@@ -5,12 +5,12 @@ import (
 	rand "math/rand/v2"
 	"testing"
 
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/queries"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/queries"
 
 	"github.com/google/uuid"
 	"github.com/h2non/gock"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/models"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/models"
 )
 
 func externalSSOMock() (int, string, string) {

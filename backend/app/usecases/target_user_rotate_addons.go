@@ -6,13 +6,13 @@ import (
 	"fmt"
 
 	"github.com/goccy/go-json"
+	"github.com/maintainer64/cms-labs-api/backend/app/addons"
+	"github.com/maintainer64/cms-labs-api/backend/app/addons/vault"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/connection"
+	"github.com/maintainer64/cms-labs-api/shared/k8s_utils"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/addons"
-	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/connection"
-	"gitlab.com/a10869/api-modules/shared/k8s_utils"
 )
 
 // TargetUserRotateAddonsUC – перевыпуск и обновление всех прав для пользователя

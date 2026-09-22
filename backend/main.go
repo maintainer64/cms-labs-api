@@ -6,13 +6,13 @@ import (
 
 	fiber "github.com/gofiber/fiber/v2"
 	_ "github.com/joho/godotenv/autoload" // load .env file automatically
-	"gitlab.com/a10869/api-modules/backend/app/di"
-	_ "gitlab.com/a10869/api-modules/backend/docs" // load API Docs files (Swagger)
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
-	"gitlab.com/a10869/api-modules/backend/pkg/middleware"
-	"gitlab.com/a10869/api-modules/backend/pkg/routes"
-	"gitlab.com/a10869/api-modules/backend/pkg/utils"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/maintainer64/cms-labs-api/backend/app/di"
+	_ "github.com/maintainer64/cms-labs-api/backend/docs" // load API Docs files (Swagger)
+	"github.com/maintainer64/cms-labs-api/backend/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/middleware"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/routes"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/utils"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 // @title API

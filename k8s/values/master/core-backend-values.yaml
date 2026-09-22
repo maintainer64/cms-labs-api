@@ -1,4 +1,4 @@
-defaultImage: harbor.k8s.cmslabs.ru/svc_cms_labs/api-modules/backend/master
+defaultImage: ghcr.io/maintainer64/cms-labs-api/backend
 
 deployments:
   core-backend:

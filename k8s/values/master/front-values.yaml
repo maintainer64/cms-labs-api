@@ -1,4 +1,4 @@
-defaultImage: harbor.k8s.cmslabs.ru/svc_cms_labs/api-modules/frontend/master
+defaultImage: ghcr.io/maintainer64/cms-labs-api/frontend
 
 ingressHostname: auth.k8s.cmslabs.ru
 

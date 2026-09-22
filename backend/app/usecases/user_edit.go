@@ -3,11 +3,11 @@ package usecases
 import (
 	"time"
 
-	"gitlab.com/a10869/api-modules/backend/app/models/types"
+	"github.com/maintainer64/cms-labs-api/backend/app/models/types"
 
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
 	"github.com/ory/go-convenience/stringsx"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
 )
 
 type UserEditUC struct {

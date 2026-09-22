@@ -1,4 +1,4 @@
-FROM docker.io/library/nginx:alpine
+FROM docker.io/library/nginx:1.31.6-alpine3.24
 
 COPY dist /usr/share/nginx/html/
 COPY nginx /etc/nginx/

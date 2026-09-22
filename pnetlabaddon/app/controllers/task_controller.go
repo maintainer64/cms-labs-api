@@ -2,9 +2,9 @@ package controllers
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
-	"gitlab.com/a10869/api-modules/pnetlabaddon/app/di"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/maintainer64/cms-labs-api/pnetlabaddon/app/di"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 // PNETServerPing Пинг в core-backend для синхронизации попыток.

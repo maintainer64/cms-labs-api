@@ -1,0 +1,96 @@
+name: Container images
+
+on:
+  push:
+    branches: [main, stage, pre]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, stage, pre]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+concurrency:
+  group: images-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: "1.24.4"
+  NODE_VERSION: "22"
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    name: Build ${{ matrix.image }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: backend
+            context: backend
+            build: make -C backend build
+            runtime: go
+          - image: clabgate
+            context: clabgate
+            build: make -C clabgate build
+            runtime: go
+          - image: frontend
+            context: nextui-dashboard
+            build: yarn --cwd nextui-dashboard build
+            runtime: node
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        if: matrix.runtime == 'go'
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: |
+            go.sum
+            go.work.sum
+            backend/go.sum
+            clabgate/go.sum
+            shared/go.sum
+      - uses: actions/setup-node@v7.0.0
+        if: matrix.runtime == 'node'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Enable Yarn
+        if: matrix.runtime == 'node'
+        run: corepack enable && corepack prepare yarn@1.22.22 --activate
+      - name: Install frontend dependencies
+        if: matrix.runtime == 'node'
+        run: yarn --cwd nextui-dashboard install --frozen-lockfile
+      - name: Build application artifact
+        run: ${{ matrix.build }}
+      - uses: docker/setup-buildx-action@v4.4.1
+      - uses: docker/login-action@v4.6.0
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v6.2.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.image }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+      - uses: docker/build-push-action@v7.4.0
+        with:
+          context: ${{ matrix.context }}
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+          provenance: ${{ github.event_name != 'pull_request' }}
+          sbom: ${{ github.event_name != 'pull_request' }}

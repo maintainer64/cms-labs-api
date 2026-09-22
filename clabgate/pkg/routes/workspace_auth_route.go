@@ -1,0 +1,45 @@
+package routes
+
+import (
+	"net/http"
+	"strings"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/maintainer64/cms-labs-api/clabgate/app/usecases"
+	"github.com/maintainer64/cms-labs-api/clabgate/pkg/configs"
+)
+
+func WorkspaceAuthRoutes(app *fiber.App) {
+	app.Get("/clabgate/workspace-auth/exchange", workspaceExchange)
+	app.Get("/clabgate/workspace-auth/verify", workspaceVerify)
+}
+
+func workspaceExchange(c *fiber.Ctx) error {
+	config := configs.AppConfig.Session
+	cookie, destination, sessionID, err := usecases.ExchangeWorkspaceGrant(
+		config.WorkspaceSecret,
+		c.Query("grant"),
+		time.Duration(config.WorkspaceCookieTTL)*time.Second,
+	)
+	if err != nil {
+		return c.Status(http.StatusUnauthorized).SendString("invalid or expired workspace grant")
+	}
+	c.Cookie(&fiber.Cookie{
+		Name: usecases.WorkspaceCookieName, Value: cookie,
+		Path:   strings.TrimRight(config.WorkspacePrefix, "/") + "/" + sessionID + "/",
+		MaxAge: int(config.WorkspaceCookieTTL), HTTPOnly: true, Secure: true, SameSite: "Lax",
+	})
+	return c.Redirect(destination, http.StatusSeeOther)
+}
+
+func workspaceVerify(c *fiber.Ctx) error {
+	if err := usecases.VerifyWorkspaceCookie(
+		configs.AppConfig.Session.WorkspaceSecret,
+		c.Cookies(usecases.WorkspaceCookieName),
+		c.Get("X-Original-URI"),
+	); err != nil {
+		return c.Status(http.StatusUnauthorized).SendString("workspace authorization required")
+	}
+	return c.SendStatus(http.StatusNoContent)
+}

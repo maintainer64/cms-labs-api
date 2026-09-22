@@ -1,0 +1,156 @@
+name: CI
+
+on:
+  push:
+    branches: [main, stage, pre]
+  pull_request:
+    branches: [main, stage, pre]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: "1.24.4"
+  NODE_VERSION: "22"
+
+jobs:
+  pre-commit:
+    name: Pre-commit hooks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: go.work.sum
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install hook runtimes
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pre-commit"
+          "$RUNNER_TEMP/pre-commit/bin/pip" install pre-commit==4.6.2
+          echo "$RUNNER_TEMP/pre-commit/bin" >> "$GITHUB_PATH"
+          go install golang.org/x/tools/cmd/goimports@v0.41.0
+          corepack enable
+          corepack prepare yarn@1.22.22 --activate
+          yarn --cwd nextui-dashboard install --frozen-lockfile
+      - run: pre-commit run --all-files --show-diff-on-failure
+
+  go-lint:
+    name: Go lint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: |
+            go.sum
+            go.work.sum
+            backend/go.sum
+            clabgate/go.sum
+            pnetlabaddon/go.sum
+            shared/go.sum
+      - name: Check module workspace
+        run: go work sync && git diff --exit-code -- go.work.sum
+      - uses: golangci/golangci-lint-action@v9.3.0
+        with:
+          version: v2.13.2
+          args: ./backend/... ./shared/... ./pnetlabaddon/... ./clabgate/... --timeout=10m
+      - name: Shellcheck operational scripts
+        run: shellcheck backend/migrate.sh pnetlabaddon/migrate.sh pnetlabaddon/updater.sh k8s/local-kind/verify.sh k8s/local-kind/reset-smoke.sh clabgate/e2e/checker/entrypoint.sh
+
+  go-test:
+    name: Go test
+    runs-on: ubuntu-24.04
+    services:
+      mysql:
+        image: mysql:9.1
+        env:
+          MYSQL_DATABASE: db
+          MYSQL_ROOT_PASSWORD: pnetlab
+          MYSQL_ROOT_HOST: "%"
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root --password=pnetlab"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+      DB_USER: root
+      DB_PASSWORD: pnetlab
+      DB_NAME: db
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: |
+            go.sum
+            go.work.sum
+            backend/go.sum
+            clabgate/go.sum
+            pnetlabaddon/go.sum
+            shared/go.sum
+      - name: Install migration tool
+        run: go install github.com/rubenv/sql-migrate/...@v1.8.1
+      - name: Apply test migrations
+        run: |
+          (cd backend && ./migrate.sh up)
+          (cd pnetlabaddon && ./migrate.sh up)
+      - name: Run tests
+        run: go test -v -covermode=atomic -coverprofile=coverage.out ./backend/... ./shared/... ./pnetlabaddon/... ./clabgate/...
+      - name: Coverage summary
+        run: go tool cover -func=coverage.out
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: go-coverage
+          path: coverage.out
+          if-no-files-found: error
+          retention-days: 14
+
+  frontend:
+    name: Frontend lint, types and build
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: nextui-dashboard
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Enable Yarn
+        run: corepack enable && corepack prepare yarn@1.22.22 --activate
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      - run: yarn types
+      - run: yarn format:check
+      - run: yarn build
+
+  helm:
+    name: Helm validation
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: azure/setup-helm@v5.0.1
+      - name: Lint deployment variants
+        run: |
+          for environment in pre master; do
+            for service in core-backend clabgate front; do
+              helm lint ./k8s/base-chart \
+                --values ./k8s/values/_common/_common.yaml \
+                --values "./k8s/values/_common/${service}-values.yaml" \
+                --values "./k8s/values/${environment}/${service}-values.yaml" \
+                --set-string defaultImageTag=ci
+            done
+          done

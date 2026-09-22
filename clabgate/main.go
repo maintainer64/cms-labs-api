@@ -2,14 +2,24 @@
 package main
 
 import (
+	"context"
+	"os"
+	"time"
+
 	fiber "github.com/gofiber/fiber/v2"
-	_ "github.com/joho/godotenv/autoload"           // load .env file automatically
-	_ "gitlab.com/a10869/api-modules/clabgate/docs" // load API Docs files (Swagger)
-	"gitlab.com/a10869/api-modules/clabgate/pkg/configs"
-	"gitlab.com/a10869/api-modules/clabgate/pkg/middleware"
-	"gitlab.com/a10869/api-modules/clabgate/pkg/routes"
-	"gitlab.com/a10869/api-modules/clabgate/pkg/utils"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	_ "github.com/joho/godotenv/autoload" // load .env file automatically
+	"github.com/maintainer64/cms-labs-api/clabgate/app/di"
+	_ "github.com/maintainer64/cms-labs-api/clabgate/docs" // load API Docs files (Swagger)
+	"github.com/maintainer64/cms-labs-api/clabgate/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/clabgate/pkg/middleware"
+	"github.com/maintainer64/cms-labs-api/clabgate/pkg/routes"
+	"github.com/maintainer64/cms-labs-api/clabgate/pkg/utils"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/leaderelection"
+	"k8s.io/client-go/tools/leaderelection/resourcelock"
 )
 
 // @title Clabernetes Gate API
@@ -35,11 +45,98 @@ func main() {
 	// Middlewares.
 	middleware.FiberMiddleware(app) // Register Fiber's middleware for app.
 	routes.FiberRoutes(app)         // Register Fiber's routes for app.
+	startSessionReconciler(context.Background())
 
 	// Start server (with or without graceful shutdown).
 	if configs.AppConfig.Server.Layer == "dev" {
 		utils.StartServer(app)
 	} else {
 		utils.StartServerWithGracefulShutdown(app)
+	}
+}
+
+func startSessionReconciler(ctx context.Context) {
+	config := configs.AppConfig
+	if config.Session.ReconcileSeconds <= 0 || config.CMS.BaseURL == "" || config.CMS.ClientID == "" || config.CMS.Token == "" {
+		return
+	}
+	go func() {
+		loggerConf := (&logs.ZeroLoggerConf{}).SetName("tasks.SessionReconciler")
+		logger := logs.NewZeroLogger(loggerConf)
+		clusterConfig, err := rest.InClusterConfig()
+		if err != nil {
+			logger.Error().Err(err).Msg("initialize reconciler leader election")
+			return
+		}
+		clientset, err := kubernetes.NewForConfig(clusterConfig)
+		if err != nil {
+			logger.Error().Err(err).Msg("initialize leader election client")
+			return
+		}
+		identity := os.Getenv("POD_NAME")
+		if identity == "" {
+			identity, _ = os.Hostname()
+		}
+		namespace := os.Getenv("POD_NAMESPACE")
+		if namespace == "" {
+			namespace = "default"
+		}
+		lock := &resourcelock.LeaseLock{
+			LeaseMeta:  metav1.ObjectMeta{Name: "clabgate-session-reconciler", Namespace: namespace},
+			Client:     clientset.CoordinationV1(),
+			LockConfig: resourcelock.ResourceLockConfig{Identity: identity},
+		}
+		leaderelection.RunOrDie(ctx, leaderelection.LeaderElectionConfig{
+			Lock: lock, LeaseDuration: 30 * time.Second, RenewDeadline: 20 * time.Second, RetryPeriod: 5 * time.Second,
+			ReleaseOnCancel: true,
+			Callbacks: leaderelection.LeaderCallbacks{
+				OnStartedLeading: func(leaderCtx context.Context) { runSessionReconciler(leaderCtx, loggerConf) },
+				OnStoppedLeading: func() { logger.Warn().Msg("session reconciler leadership lost") },
+				OnNewLeader: func(current string) {
+					if current != identity {
+						logger.Info().Str("leader", current).Msg("session reconciler leader elected")
+					}
+				},
+			},
+		})
+	}()
+}
+
+func runSessionReconciler(ctx context.Context, loggerConf *logs.ZeroLoggerConf) {
+	logger := logs.NewZeroLogger(loggerConf)
+	interval := time.Duration(configs.AppConfig.Session.ReconcileSeconds) * time.Second
+	container, err := di.NewDIContainer(loggerConf)
+	if err != nil {
+		logger.Error().Err(err).Msg("initialize session reconciler")
+		return
+	}
+	defer container.Close()
+	uc, err := container.SessionsUC()
+	if err != nil {
+		logger.Error().Err(err).Msg("initialize session reconciler clients")
+		return
+	}
+
+	reconcile := func() {
+		count, reconcileErr := uc.Reconcile(ctx)
+		if reconcileErr != nil {
+			logger.Error().Err(reconcileErr).Msg("reconcile sessions")
+			return
+		}
+		if count > 0 {
+			logger.Info().Int("updated_attempts", count).Msg("sessions reconciled")
+		}
+	}
+
+	reconcile()
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			reconcile()
+		}
 	}
 }

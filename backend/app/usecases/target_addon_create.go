@@ -5,12 +5,12 @@ import (
 	"errors"
 
 	"github.com/goccy/go-json"
-	"gitlab.com/a10869/api-modules/backend/app/addons"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/models/types"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/backend/app/addons"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/models/types"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 )
 
 // TargetAddonCreateUC – подключение дополнения к цели

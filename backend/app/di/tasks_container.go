@@ -1,9 +1,9 @@
 package di
 
 import (
-	"gitlab.com/a10869/api-modules/backend/app/usecases/tasks"
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/tasks"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 func (di *DIContainer) TaskStartup() *tasks.StartupFiberUC {

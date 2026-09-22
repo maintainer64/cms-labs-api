@@ -2,7 +2,7 @@ package routes
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
-	"gitlab.com/a10869/api-modules/backend/app/controllers"
+	"github.com/maintainer64/cms-labs-api/backend/app/controllers"
 )
 
 // V1SSORoute func for describe group of openid protocol auth.

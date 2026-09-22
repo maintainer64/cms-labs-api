@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/google/uuid"
-	"gitlab.com/a10869/api-modules/backend/app/usecases"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases"
 
-	"gitlab.com/a10869/api-modules/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
 )
 
 func TestV1ServerRouteGet(t *testing.T) {

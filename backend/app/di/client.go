@@ -2,9 +2,9 @@ package di
 
 import (
 	resty "github.com/go-resty/resty/v2"
-	"gitlab.com/a10869/api-modules/backend/app/addons/vault"
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
-	"gitlab.com/a10869/api-modules/shared/logs"
+	"github.com/maintainer64/cms-labs-api/backend/app/addons/vault"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
 var (

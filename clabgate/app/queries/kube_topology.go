@@ -5,8 +5,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/maintainer64/cms-labs-api/shared/logs"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/shared/logs"
 	"gopkg.in/yaml.v3"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -42,10 +42,24 @@ type TTYDInfo struct {
 const ClabgateApiTopology = `/clabgate/api/v1/topology`
 
 type KubernetesAdminQuery struct {
-	clientset     *kubernetes.Clientset
+	clientset     kubernetes.Interface
 	dynamicClient dynamic.Interface
 	config        *rest.Config
 	*zerolog.Logger
+}
+
+func NewKubernetesAdminWithClients(
+	clientset kubernetes.Interface,
+	dynamicClient dynamic.Interface,
+	config *rest.Config,
+	logger *zerolog.Logger,
+) *KubernetesAdminQuery {
+	return &KubernetesAdminQuery{
+		clientset:     clientset,
+		dynamicClient: dynamicClient,
+		config:        config,
+		Logger:        logger,
+	}
 }
 
 // NewKubernetesAdmin создает клиент Kubernetes из in-cluster serviceaccount

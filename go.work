@@ -3,8 +3,8 @@ go 1.24.4
 use (
 	.
 	./backend
-	./shared
-	./pnetlabaddon
 	./clabgate
 	./nextui-dashboard
+	./pnetlabaddon
+	./shared
 )

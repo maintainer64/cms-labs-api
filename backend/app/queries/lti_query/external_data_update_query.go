@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"gitlab.com/a10869/api-modules/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
 
 	json "github.com/goccy/go-json"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/queries"
 	"github.com/ory/go-convenience/mapx"
 	"github.com/ory/go-convenience/stringsx"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/queries"
 )
 
 type ExternalDataUpdateQuery struct {

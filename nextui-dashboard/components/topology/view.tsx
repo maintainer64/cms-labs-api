@@ -49,16 +49,16 @@ export const TopologyFlowVisualization = ({ dispatch }: TopologyFlowVisualizatio
       Topology: { Connect }
     }
   } = useLanguageBrowser();
-  const { username, attemptNumber } = useParams();
+  const { username, attemptNumber, sessionId } = useParams();
   const ref = useRef(null);
-  const queryTopology = useQueryTopologyGet({ username, attemptNumber });
+  const queryTopology = useQueryTopologyGet({ username, attemptNumber, sessionId });
   useEffect(() => {
     // @ts-ignore
-    window.document.title = `${username}-${attemptNumber}`;
+    window.document.title = sessionId ? `Lab ${sessionId}` : `${username}-${attemptNumber}`;
     return () => {
       window.document.title = 'CMS LABS';
     };
-  }, []);
+  }, [attemptNumber, sessionId, username]);
   if (queryTopology.isLoading) return <AuthLoadingWrapper />;
   if (queryTopology.error || queryTopology.data === undefined) {
     // @ts-ignore

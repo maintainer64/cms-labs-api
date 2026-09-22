@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/contrib/fiberzerolog"
 	fiber "github.com/gofiber/fiber/v2"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 )
 
 func NewFiberZerologLogger() fiber.Handler {

@@ -12,8 +12,12 @@ type ListAttemptsModel struct {
 	AttemptNumber  int    `json:"id"`
 	AttemptID      string `json:"attempt_id"`
 	UserID         int64  `json:"user_id"`
+	UserName       string `json:"user_name"`
 	Status         string `json:"status"`
 	ServerClientID string `json:"server_client_id"`
+	RoutingName    string `json:"lti_routing_name"`
+	LabsPath       string `json:"labs_path"`
+	TestPath       string `json:"test_path"`
 	Result         any    `json:"result,omitempty"`
 }
 

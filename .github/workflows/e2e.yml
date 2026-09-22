@@ -1,0 +1,94 @@
+name: Kubernetes E2E
+
+on:
+  push:
+    branches: [main, stage, pre]
+  pull_request:
+    branches: [main, stage, pre]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: "1.24.4"
+  NODE_VERSION: "22"
+
+jobs:
+  kind:
+    name: Session lifecycle on kind
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: |
+            go.sum
+            go.work.sum
+            clabgate/go.sum
+            shared/go.sum
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Enable Yarn
+        run: corepack enable && corepack prepare yarn@1.22.22 --activate
+      - run: yarn --cwd nextui-dashboard install --frozen-lockfile
+      - uses: azure/setup-helm@v5.0.1
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.13.0
+        with:
+          version: v0.33.0
+          kubectl_version: v1.33.12
+          cluster_name: cms-labs-local
+          config: k8s/local-kind/kind.yaml
+          node_image: kindest/node:v1.33.12@sha256:3f5c8443c620245e4d355cfe09e96a91ead32ceaa569d3f1ca9edf0cb2fe2ff4
+          wait: 120s
+      - name: Install Clabernetes
+        run: |
+          helm upgrade --install clabernetes \
+            oci://ghcr.io/srl-labs/clabernetes/clabernetes \
+            --version 0.6.0 \
+            --namespace c9s \
+            --create-namespace \
+            --kube-context kind-cms-labs-local
+          kubectl wait --for=condition=Available deployment \
+            --all -n c9s --context kind-cms-labs-local --timeout=5m
+      - name: Build smoke binaries
+        run: |
+          make -C clabgate build
+          mkdir -p clabgate/e2e/mock/build clabgate/e2e/jupyter/build
+          (cd clabgate/e2e/mock && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/smoke-mock .)
+          (cd clabgate/e2e/jupyter && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/jupyter-smoke .)
+          yarn --cwd nextui-dashboard build
+      - name: Build and load smoke images
+        run: |
+          docker build --platform linux/amd64 -t cms-labs/clabgate:local clabgate
+          docker build --platform linux/amd64 -t cms-labs/smoke-mock:local clabgate/e2e/mock
+          docker build --platform linux/amd64 -t cms-labs/jupyter-smoke:local clabgate/e2e/jupyter
+          docker build --platform linux/amd64 -t cms-labs/checker-smoke:local clabgate/e2e/checker
+          docker build --platform linux/amd64 -t cms-labs/front:local nextui-dashboard
+          kind load docker-image --name cms-labs-local \
+            cms-labs/clabgate:local \
+            cms-labs/smoke-mock:local \
+            cms-labs/jupyter-smoke:local \
+            cms-labs/checker-smoke:local \
+            cms-labs/front:local
+      - name: Deploy smoke environment
+        run: kubectl apply --context kind-cms-labs-local -f k8s/local-kind/smoke.yaml
+      - name: Verify complete session lifecycle
+        run: ./k8s/local-kind/verify.sh
+      - name: Kubernetes diagnostics
+        if: failure()
+        run: |
+          kubectl get nodes -o wide --context kind-cms-labs-local || true
+          kubectl get all,events,topology,lease -A --context kind-cms-labs-local || true
+          kubectl describe pods -A --context kind-cms-labs-local || true
+          for pod in $(kubectl get pods -A --context kind-cms-labs-local -o jsonpath='{range .items[*]}{.metadata.namespace}{"/"}{.metadata.name}{"\n"}{end}'); do
+            kubectl logs --all-containers --prefix --tail=300 -n "${pod%%/*}" "${pod#*/}" --context kind-cms-labs-local || true
+          done

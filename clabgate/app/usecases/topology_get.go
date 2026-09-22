@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/maintainer64/cms-labs-api/clabgate/app/queries"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
+	"github.com/maintainer64/cms-labs-api/shared/jsonrpc"
 	"github.com/rs/zerolog"
-	"gitlab.com/a10869/api-modules/clabgate/app/queries"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
-	"gitlab.com/a10869/api-modules/shared/jsonrpc"
 	"gopkg.in/yaml.v3"
 )
 
@@ -21,6 +21,7 @@ type TopologiesGetUC struct {
 type TopologiesGetInputDTO struct {
 	Username      string `json:"username"`
 	AttemptNumber string `json:"attempt_number"`
+	SessionID     string `json:"session_id,omitempty"`
 }
 
 type TopologiesGetRequest struct {
@@ -56,12 +57,22 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 	if !cms_client.SSOHasIntersection(
 		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
 		u.user.Roles,
-	) && dto.Username != u.user.Username {
+	) && dto.SessionID == "" && dto.Username != u.user.Username {
 		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("user_not_allow_topology", "user not allow connect topology")
 	}
 	ctx := context.Background()
 	u.Logger.Info().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML by attempt: %v", dto.AttemptNumber))
 	namespace := fmt.Sprintf("jup-%s-%s", dto.Username, dto.AttemptNumber)
+	if dto.SessionID != "" {
+		session, err := u.KubernetesAdminQuery.GetSession(ctx, dto.SessionID, "")
+		if err != nil {
+			return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("session_not_found", err.Error())
+		}
+		if !isOperator(u.user) && session.OwnerID != u.user.Sub {
+			return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("session_forbidden", "session belongs to another user")
+		}
+		namespace = session.Namespace
+	}
 	yamlContent, err := u.KubernetesAdminQuery.GetTopologyYAML(ctx, namespace)
 
 	var containerlabContent string
@@ -84,7 +95,10 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 
 	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, namespace)
 	services, _ := u.KubernetesAdminQuery.GetServicesInfo(ctx, namespace)
-	ttyd, _ := u.KubernetesAdminQuery.GetTTYDInfo(ctx, dto.Username, dto.AttemptNumber)
+	var ttyd []queries.TTYDInfo
+	if dto.SessionID == "" {
+		ttyd, _ = u.KubernetesAdminQuery.GetTTYDInfo(ctx, dto.Username, dto.AttemptNumber)
+	}
 
 	return TopologiesGetOutputDTO{
 		Topology:    containerlabContent,

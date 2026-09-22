@@ -7,10 +7,10 @@ import (
 
 	json "github.com/goccy/go-json"
 	"github.com/google/uuid"
+	"github.com/maintainer64/cms-labs-api/backend/app/models"
+	"github.com/maintainer64/cms-labs-api/backend/app/usecases/auth"
+	"github.com/maintainer64/cms-labs-api/shared/cms_client"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/a10869/api-modules/backend/app/models"
-	"gitlab.com/a10869/api-modules/backend/app/usecases/auth"
-	"gitlab.com/a10869/api-modules/shared/cms_client"
 )
 
 func TestSSOAuthorize(t *testing.T) {

@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/maintainer64/cms-labs-api/shared/connection"
 	"github.com/rs/zerolog/log"
-	"gitlab.com/a10869/api-modules/shared/connection"
 )
 
 type AppConfigModel struct {

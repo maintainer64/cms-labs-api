@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"math/big"
 
-	"gitlab.com/a10869/api-modules/backend/pkg/configs"
+	"github.com/maintainer64/cms-labs-api/backend/pkg/configs"
 )
 
 type SSOJWKSOutputDTO struct {

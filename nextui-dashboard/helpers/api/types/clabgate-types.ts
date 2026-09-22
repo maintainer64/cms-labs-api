@@ -32,6 +32,7 @@ export interface QueriesTTYDInfo {
 export interface UsecasesNodeActionInputDTO {
   actions?: UsecasesNodeActionItem[];
   attempt_number?: string;
+  session_id?: string;
   username?: string;
 }
 
@@ -66,6 +67,7 @@ export interface UsecasesNodeActionResponse {
 
 export interface UsecasesTopologiesGetInputDTO {
   attempt_number?: string;
+  session_id?: string;
   username?: string;
 }
 
@@ -93,4 +95,67 @@ export interface UsecasesTopologiesGetResponse {
   /** @default "2.0" */
   jsonrpc?: string;
   result?: UsecasesTopologiesGetOutputDTO;
+}
+
+export type QueriesSessionPhase = 'pending' | 'provisioning' | 'ready' | 'degraded' | 'failed' | 'stopping';
+
+export interface QueriesSessionRecord {
+  attempt_id?: string;
+  checker_running?: boolean;
+  checker_successful?: boolean;
+  created_at?: string;
+  desired_resources_accepted?: boolean;
+  id?: string;
+  lab_path?: string;
+  message?: string;
+  namespace?: string;
+  owner_id?: string;
+  phase?: QueriesSessionPhase;
+  test_path?: string;
+  task_revision?: string;
+  title?: string;
+  topology_ready?: boolean;
+  username?: string;
+  workspace_ready?: boolean;
+  workspace_url?: string;
+}
+
+export interface UsecasesSessionOutputDTO {
+  session?: QueriesSessionRecord;
+}
+
+export interface UsecasesSessionEnsureInputDTO {
+  attempt_id?: string;
+}
+
+export interface UsecasesSessionGetInputDTO {
+  session_id?: string;
+}
+
+export interface UsecasesSessionStopInputDTO {
+  session_id?: string;
+}
+
+export interface UsecasesSessionListOutputDTO {
+  sessions?: QueriesSessionRecord[];
+}
+
+export interface UsecasesSessionStopOutputDTO {
+  stopped?: boolean;
+}
+
+export interface UsecasesSessionCheckInputDTO {
+  session_id?: string;
+}
+
+export interface UsecasesSessionCheckOutputDTO {
+  job_name?: string;
+}
+
+export interface UsecasesSessionOpenInputDTO {
+  session_id?: string;
+}
+
+export interface UsecasesSessionOpenOutputDTO {
+  url?: string;
 }
