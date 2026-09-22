@@ -10,6 +10,18 @@ The same lifecycle runs for every pull request in
 `.github/workflows/e2e.yml` on an ephemeral GitHub-hosted kind cluster. No
 production Kubernetes credentials are used.
 
+The smoke topology includes a `client` node that must access the Docker daemon
+inside the kind node. Clabernetes therefore mounts the host socket into the
+generated pod via:
+
+```yaml
+node:
+  kind: linux
+  image: ghcr.io/srl-labs/alpine
+  clabernetes:
+    mountDockerSock: true
+```
+
 The fixed attempt is `550e8400-e29b-41d4-a716-446655440000`. The frontend is
 published at `http://127.0.0.1:18080`.
 
