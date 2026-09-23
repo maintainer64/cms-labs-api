@@ -436,8 +436,7 @@ func (k *KubernetesAdminQuery) ensureWorkspace(
 							"start-notebook.py",
 							"--ServerApp.base_url=" + baseURL,
 							"--ServerApp.allow_remote_access=True",
-							"--ServerApp.token=",
-							"--ServerApp.password=",
+							"--IdentityProvider.token=",
 						},
 						Env: []corev1.EnvVar{
 							{Name: "ATTEMPT_ID", Value: params.AttemptID},

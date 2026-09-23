@@ -55,6 +55,8 @@ deployments:
                 fieldPath: metadata.namespace
           - name: CHECKER_IMAGE
             value: ghcr.io/maintainer64/cms-labs-checker:latest
+          - name: JUPYTER_IMAGE
+            value: ghcr.io/maintainer64/cms-labs-jupyter:latest
         ports:
           - name: http
             containerPort: 8080

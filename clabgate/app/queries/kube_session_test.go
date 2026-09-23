@@ -99,6 +99,19 @@ spec:
 	if deployment.Spec.Template.Spec.AutomountServiceAccountToken == nil || *deployment.Spec.Template.Spec.AutomountServiceAccountToken {
 		t.Fatal("Jupyter must not receive a Kubernetes service account token")
 	}
+	container := deployment.Spec.Template.Spec.Containers[0]
+	if container.Image != params.JupyterImage {
+		t.Fatalf("Jupyter image = %q, want %q", container.Image, params.JupyterImage)
+	}
+	wantArgs := []string{
+		"start-notebook.py",
+		"--ServerApp.base_url=/clabgate/workspace/" + params.AttemptID,
+		"--ServerApp.allow_remote_access=True",
+		"--IdentityProvider.token=",
+	}
+	if strings.Join(container.Args, "\x00") != strings.Join(wantArgs, "\x00") {
+		t.Fatalf("Jupyter args = %q, want %q", container.Args, wantArgs)
+	}
 	if _, err := client.CoreV1().PersistentVolumeClaims(namespace).Get(context.Background(), workspaceName, metav1.GetOptions{}); err != nil {
 		t.Fatalf("Jupyter PVC was not created: %v", err)
 	}

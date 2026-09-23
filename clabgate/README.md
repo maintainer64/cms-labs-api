@@ -128,7 +128,7 @@ Reconciler валидирует диапазон оценки, добавляе�
 | `CMS_TASK_BRANCH` | Git ref каталога, `master`; при запуске разрешается в commit SHA |
 | `TASK_REPOSITORY_TOKEN` | optional token для private GitLab/GitHub repository |
 | `GITLAB_TOKEN` | legacy fallback для `TASK_REPOSITORY_TOKEN` на время миграции |
-| `JUPYTER_IMAGE` | standalone notebook image со `start-notebook.py` |
+| `JUPYTER_IMAGE` | standalone notebook image со `start-notebook.py`; production default — `ghcr.io/maintainer64/cms-labs-jupyter:latest` |
 | `JUPYTER_STORAGE_SIZE` | размер PVC, `1Gi` |
 | `WORKSPACE_PROXY_PREFIX` | URL prefix Jupyter, `/clabgate/workspace` |
 | `WORKSPACE_AUTH_SECRET` | общий для replicas HMAC secret, минимум 32 байта; обязателен для `session.open` |
@@ -143,7 +143,7 @@ ServiceAccount/RBAC в `k8s/values/_common/clabgate-values.yaml` расшире�
 ### Что ещё не завершено
 
 - Нет live-cluster smoke test: локального kubeconfig/кластера сейчас нет. Kubernetes orchestration покрыт fake-client тестом, включая multi-document manifest и повторный ensure.
-- Jupyter image должен быть проверен на standalone запуске всех текущих notebook; старый образ мог полагаться на `jupyterhub-singleuser` и nbgitpuller redirect.
+- Standalone Jupyter image проверяется собственным CI: запуск сервера, импорт библиотек всех текущих notebook и совместимость legacy SNMP API.
 - Загрузка notebook пока использует `nbgitpuller`, но и Kubernetes-манифесты, и notebook checkout закреплены по разрешённому commit SHA.
 - Новый session route намеренно не выдаёт прямые ttyd URL. Нужен авторизованный WebSocket/terminal proxy; старый username-based nginx route оставлен только для совместимости.
 - Ещё нет ResourceQuota, LimitRange, NetworkPolicy, TTL/idle policy и informer cache. Две replicas reconciler координируются Kubernetes Lease.
