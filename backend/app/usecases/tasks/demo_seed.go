@@ -15,7 +15,7 @@ func (u *DemoSeedUC) Execute() error {
 	if err := u.DB.Where("email = ?", "admin@admin.com").First(&user).Error; err != nil { return err }
 	var server models.Server
 	if err := u.DB.Where("client_id = ?", "demo-kubernetes").First(&server).Error; err != nil {
-		server = models.Server{ServerBase: models.ServerBase{Name:"Demo Kubernetes", Url:"http://clabgate:8080", Type:models.ServerTypeKubernetes, IsActive:true}, ServerSecret:models.ServerSecret{ClientID:"demo-kubernetes"}}
+		server = models.Server{ServerBase: models.ServerBase{Name:"Demo Kubernetes", Url:"http://clabgate:8080", Type:models.ServerTypeKubernetes, IsActive:true}, ServerSecret:models.ServerSecret{ClientID:"demo-kubernetes", Token:"demo-secret"}}
 		if err := u.DB.Create(&server).Error; err != nil { return err }
 	}
 	var route models.LTIRouting
