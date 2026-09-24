@@ -21,6 +21,8 @@ func (u *StartupFiberUC) Startup(taskName *string) (bool, error) {
 	if *taskName == "grade_sync" {
 		return true, u.LTISyncResultUC.Execute()
 	}
-	if *taskName == "demo_seed" { return true, u.DemoSeedUC.Execute() }
+	if *taskName == "demo_seed" {
+		return true, u.DemoSeedUC.Execute()
+	}
 	return false, errors.New("task is undefined")
 }
