@@ -23,7 +23,7 @@ interface MenuItem {
 
 export function RFContextMenu({ id, top, left, right, bottom, dispatch, onClick }: RFContextMenuProps) {
   if (!id) return <></>;
-  const { username, attemptNumber } = useParams();
+  const sessionId = useParams().sessionId || '';
   const {
     locale: {
       Topology: { Modal }
@@ -80,8 +80,7 @@ export function RFContextMenu({ id, top, left, right, bottom, dispatch, onClick 
   }, [id, dispatch]);
   const restart = useCallback(() => {
     mutate?.({
-      attemptNumber: attemptNumber,
-      username: username,
+      sessionId,
       actions: [
         {
           node: id,
@@ -89,12 +88,11 @@ export function RFContextMenu({ id, top, left, right, bottom, dispatch, onClick 
         }
       ]
     });
-  }, [id, mutate, username, attemptNumber]);
+  }, [id, mutate, sessionId]);
 
   const wipe = useCallback(() => {
     mutate?.({
-      attemptNumber: attemptNumber,
-      username: username,
+      sessionId,
       actions: [
         {
           node: id,
@@ -102,7 +100,7 @@ export function RFContextMenu({ id, top, left, right, bottom, dispatch, onClick 
         }
       ]
     });
-  }, [id, mutate, username, attemptNumber]);
+  }, [id, mutate, sessionId]);
 
   const menuItems: MenuItem[] = [
     {

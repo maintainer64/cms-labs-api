@@ -39,10 +39,10 @@ definitions:
         items:
           $ref: '#/definitions/usecases.NodeActionItem'
         type: array
-      attempt_number:
+      session_id:
         type: string
-      username:
-        type: string
+    required:
+    - session_id
     type: object
   usecases.NodeActionItem:
     properties:
@@ -85,10 +85,10 @@ definitions:
     type: object
   usecases.TopologiesGetInputDTO:
     properties:
-      attempt_number:
+      session_id:
         type: string
-      username:
-        type: string
+    required:
+    - session_id
     type: object
   usecases.TopologiesGetOutputDTO:
     properties:

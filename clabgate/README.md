@@ -63,7 +63,7 @@ Jupyter находится в namespace топологии, но не являе
 | `topology.get {session_id}` | Получить topology для нового immutable session ID |
 | `node.action {session_id, actions}` | Выполнить совместимые действия над узлами с ownership check |
 
-Старые параметры `username + attempt_number` для `topology.get` и `node.action` пока сохранены для rollback. Новый frontend передаёт `session_id`.
+Legacy-параметры `username + attempt_number` и прямой nginx-маршрут удалены; topology и node actions работают только через immutable `session_id`.
 
 ### Kubernetes-контракт сессии
 
@@ -145,7 +145,7 @@ ServiceAccount/RBAC в `k8s/values/_common/clabgate-values.yaml` расшире�
 - Нет live-cluster smoke test: локального kubeconfig/кластера сейчас нет. Kubernetes orchestration покрыт fake-client тестом, включая multi-document manifest и повторный ensure.
 - Standalone Jupyter image проверяется собственным CI: запуск сервера, импорт библиотек всех текущих notebook и совместимость legacy SNMP API.
 - Загрузка notebook пока использует `nbgitpuller`, но и Kubernetes-манифесты, и notebook checkout закреплены по разрешённому commit SHA.
-- Новый session route намеренно не выдаёт прямые ttyd URL. Нужен авторизованный WebSocket/terminal proxy; старый username-based nginx route оставлен только для совместимости.
+- `topology.get` выдаёт ttyd только как короткоживущий grant: frontend обменивает его на scoped HttpOnly cookie и проксирует HTTP/WebSocket в namespace сессии.
 - Ещё нет ResourceQuota, LimitRange, NetworkPolicy, TTL/idle policy и informer cache. Две replicas reconciler координируются Kubernetes Lease.
 - `Topology` GVR соответствует используемому локальному fork `clabernetes.containerlab.dev/v1alpha1`; перед обновлением upstream нужна миграция API group/version.
 
@@ -172,7 +172,7 @@ production-контракт и отложенные задачи находят�
 - `jupyter/cmsspawner` — KubeSpawner, запуск named server, загрузка topology и idle sync;
 - `jupyter/k8s` — Helm values, RBAC, Gateway API и CronJob;
 - `cms_task_collection` — коллекция лабораторных, notebook и `topology.template.yaml`;
-- локальный `clabernetes-launch/ui` — штатный UI Clabernetes.
+- локальный `cms-labs-clabernetes/ui` — UI поддерживаемого CMS Labs fork.
 
 Локальные незакоммиченные файлы в соседних репозиториях не изменялись.
 
@@ -246,42 +246,32 @@ sequenceDiagram
 | CMS frontend | clabgate, React Flow, nginx DNS proxy | Рисует topology и проксирует ttyd WebSocket |
 | Task collection | Git submodules, notebook image, custom IPython startup, topology template convention | Хранит учебные материалы и часть topology |
 
-## Что уже умеет clabgate и чего в нём нет
+## Что уже умеет clabgate
 
-Сегодня `clabgate` — не gate и не orchestrator, а небольшой read/action API:
-
-- `topology.get` читает первый `Topology` в namespace, deployments, LoadBalancer services и ttyd services;
-- `node.action` выполняет `kill 1` через pod exec либо удаляет pod;
-- namespace вычисляется как `jup-<username>-<attempt_number>`;
-- Kubernetes clients создаются на каждый запрос;
-- API не создаёт namespace, quota, PVC, workspace, HTTPRoute или Topology;
-- endpoint для ttyd фактически реализован не в `clabgate`, а регулярным nginx `proxy_pass` во frontend.
-
-То есть расширять существующий сервис можно, но его текущий контракт не следует считать фундаментом новой архитектуры.
+- `session.ensure` создаёт namespace `lab-<attempt UUID>`, Topology, PVC, Jupyter Deployment и Service;
+- `topology.get` и `node.action` принимают только `session_id`, проверяют владельца и работают в найденном namespace;
+- ttyd из CMS Labs Clabernetes fork остаётся `ClusterIP` и доступен только через session-scoped workspace proxy;
+- `session.check` запускает checker Job и отправляет структурированный результат в CMS;
+- две replicas reconciler координируются Kubernetes Lease.
 
 ## Проблемы, которые нужно исправить независимо от миграции
 
 ### Критические
 
-1. **JWT принимается без проверки подписи.** `ParseUnverified` позволяет подделать username и роли, а service account `clabgate` имеет права на pods во всех namespaces. До расширения write-доступа необходимо валидировать `iss`, `aud`, `exp`, подпись по JWKS и допустимый алгоритм.
-2. **ttyd proxy не проверяет авторизацию.** URL строится из `username`, номера попытки и service, после чего nginx напрямую проксирует его во внутренний Service. Знание или угадывание URL потенциально даёт обход проверки `clabgate`.
-3. **Namespace строится из внешнего username.** Нет канонизации DNS label, защиты от коллизий, переименования пользователя и раскрытия персональных данных.
-4. **Произвольный manifest нельзя применять с текущими правами и реализацией.** Python-код поддерживает только часть core resources, остальные ошибочно отправляет через `CustomObjectsApi`, вычисляет plural эвристикой, делает только create и пропускает `409` вместо обновления.
+1. Нужны ResourceQuota, LimitRange и default-deny NetworkPolicy для каждого session namespace.
+2. Нужна политика idle timeout/TTL и гарантированная очистка зависших namespace.
+3. Разрешённые типы Kubernetes-объектов из task repository должны оставаться ограничены валидатором Clabgate.
 
 ### Надёжность и производительность
 
-- browser управляет транзакцией запуска, поэтому закрытие страницы прерывает orchestration;
-- topology создаётся после readiness notebook, а не как часть единого desired state;
-- поиск namespace идёт через pod label и выбирает первый найденный pod;
-- `attempt_id` (UUID) и `attempt_number` (числовой DB id / named server) используются как разные идентификаторы одной сессии;
+- live status пока опрашивается, а не доставляется через SSE/WebSocket;
 - `context.Background()` не наследует отмену HTTP-запроса и deadline;
 - список pods запрашивается отдельно для каждого deployment;
 - ошибки при чтении deployments/services/ttyd отбрасываются;
 - ошибка `executor.StreamWithContext` при restart игнорируется;
 - при нескольких replicas/pods выбирается последний элемент без проверки readiness;
 - `GetTopologyYAML` возвращает первый Topology в namespace, а не ресурс по имени/owner label;
-- список `ServiceInfo` содержит только `LoadBalancer`, хотя ttyd в изученной версии Clabernetes создаётся как `ClusterIP`;
-- Kubernetes clients и discovery следует создавать один раз и переиспользовать;
+- список `ServiceInfo` всё ещё ориентирован на внешние адреса, тогда как ttyd обнаруживается отдельным namespace-local запросом;
 - зависимости notebook почти не закреплены по версиям, поэтому образ невоспроизводим;
 - topology templates и notebooks не имеют машинно-проверяемого общего manifest.
 
@@ -559,7 +549,7 @@ Monaco — редакторное ядро, используемое VS Code, н
 
 ### Важное состояние upstream
 
-В актуальном upstream Clabernetes встроенный UI больше не является поддерживаемой частью проекта: удаление UI вошло в release `v0.7.0`. Поэтому `ui.enabled=true` нельзя считать возможностью нового upstream chart. Локальные `clabernetes-launch` и `c9s` используют собственную ветку старого chart/API и сохраняют `clabernetes-ui`; эту связку придётся либо явно версионировать и поддерживать, либо заменить. Источник: [официальные релизы Clabernetes](https://github.com/clabernetes/clabernetes/releases).
+В актуальном upstream Clabernetes встроенный UI больше не является поддерживаемой частью проекта: удаление UI вошло в release `v0.7.0`. Поэтому `ui.enabled=true` нельзя считать возможностью нового upstream chart. `cms-labs-clabernetes` — явно версионируемый fork с ttyd/tmux-интеграцией; student UI при этом остаётся в CMS Labs frontend.
 
 ### Что уже готово в локальном `c9s`
 
@@ -576,7 +566,7 @@ Monaco — редакторное ядро, используемое VS Code, н
 brew install kind
 kind create cluster --name c9s-ui
 
-cd /Users/gubanov/golang/clabernetes-launch
+cd /Users/gubanov/golang/cms-labs-clabernetes
 helm upgrade --install clabernetes ./charts/clabernetes \
   --namespace clabernetes --create-namespace \
   --set ui.enabled=true \
@@ -646,11 +636,11 @@ Pending -> Scheduled -> Provisioning -> Ready -> Stopping -> Completed
 
 ## План миграции
 
-### Этап 0. Защитить текущую систему
+### Этап 0. Защитить текущую систему — выполнено
 
 Цель: не расширять небезопасную основу.
 
-- заменить `ParseUnverified` на полную JWT/JWKS validation;
+- проверять подпись и срок CMS JWT;
 - закрыть ttyd proxy авторизацией и ownership check;
 - перейти с username-based namespace lookup на immutable session label;
 - прокидывать request context/deadline и перестать игнорировать Kubernetes errors;
@@ -798,4 +788,4 @@ Pending -> Scheduled -> Provisioning -> Ready -> Stopping -> Completed
 - current unverified JWT parsing: [`app/usecases/auth/jwt_parser.go`](app/usecases/auth/jwt_parser.go)
 - current ttyd nginx proxy: [`../nextui-dashboard/nginx/templates/default.conf.template`](../nextui-dashboard/nginx/templates/default.conf.template)
 - task catalog: `cms_task_collection/README.md`
-- upstream/local Clabernetes UI: `clabernetes-launch/ui`
+- CMS Labs Clabernetes fork: `cms-labs-clabernetes`

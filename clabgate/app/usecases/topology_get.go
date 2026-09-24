@@ -23,9 +23,7 @@ type TopologiesGetUC struct {
 }
 
 type TopologiesGetInputDTO struct {
-	Username      string `json:"username"`
-	AttemptNumber string `json:"attempt_number"`
-	SessionID     string `json:"session_id,omitempty"`
+	SessionID string `json:"session_id" validate:"required"`
 }
 
 type TopologiesGetRequest struct {
@@ -58,25 +56,19 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 	if u.user == nil {
 		return TopologiesGetOutputDTO{}, errors.New("not logged in")
 	}
-	if !cms_client.SSOHasIntersection(
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
-		u.user.Roles,
-	) && dto.SessionID == "" && dto.Username != u.user.Username {
-		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("user_not_allow_topology", "user not allow connect topology")
-	}
 	ctx := context.Background()
-	u.Logger.Info().Msg(fmt.Sprintf("TopologiesGetUC: GetTopologyYAML by attempt: %v", dto.AttemptNumber))
-	namespace := fmt.Sprintf("jup-%s-%s", dto.Username, dto.AttemptNumber)
-	if dto.SessionID != "" {
-		session, err := u.KubernetesAdminQuery.GetSession(ctx, dto.SessionID, "")
-		if err != nil {
-			return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("session_not_found", err.Error())
-		}
-		if !isOperator(u.user) && session.OwnerID != u.user.Sub {
-			return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("session_forbidden", "session belongs to another user")
-		}
-		namespace = session.Namespace
+	if dto.SessionID == "" {
+		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("session_required", "session_id is required")
 	}
+	u.Logger.Info().Str("session_id", dto.SessionID).Msg("TopologiesGetUC: read session topology")
+	session, err := u.KubernetesAdminQuery.GetSession(ctx, dto.SessionID, "")
+	if err != nil {
+		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("session_not_found", err.Error())
+	}
+	if !isOperator(u.user) && session.OwnerID != u.user.Sub {
+		return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("session_forbidden", "session belongs to another user")
+	}
+	namespace := session.Namespace
 	yamlContent, err := u.KubernetesAdminQuery.GetTopologyYAML(ctx, namespace)
 
 	var containerlabContent string
@@ -99,19 +91,14 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 
 	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, namespace)
 	services, _ := u.KubernetesAdminQuery.GetServicesInfo(ctx, namespace)
-	var ttyd []queries.TTYDInfo
-	if dto.SessionID == "" {
-		ttyd, _ = u.KubernetesAdminQuery.GetTTYDInfo(ctx, dto.Username, dto.AttemptNumber)
-	} else {
-		ttyd, _ = u.KubernetesAdminQuery.GetTTYDInfoInNamespace(ctx, namespace)
-		for index := range ttyd {
-			destination := fmt.Sprintf("/clabgate/workspace/%s/terminal/%s/", dto.SessionID, ttyd[index].Name)
-			grant, grantErr := IssueWorkspaceGrant(u.WorkspaceSecret, dto.SessionID, destination, u.WorkspaceGrantTTL)
-			if grantErr != nil {
-				return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("workspace_auth_unavailable", grantErr.Error())
-			}
-			ttyd[index].Url = "/clabgate/workspace-auth/exchange?grant=" + url.QueryEscape(grant)
+	ttyd, _ := u.KubernetesAdminQuery.GetTTYDInfoInNamespace(ctx, namespace)
+	for index := range ttyd {
+		destination := fmt.Sprintf("/clabgate/workspace/%s/terminal/%s/", dto.SessionID, ttyd[index].Name)
+		grant, grantErr := IssueWorkspaceGrant(u.WorkspaceSecret, dto.SessionID, destination, u.WorkspaceGrantTTL)
+		if grantErr != nil {
+			return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("workspace_auth_unavailable", grantErr.Error())
 		}
+		ttyd[index].Url = "/clabgate/workspace-auth/exchange?grant=" + url.QueryEscape(grant)
 	}
 
 	return TopologiesGetOutputDTO{

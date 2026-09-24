@@ -114,36 +114,6 @@ server {
         proxy_set_header X-Forwarded-Proto $forwarded_proto;
     }
 
-    # Проксирование /clabgate/api/v1/topology/:username/:attemptNumber/:service
-    # → http://:service.jup-:username-:attemptNumber.svc.cluster.local:7681
-    location ~ ^/clabgate/api/v1/topology/([^/]+)/([^/]+)/([^/]+)(/.*)? {
-        set $topology_username $1;
-        set $topology_attempt  $2;
-        set $topology_service  $3;
-        set $topology_path     $4;  # остаток пути после :service (может быть пустым)
-
-        set $proxy_target http://$topology_service.jup-$topology_username-$topology_attempt.svc.cluster.local:7681;
-
-        proxy_pass $proxy_target$topology_path;
-
-        # WebSocket-поддержка (ttyd / Jupyter)
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade           $http_upgrade;
-        proxy_set_header Connection        "upgrade";
-        proxy_connect_timeout               1800s;
-        proxy_send_timeout                  1800s;
-        proxy_read_timeout                  1800s;
-        proxy_buffering                     off;
-        proxy_cache                         off;
-
-        proxy_set_header Host              $host;
-        proxy_set_header X-Scheme          $scheme;
-        proxy_set_header X-Original-URI    $request_uri;
-        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header X-Real-IP         $remote_addr;
-        proxy_set_header X-Forwarded-Proto $forwarded_proto;
-    }
-
     # Проксирование /clabgate/api/ на другой контейнер (общий fallback)
     location /clabgate/api/ {
         set $target_host ${CLABGATE_SERVICE};

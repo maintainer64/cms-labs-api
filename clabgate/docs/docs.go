@@ -156,6 +156,9 @@ const docTemplate = `{
         },
         "usecases.NodeActionInputDTO": {
             "type": "object",
+            "required": [
+                "session_id"
+            ],
             "properties": {
                 "actions": {
                     "type": "array",
@@ -163,10 +166,7 @@ const docTemplate = `{
                         "$ref": "#/definitions/usecases.NodeActionItem"
                     }
                 },
-                "attempt_number": {
-                    "type": "string"
-                },
-                "username": {
+                "session_id": {
                     "type": "string"
                 }
             }
@@ -230,11 +230,11 @@ const docTemplate = `{
         },
         "usecases.TopologiesGetInputDTO": {
             "type": "object",
+            "required": [
+                "session_id"
+            ],
             "properties": {
-                "attempt_number": {
-                    "type": "string"
-                },
-                "username": {
+                "session_id": {
                     "type": "string"
                 }
             }

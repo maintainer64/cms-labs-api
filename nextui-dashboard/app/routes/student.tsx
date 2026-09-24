@@ -19,7 +19,6 @@ const RoutesStudent = () => {
       <Route path={RoutesLocation.targetsCreate()} element={<TargetsPageEdit />} />
       <Route path={RoutesLocation.ltiRedirect()} element={<LTIAttemptsPageCreate />} />
       <Route path={RoutesLocation.ltiRedirectCreate()} element={<LTIAttemptsPageCreate />} />
-      <Route path={RoutesLocation.topologyView()} element={<TopologyPageView />} />
       <Route path={RoutesLocation.session()} element={<SessionPage />} />
       <Route path={RoutesLocation.sessionTopology()} element={<TopologyPageView />} />
     </Routes>

@@ -49,7 +49,6 @@ const RoutesAdmin = () => {
       <Route path={RoutesLocation.targets()} element={<TargetsPage />} />
       <Route path={RoutesLocation.targetsEdit()} element={<TargetsPageEdit />} />
       <Route path={RoutesLocation.targetsCreate()} element={<TargetsPageEdit />} />
-      <Route path={RoutesLocation.topologyView()} element={<TopologyPageView />} />
       <Route path={RoutesLocation.session()} element={<SessionPage />} />
       <Route path={RoutesLocation.sessionTopology()} element={<TopologyPageView />} />
       <Route path={RoutesLocation.login()} element={<LoginPage />} />

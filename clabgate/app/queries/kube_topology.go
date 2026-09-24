@@ -39,8 +39,6 @@ type TTYDInfo struct {
 	Url  string `json:"url"`
 }
 
-const ClabgateApiTopology = `/clabgate/api/v1/topology`
-
 type KubernetesAdminQuery struct {
 	clientset     kubernetes.Interface
 	dynamicClient dynamic.Interface
@@ -184,19 +182,6 @@ func (k *KubernetesAdminQuery) GetServicesInfo(ctx context.Context, namespace st
 			ExternalIP: externalIP,
 			ClusterIP:  svc.Spec.ClusterIP,
 		})
-	}
-	return result, nil
-}
-
-// GetTTYDInfo возвращает информацию о сервисах, у которых есть порт ttyd:7681
-func (k *KubernetesAdminQuery) GetTTYDInfo(ctx context.Context, username string, attemptNumber string) ([]TTYDInfo, error) {
-	namespace := fmt.Sprintf("jup-%s-%s", username, attemptNumber)
-	result, err := k.GetTTYDInfoInNamespace(ctx, namespace)
-	if err != nil {
-		return nil, err
-	}
-	for index := range result {
-		result[index].Url = fmt.Sprintf("%s/%s/%s/%s/", ClabgateApiTopology, username, attemptNumber, result[index].Name)
 	}
 	return result, nil
 }

@@ -45,6 +45,5 @@ export const RoutesLocation = {
   },
   session: (sessionId = ':sessionId') => `/session/${sessionId}`,
   sessionTopology: (sessionId = ':sessionId') => `/session/${sessionId}/topology`,
-  topologyView: (username = ':username', attemptNumber = ':attemptNumber') => `/topology/${username}/${attemptNumber}`,
   home: () => '/'
 };

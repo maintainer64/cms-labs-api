@@ -23,10 +23,8 @@ type NodeActionItem struct {
 }
 
 type NodeActionInputDTO struct {
-	Actions       []NodeActionItem `json:"actions"`
-	Username      string           `json:"username"`
-	AttemptNumber string           `json:"attempt_number"`
-	SessionID     string           `json:"session_id,omitempty"`
+	Actions   []NodeActionItem `json:"actions"`
+	SessionID string           `json:"session_id" validate:"required"`
 }
 
 type NodeActionRequest struct {
@@ -56,25 +54,19 @@ func (u *NodeActionsUC) Execute(dto NodeActionInputDTO) (NodeActionOutputDTO, er
 	if u.user == nil {
 		return NodeActionOutputDTO{}, errors.New("not logged in")
 	}
-	if !cms_client.SSOHasIntersection(
-		[]string{cms_client.SSOUsersRoleAdmin, cms_client.SSOUsersRoleInstructor},
-		u.user.Roles,
-	) && dto.SessionID == "" && dto.Username != u.user.Username {
-		return NodeActionOutputDTO{}, errors.New("user not allow connect topology")
+	if dto.SessionID == "" {
+		return NodeActionOutputDTO{}, errors.New("session_id is required")
 	}
 	ctx := context.Background()
-	u.Logger.Info().Msg(fmt.Sprintf("NodeActionsUC: action by attempt: %v", dto.AttemptNumber))
-	namespace := fmt.Sprintf("jup-%s-%s", dto.Username, dto.AttemptNumber)
-	if dto.SessionID != "" {
-		session, err := u.KubernetesAdminQuery.GetSession(ctx, dto.SessionID, "")
-		if err != nil {
-			return NodeActionOutputDTO{}, err
-		}
-		if !isOperator(u.user) && session.OwnerID != u.user.Sub {
-			return NodeActionOutputDTO{}, errors.New("session belongs to another user")
-		}
-		namespace = session.Namespace
+	u.Logger.Info().Str("session_id", dto.SessionID).Msg("NodeActionsUC: execute session action")
+	session, err := u.KubernetesAdminQuery.GetSession(ctx, dto.SessionID, "")
+	if err != nil {
+		return NodeActionOutputDTO{}, err
 	}
+	if !isOperator(u.user) && session.OwnerID != u.user.Sub {
+		return NodeActionOutputDTO{}, errors.New("session belongs to another user")
+	}
+	namespace := session.Namespace
 
 	deployments, _ := u.KubernetesAdminQuery.GetDeploymentsInfo(ctx, namespace)
 

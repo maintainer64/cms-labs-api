@@ -31,9 +31,7 @@ export interface QueriesTTYDInfo {
 
 export interface UsecasesNodeActionInputDTO {
   actions?: UsecasesNodeActionItem[];
-  attempt_number?: string;
-  session_id?: string;
-  username?: string;
+  session_id: string;
 }
 
 export interface UsecasesNodeActionItem {
@@ -66,9 +64,7 @@ export interface UsecasesNodeActionResponse {
 }
 
 export interface UsecasesTopologiesGetInputDTO {
-  attempt_number?: string;
-  session_id?: string;
-  username?: string;
+  session_id: string;
 }
 
 export interface UsecasesTopologiesGetOutputDTO {
