@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
+	"time"
 
 	"github.com/maintainer64/cms-labs-api/clabgate/app/queries"
 	"github.com/maintainer64/cms-labs-api/shared/cms_client"
@@ -15,6 +17,8 @@ import (
 type TopologiesGetUC struct {
 	*zerolog.Logger
 	KubernetesAdminQuery *queries.KubernetesAdminQuery
+	WorkspaceSecret      string
+	WorkspaceGrantTTL    time.Duration
 	user                 *cms_client.SSOTokenPublicData
 }
 
@@ -98,6 +102,16 @@ func (u *TopologiesGetUC) Execute(dto TopologiesGetInputDTO) (TopologiesGetOutpu
 	var ttyd []queries.TTYDInfo
 	if dto.SessionID == "" {
 		ttyd, _ = u.KubernetesAdminQuery.GetTTYDInfo(ctx, dto.Username, dto.AttemptNumber)
+	} else {
+		ttyd, _ = u.KubernetesAdminQuery.GetTTYDInfoInNamespace(ctx, namespace)
+		for index := range ttyd {
+			destination := fmt.Sprintf("/clabgate/workspace/%s/terminal/%s/", dto.SessionID, ttyd[index].Name)
+			grant, grantErr := IssueWorkspaceGrant(u.WorkspaceSecret, dto.SessionID, destination, u.WorkspaceGrantTTL)
+			if grantErr != nil {
+				return TopologiesGetOutputDTO{}, jsonrpc.NewRpcError("workspace_auth_unavailable", grantErr.Error())
+			}
+			ttyd[index].Url = "/clabgate/workspace-auth/exchange?grant=" + url.QueryEscape(grant)
+		}
 	}
 
 	return TopologiesGetOutputDTO{

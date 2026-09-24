@@ -25,10 +25,14 @@ func workspaceExchange(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(http.StatusUnauthorized).SendString("invalid or expired workspace grant")
 	}
+	maxAge := config.WorkspaceCookieTTL
+	if maxAge > 86400 {
+		maxAge = 86400
+	}
 	c.Cookie(&fiber.Cookie{
 		Name: usecases.WorkspaceCookieName, Value: cookie,
 		Path:   strings.TrimRight(config.WorkspacePrefix, "/") + "/" + sessionID + "/",
-		MaxAge: int(config.WorkspaceCookieTTL), HTTPOnly: true, Secure: true, SameSite: "Lax",
+		MaxAge: int(maxAge), HTTPOnly: true, Secure: true, SameSite: "Lax",
 	})
 	return c.Redirect(destination, http.StatusSeeOther)
 }

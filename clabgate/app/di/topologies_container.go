@@ -1,7 +1,10 @@
 package di
 
 import (
+	"time"
+
 	"github.com/maintainer64/cms-labs-api/clabgate/app/usecases"
+	"github.com/maintainer64/cms-labs-api/clabgate/pkg/configs"
 	"github.com/maintainer64/cms-labs-api/shared/logs"
 )
 
@@ -13,6 +16,8 @@ func (di *DIContainer) TopologiesGetUC() (*usecases.TopologiesGetUC, error) {
 	return &usecases.TopologiesGetUC{
 		Logger:               logs.NewZeroLogger(di.ZeroLogConf.SetName("usecases.TopologiesGetUC")),
 		KubernetesAdminQuery: kubeQuery,
+		WorkspaceSecret:      configs.AppConfig.Session.WorkspaceSecret,
+		WorkspaceGrantTTL:    time.Duration(configs.AppConfig.Session.WorkspaceGrantTTL) * time.Second,
 	}, nil
 }
 
