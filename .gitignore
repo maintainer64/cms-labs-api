@@ -1,6 +1,7 @@
 # macOS
 **/.DS_Store
 **/.idea/
+**/.vscode/
 
 # Dev build
 build/
@@ -9,6 +10,9 @@ processed_migrations/
 
 # Test
 *.out
+*.test
+coverage.out
+*.log
 
 # Environment variables
 .env
@@ -28,6 +32,9 @@ processed_migrations/
 **/node_modules/
 **/.next/
 **/.vite/
+**/.turbo/
+**/.cache/
+**/*.ipynb_checkpoints/
 
 # Files
 hosts.ini
