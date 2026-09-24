@@ -11,6 +11,7 @@ func (di *DIContainer) TaskStartup() *tasks.StartupFiberUC {
 		UserDefaultCreateUC: di.TaskUserDefaultCreateUC(),
 		ProxmoxSyncUC:       di.TaskProxmoxSyncUC(),
 		LTISyncResultUC:     di.TaskLTISyncResultUC(),
+		DemoSeedUC:          &tasks.DemoSeedUC{DB: di.Queries.DB, Logger: logs.NewZeroLogger(di.ZeroLogConf.SetName("tasks.DemoSeedUC"))},
 	}
 }
 

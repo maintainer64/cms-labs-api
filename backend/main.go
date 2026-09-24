@@ -30,7 +30,9 @@ import (
 func main() {
 	// Define Fiber config.
 	task := flag.String("task", "", "Task name")
+	demo := flag.Bool("demo", false, "Seed local full-stack demo records and exit")
 	flag.Parse()
+	if *demo { *task = "demo_seed" }
 	config := configs.FiberConfig()
 	logs.ZeroLogInit(configs.AppConfig.Debug)
 
